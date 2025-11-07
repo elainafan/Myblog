@@ -12,6 +12,10 @@ links:
     description: 故事的下一页
     website: https://zhaoyi-tian.cn
     image: https://zhaoyi-tian.github.io/images/profile.png
+  - title: Hinai
+    description: 昙花一现
+    website: https://blog.woo.moe
+    image: https://data.woo.moe/img/ico/104491469_0_r.png
     
 menu:
     main: 
