@@ -1,4 +1,4 @@
-baseurl: https://elainafan.github.io
+baseurl: https://www.elainafan.one/
 languageCode: en-us
 theme: hugo-theme-stack
 pagination:
@@ -55,7 +55,7 @@ params:
         avatar:
             enabled: true
             local: true
-            src: img/avatar.png
+            src: img/avatar.jpg
 
     article:
         math: true
