@@ -26,8 +26,8 @@ comments: true
 ```
 title: Elainafan's blog
 description: 只因"现在"深爱其中
-website: https://elainafan.github.io/
-image: https://elainafan.github.io/img/avatar_hu6704910776472921171.png
+website: https://www.elainafan.one/
+image: https://www.elainafan.one/img/avatar_hu1071812203031902840.jpg
 ```
 如欲在本站添加友链，请你
 - 确认已在你的友链添加了本站。
