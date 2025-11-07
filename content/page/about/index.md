@@ -19,7 +19,7 @@ menu:
 - 喜欢长跑、围棋、旅游与发呆，啊对了，还有睡觉（笑）。
 - 喜欢老番和美剧，2025秋《Stranger Things》要出第五季啦！
 ## 关于本博客
-- 头像：显然是小埋，十年前的老番。
+- 头像：律队/田井中律/Ritsu/K-ON部长，十六年前的老番(什么时候出大学篇)。
 - 站名：我是elaina（伊蕾娜）小姐的粉丝！自由自在旅行、写下自己的故事太吸引人啦~
 ## 博客是怎么建的？
 - 博客由[hugo](https://gohugo.io/getting-started/quick-start/)搭建，采用了Jimmy Cai的[Stack](https://github.com/CaiJimmy/hugo-theme-stack)主题。  
