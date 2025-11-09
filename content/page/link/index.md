@@ -16,6 +16,10 @@ links:
     description: 昙花一现
     website: https://blog.woo.moe
     image: https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg
+  - title: Elty-Nov
+    description: Don't be afraid daybreak has come
+    website: https://elty-nov.github.io
+    image: https://elty-nov.github.io/images/sakiko.jpg
     
 menu:
     main: 
