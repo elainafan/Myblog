@@ -23,7 +23,7 @@ links:
   - title: Anfsity
     description: There is a reason
     website: https://www.anfstiy.me/
-    image: https://www.anfstiy.me/img/avatar_hu_360325857fd925ef.png
+    image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
     
 menu:
     main: 
