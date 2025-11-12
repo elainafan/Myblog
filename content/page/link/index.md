@@ -20,6 +20,10 @@ links:
     description: Don't be afraid daybreak has come
     website: https://elty-nov.github.io
     image: https://elty-nov.github.io/images/sakiko.jpg
+  - title: Anfsity
+    description: There is a reason
+    website: https://www.anfstiy.me/
+    image: https://www.anfstiy.me/img/avatar_hu_360325857fd925ef.png
     
 menu:
     main: 
