@@ -8,6 +8,10 @@ links:
     description: 所见高山远木，阔云流风；所幸岁月盈余，了无拘束
     website: https://arthals.ink/
     image: https://cdn.arthals.ink/Arthals.png 
+  - title: Jing Xu's Site
+    description: 上士闻道，勤而行之
+    website: https://iculizhi.github.io/
+    image: https://iculizhi.github.io/images/xj.jpg
   - title: Zhaoyi Tian
     description: 故事的下一页
     website: https://zhaoyi-tian.cn
@@ -24,11 +28,7 @@ links:
     description: There is a reason
     website: https://www.anfstiy.me/
     image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
-  - title: Jing Xu's Site
-    description: 上士闻道，勤而行之
-    website: https://iculizhi.github.io/
-    image: https://iculizhi.github.io/images/xj.jpg
-    
+
 menu:
     main: 
         weight: -50

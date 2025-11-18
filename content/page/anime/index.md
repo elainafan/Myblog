@@ -20,10 +20,10 @@ links:
     description: 也许，我是说也许，我们都有青春期症候群？
     website: https://www.bilibili.com/bangumi/play/ss25733?spm_id_from=333.1387.0.0
     image: /images/5.jpg
-  - title: 干物妹！小埋
-    description: 随心所欲就是面对"最喜欢"的人的表现
-    website: https://www.bilibili.com/bangumi/play/ss2580?spm_id_from=333.1387.0.0
-    image: /images/4.jpg
+  - title: 凉宫春日的忧郁
+    description: 漫无止境的八月，校园番开山之作
+    website: https://www.bilibili.com/bangumi/play/ss1057?spm_id_from=333.337.0.0
+    image: /images/4.png
   - title: 时光流逝，饭菜依旧美味
     description: 就觉得女孩子们之间真是好啊
     website: https://www.bilibili.com/video/BV1fH3czjE1Y/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a

@@ -20,6 +20,10 @@ links:
     description: 我的母校
     website: https://www.pku.edu.cn/
     image: pku-logo.png
+  - title: Codeforces
+    description: 深夜激情平台，内含精美算术魔法
+    website: https://codeforces.com/
+    image: codeforces-logo.png
 
 menu:
     main: 
