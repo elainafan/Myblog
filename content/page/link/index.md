@@ -12,6 +12,10 @@ links:
     description: 上士闻道，勤而行之
     website: https://iculizhi.github.io/
     image: https://iculizhi.github.io/images/xj.jpg
+  - title: SunVapor's blog
+    description: 静水流深
+    website: https://www.sunvapor.site/
+    image: /avatars/sunvapor.png
   - title: Zhaoyi Tian
     description: 故事的下一页
     website: https://zhaoyi-tian.cn
