@@ -885,7 +885,7 @@ void eval(char *cmdline)
     }
 
    /*
-   关闭文佳，恢复标准输入输出
+   关闭文件，恢复标准输入输出
    */
 
     return;
