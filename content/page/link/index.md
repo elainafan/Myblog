@@ -32,6 +32,10 @@ links:
     description: There is a reason
     website: https://www.anfstiy.me/
     image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
+  - title: Lane's Blog
+    description: 探索未知，解码未来
+    website: https://www.laneljc.cn/
+    image: https://www.laneljc.cn/assets/favicon.png
 
 menu:
     main: 
