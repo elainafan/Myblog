@@ -24,12 +24,15 @@ links:
     description: 漫无止境的八月，校园番开山之作
     website: https://www.bilibili.com/bangumi/play/ss1057?spm_id_from=333.337.0.0
     image: /images/4.png
+  - title: 安达与岛村
+    description: 所有引力浪漫主义者终将相遇
+    website: https://www.bilibili.com/video/BV1n1sRzqEr7/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
+    image: /images/7.png  
   - title: 时光流逝，饭菜依旧美味
     description: 就觉得女孩子们之间真是好啊
     website: https://www.bilibili.com/video/BV1fH3czjE1Y/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
     image: /images/6.jpg
-  
-    
+
 menu:
     main: 
         weight: -50
