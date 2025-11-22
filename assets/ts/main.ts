@@ -12,6 +12,7 @@ import createElement from 'ts/createElement';
 import StackColorScheme from 'ts/colorScheme';
 import { setupScrollspy } from 'ts/scrollspy';
 import { setupSmoothAnchors } from "ts/smoothAnchors";
+import { searchInit } from "ts/search";
 
 let Stack = {
     init: () => {
@@ -26,6 +27,9 @@ let Stack = {
             setupSmoothAnchors();
             setupScrollspy();
         }
+
+        // 调用search脚本初始化方法
+        searchInit();
 
         /**
          * Add linear gradient background to tile style article

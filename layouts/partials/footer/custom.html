@@ -1,45 +1,250 @@
-<!-- vercount的脚本；若用不蒜子，则更换成不蒜子的脚本就好 -->
-<script defer src="https://cn.vercount.one/js"></script>
+<!-- 【custom.html】 -->
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<div id="aplayer"></div>
 
 <script>
-    function showHideView() {
-        // 判断是否存在vercount标签
-        let viewCounts = document.querySelectorAll("#viewCount");
-        if (viewCounts) {
-            // 判断是否为文章页
-            let article =  document.querySelector(".article-page");
-            if (!article) {
-                viewCounts.forEach(ele => {
-                    ele.style.display = 'none';
-                });
+    const staticDir = {{ .Site.Home.Permalink }};
+    console.log(staticDir);
+    const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        fixed: true,
+        audio: [
+            {
+                name: 'The day you went away',
+                artist: 'M2M',
+                url: staticDir + 'music/The-day-you-went-away/music.mp3',
+                cover: staticDir + 'music/The-day-you-went-away/cover.png'
+            },
+            {
+                name: 'Hey,Jude',
+                artist: 'The Beatles',
+                url: staticDir + 'music/Hey-Jude/music.mp3',
+                cover: staticDir + 'music/Hey-Jude/cover.png'
+            },
+            {
+                name: 'Everyday world',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Everyday-world/music.mp3',
+                cover: staticDir + 'music/Everyday-world/cover.png'
+            },
+            {
+                name: 'God knows',
+                artist: '平野绫',
+                url: staticDir + 'music/God-knows/music.mp3',
+                cover: staticDir + 'music/God-knows/cover.png'
+            },
+            {
+                name: '轻飘飘の时间',
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/轻飘飘の时间/music.mp3',
+                cover: staticDir + 'music/轻飘飘の时间/cover.png'
+            },
+
+            {
+                name: 'Some things never change',
+                artist: 'Elsa/Anna/Olaf/Kristoff',
+                url: staticDir + 'music/Some-things-never-change/music.mp3',
+                cover: staticDir + 'music/Some-things-never-change/cover.png'
+            },
+        ],
+    });
+    /**
+     * 页面销毁前监听
+     */
+    window.onbeforeunload = () => {
+        // 将播放信息用对象封装，并存入到localStorage中
+        const playInfo = {
+            index: ap.list.index,
+            currentTime: ap.audio.currentTime,
+            paused: ap.paused
+        };
+        localStorage.setItem("playInfo", JSON.stringify(playInfo));
+    };
+
+    /**
+     * 页面加载后监听
+     */
+    window.onload = () => {
+        // 从localStorage取出播放信息
+        const playInfo = JSON.parse(localStorage.getItem("playInfo"));
+        if (!playInfo) {
+            return;
+        }
+        // 切换歌曲
+        ap.list.switch(playInfo.index);
+        // 等待500ms再执行下一步(切换歌曲需要点时间，不能立马调歌曲进度条)
+        setTimeout(() => {
+            // 调整时长
+            ap.seek(playInfo.currentTime);
+            // 是否播放
+            if (!playInfo.paused) {
+                ap.play()
             }
+        }, 500);
+    };
+</script>
+
+{{ with resources.Get "js/topbar.min.js" }}
+<!-- 引入本地JS脚本 -->
+<script src={{ .Permalink }}></script>
+{{ end }}
+
+<!-- 【custom.html】 -->
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script>
+    var pjax = new Pjax({
+        selectors: [
+            ".main-container", ".js-Pjax"
+        ]
+    })
+
+    pjax._handleResponse = pjax.handleResponse;
+
+    pjax.handleResponse = function (responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            if (responseText) {
+                // 将新页面的html字符串解析成DOM对象
+                let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+                // 获取新页面中body的className，并设置回当前页面
+                let bodyClass = newDom.body.className;
+                document.body.setAttribute("class", bodyClass)
+            }
+            // 放行，交给pjax自己处理
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            // handle non-HTML response here
         }
     }
-    
-    showHideView();
+
+    async function renderKaTeX() {
+        // 判断当前页面是否有KateX
+        let katex = document.querySelector(".math-katex");
+        if (!katex) {
+            return;
+        }
+        // 等待函数加载成功后，再执行渲染方法
+        while (typeof renderMathInElement !== 'function') {
+            await delay(500);
+        }
+        // KaTeX渲染方法
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });
+    }
+
+    /**
+     * 同步延迟
+     */
+    function delay(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time)
+        })
+    }
+
+    document.addEventListener('pjax:send', () => {
+        // 显示顶部进度条
+        topbar.show();
+    })
+
+    document.addEventListener('pjax:complete', () => {
+        // 去掉 URL 中的时间戳查询参数
+        let url = new URL(window.location.href);
+        url.searchParams.delete('t');  // 删除 `t` 参数
+        history.replaceState(null, '', url.toString());  // 更新 URL 不刷新页面
+        renderKaTeX();
+        // Stack脚本初始化
+        window.Stack.init();
+        topbar.hide();
+        // 加载Giscus评论脚本
+    })
 </script>
 
-<script src="https://npm.elemecdn.com/nprogress@0.2.0/nprogress.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://npm.elemecdn.com/nprogress@0.2.0/nprogress.css" crossorigin="anonymous" />
-<script>
-    NProgress.start();
-    document.addEventListener("readystatechange", () => {
-        if (document.readyState === "interactive") NProgress.inc(0.8);
-        if (document.readyState === "complete") NProgress.done();
-    });
-</script>
+{{- with .Site.Params.comments.giscus -}}
+<div class="js-Pjax">
+    <script>
+            (function () {
+                // 判断当前是否有文章评论标识
+                let comment = document.querySelector(".comment");
+                if (!comment) {
+                    return;
+                }
+                function injectGiscusScript() {
+                    let script = document.createElement('script');
+                    // 将对应评论的脚本内容填进去
+                    script.setAttribute('src', 'https://giscus.app/client.js');
+                    script.setAttribute('data-repo', '{{- .repo -}}');
+                    script.setAttribute('data-repo-id', '{{- .repoID -}}');
+                    script.setAttribute('data-category', '{{- .category -}}');
+                    script.setAttribute('data-category-id', '{{- .categoryID -}}');
+                    script.setAttribute('data-mapping', '{{- default `title` .mapping -}}');
+                    script.setAttribute('data-strict', '{{- default 0 .strict -}}');
+                    script.setAttribute('data-reactions-enabled', '{{- default 1 .reactionsEnabled -}}');
+                    script.setAttribute('data-emit-metadata', '{{- default 0 .emitMetadata -}}');
+                    script.setAttribute('data-input-position', '{{- default `top` .inputPosition -}}');
+                    script.setAttribute('data-theme', '{{- default `light` .lightTheme -}}');
+                    script.setAttribute('data-lang', '{{- default `en` .lang -}}');
+                    script.setAttribute('data-loading', 'lazy');
+                    script.setAttribute('crossorigin', 'anonymous');
+                    script.async = true;
 
-<!-- Add blog running time -->
-<script>
-    let s1 = '2025-6-23'; //website start date
-    s1 = new Date(s1.replace(/-/g, "/"));
-    let s2 = new Date();
-    let timeDifference = s2.getTime() - s1.getTime();
+                    // 重新注入评论脚本到页面
+                    let footer = document.querySelector('.site-footer');
+                    if (footer) {
+                        footer.before(script);
+                    }
+                }
 
-    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                // 初次加载时注入
+                injectGiscusScript();
 
-    let result = days + "天" + hours + "小时" + minutes + "分钟";
-    document.getElementById('runningdays').innerHTML = result;
-</script>
+                // 监听 PJAX 更新后重新注入
+                document.addEventListener('pjax:success', function () {
+                    injectGiscusScript();
+                });
+            })(document);
+    </script>
+    <div>
+        {{- end -}}
+
+        <script defer src="https://cn.vercount.one/js"></script>
+
+        <script>
+            function showHideView() {
+                // 判断是否存在vercount标签
+                let viewCounts = document.querySelectorAll("#viewCount");
+                if (viewCounts) {
+                    // 判断是否为文章页
+                    let article = document.querySelector(".article-page");
+                    if (!article) {
+                        viewCounts.forEach(ele => {
+                            ele.style.display = 'none';
+                        });
+                    }
+                }
+            }
+
+            showHideView();
+        </script>
+
+        <!-- Add blog running time -->
+        <script>
+            let s1 = '2025-6-23'; //website start date
+            s1 = new Date(s1.replace(/-/g, "/"));
+            let s2 = new Date();
+            let timeDifference = s2.getTime() - s1.getTime();
+
+            let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+            let result = days + "天" + hours + "小时" + minutes + "分钟";
+            document.getElementById('runningdays').innerHTML = result;
+        </script>

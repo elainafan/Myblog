@@ -1,6 +1,6 @@
 {{/* partial "helper/external" (dict "Context" . "Namespace" "Vibrant") */}}
 
-{{- $opts := dict "minify" hugo.IsProduction -}}
+{{- $opts := dict "minify" hugo.IsProduction "JSXFactory" "createElement" -}}
 {{- $script := resources.Get "ts/main.ts" | js.Build $opts -}}
 
 <script type="text/javascript" src="{{ $script.RelPermalink }}" defer></script>

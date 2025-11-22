@@ -1,4 +1,7 @@
 /* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.scss */
+@import "aplayer-light.scss";
+@import "aplayer-dark.scss";
+
 @media (min-width: 1024px) {
   .article-list--compact {
     display: grid;
@@ -34,6 +37,7 @@
   --code-background-color: #f8f8f8;
   // 行内代码前景色
   --code-text-color: #e96900;
+
   // 暗色模式下样式
   &[data-scheme="dark"] {
     // 行内代码背景色
@@ -81,6 +85,7 @@ code {
     background: #3a97431f;
   }
 }
+
 // ---------------------------------------
 // 代码块基础样式修改
 .highlight {
@@ -340,11 +345,12 @@ a {
 }
 
 //归档页面文章卡片右移
-.article-list--compact article{ 
-  transition: .6s ease; 
-} 
-.article-list--compact article:hover{ 
-  padding-left: 20px; 
+.article-list--compact article {
+  transition: .6s ease;
+}
+
+.article-list--compact article:hover {
+  padding-left: 20px;
 }
 
 /*主页布局间距调整*/
@@ -383,11 +389,13 @@ a {
 
 /* 首页文章卡片缩放 */
 .article-list article {
-  transition: transform 0.6s ease; /* 平滑动画 */
+  transition: transform 0.6s ease;
+  /* 平滑动画 */
 }
 
 .article-list article:hover {
-  transform: scale(1.05); /* 鼠标悬停放大 */
+  transform: scale(1.05);
+  /* 鼠标悬停放大 */
 }
 
 //右侧标签放大动画
@@ -417,11 +425,15 @@ a {
 }
 
 .running-time {
-    color: var(--card-text-color-secondary);
-    font-weight: normal;
+  color: var(--card-text-color-secondary);
+  font-weight: normal;
 
-    .running-days {
-        font-weight:bold;
-        color: var(--emphasize-text-color);
-    }   
+  .running-days {
+    font-weight: bold;
+    color: var(--emphasize-text-color);
+  }
+}
+
+#main-menu li.menu-bottom-section {
+  margin-bottom: 50px;
 }

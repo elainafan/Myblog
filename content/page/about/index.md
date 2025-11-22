@@ -26,8 +26,9 @@ menu:
 - 博客由[hugo](https://gohugo.io/getting-started/quick-start/)搭建，采用了Jimmy Cai的[Stack](https://github.com/CaiJimmy/hugo-theme-stack)主题。  
 - 建站参考了以下两篇博文，分别是[莱特雷的建站教程](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-blog/)以及[第三夏尔的主题装修笔记](https://thirdshire.com/series/hugo-stack-%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE/)，并阅读[GitHub上Stack主题](https://github.com/CaiJimmy/hugo-theme-stack)的Issues，使用[ChatGPT](https://chatgpt.com/)进行Debug。
 - 现已参考[ChatGPT](https://chatgpt.com/)，将博客迁移至[Vercel](https://vercel.com/)部署，并在[Namecheap](https://www.namecheap.com/)购买域名。
-- 评论区采用[utteranc.es](https://utteranc.es/)脚本实现。
+- 评论区采用[utteranc.es](https://utteranc.es/)脚本实现，现已迁移至[giscus](https://giscus.app/zh-CN)。
 - 文章浏览量参考了[莱特雷-博客文章浏览数统计](https://letere-gzj.github.io/hugo-stack/p/hugo/view-count/)。
+- 音乐播放器与PJAX实现参考了[莱特雷-APlayer+PJAX引入音乐播放器并实现音乐不中断功能](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-player)。
 ## 博客大事祭
 - 2025.06.23 博客完成搭建，上传了``程序设计实习``课程的相关笔记。
 - 2025.09.08 新系列``音乐与数学``开始更新。
@@ -36,5 +37,6 @@ menu:
 - 2025.10.26 加入了新页面``番剧``，修改了多处样式。
 - 2025.11.02 解决了困扰许久的图片样式问题。
 - 2025.11.07 博客迁移至新域名``elainafan.one``！
+- 2025.11.21 博客评论区脚本更换为更方便的``giscus``，同时使用``PJAX``和``Aplayer``实现``无刷新加载``与``不中断音乐播放器``！
 ## 最后的最后
 目前还是尚未成熟的小站，欢迎各位来访、评论，更欢迎在评论区留下联系方式添加友链！
