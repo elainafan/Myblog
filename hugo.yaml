@@ -67,7 +67,7 @@ params:
 
     comments:
         enabled: true
-        provider: utterances
+        provider: giscus
 
         disqusjs:
             shortname:
@@ -128,13 +128,13 @@ params:
             siteName: "" # You must insert a unique identifier here matching the one you registered (See https://cactus.chat/docs/getting-started/quick-start/#register-your-site)
 
         giscus:
-            repo:
-            repoID:
-            category:
-            categoryID:
-            mapping:
-            lightTheme:
-            darkTheme:
+            repo: "elainafan/Myblog"
+            repoID: "R_kgDOQQ-HmA"
+            category: "General"
+            categoryID: "DIC_kwDOQQ-HmM4CyEyD"
+            mapping: "url"
+            lightTheme: "light"
+            darkTheme: "dark"
             reactionsEnabled: 1
             emitMetadata: 0
 
