@@ -36,6 +36,10 @@ links:
     description: 探索未知，解码未来
     website: https://www.laneljc.cn/
     image: https://www.laneljc.cn/assets/favicon.png
+  - title: Nebula Blog
+    description: Nebula.SYS
+    website: https://www.996icu.eu.org/
+    image: https://img.scdn.io/i/692d847f79589_1764590719.webp
 
 menu:
     main: 
