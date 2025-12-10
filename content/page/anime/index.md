@@ -12,14 +12,18 @@ links:
     description: 在重逢的那一天之前，再见了
     website: https://www.bilibili.com/bangumi/play/ss34412?spm_id_from=333.1387.0.0
     image: /images/2.jpg
-  - title: 莉可丽丝
-    description: 若能握紧你的手，我便能无惧孤独
-    website: https://www.bilibili.com/bangumi/play/ss42176?spm_id_from=333.337.0.0
-    image: /images/8.jpg
+  - title: 终将成为你
+    description: 那句话真正的含义，现在的我还不知晓
+    website: https://www.bilibili.com/bangumi/play/ss25622?spm_id_from=333.337.0.0
+    image: /images/9.jpg
   - title: 安达与岛村
     description: 所有引力浪漫主义者终将相遇
     website: https://www.bilibili.com/video/BV1n1sRzqEr7/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
     image: /images/7.png  
+  - title: 莉可丽丝
+    description: 若能握紧你的手，我便能无惧孤独
+    website: https://www.bilibili.com/bangumi/play/ss42176?spm_id_from=333.337.0.0
+    image: /images/8.jpg  
   - title: 凉宫春日的忧郁
     description: 漫无止境的八月，校园番开山之作
     website: https://www.bilibili.com/bangumi/play/ss1057?spm_id_from=333.337.0.0
@@ -33,7 +37,7 @@ links:
     website: https://www.bilibili.com/bangumi/play/ss425?spm_id_from=333.1387.0.0
     image: /images/3.jpg  
   - title: 时光流逝，饭菜依旧美味
-    description: 就觉得女孩子们之间真是好啊
+    description: 强烈建议凌晨观看
     website: https://www.bilibili.com/video/BV1fH3czjE1Y/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
     image: /images/6.jpg
 
