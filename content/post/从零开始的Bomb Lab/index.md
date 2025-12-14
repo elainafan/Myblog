@@ -394,7 +394,7 @@ c
     17eb:	48 98                	cltq # %eax自身拓展
     17ed:	8b 04 84             	mov    (%rsp,%rax,4),%eax # 取出第i个整数
     17f0:	01 c0                	add    %eax,%eax # %eax=2*%eax
-    17f2:	39 04 94             	cmp    %eax,(%rsp,%rdx,4) 若%eax!=第(i+1)个整数，跳转到爆炸
+    17f2:	39 04 94             	cmp    %eax,(%rsp,%rdx,4) # 若%eax!=第(i+1)个整数，跳转到爆炸
     17f5:	74 e6                	je     17dd <phase_2+0x35>
     17f7:	e8 1e 08 00 00       	call   201a <explode_bomb>
     17fc:	eb df                	jmp    17dd <phase_2+0x35> # 循环回跳
