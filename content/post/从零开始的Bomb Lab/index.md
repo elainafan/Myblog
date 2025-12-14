@@ -497,7 +497,7 @@ c
     184e:	0f 87 8d 00 00 00    	ja     18e1 <phase_3+0xc8>
     1854:	8b 04 24             	mov    (%rsp),%eax # %eax=(%rsp)
     1857:	48 8d 15 42 2a 00 00 	lea    0x2a42(%rip),%rdx        # 42a0 <_IO_stdin_used+0x2a0> # 相对PC进行引用，存入%rdx
-    185e:	48 63 04 82          	movslq (%rdx,%rax,4),%rax %rax=%rdx偏移%rax*4位
+    185e:	48 63 04 82          	movslq (%rdx,%rax,4),%rax # %rax=%rdx，偏移%rax*4位
     1862:	48 01 d0             	add    %rdx,%rax # %rax+=%rdx
     1865:	3e ff e0             	notrack jmp *%rax # 跳转
     1868:	e8 ad 07 00 00       	call   201a <explode_bomb>
