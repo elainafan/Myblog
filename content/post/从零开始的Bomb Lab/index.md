@@ -631,7 +631,7 @@ c
     194e:	48 89 44 24 08       	mov    %rax,0x8(%rsp) # 金丝雀值存放在(%rsp+8)处
     1953:	31 c0                	xor    %eax,%eax # %eax置零
     1955:	48 8d 4c 24 04       	lea    0x4(%rsp),%rcx # %rcx=(%rsp+4)
-    195a:	48 89 e2             	mov    %rsp,%rdx %rdx=(%rsp+4)
+    195a:	48 89 e2             	mov    %rsp,%rdx # %rdx=(%rsp+4)
     195d:	48 8d 35 bc 2c 00 00 	lea    0x2cbc(%rip),%rsi        # 4620 <transition_table+0x340> # 将内存中的某个值赋给%rsi，第二个参数
     1964:	e8 d7 f9 ff ff       	call   1340 <__isoc99_sscanf@plt> # 调用输入函数
     1969:	83 f8 02             	cmp    $0x2,%eax # 若%eax!=2，跳转爆炸
