@@ -1162,7 +1162,7 @@ I love elaina.
 
 于是，完成了ICS的第二个Lab，Congratulations!
 
-## Secret Phase
+## Secret Phase/有限状态自动机版
 ### 题目背景
 根据``writeup``跟``bomb.c``，得到以下几句话：
 
@@ -1955,6 +1955,10 @@ int main() {
 ![](18.png)
 
 于是，真正意义上攻克了ICS的第二个Lab，Congratulations！
+
+## Secret Phase/二叉树版
+
+待补充....
 
 ## 参考文献
 [Arthals-更适合北大宝宝体质的Bomb Lab踩坑记](https://arthals.ink/blog/bomb-lab#phase-6)
