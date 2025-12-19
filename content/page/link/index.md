@@ -40,6 +40,10 @@ links:
     description: Nebula.SYS
     website: https://www.996icu.eu.org/
     image: https://img.scdn.io/i/692d847f79589_1764590719.webp
+  - title: Masttf
+    description: 退役Acmer 是个菜鸡
+    website: https://epiphyllum.masttf.fun
+    image: https://epiphyllum.masttf.fun/avatar.jpg
 
 menu:
     main: 
