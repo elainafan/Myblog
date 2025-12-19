@@ -16,6 +16,10 @@ links:
     description: 静水流深
     website: https://www.sunvapor.site/
     image: /avatars/sunvapor.png
+  - title: YangTY
+    description: 越过山川
+    website: https://blog.imyangty.com/
+    image: https://blog.imyangty.com/assets/avatar.jpg
   - title: Zhaoyi Tian
     description: 故事的下一页
     website: https://zhaoyi-tian.cn
