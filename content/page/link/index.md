@@ -40,10 +40,10 @@ links:
     description: 探索未知，解码未来
     website: https://www.laneljc.cn/
     image: https://www.laneljc.cn/assets/favicon.png
-  - title: Nebula Blog
-    description: Nebula.SYS
-    website: https://www.996icu.eu.org/
-    image: https://img.scdn.io/i/692d847f79589_1764590719.webp
+  - title: worable’s Blog
+    description: ≡ω≡ 嗯对，一名普通的职一牲~
+    website: https://worable.top/
+    image: https://free.picui.cn/free/2025/12/22/6948ba484b15f.jpg
   - title: Masttf
     description: 退役Acmer 是个菜鸡
     website: https://epiphyllum.masttf.fun
