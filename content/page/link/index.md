@@ -48,6 +48,10 @@ links:
     description: 退役Acmer 是个菜鸡
     website: https://epiphyllum.masttf.fun
     image: https://epiphyllum.masttf.fun/avatar.jpg
+  - title: Collapse179
+    description: Try my 120%
+    website: https://collapse179.github.io/
+    image: https://collapse179.github.io/img/avatar.png
 
 menu:
     main: 
