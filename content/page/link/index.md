@@ -52,6 +52,10 @@ links:
     description: Try my 120%
     website: https://collapse179.github.io/
     image: https://collapse179.github.io/img/avatar.png
+  - title: Sam's blog
+    description: So, what's the point?
+    website: https://staaaaaaaaar.github.io/
+    image: https://staaaaaaaaar.github.io/img/avatar.png
 
 menu:
     main: 
