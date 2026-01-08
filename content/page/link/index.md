@@ -56,6 +56,10 @@ links:
     description: So, what's the point?
     website: https://staaaaaaaaar.github.io/
     image: https://staaaaaaaaar.github.io/img/avatar.png
+  - title: ~zzz
+    description: not one,ont two,not seven
+    website: https://fuquan99666.github.io
+    image: https://fuquan99666.github.io/img/avatar_hu_e94f98a3296399de.png
 
 menu:
     main: 
