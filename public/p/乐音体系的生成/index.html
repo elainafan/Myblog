@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=60925&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="乐音体系的生成 乐音体系是有限多个音级组成的集合，这个集合中的元素是如何确定的？ 这就是律学要解决的问题： 确定绝对音高，就是要确定每个音级对应的">
+<title>乐音体系的生成</title>
+
+<link rel='canonical' href='http://localhost:60925/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/'>
+
+<link rel="stylesheet" href="/scss/style.min.82568993da6d0d9326d0d4958b59258062a1a23931738af45377eedd5102d227.css"><meta property='og:title' content="乐音体系的生成">
+<meta property='og:description' content="乐音体系的生成 乐音体系是有限多个音级组成的集合，这个集合中的元素是如何确定的？ 这就是律学要解决的问题： 确定绝对音高，就是要确定每个音级对应的">
+<meta property='og:url' content='http://localhost:60925/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/'>
+<meta property='og:site_name' content='Elainafan'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-10-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-10-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="乐音体系的生成">
+<meta name="twitter:description" content="乐音体系的生成 乐音体系是有限多个音级组成的集合，这个集合中的元素是如何确定的？ 这就是律学要解决的问题： 确定绝对音高，就是要确定每个音级对应的">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu2220087750940415266.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😉</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Elainafan</a></h1>
+            <h2 class="site-description">只因&#34;现在&#34;深爱其中</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/elainafan'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页 | Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于 | About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档 | Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索 | Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/friends/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-friends"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" /><path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" /></svg>
+                
+                <span>友链 | Friends</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/photos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+                
+                <span>图库 | Photos</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/anime/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                
+                <span>番剧 | Anime</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接 | Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#乐音体系的生成">乐音体系的生成</a></li>
+    <li><a href="#三分损益">三分损益</a>
+      <ol>
+        <li><a href="#十二律">十二律</a></li>
+      </ol>
+    </li>
+    <li><a href="#五度相生">五度相生</a></li>
+    <li><a href="#纯律">纯律</a></li>
+    <li><a href="#中庸全音律">中庸全音律</a></li>
+    <li><a href="#平均律">平均律</a></li>
+    <li><a href="#音分">音分</a></li>
+    <li><a href="#思考题">思考题</a></li>
+    <li><a href="#声明">声明</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E9%9F%B3%E4%B9%90%E4%B8%8E%E6%95%B0%E5%AD%A6/" style="background-color: #D4B75C; color: #fff;">
+                音乐与数学
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/">乐音体系的生成</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-10-29</time>
+            </div>
+    
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+            </div>
+        
+
+         
+        <div id="viewCount">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-time--reading">
+                
+                <span id="vercount_value_page_pv">loading... </span>次
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="乐音体系的生成">乐音体系的生成
+</h2><ul>
+<li>乐音体系是<strong>有限多个音级</strong>组成的集合，这个集合中的元素是如何确定的？</li>
+<li>这就是<strong>律学</strong>要解决的问题：
+<ul>
+<li>确定<strong>绝对音高</strong>，就是要确定<strong>每个音级对应的振动频率</strong>。</li>
+<li>确定<strong>同一个八度</strong>内<strong>不同音级的相对音高</strong>。</li>
+</ul>
+</li>
+<li>一定意义上说，<strong>相对音高</strong>更为重要。</li>
+<li>因为八度音程对应的频率比为$1:2$，如果<strong>同一个八度</strong>内的12个音级之间的<strong>频率比值确定</strong>，那么确定<strong>任意一个音级</strong>的振动频率，这个八度内其他音级的频率就随之确定。然后可以得到其他八度内各个音级对应的振动频率。</li>
+</ul>
+<h2 id="三分损益">三分损益
+</h2><ul>
+<li>在春秋时期《管子》一书&quot;地员&quot;篇中记载。</li>
+<li>首先，计算初始值，即<strong>宫音</strong>，$3^4=81$。</li>
+<li>对<strong>宫音</strong>增加三分之一，即<strong>徵音</strong>，$81 \times \frac{4}{3}=108$。</li>
+<li>对<strong>徽音</strong>减少三分之一，即<strong>商音</strong>，$108 \times \frac{2}{3}=72$。</li>
+<li>对<strong>商音</strong>增加三分之一，即<strong>羽音</strong>，$72 \times \frac{4}{3}=96$。</li>
+<li>对<strong>羽音</strong>减少三分之一，即<strong>角音</strong>，$96 \times \frac{2}{3}=64$。</li>
+<li>由于<strong>弦的长度</strong>与<strong>发声频率</strong>成<strong>反比</strong>，所以<strong>数字越大</strong>的音级<strong>频率越低</strong>，把<strong>徵音</strong>和<strong>羽音</strong>分别<strong>除以2</strong>，得到高八度的两个音级。</li>
+<li>整理得到以下音列：</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>(徵)</th>
+<th>(羽)</th>
+<th>宫</th>
+<th>商</th>
+<th>角</th>
+<th>徵</th>
+<th>羽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(108)</td>
+<td>(96)</td>
+<td>81</td>
+<td>72</td>
+<td>64</td>
+<td>54</td>
+<td>48</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>
+<p>假设<strong>宫音</strong>对应中央$C$，得到五声音阶$C,D,E,G,A$。
+<img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/456d3921719b5d1537544ff1bc556e23.png"
+	width="693"
+	height="171"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="405"
+		data-flex-basis="972px"
+	
+></p>
+</li>
+<li>
+<p><strong>徵音</strong>与<strong>宫音</strong>的频率比为$4:3$，符合<strong>理想纯四度</strong>的简单整数比。</p>
+</li>
+<li>
+<p><strong>宫音</strong>与<strong>高八度的徵音</strong>频率比为$3:2$，符合<strong>理想纯五度</strong>的简单整数比。</p>
+</li>
+<li>
+<p>但是<strong>宫音</strong>与<strong>角音</strong>的频率比为$81:64$，不符合<strong>理想大三度</strong>的简单整数比。</p>
+</li>
+<li>
+<p>对<strong>角音</strong>继续做<strong>三分损益</strong>，得到<strong>变宫音</strong>$64 \times \frac{4}{3}=\frac{256}{3} \approx 85$和<strong>变徵音</strong>$\frac{256}{3} \times \frac{2}{3}=\frac{512}{9} \approx 87$。</p>
+</li>
+<li>
+<p>整理得到新的音列</p>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>(徵)</th>
+<th>(羽)</th>
+<th>(变宫)</th>
+<th>宫</th>
+<th>商</th>
+<th>角</th>
+<th>变徵</th>
+<th>徵</th>
+<th>羽</th>
+<th>变宫</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(108)</td>
+<td>(96)</td>
+<td>$\frac{256}{3}$</td>
+<td>81</td>
+<td>72</td>
+<td>64</td>
+<td>$\frac{512}{9}$</td>
+<td>54</td>
+<td>48</td>
+<td>$\frac{128}{3}$</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>古代以<strong>清浊</strong>形容音的<strong>高低</strong>，<code>清宫</code>就是<strong>比宫音高八度</strong>的音级，假设<strong>宫音</strong>为中央$C$，则三分损益法得到的七声音阶为</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/7036c141e6f78351c5f7f06ec5788e04.png"
+	width="921"
+	height="144"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="639"
+		data-flex-basis="1535px"
+	
+></p>
+<ul>
+<li>这就是传统音乐中的<strong>雅乐音阶</strong>，亦称为<strong>古音阶</strong>。</li>
+</ul>
+<h3 id="十二律">十二律
+</h3><ul>
+<li>战国时期，《吕氏春秋》提出了十二律的名称和相生关系。</li>
+<li>本质上是对<strong>七声音阶的拓展</strong>。</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/cb90084be140a36a7c924026c5f42a07.png"
+	width="1014"
+	height="522"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="194"
+		data-flex-basis="466px"
+	
+></p>
+<ul>
+<li>把十二律对应的数值<strong>从大到小</strong>（<strong>音高从低到高</strong>）排列，它与五音的联系如下：</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/e104692898376bb1fc6bcf8f245e4b5f.png"
+	width="933"
+	height="435"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="214"
+		data-flex-basis="514px"
+	
+></p>
+<ul>
+<li>得到$\sharp E$对应的数值后，继续做三分损益，得到它上方纯五度的$\sharp B$，其数值为$\frac{2^{17}}{3^7} \times \frac{2}{3}=\frac{2^{18}}{3^8}$</li>
+<li>在现代律制中，$\sharp B$与高八度的$C&rsquo;$等音，但实际上十二律会现代律制比<strong>略低</strong>，即<strong>旋宫不归</strong>。</li>
+</ul>
+<h2 id="五度相生">五度相生
+</h2><ul>
+<li>毕达哥拉斯假设中央$C$对应的<strong>频率为1</strong>，其上方<strong>五度</strong>的$G$对应的频率为$\frac{3}{2}$。</li>
+<li>而$G$上方五度音的频率应该是$\frac{9}{4}&gt;2$，<strong>超出同一个八度</strong>，因此<strong>降低一个八度</strong>，得到$D$对应的频率为$\frac{9}{8}$。</li>
+<li>以此类推，产生<strong>全部十二个音名</strong>，完整的五度相生音阶。</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/b631a672d3180364eaebf030a2457d89.png"
+	width="993"
+	height="192"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="517"
+		data-flex-basis="1241px"
+	
+></p>
+<ul>
+<li><strong>纯五度和纯四度</strong>的音程频率都符合理想整数比，<strong>大三度频率</strong>，如$C \sim E$，其频率比为$\frac{81}{64} &gt; \frac{5}{4}$，<strong>出现一定偏差</strong>。</li>
+<li>得到音级$\sharp E$后，可以接着考虑其上方纯五度音的频率，$\frac{3^{11}}{2^{17}} \times \frac{3}{2}=\frac{3^{12}}{2^{18}}&gt;2$。</li>
+<li>将其<strong>降低八度</strong>，得到其频率为$\frac{3^{12}}{2^{19}} \approx 1.01 &gt;1$。</li>
+<li>按照现代律制，$\sharp E$上方五度应该是 $\sharp B$ ，<strong>降低八度</strong>后应该得到$C$，即上述式子应该等于1。</li>
+<li>这就是著名的<strong>毕达哥拉斯音差</strong>。</li>
+<li><strong>单声音乐</strong>：<strong>单音曲调</strong>构成的音乐，包括<strong>没有伴奏</strong>的独唱、独奏，以及<strong>曲调作同度或八度重叠</strong>的齐唱、齐奏。</li>
+<li>通常合唱比赛的都是齐唱，而非合唱，因为男女声部不算分声部。</li>
+<li><strong>多声部音乐</strong>：
+<ul>
+<li>公元9世纪前后出现<strong>奥尔加农音乐样式</strong>，是多声部音乐的雏形。</li>
+<li>可以分为复调音乐和主调音乐。</li>
+<li><strong>复调音乐</strong>：<strong>不同声部</strong>具有各自的<strong>相对独立性</strong>，按照<strong>对位法</strong>结合在一起。</li>
+<li><strong>主调音乐</strong>：以<strong>一个声部</strong>为<strong>主要旋律声部</strong>，其余声部相对<strong>缺少独立性</strong>，对主要旋律起<strong>伴奏、烘托</strong>作用。</li>
+<li>里切卡尔/无差部赋格：16-17世纪的一种复调器乐曲。</li>
+<li>17世纪后出现了贯穿主题模仿的里切卡尔，结构近似赋格。</li>
+<li>巴赫《音乐的奉献》中有一首六声部里切卡尔。</li>
+<li>复调音乐如今不多见，<strong>常见的为主调音乐</strong>，如《军队进行曲》。</li>
+<li>也可以在音乐中<strong>同时使用主调和复调</strong>，如贺绿汀《牧童短笛》。</li>
+</ul>
+</li>
+</ul>
+<h2 id="纯律">纯律
+</h2><ul>
+<li>文艺复兴开始，西方音乐越来越重视使用<strong>三度和六度</strong>音程。</li>
+<li><strong>纯律</strong>：在五度相生法中添加一个<strong>生律元素</strong>，理想大三度的比例 5:4，形成纯律。</li>
+<li>据传为意大利音乐理论家扎利诺提出。</li>
+<li>在纯律中， $E$ 的音高为 $\frac{5}{4}$，由于$E$和$B$形成纯五度，因此$B$的音高为 $\frac{15}{8}$。</li>
+<li>又$F$和高音$C$构成纯五度音，因此$F$的音高为 $\frac{4}{3}$。</li>
+<li>而$F$和$A$构成大三度音，因此$A$的音高为 $\frac{5}{3}$。</li>
+<li>于是，正三和弦 $C-E-G,F-A-C&rsquo;,G-B-D&rsquo;$都符合理想整数比$4:5:6$，对于多声部音乐有重要意义。</li>
+<li>纯律也有不足之处，即五度音程$D-A$不协和，其比例为$\frac{5}{3}:\frac{9}{8}=\frac{40}{27}&lt;\frac{3}{2}$，<strong>比理想的纯五度窄</strong>。</li>
+<li>同时，有两种<strong>不同的大二度(全音)</strong>，音程$C-D,F-G,A-B$的比例为 $\frac{9}{8}$，而音程$D-E,G_A$的比例为 $\frac{10}{9}$。</li>
+<li>存在<strong>音差(Comma)问题</strong>，从$C$出发<strong>升高4个纯五度</strong>，再<strong>降低两个八度和一个大三度</strong>，得到 $(\frac{3}{2})^4 \times (\frac{1}{2})^2 \times \frac{4}{5}=\frac{81}{80}$，即回到比$C$高一点的地方，这个数值被称为<strong>谐调音差(Syntonic Comma)</strong>。</li>
+<li>存在<strong>转调问题</strong>。例如《保卫黄河》，《青花瓷》。</li>
+<li>例如，对于$1=C$调好的音阶，要转为$1=D$，则其上方纯五度为$A$，其比例为 $\frac{5}{3} \times \frac{8}{9}=\frac{40}{27}&lt;\frac{3}{2}$</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/1.png"
+	width="1104"
+	height="218"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="506"
+		data-flex-basis="1215px"
+	
+></p>
+<ul>
+<li>三分损益、五度相生和纯律都发挥过重要作用，但它们都存在缺陷。</li>
+<li>我国出现过<strong>六十律、新律、三百六十律、十八律</strong>等律法。</li>
+</ul>
+<h2 id="中庸全音律">中庸全音律
+</h2><ul>
+<li>假定音名$C$的频率为$f$，则高八度$C&rsquo;$的频率为$2f$，再高一个八度的$C&rsquo;&rsquo;$对应频率为 $4f$。</li>
+<li>如果$C$上方五度的频率为 $\frac{3}{2}f$，则再高一个八度对应频率为 $(\frac{3}{2})^2 f$</li>
+<li>经过 $n$ 次后，希望能有比 $C$ 高 $m$ 个八度的音级，对应频率满足 $(\frac{3}{2})^n \cdot f=2^m \cdot f$</li>
+<li>即 $3^n=2^{m+n}$，易见不可能成立，即<strong>有理数范围内无法调好律</strong>。</li>
+<li>回顾第一次数学危机，毕达哥拉斯学派是否认无理数的(他的学生希帕索斯发现无理数)。</li>
+<li>于是，目标变为<strong>消除音差</strong>，通过牺牲纯五度的比例 $3:2$。</li>
+<li>需要想办法将音差分配给不同的音级，<strong>新律</strong>实现了这种平均。</li>
+<li>但是音程关系是<strong>频率的比值</strong>，对应于乘除而非加减，因此<strong>无法用算术平均</strong>解决问题。</li>
+<li>假设 $a=\frac{81}{80}$ 为谐调音差，则其 $\frac{1}{4}$ 应该等于 $d=\sqrt[4]{a}$。</li>
+<li>于是，得到缩小 $\frac{1}{4}$ 谐调音差后的纯五度音程比值为 $\frac{3}{2} \div \sqrt[4]{\frac{81}{80}}=\frac{3}{2} \times \frac{2\sqrt[4]{5}}{3}=\sqrt[4]{5}$ 。</li>
+<li>再考虑 $F$ ，由于其上方五度的音级 $C&rsquo;$ 与 $F$ 的比值应该等于生律元素 $\sqrt[4]{5}$，解得 $F$ 的音级为 $\frac{2\cdot 5^{\frac{3}{4}}}{5}$。</li>
+<li>于是得到7个自然音级对应的数值：</li>
+</ul>
+<p><img src="/p/%E4%B9%90%E9%9F%B3%E4%BD%93%E7%B3%BB%E7%9A%84%E7%94%9F%E6%88%90/2.png"
+	width="954"
+	height="189"
+	
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="504"
+		data-flex-basis="1211px"
+	
+></p>
+<ul>
+<li>这就是<strong>中庸全音律</strong>。</li>
+<li>有区分<strong>自然律</strong>和<strong>人工律</strong>，<strong>自然律</strong>就是<strong>泛音列</strong>，其音级都是<strong>有理数</strong>；而无理数<strong>一定是人工律</strong>。</li>
+<li>纯律中有两种不同的大二度（全音），即 $C-D$ 和 $D-E$，它们的<strong>几何平均</strong>恰为中庸全音律中 $D$ 的值。</li>
+<li>这说明了中庸全音律不仅<strong>保持了大三度</strong>音程的理想比例，又使得<strong>大二度音程的频率比相等</strong>。</li>
+<li>计算小二度（半音） $B-C&rsquo;$ 和 $E-F$ 的频率比，它们是相同的。但是两个小二度叠加，得到的频率比<strong>略大于一个全音</strong>。</li>
+<li>中庸全音律<strong>消除了谐调音差</strong>，<strong>各个全音音程</strong>和<strong>各个半音音程</strong>一致，<strong>大小三度</strong>和<strong>大小六度</strong>都合于纯律，并且能<strong>在一定范围内转调</strong>，这是它的优点。</li>
+<li>它<strong>牺牲了纯五度的理想比例</strong>，纯五度音程 $C-G$ 的比例等于 $\sqrt[4]{5}&lt;\frac{3}{2}$，经过<strong>多次五度相生</strong>会产生<strong>与纯五度相差极大</strong>的五度音程，历史上称为<strong>狼五度</strong>。</li>
+</ul>
+<h2 id="平均律">平均律
+</h2><ul>
+<li>设一个八度之间有12个半音，则相应的音级对应的频率构成一个<strong>等比数列</strong>，计算出其公比为 $r=\sqrt[12]{2}$，这就构成了<strong>十二平均律</strong>。</li>
+<li>世界上第一个通过准确计算提出平均律的人是<strong>朱载堉</strong>，他把自己提出的平均律称为<strong>新法密率</strong>，并且精确到了小数点后<strong>25位</strong>。</li>
+<li>巴赫的《音乐的奉献》基于&quot;国王主题&quot;，包括两首无插入赋格，有一首是六声部的，还有十首卡农和一首以长笛为特色的三重奏奏鸣曲。</li>
+<li>十首卡农中有一首&quot;canon per tonos&quot;，意为&quot;经由种种调性的卡农&quot;。</li>
+<li>它有三个声部，不断变调后又回到最初的 $C$ 小调。</li>
+</ul>
+<h2 id="音分">音分
+</h2><ul>
+<li>是<strong>度量不同声音的频率之比</strong>的单位，设两个声音的频率分别为 $f_1&lt;f_2$ ，则两个声音之间的音分数是 $1200\log_{2} (\frac{f_2}{f_1})$。</li>
+<li>对于<strong>平均律</strong>，则半音之间的音分是100音分。</li>
+<li>同样，有音分可以求频率比， $r=2^{\frac{c}{1200}}$</li>
+<li>将音级 $C$ 的频率记为 $f$，则 $G$ 的频率应该是 $2^{\frac{7}{12}} \approx 1.4983f$</li>
+<li>普通人通常能分辨出 $4 \sim 6$ 音分的频率差。</li>
+<li>对比平均律和纯律的音高，可以发现 $E$ 和 $A$ 分别高出了14音分和16音分，差距较大。</li>
+<li><strong>八度循环</strong> $2:1$，<strong>五度纯正</strong> $3:2$，<strong>和弦协和</strong> $5:4$，这三个比例一直推动着人们进行不停探索，它们也被称为<strong>三条彩线</strong>。</li>
+<li>上面提到的都是<strong>相对音高</strong>，历史上<strong>没有标准的绝对音高</strong>。</li>
+<li>人们倾向于<strong>不断提高音高</strong>，主观上作曲家、演奏家和乐器制造者都追求用<strong>明亮、华丽的音色</strong>吸引听众，<strong>材料和制造技术</strong>的进步为提高绝对音高提供了客观可能性。</li>
+<li>1939年国际标准化协会(ISA)确立 $A=440 \mathrm{Hz}$ 为<strong>音乐会音高</strong>。</li>
+<li><strong>MIDI(Musical Instrument Digital Interface)</strong>：乐器数字接口。</li>
+<li>它用音符数 $21 \sim 108$ 代表 $A_0 \sim C_8$ 这88个音级。</li>
+<li>若采用<strong>十二平均律</strong>和<strong>音乐会音高标准</strong>，则音符数 $n$ 对应的频率 $f$ 可以这样求出： $f=440 \cdot 2^{\frac{n-69}{12}}$</li>
+</ul>
+<h2 id="思考题">思考题
+</h2><ul>
+<li>纯律中各自然音级之间的频率比能够唯一确定吗？</li>
+<li>纯律中，各自然音级之间的频率比并不能唯一确定。例如 $A$ 的频率，我们先用高音 $C$ 推出 $F$ 的频率为 $4:3$，然后再通过大三度音得到 $A$ 的频率为 $5:3$。若通过 $D-A$ 构成纯五度音，推出 $A$ 的频率应该为 $27:16$。因此，纯律中的频率比并不唯一缺点。计算的方式不同，结果也不尽相同。</li>
+<li>在纯律中，确定了各自然音级之间的频率比后，如何进一步确定变化音级的频率？</li>
+<li>首先根据 $B$ 的频率 $15:8$ 推出 $\sharp F$ 的频率 $16:15$。</li>
+<li>根据 $\sharp F$ 跟高八度的 $\sharp C$ 构成纯五度音，推出 $\sharp C$ 的频率 $16:15$。</li>
+<li>根据 $\sharp C$ 和 $\sharp G$ 构成纯五度音，得到 $\sharp G$ 的频率 $8:5$。</li>
+<li>$\sharp G$ 和高八度的 $\sharp D$ 构成纯五度音，得到 $\sharp D$ 的频率 $6:5$。</li>
+<li>最后根据 $\sharp D$ 和 $\sharp A$ 构成纯五度音，得到 $\sharp A$ 的频率为 $9:5$，这样得到了完整的七声音阶。</li>
+<li>在实际演奏中，小提琴、二胡等弓弦乐器通常依照哪种律制确定其空弦的音高？</li>
+<li>小提琴依据十二平均律确定，二胡依据五度相生确定。</li>
+</ul>
+<h2 id="声明">声明
+</h2><p>本笔记的部分内容来自<a class="link" href="https://zhuanlan.zhihu.com/p/719294158"  target="_blank" rel="noopener"
+    >喵喵的学习笔记</a>
+，如有侵权请联系我删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+<div class="math-katex"></div>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E6%95%B0%E5%AD%A6%E7%9A%84%E8%8A%82%E5%A5%8F%E4%B8%8E%E8%8A%82%E5%A5%8F%E7%9A%84%E6%95%B0%E5%AD%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">数学的节奏与节奏的数学</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E9%9F%B3%E7%B1%BB%E9%9B%86%E5%90%88%E4%B8%8E%E6%96%B0%E9%BB%8E%E6%9B%BC%E7%90%86%E8%AE%BA/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">音类集合与新黎曼理论</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E6%97%8B%E5%BE%8B%E4%B8%8E%E5%AF%B9%E7%A7%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">旋律与对称</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E8%B0%83%E5%BC%8F%E9%9F%B3%E9%98%B6%E4%B8%8E%E5%92%8C%E5%BC%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">调式、音阶与和弦</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E6%9C%BA%E5%99%A8%E4%BD%9C%E6%9B%B2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">机器作曲</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="elainafan/Myblog"
+    data-repo-id="R_kgDOQQ-HmA"
+    data-category="General"
+    data-category-id="DIC_kwDOQQ-HmM4CyEyD"
+    data-mapping="url"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark');
+            }
+        }
+    })();
+</script>
+    <div class="comment"></div>
+
+    
+
+    <footer class="site-footer">
+    
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        发表了40篇文章 · 
+        总计221.47k字
+    </section>
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 elainafan
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<div id="aplayer"></div>
+
+<script>
+    const staticDir = "http://localhost:60925/";
+    console.log(staticDir);
+    const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        fixed: true,
+        audio: [
+            {
+                name: 'Everyday world',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Everyday-world/music.mp3',
+                cover: staticDir + 'music/Everyday-world/cover.png'
+            },
+            {
+                name: 'Sparkling Daydream',
+                artist: 'ZAQ',
+                url: staticDir + 'music/Sparkling-Daydream/music.mp3',
+                cover: staticDir + 'music/Sparkling-Daydream/cover.jpg'
+            },
+            {
+                name: 'Inside Identity',
+                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
+                url: staticDir + 'music/Inside-Identity/music.mp3',
+                cover: staticDir + 'music/Inside-Identity/cover.jpg'
+            },
+            {
+                name: '花の塔',
+                artist: '酸欠少女さユり',
+                url: staticDir + 'music/花の塔/music.mp3',
+                cover: staticDir + 'music/花の塔/cover.jpg'
+            },
+            {
+                name: 'The day you went away',
+                artist: 'M2M',
+                url: staticDir + 'music/The-day-you-went-away/music.mp3',
+                cover: staticDir + 'music/The-day-you-went-away/cover.png',
+            },
+            {
+                name: 'Hey,Jude',
+                artist: 'The Beatles',
+                url: staticDir + 'music/Hey-Jude/music.mp3',
+                cover: staticDir + 'music/Hey-Jude/cover.png'
+            },
+            {
+                name: 'God knows',
+                artist: '平野绫',
+                url: staticDir + 'music/God-knows/music.mp3',
+                cover: staticDir + 'music/God-knows/cover.png'
+            },
+            {
+                name: '轻飘飘の时间',
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/轻飘飘の时间/music.mp3',
+                cover: staticDir + 'music/轻飘飘の时间/cover.png'
+            },
+
+            {
+                name: 'Some things never change',
+                artist: 'Elsa/Anna/Olaf/Kristoff',
+                url: staticDir + 'music/Some-Things-Never-Change/music.mp3',
+                cover: staticDir + 'music/Some-Things-Never-Change/cover.png'
+            },
+        ],
+    });
+    
+
+    window.onbeforeunload = () => {
+        
+        const playInfo = {
+            index: ap.list.index,
+            currentTime: ap.audio.currentTime,
+            paused: ap.paused
+        };
+        localStorage.setItem("playInfo", JSON.stringify(playInfo));
+    };
+
+    
+
+    window.onload = () => {
+        
+        const playInfo = JSON.parse(localStorage.getItem("playInfo"));
+        if (!playInfo) {
+            return;
+        }
+        
+        ap.list.switch(playInfo.index);
+        
+        setTimeout(() => {
+            
+            ap.seek(playInfo.currentTime);
+            
+            if (!playInfo.paused) {
+                ap.play()
+            }
+        }, 500);
+    };
+</script>
+
+
+
+<script src=http://localhost:60925/js/topbar.min.js></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script>
+    var pjax = new Pjax({
+        selectors: [
+            ".main-container", ".js-Pjax", "Timer"
+        ]
+    })
+
+    pjax._handleResponse = pjax.handleResponse;
+
+    pjax.handleResponse = function (responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            if (responseText) {
+                
+                let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+                
+                let bodyClass = newDom.body.className;
+                document.body.setAttribute("class", bodyClass)
+            }
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+        }
+    }
+
+    async function renderKaTeX() {
+        
+        let katex = document.querySelector(".math-katex");
+        if (!katex) {
+            return;
+        }
+        
+        while (typeof renderMathInElement !== 'function') {
+            await delay(500);
+        }
+        
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });
+    }
+
+    
+
+    function delay(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time)
+        })
+    }
+
+    document.addEventListener('pjax:send', () => {
+        
+        topbar.show();
+    })
+
+    document.addEventListener('pjax:complete', () => {
+        
+        let url = new URL(window.location.href);
+        url.searchParams.delete('t');  
+        history.replaceState(null, '', url.toString());  
+        renderKaTeX();
+        
+        window.Stack.init();
+        topbar.hide();
+        
+    })
+</script><div class="js-Pjax">
+    <script>
+            (function () {
+                
+                let comment = document.querySelector(".comment");
+                if (!comment) {
+                    return;
+                }
+                function injectGiscusScript() {
+                    let script = document.createElement('script');
+                    
+                    script.setAttribute('src', 'https://giscus.app/client.js');
+                    script.setAttribute('data-repo', 'elainafan\/Myblog');
+                    script.setAttribute('data-repo-id', 'R_kgDOQQ-HmA');
+                    script.setAttribute('data-category', 'General');
+                    script.setAttribute('data-category-id', 'DIC_kwDOQQ-HmM4CyEyD');
+                    script.setAttribute('data-mapping', 'url');
+                    script.setAttribute('data-strict', '0');
+                    script.setAttribute('data-reactions-enabled', '1');
+                    script.setAttribute('data-emit-metadata', '0');
+                    script.setAttribute('data-input-position', 'top');
+                    script.setAttribute('data-theme', 'light');
+                    script.setAttribute('data-lang', 'en');
+                    script.setAttribute('data-loading', 'lazy');
+                    script.setAttribute('crossorigin', 'anonymous');
+                    script.async = true;
+
+                    
+                    let footer = document.querySelector('.site-footer');
+                    if (footer) {
+                        footer.before(script);
+                    }
+                }
+
+                
+                injectGiscusScript();
+
+                
+                document.addEventListener('pjax:complete', function () {
+                    injectGiscusScript();
+                });
+            })(document);
+    </script>
+    <div><script defer src="https://cn.vercount.one/js"></script>
+
+        <script>
+            function showHideView() {
+                
+                let viewCounts = document.querySelectorAll("#viewCount");
+                if (viewCounts) {
+                    
+                    let article = document.querySelector(".article-page");
+                    if (!article) {
+                        viewCounts.forEach(ele => {
+                            ele.style.display = 'none';
+                        });
+                    }
+                }
+            }
+            showHideView();
+        </script>
+
+        <div class="Timer">
+            
+            <script>
+                function updateRunningDays() {
+                    let s1 = '2025-6-23'; 
+                    s1 = new Date(s1.replace(/-/g, "/"));
+                    let s2 = new Date();
+                    let timeDifference = s2.getTime() - s1.getTime();
+
+                    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+                    let result = days + "天" + hours + "小时" + minutes + "分钟";
+                    const elem = document.getElementById('runningdays');
+                    if (elem) elem.innerHTML = result;
+                }
+
+                updateRunningDays();
+
+                document.addEventListener('pjax:complete', function () {
+                    updateRunningDays();
+                });
+            </script>
+            <div>
+    </body>
+</html>

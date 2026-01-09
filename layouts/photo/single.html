@@ -1,0 +1,369 @@
+{{- define "main" -}}
+<article class="main-article">
+    <header class="main-article-header">
+        {{ partial "article/components/header" . }}
+    </header>
+
+    <section class="main-article-content">
+        {{ .Content }}
+
+        {{- $imgs := resources.Match "waifus/*.{jpg,jpeg,png,webp}" -}}
+
+        <div class="carousel-container" id="multi-api-carousel" data-images='[
+  {{- range $i, $img := $imgs -}}
+    "{{ $img.RelPermalink }}"{{ if ne (add $i 1) (len $imgs) }},{{ end }}
+  {{- end -}}
+  ]'>
+            <div class="loading-indicator">Loading...</div>
+            <button class="carousel-btn prev-btn" title="Previous"></button>
+            <button class="carousel-btn next-btn" title="Next"></button>
+        </div>
+
+    </section>
+
+    <footer class="main-article-footer">
+        {{ partial "footer/footer" . }}
+    </footer>
+</article>
+
+<style>
+    :root {
+        --carousel-bg-light: #f4f4f5;
+        --carousel-bg-dark: #2a2a2a;
+        --carousel-border-light: rgba(0, 0, 0, 0.05);
+        --carousel-border-dark: rgba(255, 255, 255, 0.1);
+    }
+
+    .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        aspect-ratio: 3 / 4;
+        margin: 3rem auto;
+        overflow: hidden;
+
+        border-radius: 16px;
+        background-color: var(--carousel-bg-light);
+        border: 1px solid var(--carousel-border-light);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        transition: aspect-ratio 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+            max-width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+            background-color 0.5s ease;
+
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    [data-scheme="dark"] .carousel-container {
+        background-color: var(--carousel-bg-dark);
+        border-color: var(--carousel-border-dark);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transform: scale(1.02);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        visibility: hidden;
+        z-index: 1;
+    }
+
+    .carousel-image.active {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+        z-index: 2;
+    }
+
+    .loading-indicator {
+        z-index: 0;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(128, 128, 128, 0.2);
+        border-top-color: var(--card-text-color-main, #555);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        text-indent: -9999px;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .carousel-btn {
+        z-index: 10;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+
+        background-color: transparent;
+        border: none;
+
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 28px;
+
+        opacity: 0;
+    }
+
+    .carousel-container:hover .carousel-btn {
+        opacity: 1;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-50%) scale(1.1);
+        backdrop-filter: blur(2px);
+    }
+
+    @media (max-width: 768px) {
+        .carousel-btn {
+            opacity: 1;
+            width: 44px;
+            height: 44px;
+            background-size: 24px;
+        }
+    }
+
+    .prev-btn {
+        left: 10px;
+        background-image: url("{{ (resources.Get `icons/left.svg`).RelPermalink }}");
+        filter: invert(1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+    }
+
+    .next-btn {
+        right: 10px;
+        background-image: url("{{ (resources.Get `icons/right.svg`).RelPermalink }}");
+        filter: invert(1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+    }
+
+    /* 全屏轮播 overlay */
+    .carousel-fullscreen-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        cursor: pointer;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .carousel-fullscreen-overlay.active {
+        background-color: rgba(0, 0, 0, 0.95);
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .carousel-fullscreen-overlay img {
+        max-width: 95%;
+        max-height: 95%;
+        object-fit: contain;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+</style>
+
+<script>
+    (function () {
+        const initCarousel = () => {
+            const carousel = document.getElementById('multi-api-carousel');
+            // Prevent duplicate init
+            if (!carousel || carousel.dataset.init === 'true') return;
+
+            carousel.dataset.init = 'true';
+
+            const loader = carousel.querySelector('.loading-indicator');
+            const imagesFromLocal = JSON.parse(carousel.dataset.images || "[]");
+            const imageData = [];
+            let currentIndex = 0;
+            const prevBtn = carousel.querySelector('.prev-btn');
+            const nextBtn = carousel.querySelector('.next-btn');
+
+            async function preloadLocalImages() {
+                for (const url of imagesFromLocal) {
+                    const img = new Image();
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                        img.src = url;
+                    });
+
+                    imageData.push({
+                        url,
+                        width: img.naturalWidth,
+                        height: img.naturalHeight
+                    });
+
+                    const el = document.createElement('img');
+                    el.src = url;
+                    el.classList.add('carousel-image');
+                    el.alt = 'Local image';
+                    carousel.insertBefore(el, loader);
+                }
+            }
+
+            function showImage(index) {
+                const images = carousel.querySelectorAll('.carousel-image');
+                if (images.length === 0 || !imageData[index]) return;
+
+                currentIndex = index;
+                const currentImage = imageData[index];
+                const newAspectRatio = currentImage.width / currentImage.height;
+
+                if (newAspectRatio < 1) {
+                    carousel.style.maxWidth = '900px';
+                } else {
+                    carousel.style.maxWidth = '1150px';
+                }
+
+                carousel.style.aspectRatio = newAspectRatio;
+
+                images.forEach((img, i) => {
+                    img.classList.toggle('active', i === index);
+                });
+
+            }
+
+            /// 新增全屏 overlay 变量
+            let fullscreenOverlay = null;
+            let fullscreenImg = null;
+
+            // 点击图片进入全屏
+            carousel.addEventListener('click', (e) => {
+                if (e.target.closest('.carousel-btn')) return;
+                const rect = carousel.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                const clickRatio = x / width;
+
+                // 区域左右切换
+                if (clickRatio < 0.3) {
+                    if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length);
+                    return;
+                }
+                else if (clickRatio > 0.7) {
+                    if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length);
+                    return;
+                }
+
+                // 中间点击 => 全屏
+                fullscreenOverlay = document.createElement('div');
+                fullscreenOverlay.className = 'carousel-fullscreen-overlay';
+
+                fullscreenImg = document.createElement('img');
+                fullscreenImg.src = imageData[currentIndex].url;
+                fullscreenOverlay.appendChild(fullscreenImg);
+                document.body.appendChild(fullscreenOverlay);
+
+                // 强制浏览器渲染，再加 active class 触发动画
+                requestAnimationFrame(() => {
+                    fullscreenOverlay.classList.add('active');
+                });
+
+                // 点击全屏关闭
+                fullscreenOverlay.addEventListener('click', () => {
+                    // 先移除 active，触发淡出动画
+                    fullscreenOverlay.classList.remove('active');
+
+                    // 动画结束后删除 overlay
+                    fullscreenOverlay.addEventListener('transitionend', () => {
+                        if (fullscreenOverlay && fullscreenOverlay.parentNode) {
+                            document.body.removeChild(fullscreenOverlay);
+                        }
+                        fullscreenOverlay = null;
+                        fullscreenImg = null;
+                    }, { once: true });
+                });
+            });
+
+
+            // 键盘支持
+            document.addEventListener('keydown', e => {
+                if (!imageData.length) return;
+
+                if (e.key === 'ArrowLeft') {
+                    showImage((currentIndex - 1 + imageData.length) % imageData.length);
+                    if (fullscreenImg) fullscreenImg.src = imageData[currentIndex].url;
+                }
+                if (e.key === 'ArrowRight') {
+                    showImage((currentIndex + 1) % imageData.length);
+                    if (fullscreenImg) fullscreenImg.src = imageData[currentIndex].url;
+                }
+
+                if (e.key === 'Escape' && fullscreenOverlay) {
+                    document.body.removeChild(fullscreenOverlay);
+                    fullscreenOverlay = null;
+                    fullscreenImg = null;
+                }
+            });
+
+            nextBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length); });
+            prevBtn.addEventListener('click', () => { if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length); });
+
+            carousel.addEventListener('click', (e) => {
+                if (e.target.closest('.carousel-btn')) return;
+                const rect = carousel.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                const clickRatio = x / width;
+                if (clickRatio < 0.3) {
+                    if (imageData.length > 0) showImage((currentIndex - 1 + imageData.length) % imageData.length);
+                }
+                else if (clickRatio > 0.7) {
+                    if (imageData.length > 0) showImage((currentIndex + 1) % imageData.length);
+                }
+            });
+
+            async function init() {
+                if (imagesFromLocal.length === 0) {
+                    loader.innerText = 'No local images.';
+                    return;
+                }
+
+                // 可选：每次刷新随机顺序
+                imagesFromLocal.sort(() => Math.random() - 0.5);
+
+                await preloadLocalImages();
+                loader.style.display = 'none';
+                showImage(0);
+            }
+
+            init();
+        };
+
+        // Initialize immediately and on Turbo navigation
+        initCarousel();
+        document.addEventListener('turbo:load', initCarousel);
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCarousel);
+        }
+    })();
+</script>
+{{- end -}}

@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=60925&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一维振动方程 乐器的分类 气鸣乐器：边棱、唇鸣、簧鸣等。 弦鸣乐器：弓拨、弹拨、击打等。 电鸣乐器。 体鸣乐器：打击乐、木琴。 膜鸣乐器：鼓、卡祖笛等。">
+<title>一维振动方程</title>
+
+<link rel='canonical' href='http://localhost:60925/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/'>
+
+<link rel="stylesheet" href="/scss/style.min.82568993da6d0d9326d0d4958b59258062a1a23931738af45377eedd5102d227.css"><meta property='og:title' content="一维振动方程">
+<meta property='og:description' content="一维振动方程 乐器的分类 气鸣乐器：边棱、唇鸣、簧鸣等。 弦鸣乐器：弓拨、弹拨、击打等。 电鸣乐器。 体鸣乐器：打击乐、木琴。 膜鸣乐器：鼓、卡祖笛等。">
+<meta property='og:url' content='http://localhost:60925/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/'>
+<meta property='og:site_name' content='Elainafan'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-10-13T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-10-13T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="一维振动方程">
+<meta name="twitter:description" content="一维振动方程 乐器的分类 气鸣乐器：边棱、唇鸣、簧鸣等。 弦鸣乐器：弓拨、弹拨、击打等。 电鸣乐器。 体鸣乐器：打击乐、木琴。 膜鸣乐器：鼓、卡祖笛等。">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu2220087750940415266.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😉</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Elainafan</a></h1>
+            <h2 class="site-description">只因&#34;现在&#34;深爱其中</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/elainafan'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页 | Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于 | About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档 | Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索 | Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/friends/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-friends"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" /><path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" /></svg>
+                
+                <span>友链 | Friends</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/photos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+                
+                <span>图库 | Photos</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/anime/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                
+                <span>番剧 | Anime</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接 | Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一维振动方程">一维振动方程</a>
+      <ol>
+        <li><a href="#乐器的分类">乐器的分类</a></li>
+        <li><a href="#抽象化">抽象化</a></li>
+        <li><a href="#数学建模">数学建模</a></li>
+      </ol>
+    </li>
+    <li><a href="#振动模态与泛音">振动模态与泛音</a>
+      <ol>
+        <li><a href="#振动模态">振动模态</a></li>
+        <li><a href="#泛音">泛音</a></li>
+        <li><a href="#协和音程泛音列重合理论">协和音程泛音列重合理论</a></li>
+        <li><a href="#泛音与小号">泛音与小号</a></li>
+        <li><a href="#泛音与古琴">泛音与古琴</a></li>
+        <li><a href="#泛音与呼麦">泛音与呼麦</a></li>
+      </ol>
+    </li>
+    <li><a href="#拨弦与傅里叶级数">拨弦与傅里叶级数</a></li>
+    <li><a href="#空穴来风">空穴来风</a>
+      <ol>
+        <li><a href="#管乐器">管乐器</a></li>
+        <li><a href="#开管的振动模态">开管的振动模态</a></li>
+        <li><a href="#闭管的振动模态">闭管的振动模态</a></li>
+        <li><a href="#管乐器实例">管乐器实例</a></li>
+      </ol>
+    </li>
+    <li><a href="#思考题">思考题</a></li>
+    <li><a href="#声明">声明</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E9%9F%B3%E4%B9%90%E4%B8%8E%E6%95%B0%E5%AD%A6/" style="background-color: #D4B75C; color: #fff;">
+                音乐与数学
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/">一维振动方程</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-10-13</time>
+            </div>
+    
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+
+         
+        <div id="viewCount">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-time--reading">
+                
+                <span id="vercount_value_page_pv">loading... </span>次
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="一维振动方程">一维振动方程
+</h2><h3 id="乐器的分类">乐器的分类
+</h3><ul>
+<li><strong>气鸣</strong>乐器：边棱、唇鸣、簧鸣等。</li>
+<li><strong>弦鸣</strong>乐器：弓拨、弹拨、击打等。</li>
+<li><strong>电鸣</strong>乐器。</li>
+<li><strong>体鸣</strong>乐器：打击乐、木琴。</li>
+<li><strong>膜鸣</strong>乐器：鼓、卡祖笛等。</li>
+<li>一维上我们只考虑<strong>弦鸣乐器</strong>。</li>
+</ul>
+<h3 id="抽象化">抽象化
+</h3><ul>
+<li>一个<strong>假设</strong>：<strong>均匀细弦</strong>。</li>
+<li>三个参数：<strong>长度</strong>$L$，<strong>受到张力</strong>$T$，<strong>单位长度的质量/弦密度</strong>$\rho$，用于衡量弦<strong>粗细</strong>。</li>
+</ul>
+<h3 id="数学建模">数学建模
+</h3><ul>
+<li>一条<strong>水平弦</strong>被<strong>固定</strong>在水平轴$(0,0)$和$(L,0)$之间，设$u(x,t)$为位置$x$在时刻$t$时的<strong>位移</strong>。取弦上的一小段$\overline{PQ}$,其中$P=(x_0,u(x_0,t)),Q=(x_0+\Delta x,u(x_0+\Delta x,t))$.</li>
+</ul>
+<p><img src="/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/3f47d99ec875113a71bdb016f79ff81c.png"
+	width="1689"
+	height="522"
+	
+	loading="lazy"
+	
+		alt="水平弦建模"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="323"
+		data-flex-basis="776px"
+	
+></p>
+<ul>
+<li>运用牛顿第二定律，$PQ$受到的力$F=T_Q-T_P \approx T(\tan \beta - \tan \alpha)$，质量$m=\rho \Delta x$.</li>
+<li>由牛顿第二定律得到，$T(\frac{\partial u}{\partial x} \mid_{x=x_0+\Delta x}-\frac{\partial u}{\partial x} \mid_{x=x_0})=\rho \Delta x \cdot a$.</li>
+<li>化简得到$\frac{(\frac{\partial u}{\partial x} \mid_{x=x_0+\Delta x}-\frac{\partial u}{\partial x} \mid_{x=x_0})}{\Delta x}=\frac{\rho}{T} \cdot a$.</li>
+<li>令$\Delta x \to 0$，得到$\frac{\partial^2 u}{\partial x^2}=\frac{\rho}{T}\frac{\partial^2 u}{\partial T^2}|_{x=x_0}$.</li>
+<li>由于$x$的<strong>任意性</strong>，得到$\frac{\partial^2 u}{\partial x^2}=\frac{\rho}{T}\frac{\partial^2 u}{\partial t^2}$.</li>
+<li>再令$c=\sqrt{\frac{T}{\rho}}$，得到均匀细弦上的位移函数$u(x,t)$需满足的<strong>一维振动方程</strong>：$\frac{\partial^2 u}{\partial t^2}=c^2\frac{\partial^2 u}{\partial x^2}$</li>
+<li>由于弦的两边是<strong>固定</strong>的，所以上述一维振动方程还需要满足<strong>边值条件</strong>：$u(0,t)=u(L,t)=0,\forall t \geq 0$.</li>
+<li>使用<strong>分离变量法</strong>解上述方程。</li>
+<li>得到方程的解$u(x,t)=\sum\limits_{n=1}^{+\infty}(a_n \cos \frac{n \pi c}{L}t+b_n \sin \frac{n \pi c}{L}t) \sin (\frac{n \pi}{L}x)$.</li>
+<li>对于每个$u_n(x,t)$，它是两部分的乘积，前一部分是<strong>时间的函数</strong>，后一部分是<strong>位置的函数</strong>，令$w_n=\frac{n \pi c}{L}, \tan \theta_n=\frac{a_n}{b_n},$得到$u(x,t)=\sqrt{a_n^2+b_n^2} \sin (w_nt+\theta_n) \sin \frac{n \pi}{L}x$.</li>
+</ul>
+<h2 id="振动模态与泛音">振动模态与泛音
+</h2><h3 id="振动模态">振动模态
+</h3><ul>
+<li>弦的振动是<strong>无穷多个正弦振动</strong>的<strong>叠加</strong>。</li>
+<li>对于$u(x,t)=\sqrt{a_n^2+b_n^2} \sin (w_nt+\theta_n) \sin \frac{n \pi}{L}x$，称为弦振动的第$n$个<strong>振动模态</strong>。</li>
+<li>在弦中间<strong>任意固定</strong>一点$x_0$，则可以得到$x_0$的第$n$个振动模态。</li>
+<li>$\mathrm{Mersenne}$定律：$x_0$的<strong>第$n$个振动模态</strong>频率为$f_n=\frac{n}{2L}\sqrt{\frac{T}{\rho}}$，$n=1$时，$f_1=\frac{1}{2L}\sqrt{\frac{T}{\rho}}$.</li>
+</ul>
+<h3 id="泛音">泛音
+</h3><ul>
+<li>弦的<strong>振动频率</strong>组成的序列$f_1,f_2,\ldots$称为弦的<strong>固有频率</strong>。</li>
+<li><strong>基频</strong>：$f_1$，相应的声音称为<strong>基音</strong>。</li>
+<li><strong>泛音</strong>：$f_n(n&gt;1)$对应的声音，通常称$f_2$对应<strong>第一泛音</strong>，$f_3$对应<strong>第二泛音</strong>等等。</li>
+<li>由上述公式可知，所有泛音的频率都是基频<strong>整数倍</strong>。</li>
+<li><strong>泛音列</strong>：$f,2f,3f,\ldots$。</li>
+<li><strong>波节</strong>：振幅为<strong>0</strong>，即点$x=\frac{kL}{n}$处，即高中物理中的<strong>波峰波谷</strong>。</li>
+<li><strong>波腹</strong>：振幅<strong>最大</strong>，即点$x=\frac{kL}{2n}$处，即高中物理中的<strong>平衡位置</strong>。</li>
+</ul>
+<h3 id="协和音程泛音列重合理论">协和音程泛音列重合理论
+</h3><ul>
+<li>由<strong>赫尔姆霍兹</strong>发现，一个音列与<strong>泛音列</strong>的<strong>重合度越高</strong>，那么这个音听起来<strong>越和谐</strong>。</li>
+<li>例如八度音程$2f,4f,\ldots$有一半的音与泛音列重合，听起来非常和谐。</li>
+<li>纯五度音程$\frac{3}{2}f,3f,\frac{9}{2}f,\ldots$有一部分音与泛音列重合，听起来比较和谐。</li>
+<li>大二度音程$\frac{9}{8}f,\frac{9}{4}f,\frac{27}{8}f$，没有任何音与泛音列重合，听起来不和谐。</li>
+</ul>
+<h3 id="泛音与小号">泛音与小号
+</h3><ul>
+<li><strong>自然小号/巴洛克小号</strong>：长度为现代小号的两倍，声音比现代小号<strong>低一个八度</strong>。号管上没有<strong>开孔</strong>和<strong>活塞按键</strong>，只能发出<strong>基频的自然泛音</strong>。</li>
+<li>C调自然小号的<strong>基音</strong>是$C_2$，<strong>第一泛音</strong>为$C_3$，通常演奏者从<strong>第二泛音</strong>($G_3$)开始。</li>
+<li>由于小三度的比例为$6:5=1.2$，得出4倍基频的为$C_4$，5倍基频的为$E_4$，6倍基频的为$G_4$，又由于$7:6 \approx 1.16$，7倍基频为$\flat B_4$，八倍基频的为$C_5$。</li>
+<li>大二度的比例为$9:8=1.125$，所以9倍基频为$D_5$，10倍基频为$E_5$，由于$11:9 \approx 1.2$，11倍基频为$F_5$，$12:10=1.2$，12倍基频为$G_5$，由于$13:12 \approx 1.08$，13倍基频为$A_6$。</li>
+</ul>
+<p><img src="/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/83d446d63f01193636ea3d93ca705d4e.png"
+	width="1538"
+	height="300"
+	
+	loading="lazy"
+	
+		alt="自然小号"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="512"
+		data-flex-basis="1230px"
+	
+></p>
+<h3 id="泛音与古琴">泛音与古琴
+</h3><ul>
+<li>泛音演奏：古琴曲《流水》，《沧海一声笑》。</li>
+<li>古琴音色按照弹法可以分为三类：
+<ul>
+<li><strong>泛音</strong>：象征天，有清冷入仙感，轻盈活泼。</li>
+<li><strong>散音</strong>：象征地，松陈旷远，深沉浑厚。</li>
+<li><strong>按音</strong>：象征人，婉转抒情，缥缈多变。</li>
+</ul>
+</li>
+<li>古琴的结构如下图所示，若按一下七徽则<strong>奇数倍</strong>基频<strong>被破坏</strong>，<strong>偶数倍基频不变</strong>。</li>
+<li>得出结论，按一下，<strong>相乘能成为整数</strong>的基频倍数<strong>不被破坏</strong>。</li>
+</ul>
+<p><img src="/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/b0d1ca768d9648df823fc790310aa394.png"
+	width="1529"
+	height="1017"
+	
+	loading="lazy"
+	
+		alt="古琴"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="150"
+		data-flex-basis="360px"
+	
+></p>
+<h3 id="泛音与呼麦">泛音与呼麦
+</h3><ul>
+<li><strong>呼麦/喉音唱法/泛音唱法/多声唱法</strong>：演唱者运用口腔<strong>不同部位的气息</strong>控制，突出某些泛音，产生<strong>同时唱出两个声部</strong>的效果。</li>
+<li>2009年，呼麦被列入联合国教科文组织非物质文化遗产代表名录。</li>
+</ul>
+<h2 id="拨弦与傅里叶级数">拨弦与傅里叶级数
+</h2><ul>
+<li>为确定$a_n,b_n$，需要以下方程：</li>
+</ul>
+<p>$$\begin{cases}
+\frac{\partial^2 u}{\partial t^2}=c^2 \frac{\partial^2 u}{\partial x^2}, &amp; x \in [0,L],t \geq 0 \\
+u(0,t)=u(L,t)=0, &amp; \forall t \geq 0 , \quad (边值条件) \\
+u(x,0)=\phi(x), &amp; \forall x \in [0,L] , \quad (初始形状) \\
+\frac{\partial u}{\partial t}_{t=0}=\psi(x), &amp; \forall x \in [0,L] , \quad (初始速度) \\
+\end{cases}$$</p>
+<ul>
+<li>本课程主要介绍特殊情况，即<code>拨弦</code>。</li>
+<li>给定$x_0 \in (0,L)$和常数$h&gt;0$，假设把弦上$x_0$点拨到距离原来位置$h$的的地方，则此时的$\phi(x)$是<strong>折线函数</strong>，方程为$\phi(x)=\begin{cases}\frac{hx}{x_0}, \quad 0 \leq x \leq x_0, \\ \frac{h(x-L)}{x_0-L}, \quad x_0 \leq x \leq L \end{cases}$.</li>
+<li>将$t=0$代入，得$\phi(x)=u(x,0)=\sum\limits_{n=1}^{+\infty}a_n \sin (\frac{n \pi}{L}x)$.</li>
+<li>有关傅里叶级数的介绍，详见《高等数学A（下）》课程。</li>
+<li>将$\phi(x)$<strong>奇延拓</strong>到$[-L,0]$，再进行<strong>周期延拓</strong>，得到$a_n=\frac{1}{L}\int_{-L}^{L}\phi(x) \sin \frac{n \pi}{L}xdx$.</li>
+<li>$\psi(x)$也被表示为一个傅里叶级数，$\psi(x)=\sum\limits_{n=1}^{+\infty}b_n \frac{n \pi c}{L} \sin (\frac{n \pi}{L}x)$。</li>
+<li>同理可以求出$b_n=\frac{1}{L}\int_{-L}^{L}\psi(x) \sin \frac{n \pi}{L}xdx$.</li>
+<li>假设在拨弦的<strong>手指放开</strong>时弦是<strong>静止的</strong>，即弦上任一点的的<strong>初速度</strong>为$0$，$\psi(x)=0,\forall x \in [0,L],$则所有的系数$b_n=0$。</li>
+<li>得到最终结果，给定长度为$L$，两端均<strong>固定</strong>的弦，在其中点$\frac{L}{2}$处拨动，假定释放时弦上各处的<strong>初速度</strong>均为<strong>0</strong>，则弦产生的振动为$u(x,t)=\sum\limits_{n=1}^{+\infty}(a_n \cos \frac{n \pi c}{L}t+b_n \sin \frac{n \pi c}{L}t) \sin (\frac{n \pi}{L}x)=\sum\limits_{k=0}^{+\infty}\frac{8}{(2k+1)^2 \pi^2} \cos (\frac{(2k+1) \pi c}{L}t) \sin (\frac{(2k+1) \pi}{L}x)$.</li>
+<li>拨弦的<strong>各振动模态</strong>的频率都是<strong>基频的奇数倍</strong>，在弦振动的<strong>固有频率</strong>中，只有<strong>对应于奇数的频率才会出现</strong>。</li>
+<li>几何解释：在$\frac{L}{2}$释放弦后，弦的振动应当始终保持<strong>关于其对称</strong>，$n$为<strong>奇数</strong>时是<strong>对称</strong>的，而<strong>偶数</strong>时的波形是<strong>反对称</strong>的。</li>
+<li>吉他上的品与泛音息息相关，十二品处于中间位置。</li>
+</ul>
+<p><img src="/p/%E4%B8%80%E7%BB%B4%E6%8C%AF%E5%8A%A8%E6%96%B9%E7%A8%8B/fc0b25c5129bce6bde6c822a69b770d1.png"
+	width="1596"
+	height="228"
+	
+	loading="lazy"
+	
+		alt="延拓后的折线函数"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="700"
+		data-flex-basis="1680px"
+	
+></p>
+<h2 id="空穴来风">空穴来风
+</h2><h3 id="管乐器">管乐器
+</h3><ul>
+<li>管乐器通常分为两组：
+<ul>
+<li><strong>木管组</strong>：短笛、长笛、双簧管、单簧管、大管等。</li>
+<li><strong>铜管组</strong>：小号、圆号、长号、大号等。</li>
+</ul>
+</li>
+<li><strong>木管五重奏</strong>通常由<strong>长笛、双簧管、单簧管、大管和圆号</strong>组成。</li>
+<li>管乐器的<strong>振动主体</strong>是管内的<strong>空气柱</strong>，但<strong>边值条件</strong>与弦振动的不同。振动的空气柱会<strong>超出管的端口</strong>，需要对其<strong>音高/频率</strong>进行<strong>端口校正</strong>。最早由明朝朱载堉提出。</li>
+<li>声音是<strong>纵波</strong>，管子中的<strong>空气柱振动</strong>时，沿着管子的<strong>轴向方向</strong>形成<strong>疏密相间的拨动</strong>。</li>
+<li><strong>不考虑管口校正</strong>的情况下，在<strong>开口</strong>处，空气柱可以<strong>自由移动</strong>，振动幅度<strong>最大</strong>，形成<strong>波腹</strong>。</li>
+<li>如果管子的<strong>一端是封闭的</strong>，则该处的空气柱<strong>无法做纵向的振动</strong>，形成<strong>波节</strong>。</li>
+<li>从波腹到波节刚好构成<strong>一个完整振动周期</strong>的$\frac{1}{4}$，即距离恰等于$\frac{1}{4}$波长。</li>
+</ul>
+<h3 id="开管的振动模态">开管的振动模态
+</h3><ul>
+<li><strong>不计管口校正</strong>，<strong>开口</strong>位置总是位于振动的<strong>波腹</strong>，<strong>闭口</strong>位置只能位于<strong>波节</strong>。</li>
+<li>对于基频，有$L=\frac{\lambda_1}{2}$，对于$f_n$，有$L=\frac{n\lambda_n}{2}$。</li>
+<li>即开管的<strong>泛音列</strong>为$f,2f,3f,\ldots$。</li>
+</ul>
+<h3 id="闭管的振动模态">闭管的振动模态
+</h3><ul>
+<li><strong>不计管口校正</strong>，<strong>开口</strong>位置总是位于振动的<strong>波腹</strong>，<strong>闭口</strong>位置只能位于<strong>波节</strong>。</li>
+<li>对于基频，有$L=\frac{\lambda_1}{4}$，对于$f_n$，有$L=\frac{(2n-1)\lambda_n}{4}$。</li>
+<li>即闭管的<strong>泛音列</strong>为$f,3f,5f,\ldots$，即闭管只有<strong>偶次泛音</strong>。</li>
+</ul>
+<h3 id="管乐器实例">管乐器实例
+</h3><ul>
+<li><strong>长笛</strong>是一种<strong>开管</strong>，<strong>单簧管</strong>是一种<strong>闭管</strong>。</li>
+<li>假设有效管长$L \approx 0.66m,$声速$v=340m/s$。</li>
+<li>对于长笛，其基频$f_1=\frac{v}{\lambda_1}=\frac{v}{2L}=\frac{340}{1.32}=258 \mathrm{Hz}$。</li>
+<li>对于单簧管，其基频$f_1=\frac{v}{\lambda_1}=\frac{v}{4L}=\frac{340}{2.64}=129 \mathrm{Hz}$。</li>
+<li>普通长笛的<strong>最低音</strong>为$C_4$（中央$C$），普通的$\flat B$单簧管的<strong>最低音</strong>为$D_3$，记谱为$E_3 -$<strong>移调乐器</strong>。</li>
+<li><strong>长笛</strong>的泛音列中，第二项的频率为$2f$，超吹产生<strong>高八度</strong>的音。</li>
+<li><strong>单簧管</strong>的泛音列中，第二项的频率为$3f$，超吹产生<strong>高十二度</strong>的音。</li>
+</ul>
+<h2 id="思考题">思考题
+</h2><ul>
+<li>乐音和噪音的本质区别是什么？</li>
+<li>发出乐音的声源的振动是规则的，而发出噪音的声源的振动是不规则的。乐音是由一系列频率整数倍关系的正弦波叠加而成的，而噪音则是由频率分布较为均匀的波叠加而成的。</li>
+<li>为什么单簧管只能发出偶次泛音，而自然小号可以发出所有的泛音？</li>
+<li>因为单簧管是一种闭管，而自然小号是一种开管。</li>
+</ul>
+<h2 id="声明">声明
+</h2><p>本笔记的部分内容来自<a class="link" href="https://zhuanlan.zhihu.com/p/719184665"  target="_blank" rel="noopener"
+    >喵喵的学习笔记</a>
+，如有侵权请联系我删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+<div class="math-katex"></div>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E6%95%B0%E5%AD%A6%E7%9A%84%E8%8A%82%E5%A5%8F%E4%B8%8E%E8%8A%82%E5%A5%8F%E7%9A%84%E6%95%B0%E5%AD%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">数学的节奏与节奏的数学</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E9%9F%B3%E7%B1%BB%E9%9B%86%E5%90%88%E4%B8%8E%E6%96%B0%E9%BB%8E%E6%9B%BC%E7%90%86%E8%AE%BA/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">音类集合与新黎曼理论</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E6%97%8B%E5%BE%8B%E4%B8%8E%E5%AF%B9%E7%A7%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">旋律与对称</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E8%B0%83%E5%BC%8F%E9%9F%B3%E9%98%B6%E4%B8%8E%E5%92%8C%E5%BC%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">调式、音阶与和弦</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E6%9C%BA%E5%99%A8%E4%BD%9C%E6%9B%B2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">机器作曲</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="elainafan/Myblog"
+    data-repo-id="R_kgDOQQ-HmA"
+    data-category="General"
+    data-category-id="DIC_kwDOQQ-HmM4CyEyD"
+    data-mapping="url"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark');
+            }
+        }
+    })();
+</script>
+    <div class="comment"></div>
+
+    
+
+    <footer class="site-footer">
+    
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        发表了40篇文章 · 
+        总计221.47k字
+    </section>
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 elainafan
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<div id="aplayer"></div>
+
+<script>
+    const staticDir = "http://localhost:60925/";
+    console.log(staticDir);
+    const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        fixed: true,
+        audio: [
+            {
+                name: 'Everyday world',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Everyday-world/music.mp3',
+                cover: staticDir + 'music/Everyday-world/cover.png'
+            },
+            {
+                name: 'Sparkling Daydream',
+                artist: 'ZAQ',
+                url: staticDir + 'music/Sparkling-Daydream/music.mp3',
+                cover: staticDir + 'music/Sparkling-Daydream/cover.jpg'
+            },
+            {
+                name: 'Inside Identity',
+                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
+                url: staticDir + 'music/Inside-Identity/music.mp3',
+                cover: staticDir + 'music/Inside-Identity/cover.jpg'
+            },
+            {
+                name: '花の塔',
+                artist: '酸欠少女さユり',
+                url: staticDir + 'music/花の塔/music.mp3',
+                cover: staticDir + 'music/花の塔/cover.jpg'
+            },
+            {
+                name: 'The day you went away',
+                artist: 'M2M',
+                url: staticDir + 'music/The-day-you-went-away/music.mp3',
+                cover: staticDir + 'music/The-day-you-went-away/cover.png',
+            },
+            {
+                name: 'Hey,Jude',
+                artist: 'The Beatles',
+                url: staticDir + 'music/Hey-Jude/music.mp3',
+                cover: staticDir + 'music/Hey-Jude/cover.png'
+            },
+            {
+                name: 'God knows',
+                artist: '平野绫',
+                url: staticDir + 'music/God-knows/music.mp3',
+                cover: staticDir + 'music/God-knows/cover.png'
+            },
+            {
+                name: '轻飘飘の时间',
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/轻飘飘の时间/music.mp3',
+                cover: staticDir + 'music/轻飘飘の时间/cover.png'
+            },
+
+            {
+                name: 'Some things never change',
+                artist: 'Elsa/Anna/Olaf/Kristoff',
+                url: staticDir + 'music/Some-Things-Never-Change/music.mp3',
+                cover: staticDir + 'music/Some-Things-Never-Change/cover.png'
+            },
+        ],
+    });
+    
+
+    window.onbeforeunload = () => {
+        
+        const playInfo = {
+            index: ap.list.index,
+            currentTime: ap.audio.currentTime,
+            paused: ap.paused
+        };
+        localStorage.setItem("playInfo", JSON.stringify(playInfo));
+    };
+
+    
+
+    window.onload = () => {
+        
+        const playInfo = JSON.parse(localStorage.getItem("playInfo"));
+        if (!playInfo) {
+            return;
+        }
+        
+        ap.list.switch(playInfo.index);
+        
+        setTimeout(() => {
+            
+            ap.seek(playInfo.currentTime);
+            
+            if (!playInfo.paused) {
+                ap.play()
+            }
+        }, 500);
+    };
+</script>
+
+
+
+<script src=http://localhost:60925/js/topbar.min.js></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script>
+    var pjax = new Pjax({
+        selectors: [
+            ".main-container", ".js-Pjax", "Timer"
+        ]
+    })
+
+    pjax._handleResponse = pjax.handleResponse;
+
+    pjax.handleResponse = function (responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            if (responseText) {
+                
+                let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+                
+                let bodyClass = newDom.body.className;
+                document.body.setAttribute("class", bodyClass)
+            }
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+        }
+    }
+
+    async function renderKaTeX() {
+        
+        let katex = document.querySelector(".math-katex");
+        if (!katex) {
+            return;
+        }
+        
+        while (typeof renderMathInElement !== 'function') {
+            await delay(500);
+        }
+        
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });
+    }
+
+    
+
+    function delay(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time)
+        })
+    }
+
+    document.addEventListener('pjax:send', () => {
+        
+        topbar.show();
+    })
+
+    document.addEventListener('pjax:complete', () => {
+        
+        let url = new URL(window.location.href);
+        url.searchParams.delete('t');  
+        history.replaceState(null, '', url.toString());  
+        renderKaTeX();
+        
+        window.Stack.init();
+        topbar.hide();
+        
+    })
+</script><div class="js-Pjax">
+    <script>
+            (function () {
+                
+                let comment = document.querySelector(".comment");
+                if (!comment) {
+                    return;
+                }
+                function injectGiscusScript() {
+                    let script = document.createElement('script');
+                    
+                    script.setAttribute('src', 'https://giscus.app/client.js');
+                    script.setAttribute('data-repo', 'elainafan\/Myblog');
+                    script.setAttribute('data-repo-id', 'R_kgDOQQ-HmA');
+                    script.setAttribute('data-category', 'General');
+                    script.setAttribute('data-category-id', 'DIC_kwDOQQ-HmM4CyEyD');
+                    script.setAttribute('data-mapping', 'url');
+                    script.setAttribute('data-strict', '0');
+                    script.setAttribute('data-reactions-enabled', '1');
+                    script.setAttribute('data-emit-metadata', '0');
+                    script.setAttribute('data-input-position', 'top');
+                    script.setAttribute('data-theme', 'light');
+                    script.setAttribute('data-lang', 'en');
+                    script.setAttribute('data-loading', 'lazy');
+                    script.setAttribute('crossorigin', 'anonymous');
+                    script.async = true;
+
+                    
+                    let footer = document.querySelector('.site-footer');
+                    if (footer) {
+                        footer.before(script);
+                    }
+                }
+
+                
+                injectGiscusScript();
+
+                
+                document.addEventListener('pjax:complete', function () {
+                    injectGiscusScript();
+                });
+            })(document);
+    </script>
+    <div><script defer src="https://cn.vercount.one/js"></script>
+
+        <script>
+            function showHideView() {
+                
+                let viewCounts = document.querySelectorAll("#viewCount");
+                if (viewCounts) {
+                    
+                    let article = document.querySelector(".article-page");
+                    if (!article) {
+                        viewCounts.forEach(ele => {
+                            ele.style.display = 'none';
+                        });
+                    }
+                }
+            }
+            showHideView();
+        </script>
+
+        <div class="Timer">
+            
+            <script>
+                function updateRunningDays() {
+                    let s1 = '2025-6-23'; 
+                    s1 = new Date(s1.replace(/-/g, "/"));
+                    let s2 = new Date();
+                    let timeDifference = s2.getTime() - s1.getTime();
+
+                    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+                    let result = days + "天" + hours + "小时" + minutes + "分钟";
+                    const elem = document.getElementById('runningdays');
+                    if (elem) elem.innerHTML = result;
+                }
+
+                updateRunningDays();
+
+                document.addEventListener('pjax:complete', function () {
+                    updateRunningDays();
+                });
+            </script>
+            <div>
+    </body>
+</html>
