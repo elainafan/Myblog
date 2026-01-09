@@ -3,6 +3,7 @@ title: "番剧 | Anime"
 date: 2025-10-26
 readingTime: true
 slug: "anime"
+image: 1.jpg
 links:
   - title: 轻音少女
     description: 但是，我遇见了美丽的天使
