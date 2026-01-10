@@ -9,6 +9,6 @@ menu:
     main:
         weight: -50
         params:
-            icon: photo
-comments: true
+            icon: oto
+comments: false
 ---
