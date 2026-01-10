@@ -276,3 +276,25 @@
                 });
             </script>
             <div>
+
+                {{ if .Params.encrypt }}
+                <script>
+                    function decrypt() {
+                        const pwd = document.getElementById("pwd").value;
+                        const box = document.getElementById("encrypt-box");
+                        const content = document.getElementById("post-content");
+
+                        if (pwd === "260104") { // 这里设置你的文章密码
+                            box.style.display = "none";
+                            content.style.display = "block";
+                        } else {
+                            alert("密码错误");
+                        }
+                    }
+
+                    // 允许回车解密
+                    document.addEventListener("keydown", e => {
+                        if (e.key === "Enter" && document.getElementById("pwd")) decrypt();
+                    });
+                </script>
+                {{ end }}

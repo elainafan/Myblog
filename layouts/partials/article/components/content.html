@@ -1,5 +1,17 @@
 <section class="article-content">
-    <!-- Refer to https://discourse.gohugo.io/t/responsive-tables-in-markdown/10639/5 -->
-    {{ $wrappedTable := printf "<div class=\"table-wrapper\">${1}</div>" }}
-    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" $wrappedTable | safeHTML }}
+    {{ if .Params.encrypt }}
+    <div id="encrypt-box" class="encrypt-box">
+        🔒 本文已加密，请输入密码<br>
+        <input type="password" id="pwd" placeholder="请输入密码">
+        <button onclick="decrypt()">解密</button>
+    </div>
+
+    <div id="post-content" style="display:none;">
+        {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") |
+        safeHTML }}
+    </div>
+    {{ else }}
+    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML
+    }}
+    {{ end }}
 </section>
