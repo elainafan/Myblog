@@ -31,7 +31,7 @@ links:
     image: /images/11.jpg
   - title: 珈百璃的堕落
     description: 天真善良好恶魔，颓废腹黑惰天使
-    wbesite: https://www.bilibili.com/bangumi/play/ss5793?spm_id_from=333.337.0.0
+    website: https://www.bilibili.com/bangumi/play/ss5793?spm_id_from=333.337.0.0
     image: /images/10.png
   - title: 凉宫春日的忧郁
     description: 漫无止境的八月，校园番开山之作
