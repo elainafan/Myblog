@@ -8,7 +8,7 @@ links:
   - title: 我的青春恋爱物语果然有问题。
     description: "她会有多幸运"
     website: https://www.bilibili.com/bangumi/play/ss1539?spm_id_from=333.1387.0.0
-    image: ./images/12.jpg
+    image: /images/12.jpg
   - title: 魔女之旅
     description: 在重逢的那一天之前，再见了
     website: https://www.bilibili.com/bangumi/play/ss34412?spm_id_from=333.1387.0.0
@@ -28,11 +28,11 @@ links:
   - title: 别当欧尼酱了！
     description: 看看这篇文章的头图是啥？
     website: https://www.bilibili.com/video/BV136JnzLEjq/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
-    image: ./images/11.jpg
+    image: /images/11.jpg
   - title: 珈百璃的堕落
     description: 天真善良好恶魔，颓废腹黑惰天使
     wbesite: https://www.bilibili.com/bangumi/play/ss5793?spm_id_from=333.337.0.0
-    image: /images/10.jpg
+    image: /images/10.png
   - title: 凉宫春日的忧郁
     description: 漫无止境的八月，校园番开山之作
     website: https://www.bilibili.com/bangumi/play/ss1057?spm_id_from=333.337.0.0
