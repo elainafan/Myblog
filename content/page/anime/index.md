@@ -5,14 +5,18 @@ readingTime: true
 slug: "anime"
 image: 1.jpg
 links:
+  - title: 我的青春恋爱物语果然有问题。
+    description: "她会有多幸运"
+    website: https://www.bilibili.com/bangumi/play/ss1539?spm_id_from=333.1387.0.0
+    image: ./images/12.jpg
+  - title: 魔女之旅
+    description: 在重逢的那一天之前，再见了
+    website: https://www.bilibili.com/bangumi/play/ss34412?spm_id_from=333.1387.0.0
+    image: /images/2.jpg 
   - title: 轻音少女
     description: 但是，我遇见了美丽的天使
     website: https://www.bilibili.com/bangumi/play/ss1172?spm_id_from=333.1387.0.0
     image: /images/1.jpg
-  - title: 魔女之旅
-    description: 在重逢的那一天之前，再见了
-    website: https://www.bilibili.com/bangumi/play/ss34412?spm_id_from=333.1387.0.0
-    image: /images/2.jpg
   - title: 终将成为你
     description: 那句话真正的含义，现在的我还不知晓
     website: https://www.bilibili.com/bangumi/play/ss25622?spm_id_from=333.337.0.0
@@ -21,10 +25,14 @@ links:
     description: 所有引力浪漫主义者终将相遇
     website: https://www.bilibili.com/video/BV1n1sRzqEr7/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
     image: /images/7.png  
-  - title: 莉可丽丝
-    description: 若能握紧你的手，我便能无惧孤独
-    website: https://www.bilibili.com/bangumi/play/ss42176?spm_id_from=333.337.0.0
-    image: /images/8.jpg  
+  - title: 别当欧尼酱了！
+    description: 看看这篇文章的头图是啥？
+    website: https://www.bilibili.com/video/BV136JnzLEjq/?spm_id_from=333.337.search-card.all.click&vd_source=70970b39cf6d67117999dda04596cc5a
+    image: ./images/11.jpg
+  - title: 珈百璃的堕落
+    description: 天真善良好恶魔，颓废腹黑惰天使
+    wbesite:https://www.bilibili.com/bangumi/play/ss5793?spm_id_from=333.337.0.0
+    image: /images/10.jpg
   - title: 凉宫春日的忧郁
     description: 漫无止境的八月，校园番开山之作
     website: https://www.bilibili.com/bangumi/play/ss1057?spm_id_from=333.337.0.0
