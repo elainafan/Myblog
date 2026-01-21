@@ -47,7 +47,7 @@ categories:
 | 2026.01.07 | Gb 2025    | div1+2 | 2178 | 4   | vp   | 1642 | √   | √   | √   | √   | B   |     |     |     |     |  |
 | 2026.01.07 | Hello 2026 | div1+2 | 2183 | 4   | 1989 | 1786 | √   | √   | √   | √   |     |     |     |     |     |  |
 | 2026.01.12 | R1072      | div3   | 2184 | 6   | 822  | 1921 | √   | √   | √   | √   | √   | √   | B   |     |     |  |
-| 2026.01.17 | R1073      | div1/2 | 2191 | 4   | 4312 | 1330 | √   | √   | √   | √   |     |     |     |     |     |  |
+| 2026.01.17 | R1073      | div1/2 | 2191 | 4   | 4312 | 1330 | √   | √   | √   | √   | B   |     |     |     |     |  |
 | 2025.01.18 | R1074      | div4   | 2185 | 7   | 679  | 1997 | √   | √   | √   | √   | √   | √   | √   |     |     |  |
 
 ## Codeforces Round #1072(Div.3)
@@ -495,6 +495,139 @@ void solve() {
 最后是灵神的点评：
 
 ![](3.jpg)
+
+## Codeforces Round #1073(Div.2)
+最近脑子不是很好使，掉大分。
+
+### C Sorting Game
+题目大意：Alice和Bob在二进制字符串上博弈，Alice先手，双方轮流。
+
+每个回合，选择一个非递增序列并将其排序，这个非递增序列必须同时包含0和1，最终无法下的人输棋。请确定胜者，若Alice获胜，则输出第一步。
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5$
+
+思路：非常搞笑的是，这道题只有两种情况，即Alice一开始就下不了导致Bob赢棋，或者Alice一步赢下Bob。第一种情况就是整个字符串一开始就有序，第二种情况是Alice第一步将整个字符串中，最开始不应该属于自己位置的1，跟不应该属于自己位置的0对换。最近我确实就是缺少这种一眼看出只有两个答案的思维。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    int cnt0 = 0, cnt1 = 0;
+    vector<int> res;
+    for (int i = 0; i <= n - 1; i++) {
+        if (s[i] == '0') {
+            cnt0++;
+        } else if (s[i] == '1')
+            cnt1++;
+    }
+    vector<int> res1;
+    for (int i = 0; i <= cnt0 - 1; i++) {
+        if (s[i] == '1') res1.push_back(i + 1);
+    }
+    for (int i = cnt0; i <= n - 1; i++) {
+        if (s[i] == '0') res.push_back(i + 1);
+    }
+    if (cnt1 == 0 || cnt0 == 0 || res1.size() == 0) {
+        cout << "Bob" << endl;
+        return;
+    }
+    cout << "Alice" << endl;
+    cout << 2 * res1.size() << endl;
+    for (int p : res1) cout << p << ' ';
+    for (int p : res) cout << p << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### D1 Sub-RBS(Easy)
+题目大意：给定一个长度为 $n$ 的正则括号序列 $s$ ，请求出它的最长优子序列的长度。
+
+优的定义为：必须为正则括号序列，被优的序列为其前缀或第一个不相等的位置，优子序列为``(``而被优子序列为``)``。
+
+数据范围： $2 \leq n \leq 2 \cdot 10^5$
+
+思路：需要最小化，那么当然是考虑跳过某个配对的括号序列，注意完全可以做到，对于``(()()``这样的序列，考虑是否只跳过一个``)``，注意到只需要后面少拿一个``(``，且只要能构成相应正则序列即可，如果后面都无法少拿一个``(``，那么显然就无法成立，答案为-1。而若能少拿，考虑将少拿的位置放在最前面，则考虑后面是否有至少2个``(``，因为如果少拿需要保证正则性会减掉一个。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    int las = -1, tem = 1;
+    int ans = INT_MAX;
+    vector<int> res;
+    for (int i = 1; i <= n - 1; i++) {
+        if (s[i] == s[i - 1])
+            tem++;
+        else {
+            res.push_back(tem);
+            tem = 1;
+        }
+    }
+    res.push_back(tem);
+    int m = res.size();
+    vector<int> maxx(m, 0);
+    maxx[m - 2] = res[m - 2];
+    for (int i = m - 4; i >= 0; i -= 2) {
+        maxx[i] = maxx[i + 2] + res[i];
+    }
+    if (m > 2 && maxx[2] > 1)
+        cout << n - 2 << endl;
+    else
+        cout << -1 << endl;
+    return;
+}
+```
+
+### D2 Sub-RBS(Hard)
+题目大意：给定一个长度为 $n$ 的括号序列 $s$ （**不一定正则**），请求出它的所有正则子序列的最长优子序列的长度和。
+
+数据范围： $1 \leq n \leq 100$
+
+思路：首先，需要发现一个思路，就是同D1中所讲，某个``)``之后必须要包含至少两个``(``，即形成``)((``结构，根据这个数据结构考虑使用动态规划计数，记录这个结构的形成程度（即0-3），而对于正则括号序列常见的表示形式是将其视为1和-1，即需要一个``平衡度``来记录，最终取``平衡度``为0的值，同时由于每次的条件为 $|n|-2$ ，因此可以记录总共的长度以及总共的个数，从而形成三维滚动（其实四维也可以）。说到底这题其实不难，就是考察基本功底了。
+
+```cpp
+const int MOD = 998244353;
+void solve() {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    vector<array<array<ll, 2>, 4>> dp(n + 1);
+    dp[0][0][0] = 1;
+    for (auto c : s) {
+        auto ndp = dp;
+        for (int i = 0; i <= n; i++) {
+            int tem = i + (c == ')' ? -1 : 1);
+            if (tem < 0 || tem > n) continue;
+            for (int j = 3; j >= 0; j--) {
+                if (j < 3 && c == ")(("[j]) {
+                    ndp[tem][j + 1][1] += dp[i][j][0] % MOD;
+                    ndp[tem][j + 1][1] %= MOD;
+                    ndp[tem][j + 1][1] += dp[i][j][1] % MOD;
+                    ndp[tem][j + 1][1] %= MOD;
+                    ndp[tem][j + 1][0] += dp[i][j][0] % MOD;
+                    ndp[tem][j + 1][0] %= MOD;
+                } else {
+                    ndp[tem][j][1] += dp[i][j][0] % MOD;
+                    ndp[tem][j][1] %= MOD;
+                    ndp[tem][j][1] += dp[i][j][1] % MOD;
+                    ndp[tem][j][1] %= MOD;
+                    ndp[tem][j][0] += dp[i][j][0] % MOD;
+                    ndp[tem][j][0] %= MOD;
+                }
+            }
+        }
+        dp = ndp;
+    }
+    cout << (dp[0][3][1] - 2 * dp[0][3][0] + 2 * MOD) % MOD << endl;
+    return;
+}
+```
 
 ## Codeforces Round #1074(Div.4) 
 D脑子抽了WA了五发，H不是我能做出来的，赛时出A-G差不多了，反正是Unr。
