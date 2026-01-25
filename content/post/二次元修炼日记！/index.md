@@ -1,6 +1,6 @@
 ---
 title: 二次元修炼日记！
-date: 2026-01-21
+date: 2025-01-21
 encrypt: true
 image: 5.png
 categories: 
