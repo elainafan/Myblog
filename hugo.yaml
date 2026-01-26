@@ -55,7 +55,7 @@ params:
         avatar:
             enabled: true
             local: true
-            src: img/avatar.jpg
+            src: img/elainafan.jpg
 
     article:
         math: true
