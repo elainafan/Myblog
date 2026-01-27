@@ -22,8 +22,8 @@ menu:
 - 如果你觉得你跟我很熟，那么可以私信我获取加密博文的密码，但是我不一定会给哈哈哈。
 - 什么？你连我的联系方式都没有，那哪里熟了的说~
 ## 关于本博客
-- 头像：律队/田井中律/Ritsu/K-ON部长，十六年前的老番(什么时候出大学篇)。
-- 站名：我是elaina（伊蕾娜）小姐的粉丝！自由自在旅行、写下自己的故事太吸引人啦~
+- 头像：伊蕾娜(elaina)，出自动漫《魔女之旅》。
+- 站名：我是elaina小姐的粉丝！自由自在旅行、写下自己的故事太吸引人啦~
 ## 博客是怎么建的？
 - 博客由[hugo](https://gohugo.io/getting-started/quick-start/)搭建，采用了Jimmy Cai的[Stack](https://github.com/CaiJimmy/hugo-theme-stack)主题。  
 - 建站参考了以下两篇博文，分别是[莱特雷的建站教程](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-blog/)以及[第三夏尔的主题装修笔记](https://thirdshire.com/series/hugo-stack-%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE/)，并阅读[GitHub上Stack主题](https://github.com/CaiJimmy/hugo-theme-stack)的Issues，使用[ChatGPT](https://chatgpt.com/)进行Debug。
