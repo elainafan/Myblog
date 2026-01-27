@@ -59,7 +59,7 @@ links:
   - title: ~zzz
     description: not one,ont two,not seven
     website: https://fuquan99666.github.io
-    image: https://fuquan99666.github.io/img/avatar_hu_e94f98a3296399de.png
+    image: https://fuquan99666.github.io/avatar.png
 
 menu:
     main: 
