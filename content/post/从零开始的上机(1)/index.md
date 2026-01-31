@@ -64,7 +64,7 @@ int main() {
 
 ## 输出指定结果一
 ### 描述
-根据输出完善代码。
+根据输出完善程序。
 
 ```cpp
 #include <iostream>
