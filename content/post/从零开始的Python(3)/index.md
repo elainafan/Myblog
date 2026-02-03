@@ -37,7 +37,7 @@ True
 False
 True
 ```
-# Solution
+### Solution
 py和cpp的特性差别在于  
 py并没有报错 直接告诉你要重载啥运算符  
 我们看题目 需要重载一个小于号和一个大于等于号  
