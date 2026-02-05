@@ -61,7 +61,7 @@ links:
     website: https://fuquan99666.github.io
     image: https://fuquan99666.github.io/avatar.png
   - title: Yjy's blog
-    descprition: 与你若只如初见，何须感伤离别
+    description: 与你若只如初见，何须感伤离别
     website: https://yjyxfcy.github.io/
     image: https://yjyxfcy.github.io/img/avatar.jpg
 
