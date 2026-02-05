@@ -53,21 +53,30 @@ while True:
 9
 ```
 ### Solution
-有点类似C++STL里的accumulate?  
-我们要返回一个函数，同时这个函数能存储一个值，用闭包也能实现（当时写的时候不知道为啥忘记用闭包了）
+有点类似C++STL里的accumulate? 不过不知道也没有关系，毕竟这时候应该程设还没上到这。
+
+观察上面的代码，不难发现需要返回一个函数，这个函数能存储一个临时变量的值，于是联想到使用``闭包``，即写一个内层函数，它能返回一个值。
+
+注意，这里第一次加的时候内层需要使用``缺省参数``来初始化。
 ```py
 def mysum(x):
+
     def inner(y=None):
         if y is None:
             return x
         return mysum(x + y)
+
     return inner
-def exec(g,i) : #call g for i times
-    if i == 1 :
+
+
+# 在此处补充你的代码
+def exec(g, i):  #call g for i times
+    if i == 1:
         g()
     else:
         g()
-        exec(g,i-1)
+        exec(g, i - 1)
+
 
 k = mysum(1)(2)(3)(4)
 k2 = mysum(10)(20)
@@ -82,7 +91,7 @@ while True:
         k = mysum
         for x in s:
             k = k(int(x))
-        exec(k,int(s[0]))
+        exec(k, int(s[0]))
         print(k())
     except:  #读到 eof产生异常
         break
@@ -144,44 +153,60 @@ f2 f2 f5
 第一个例子，输出结果是 f3(f2(f1(4)))
 第二个例子，输出结果是 f2(5)
 ### Solution
-跟上题有点像，也可以用闭包。
-直接把我当时写的代码搬上来了() 
+思路跟上题是一样的，都是使用闭包进行类似记忆化的操作，当然这里传入的参数应该是一个函数，然后依次叠加。
+
 ```py
 #pylint: disable = no-value-for-parameter
 def accfunc(f):
+
     def inner(g=None):
         if g is None:
             return f
         else:
             return accfunc(lambda x: g(f(x)))
+
     return inner
+
+
 def f1(x):
     return x + 1
+
+
 def f2(x):
     return x * x
+
+
 def f3(x):
     return x + x
+
+
 def f4(x):
-    return x*3
+    return x * 3
+
+
 def f5(x):
-    return x-4
+    return x - 4
+
 
 while True:
     try:
-        s = input()
+        s = input().strip()
         n = int(input())
-        s = s.split()
-        k = accfunc
-        for x in s:
-            k = k(eval(x))
-        print(k()(n))
-    except:  #读到 eof产生异常
+        funcs = s.split()
+        k = accfunc  # 初始化为accfunc函数
+        for func_name in funcs:
+            func = eval(func_name)  # 获取对应的函数对象
+            k = k(func)  # 将当前函数添加到组合链
+        # 获取最终的组合函数并调用
+        composed_func = k()
+        print(composed_func(n))
+    except:
         break
 ```
 
 ## 生成器
 ### 描述
-下面程序输入正整数n和m，输出从0开始的前m个n的倍数，请写出times函数的内部实现。不得使用列表、元组、集合、字典，times必须是个生成器函数。
+下面程序输入正整数 $n$ 和 $m$ ，输出从0开始的前 $m$ 个 $n$ 的倍数，请写出times函数的内部实现。不得使用列表、元组、集合、字典，times必须是个生成器函数。
 ```py
 exit = None
 def times(n):
@@ -213,9 +238,13 @@ $n$ 的前 $m$ 个倍数（从0开始）。
 8
 ```
 ### Solution
-题目的要求写得很清楚了，就是生成器  
-生成器的原理课件里也挺清楚的  
-在yield的时候停止并抛出下一个值就可以~  
+题目的要求写得很清楚了，就是生成器，生成器的原理课件里也挺清楚的，这里回顾一下。
+
+所谓生成器，就是含有``yield``关键字的函数，它不会一次性执行完，而是在``yield``的地方暂停，把当前值抛出，并保存全部的运行环境，而下一次使用，通常是通过``next(gen)``或者``for``循环开始。
+
+顺便说一句，第一行``exit=None``没啥用，而``seq=times(n)``只是创建了一个生成器对象，而``for``循环才是真正在执行它。
+
+于是就可以写出来了~
 ```py
 exit = None
 def times(n):
