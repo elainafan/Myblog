@@ -60,6 +60,10 @@ links:
     description: not one,ont two,not seven
     website: https://fuquan99666.github.io
     image: https://fuquan99666.github.io/avatar.png
+  - title: Yjy's blog
+    descprition: 与你若只如初见，何须感伤离别
+    website: https://yjyxfcy.github.io/
+    avatar: https://yjyxfcy.github.io/img/avatar.jpg
 
 menu:
     main: 
