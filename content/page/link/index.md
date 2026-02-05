@@ -63,7 +63,7 @@ links:
   - title: Yjy's blog
     descprition: 与你若只如初见，何须感伤离别
     website: https://yjyxfcy.github.io/
-    avatar: https://yjyxfcy.github.io/img/avatar.jpg
+    image: https://yjyxfcy.github.io/img/avatar.jpg
 
 menu:
     main: 
