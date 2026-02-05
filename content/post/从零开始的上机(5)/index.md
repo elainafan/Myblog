@@ -4,10 +4,61 @@ date: 2025-04-13
 categories:
     - 程序设计实习
 ---
-# 02:统计动物数量
-## 描述
-代码填空，使得程序能够自动统计当前各种动物的数量
+本次上机涉及内容：类与对象、运算符重载、继承、多态
+## Hero和Priest
+### 描述
+根据输出完善程序。
+
+```cpp
+#include <iostream>
+using namespace std;
+class Hero {
+public:
+// 在此处补充你的代码
+};
+class Priest: public Hero {
+public:
+    virtual void attack() { cout << "Priest::attack()" << endl; }
+    virtual void defense() { cout << "Priest::defense()" << endl; } 
+}; 
+
+int main() {
+    Priest anduin;
+    Hero h;
+    h.defense();
+    Hero *player = &anduin;
+    player->attack();
+    player->defense();
+    anduin.attack();
+    anduin.defense();
+    return 0;
+}
 ```
+
+### 输入
+
+```
+None
+```
+
+### 输出
+
+```
+Hero::defense()
+Hero::attack()
+Priest::defense()
+Priest::attack()
+Priest::defense()
+```
+
+### Solution
+
+
+## 统计动物数量
+### 描述
+根据输出完善程序。
+
+```cpp
 #include <iostream>
 using namespace std;
 // 在此处补充你的代码
@@ -40,15 +91,8 @@ int main() {
 3 animals in the zoo, 2 of them are dogs, 1 of them are cats
 6 animals in the zoo, 3 of them are dogs, 3 of them are cats
 3 animals in the zoo, 2 of them are dogs, 1 of them are cats
-样例输入
-None
-样例输出
-0 animals in the zoo, 0 of them are dogs, 0 of them are cats
-3 animals in the zoo, 2 of them are dogs, 1 of them are cats
-6 animals in the zoo, 3 of them are dogs, 3 of them are cats
-3 animals in the zoo, 2 of them are dogs, 1 of them are cats
 ```
-# Solution
+### Solution
 有一点要注意，因为太久没写忘了  
 就是基类的析构函数要写成虚函数形式，这样，在delete派生类对象的时候才会先执行派生类析构函数，再执行基类的析构函数，消得干净  
 这里我们都会写 但是通过C++的报错可以得知一个点  
@@ -56,7 +100,7 @@ print函数中引用的Animal::number这个东西，它是引用的Animal类（�
 这个时候就必须写成静态形式，因为如果不写成的话，编译器不知道你调用的是哪个Animal类对象的成员变量  
 这个也是因为太久没写忘了  
 下面看代码:
-```
+```cpp
 #include <iostream>
 using namespace std;
 class Animal{
@@ -114,9 +158,69 @@ int main() {
 }
 ```
 
-# 04:多态
-## 描述
+## 还是Fun和Do
+### 描述
+根据输出完善代码
+
+```cpp
+#include <iostream> 
+using namespace std;
+
+class A { 
+	public: 
+		virtual void Fun() { 
+			cout << "A::Fun" << endl; 
+		}; 
+		virtual void Do() { 
+			cout << "A::Do" << endl; 
+		} 
+};
+// 在此处补充你的代码
+{ 
+	p.Fun(); 
+	p.Do(); 
+} 
+
+void Call2(B p) {
+	p.Fun();
+	p.Do();
+}
+
+
+
+int main() { 
+	C c;
+	B b;
+	Call1(b);
+	Call1(c); 
+	Call2(c);
+	return 0;
+}
 ```
+
+### 输入
+
+```
+None
+```
+
+### 输出
+
+```
+A::Fun
+B::Do
+C::Fun
+C::Do
+A::Fun
+B::Do
+```
+
+### Solution
+
+## 多态
+### 描述
+根据输出完善代码。
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -141,24 +245,11 @@ int main() {
    return 0;
 }
 ```
-## 输入
+### 输入
 ```
--
+None
 ```
-## 输出
-```
-derived foo
-derived fun
-derived foo
-base fun
-base foo
-base fun
-```
-## 样例输入
-```
--
-```
-## 样例输出
+### 输出
 ```
 derived foo
 derived fun
@@ -167,7 +258,7 @@ base fun
 base foo
 base fun
 ```
-# Solution
+### Solution
 这道题花的时间最长   
 估计是因为函数的写了不调用形式没怎么见到（以及python写太久了，C++有所淡忘）  
 就是那个Base& foo();  
@@ -183,7 +274,7 @@ base fun
 而Derived类和Base类中的foo/fun成员函数同理  
 所以才会输出三次一样的  
 下面看代码:
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -218,10 +309,10 @@ int main() {
 }
 ```
 
-# 06:变来变去的数
-## 描述
-程序填空输出指定结果。（行末输出多余的空格不会影响结果的正确性）
-```
+## 变来变去的数
+### 描述
+根据输出完善代码。
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -249,34 +340,23 @@ int main(){
 	con->work(); con->work(); cout << endl;
 }
 ```
-## 输入
+### 输入
 ```
-无
+None
 ```
-## 输出
-```
-5 10
-6 2 2
-7
-3 3
-```
-## 样例输入
-```
-无
-```
-## 样例输出
+### 输出
 ```
 5 10
 6 2 2
 7
 3 3
 ```
-# Solution
+### Solution
 这里其实没有啥要看清的  
 就是抖机灵 在A的函数里写上counter大于等于4就减一这种解法  
 - ### 笔者注:此题后得知可不用特判解出，本解法仅供参考
 下面看代码：
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -314,16 +394,10 @@ int main(){
     return 0;
 }
 ```
-# 07:MyClass
-## 描述
-补充下列代码，使得程序的输出为：
-A:3
-A:15
-B:5
-3
-15
-5
-```
+## MyClass
+### 描述
+根据输出完善代码。
+```cpp
 #include <iostream>
 using namespace std;
 class CMyClassA {
@@ -351,19 +425,12 @@ int main(int argc, char** argv) {
 	return 0;
 }
 ```
-## 输入
-```
-无
-```
-## 输出
-```
-见样例
-```
-## 样例输入
+### 输入
 ```
 None
 ```
-## 样例输出
+
+### 输出
 ```
 A:3
 A:15
@@ -372,12 +439,12 @@ B:5
 15
 5
 ```
-# Solution
+### Solution
 别的不说，就说一个  
 这里的派生类的构造函数如何调用基类构造函数？  
 做的时候忘记了  
 下面看代码:
-```
+```cpp
 #include <iostream>
 using namespace std;
 class CMyClassA {
@@ -417,3 +484,165 @@ int main(int argc, char** argv) {
 	return 0;
 }
 ```
+
+## 输出指定结果二
+### 描述
+根据输出完善程序
+
+```cpp
+#include <iostream>
+#include <map>
+using namespace std;
+// 在此处补充你的代码
+int A::count = 0;
+void func(B b) {  }
+int main()
+{
+	A a1(5),a2;
+	cout << A::count << endl;
+	B b1(4);
+	cout << A::count << endl;
+	func(b1);
+	cout << A::count << endl;
+	A * pa = new B(4);
+	cout << A::count << endl;
+	delete pa;
+	cout << A::count << endl;
+	return 0;
+}
+```
+
+### 输入
+
+```
+None
+```
+
+### 输出
+
+```
+2
+3
+B::destructor
+A::destructor
+3
+4
+B::destructor
+A::destructor
+3
+B::destructor
+A::destructor
+A::destructor
+A::destructor
+```
+
+### Solution
+
+
+## 构造与析构
+### 描述
+根据输出完善程序。
+
+```cpp
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+// 在此处补充你的代码
+int main(){
+	int n;
+	cin >> n;
+	for (int i = 1; i<=n; i++) {
+		int x;
+		cin >> x;
+		if (x == 0) {
+			A *a = new A();
+			delete a;
+		}else {
+			A *a = new B();
+			delete a;
+		}
+	}
+	return 0;	
+}
+```
+
+### 输入
+
+```
+3
+1 0 1
+```
+
+### 输出
+
+```
+New A
+New B
+Delete B
+Delete A
+New A 
+Delete A
+New A
+New B
+Delete B
+Delete A
+```
+
+### Solution
+
+
+## 卖肉付牛肉
+### 描述
+根据输出完善程序。
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+class Food {
+public:
+// 在此处补充你的代码
+};
+
+class Meat : public Food {
+public:
+	void Buy() { cout << "Buy Meat" << endl; }
+	virtual void Pay() { cout << "Pay Meat" << endl; }
+};
+
+class Beef : public Meat {
+public:
+	void Buy() { cout << "Buy Beef" << endl; }
+	void Pay() { cout << "Pay Beef" << endl; }
+};
+int main() {
+	Beef bf;
+	Meat* pmt = &bf;
+	Food* pfd = &bf;
+
+	pfd->Buy();
+	pfd->Pay();
+	pmt->Buy();
+	pmt->Pay();
+	return 0;
+}
+```
+
+### 输入
+
+```
+None
+```
+
+### 输出
+
+```
+Buy Nothing
+Pay Beef
+Buy Meat
+Pay Beef
+```
+
+### Solution

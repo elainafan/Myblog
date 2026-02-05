@@ -4,6 +4,7 @@ date: 2025-03-30
 categories:
     - 程序设计实习
 ---
+本次上机涉及内容：Python(I)(II)
 ## 求分数序列和
 ### 描述
 有一个分数序列 $\frac{q_1}{p_1},\frac{q_2}{p_2},\frac{q_3}{p_3},\frac{q_4}{p_4},\frac{q_5}{p_5} \ldots$ ，其中 $q_{i+1}=q_i+p_i,p_{i+1}=q_i,p_1,q_1=2$ 。求这个分数序列的前n项之和。
