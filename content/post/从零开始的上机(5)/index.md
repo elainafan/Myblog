@@ -138,58 +138,46 @@ int main() {
 ```cpp
 #include <iostream>
 using namespace std;
-class Animal{
+class Animal {
 public:
     static int number;
-	Animal(){
-		number+=1;
-	}
-	virtual ~Animal(){
-		number--;
-	}
+    Animal() { number += 1; }
+    virtual ~Animal() { number--; }
 };
-class Dog:public Animal{
+class Dog : public Animal {
 public:
-	static int number;
-	Dog(){
-		number+=1;
-	}
-	~Dog(){
-		number--;
-	}
+    static int number;
+    Dog() { number += 1; }
+    ~Dog() { number--; }
 };
-class Cat:public Animal{
+class Cat : public Animal {
 public:
-	static int number;
-	Cat(){
-		number+=1;
-	}
-	~Cat(){
-		number--;
-	}
+    static int number;
+    Cat() { number += 1; }
+    ~Cat() { number--; }
 };
-int Animal::number=0;
-int Dog::number=0;
-int Cat::number=0;
+int Animal::number = 0;
+int Dog::number = 0;
+int Cat::number = 0;
 // 在此处补充你的代码
 void print() {
-	cout << Animal::number << " animals in the zoo, " << Dog::number << " of them are dogs, " << Cat::number << " of them are cats" << endl;
+    cout << Animal::number << " animals in the zoo, " << Dog::number << " of them are dogs, " << Cat::number << " of them are cats" << endl;
 }
 
 int main() {
-	print();
-	Dog d1, d2;
-	Cat c1;
-	print();
-	Dog* d3 = new Dog();
-	Animal* c2 = new Cat;
-	Cat* c3 = new Cat;
-	print();
-	delete c3;
-	delete c2;
-	delete d3;
-	system("pause");
-	print();
+    print();
+    Dog d1, d2;
+    Cat c1;
+    print();
+    Dog* d3 = new Dog();
+    Animal* c2 = new Cat;
+    Cat* c3 = new Cat;
+    print();
+    delete c3;
+    delete c2;
+    delete d3;
+    system("pause");
+    print();
 }
 ```
 
@@ -557,33 +545,39 @@ using namespace std;
 class myobject {
 public:
     static int counter;
-    void work(){
-        if(counter>=4) counter-=4;
-        cout<<counter<<' ';
+    void work() {
+        if (counter >= 4) counter -= 4;
+        cout << counter << ' ';
     }
-    void print_avaliable(){
-        cout<<counter<<' ';
-    }
-// 在此处补充你的代码
+    void print_avaliable() { cout << counter << ' '; }
+    // 在此处补充你的代码
 };
 
 class producer : public myobject {
 public:
-	virtual void work() {
-		counter = counter + 5;
-		print_avaliable();
-	}
+    virtual void work() {
+        counter = counter + 5;
+        print_avaliable();
+    }
 };
 
 int myobject::counter = 0;
 
-int main(){
-	producer *pro = new producer();
-	myobject *con = new myobject();
-	pro->work(); pro->work(); cout << endl;
-	con->work(); con->work(); con->work(); cout << endl;
-	pro->work(); cout << endl;
-	con->work(); con->work(); cout << endl;
+int main() {
+    producer *pro = new producer();
+    myobject *con = new myobject();
+    pro->work();
+    pro->work();
+    cout << endl;
+    con->work();
+    con->work();
+    con->work();
+    cout << endl;
+    pro->work();
+    cout << endl;
+    con->work();
+    con->work();
+    cout << endl;
     system("pause");
     return 0;
 }
