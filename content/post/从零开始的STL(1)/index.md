@@ -142,7 +142,7 @@ int main() {
 ```
 ## 按距离排序
 ### 描述
-根据结构完善程序。
+根据输出完善程序。
 ```cpp
 #include <iostream>
 #include <cmath>
