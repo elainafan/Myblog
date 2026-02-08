@@ -701,7 +701,7 @@ int main() {
 }
 ```
 ## getMax
-## 描述
+### 描述
 根据输出完善程序。
 ```cpp
 #include <iostream>
