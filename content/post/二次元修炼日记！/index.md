@@ -54,6 +54,7 @@ categories:
 | 2026.01.29 | R1077      | div1/2 | 2188 | 4   | 1344 | 1723 | √   | √   | √   | √   |     |     |     |     |     |  |
 | 2026.02.08 | R1078      | div2   | 2194 | 4   | 2090 | 1582 | √   | √   | √   | √   | B   |     |     |     |     |  |
 | 2026.02.11 | R1079      | div1/2 | 2197 | 4   | 1643 | 1650 | √   | √   | √   | √   | B   | B   |     |     |     |  |
+| 2026.02.21 | R1080      | div.3  | 2195 | 6   | 401  | 2075 | √   | √   | √   | √   | √   | √   | B   |     |     |  |
 
 ## Codeforces Round #1072(Div.3)
 第一次在d3做出六道题，事实上G理论也能出，只是AB花太多时间了，唉唉我的AK。
@@ -1963,6 +1964,229 @@ void solve() {
         }
     }
     report(res);
+    return;
+}
+```
+
+## Codeforces Round #1080(Div.3)
+这次除了H构造，确实都很trivial啊，G的思路不难但是写得少~
+
+为什么AB会WA呢，还是不够稳。
+### D
+题目大意：现在有隐藏序列 $a_1,a_2,\ldots,a_n$ ，保证 $|a_i| \leq 1000$ ，现在给定 $p_1,p_2,\ldots,p_n,p_i=\sum\limits_{i=1}^{n}a_i \cdot |i-x|$ ，要求还原原来的 $a_i$ 。 
+
+数据范围： $2 \leq n \leq 3 \cdot 10^5, -10^{14} \leq p_i \leq 10^{14}$
+
+思路：把式子写出来，然后拆项加和差分啥的，简单的数学直觉，有群友跑去高斯消元还做不出来，我不好评价。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vl f(n);
+    vl a(n);
+    rep(i, 0, n - 1) cin >> f[i];
+    ll tot = (f[0] + f[n - 1]) / (n - 1);
+    ll tem = 0;
+    rep(i, 0, n - 2) {
+        a[i] = (tot - (f[i] - f[i + 1] + 2LL * tem)) / 2;
+        tem += a[i];
+    }
+    a[n - 1] = tot;
+    rep(i, 0, n - 2) a[n - 1] -= a[i];
+    rep(i, 0, n - 1) cout << a[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### E
+题目大意：有 $n+1$ 个顶点的二叉树，每个顶点上最多可以写一个字母，所有顶点上最初啥都不写，根为0，0直接跟1连着，除0外不存在只有一个子节点的节点，现在Bob发明了白痴优先搜索，规则如下，经验证可以让他最终走到0，请给出每个节点走到0的步数，并模 $10^9+7$ 。
+
+规则：如果当前节点是叶子，那么移动到父节点，否则，若顶点为空，则写入 $L$ ，并移动到左顶点，若为 $L$ ，则覆盖为 $R$ ，并移动到右顶点，若为 $R$ 则删掉并移动到父节点。
+
+数据范围： $1 \leq n \leq 3 \cdot 10^5 +1$
+
+思路：手玩一下样例，发现由于走到父节点后父节点还会再下来走一次，而且题目的形式非常像换根，因此考虑自上而下换根DP。
+
+```cpp
+const int MOD = 1e9 + 7;
+void solve() {
+    int n;
+    cin >> n;
+    vector<pii> ma(n + 1);
+    rep(i, 1, n) cin >> ma[i].first >> ma[i].second;
+    vector<pll> siz(n + 1);
+    vl res(n + 1);
+    auto dfs = [&](this auto&& dfs, int x) -> int {
+        if (ma[x].first != 0) siz[x].first = dfs(ma[x].first);
+        if (ma[x].second != 0) siz[x].second = dfs(ma[x].second);
+        return siz[x].first + siz[x].second + 1;
+    };
+    dfs(1);
+    res[1] = (2LL * siz[1].first + 2LL * siz[1].second + 1) % MOD;
+    auto dfs2 = [&](this auto&& dfs2, int x, int pa) -> void {
+        if (x != 1) {
+            res[x] = (res[pa] + 2LL * siz[x].first + 2LL * siz[x].second + 1) % MOD;
+        }
+        if (ma[x].first) dfs2(ma[x].first, x);
+        if (ma[x].second) dfs2(ma[x].second, x);
+        return;
+    };
+    dfs2(1, -1);
+    rep(i, 1, n) cout << res[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### F
+题目大意：给定 $n$ 个二次函数，其中 $f_i=a_i x^2+b_i x + c_i$ ，如果两个函数没有交点，那么称他们为独立函数，如果某个集合中函数两两独立，那么称为独立集，请求出最大独立集大小。
+
+数据范围： $1 \leq n \leq 3000, -10^6 \leq a_i,b_i,c_i \leq 10^6$
+
+思路：考虑不交的函数有什么性质，判别式不为0？（或者注意二次项系数一样时的情况），由零点存在性原理，是恒大于或者恒小于，那么这里就存在偏序关系了，包含某个点的最大集合，就是拓扑排序中最长链的长度（因为显然地，这里存在一个有向无环图），按照拓扑序DP即可。
+
+```cpp
+void solve() {
+    int n, a, b, c;
+    cin >> n;
+    vector<tuple<ll, ll, ll>> ma(n);
+    rep(i, 0, n - 1) {
+        cin >> a >> b >> c;
+        ma[i] = make_tuple(a, b, c);
+    }
+    vi res(n);
+    vvi ma2(n);
+    vvi ma3(n);
+    vi deg(n);
+    vi deg2(n);
+    rep(i, 0, n - 1) {
+        rep(j, i + 1, n - 1) {
+            ll a1 = get<0>(ma[i]), a2 = get<0>(ma[j]);
+            ll b1 = get<1>(ma[i]), b2 = get<1>(ma[j]);
+            ll c1 = get<2>(ma[i]), c2 = get<2>(ma[j]);
+            if (a1 != a2 && (b1 - b2) * (b1 - b2) - 4 * (a1 - a2) * (c1 - c2) < 0) {
+                if (a1 > a2) {
+                    ma2[i].push_back(j);
+                    ma3[j].push_back(i);
+                    deg[j]++;
+                    deg2[i]++;
+                } else {
+                    ma2[j].push_back(i);
+                    ma3[i].push_back(j);
+                    deg[i]++;
+                    deg2[j]++;
+                }
+
+            } else if (a1 == a2 && b1 == b2 && c1 != c2) {
+                if (c1 > c2) {
+                    ma2[i].push_back(j);
+                    ma3[j].push_back(i);
+                    deg[j]++;
+                    deg2[i]++;
+                } else {
+                    ma2[j].push_back(i);
+                    ma3[i].push_back(j);
+                    deg[i]++;
+                    deg2[j]++;
+                }
+            }
+        }
+    }
+    vi dp(n);
+    vi fdp(n);
+    auto bfs = [&](this auto&& bfs, vvi& ma, vi& deg, vi& dp) -> void {
+        queue<int> q;
+        rep(i, 0, n - 1) {
+            if (deg[i] == 0) q.push(i);
+        }
+        while (!q.empty()) {
+            auto node = q.front();
+            q.pop();
+            for (int& p : ma[node]) {
+                dp[p] = max(dp[p], dp[node] + 1);
+                if (--deg[p] == 0) {
+                    q.push(p);
+                }
+            }
+        }
+    };
+    bfs(ma2, deg, dp);
+    bfs(ma3, deg2, fdp);
+    rep(i, 0, n - 1) cout << dp[i] + fdp[i] + 1 << ' ';
+    cout << endl;
+}
+```
+
+### G
+题目大意：跟E题一样，但是此时给出 $q$ 个询问，每个询问需要回答最开始位置为 $x$ ，走了 $k$ 步后的位置。
+
+数据范围： $1 \leq n \leq 3 \cdot 10^5+1, 1 \leq q \leq 4 \cdot 10^5, 1 \leq v_j \leq n, 0 \leq k_j \leq \mathrm{min}(10^9+7,T_{v_j})$ 
+
+思路：既然是数数题，那么很显然地，需要使用树上倍增，赛时能一眼看破这个，但是不大会写，补的时候参照了一下前排大佬的代码。
+
+同时，注意到这里遍历的顺序比较奇怪，也就是说刚好是欧拉序（欧拉序：每次到一个节点就记录它，子树走完再回来），如果跳到某个祖先还有剩下的步数，那么使用欧拉序求解。
+
+最后，需要使用数数来计数向上跳的步数，这里注意到应该自下而上先统计一个节点走到它的父节点所需步数，再在倍增的时候直接跳，需要注意的是， $up$ 和 $st$ 两个数组的含义不同，写的时候需要辨别。
+
+```cpp
+const int MOD = 1e9 + 7;
+const ll INF = (1LL << 50);
+void solve() {
+    int n, q, v, k;
+    cin >> n >> q;
+    vector<pii> ma(n + 1);
+    vi pa(n + 1);
+    vl dp(n + 1);
+    vvi up(n + 1, vi(20));
+    vvl st(n + 1, vl(20, INF));
+    pa[1] = 0;
+    rep(i, 1, n) {
+        cin >> ma[i].first >> ma[i].second;
+        if (ma[i].first != 0) pa[ma[i].first] = i;
+        if (ma[i].second != 0) pa[ma[i].second] = i;
+    }
+    vi path;
+    vector<pll> siz(n + 1);
+    vi pos(n + 1);
+    auto dfs = [&](this auto&& dfs, int x) -> int {
+        pos[x] = sz(path);
+        path.push_back(x);
+        if (ma[x].first != 0) {
+            siz[x].first = dfs(ma[x].first);
+            dp[x] += dp[ma[x].first] + 1;
+            path.push_back(x);
+            siz[x].second = dfs(ma[x].second);
+            dp[x] += dp[ma[x].second] + 1;
+            path.push_back(x);
+        }
+        dp[x]++;
+        return siz[x].first + siz[x].second + 1;
+    };
+    dfs(1);
+    path.push_back(0);
+    rep(i, 0, n) up[i][0] = pa[i], st[i][0] = dp[i];
+    rep(j, 0, 18) {
+        rep(i, 1, n) {
+            int mid = up[i][j];
+            if (mid) {
+                up[i][j + 1] = up[mid][j];
+                if (st[i][j] != INF && st[mid][j] != INF) st[i][j + 1] = st[mid][j] + st[i][j];
+            }
+        }
+    }
+    rep(i, 0, q - 1) {
+        cin >> v >> k;
+        frep(j, 19, 0) {
+            if (up[v][j] && st[v][j] <= k) {
+                k -= st[v][j];
+                v = up[v][j];
+            }
+        }
+        cout << path[pos[v] + k] << ' ';
+    }
+    cout << endl;
     return;
 }
 ```
