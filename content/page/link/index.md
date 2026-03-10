@@ -64,6 +64,10 @@ links:
     description: 与你若只如初见，何须感伤离别
     website: https://yjyxfcy.github.io/
     image: https://yjyxfcy.github.io/img/avatar.jpg
+  - title: lvyneko
+    description: 莫西莫西(=^..^=)
+    website: https://lvyovo-wiki.tech
+    image: /avatars/lvyneko.png
 
 menu:
     main: 
