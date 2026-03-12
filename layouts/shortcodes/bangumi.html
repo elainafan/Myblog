@@ -1,0 +1,121 @@
+<div class="article-content">
+    <style>
+        .bili-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .bili-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            overflow: hidden;
+            border-radius: 14px;
+            padding: 10px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(6px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .bili-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .bili-card img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .bili-card h3 {
+            width: 100%;
+            font-size: 1.35rem;
+            margin: 12px 0 0 0;
+            padding: 0;
+            font-weight: 600;
+            color: var(--body-text-color);
+            text-align: center;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-left: none;
+        }
+
+        .bili-card h3::before {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .bili-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .bili-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .bili-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+    <!-- 追番列表开始 -->
+    {{ $vmid := "502066312" }}
+    {{ $url := printf "https://api.bilibili.com/x/space/bangumi/follow/list?type=1&follow_status=0&pn=1&ps=20&vmid=%s"
+    $vmid }}
+
+    {{ $opts := dict "headers" (dict "User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "Referer"
+    "https://space.bilibili.com/") }}
+
+    {{ $biliData := dict }}
+    {{ $err := false }}
+
+    {{ $res := resources.GetRemote $url $opts }}
+
+    {{ if or (not $res) $res.Err }}
+    {{ $err = true }}
+    {{ if $res.Err }}
+    {{ warnf "获取B站追番数据失败: %s" $res.Err }}
+    {{ end }}
+    {{ else }}
+    {{ $biliData = $res.Content | unmarshal }}
+    {{ end }}
+
+    <div
+        style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 1.25rem; font-weight: bold; color: var(--body-text-color);">
+        {{ partial "helper/icon" "bilibili" }}
+        <span>Bilibili 追番</span>
+    </div>
+
+    <div class="bili-grid">
+        {{ if or $err (not $biliData.data) (not $biliData.data.list) }}
+        <p>無法在服務端獲取到追番數據。可能是 API 限制或網絡問題。</p>
+        {{ else }}
+        {{ range first 15 $biliData.data.list }}
+        {{ $coverUrl := replace .cover "http://" "https://" }}
+        <a href="{{ .url }}" target="_blank" class="bili-card">
+            <img src="{{ $coverUrl }}" alt="{{ .title }}" loading="lazy" referrerpolicy="no-referrer">
+            <h3>{{ .title }}</h3>
+        </a>
+        {{ end }}
+        {{ end }}
+    </div>
+    <!-- 追番列表结束 -->
+</div>
