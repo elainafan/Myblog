@@ -2192,11 +2192,550 @@ void solve() {
 }
 ```
 
-## Codeforces Round #1081(Div.2)
+## Codeforces Round #1083(Div.2)
+这场没打，后续补的时候发现题其实都很trivial~
 ### C
+题目大意：目前有 $n$ 篇博客，在第 $i$ 篇博客中提到的用户分别为 $a_{i,1},\ldots,a_{i,l_i}$ 。
 
-### D 
+现在要修改这 $n$ 篇博客的发布顺序，给定一个序列 $Q$ ，当某篇未发布的博客发布的时候，依次遍历它提到的用户，当遍历到用户 $x$ 时，若它不在 $Q$ 中，则提到 $Q$ 的最前面，反之则删除它本来在的地方并提到 $Q$ 的最前面。
+
+现在，请你求出字典序最小的 $Q$ 。
+
+数据范围： $1 \leq n \leq 3000, 1\leq l_i \leq 3000, 1 \leq sum(n) \leq 3000, 1 \leq \sum\limits_{i=1}^{n}l_i \leq 3000$ 。
+
+思路：这个贪心其实蛮难的，首先容易注意到应该从各个博客的结尾出发倒序遍历，越小的记号越晚出现最好。
+
+随后，考虑从前到后遍历，由于我们可以接受 $O(n^2)$ 的复杂度，因此直接考虑在当前取完的博客的前提下，应该取怎样的下一篇博客，从而慢慢从局部最优到全局最优，这是一个很有启发性的思路。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi l(n);
+    vvi a(n);
+    rep(i, 0, n - 1) {
+        cin >> l[i];
+        a[i].resize(l[i]);
+        rep(j, 0, l[i] - 1) cin >> a[i][j];
+    }
+    vi res;
+    set<int> s;
+    deque<int> d;
+    vector<bool> vis(n, false);
+    rep(i, 0, n - 1) {
+        vi tem;
+        vi tem2;
+        int idx = -1;
+        rep(j, 0, n - 1) {
+            if (vis[j]) continue;
+            tem.clear();
+            set<int> s1;
+            frep(v, sz(a[j]) - 1, 0) {
+                if (s.count(a[j][v]) || s1.count(a[j][v])) continue;
+                tem.push_back(a[j][v]);
+                s1.insert(a[j][v]);
+            }
+            if (tem.empty()) continue;
+            if (tem2.empty() || tem < tem2) {
+                tem2 = tem;
+                idx = j;
+            }
+        }
+        if (idx == -1) break;
+        vis[idx] = true;
+        rep(j, 0, sz(tem2) - 1) {
+            if (!s.count(tem2[j])) {
+                d.push_back(tem2[j]);
+                s.insert(tem2[j]);
+            }
+        }
+    }
+    while (!d.empty()) {
+        auto node = d.front();
+        d.pop_front();
+        res.push_back(node);
+    }
+    for (int& p : res) cout << p << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### D
+题目大意：给定一个长度为 $n$ 的排列 $a$ ，我们定义具有以下性质的数组 $b$ 为酷数组，如果不存在 $b_i=\mathrm{max}(b_{i-1},b_i,b_{i+1})$ 。
+
+现在对于 $a$ ，如果存在 $a_i=\mathrm{max}(a_{i-1},a_i,a_{i+1})$ ，则可以删除 $a_{i-1}$ 或者 $a_{i+1}$ ，求要变为酷数组所需要的最少步数。
+
+数据范围： $3 \leq n \leq 5 \cdot 10^5$ 。
+
+思路：下面我们先介绍一种叫做笛卡尔树的数据结构，它可以成为我们在完成单调栈题目时的轮椅。
+
+这棵树的每个节点有两个属性，一个是它在原数组中的下标，一个是它的值。
+
+同时，这棵树关于原数组的下标形成一棵BST，因此它的中序遍历结果就是原数组，且这棵树的每棵子树都关于值形成大根堆/小根堆，于是它的左子树就是往左边延伸小于/大于它的值，右边亦然。
+
+是不是想到了接雨水、最大矩形等题目？是的，它对单调栈贡献法的题目有奇效，哈哈，非常神奇吧~
+
+回到原题，这玩意到底有什么用？
+
+首先观察到一个性质，就是最大的数一定要移到最左边或者最右边，于是对于笛卡尔树，就要舍弃当前节点的左子树或者右子树，以此类推，最后剩下的元素就是从根节点到叶子节点的节点数。
+
+于是，要使剩下的节点数最大，那么就是树的深度，因此答案为 $n$ 减去树的最大深度。
+
+```cpp
+// 笛卡尔树，默认为大根堆
+template <class T, typename Compare = std::greater<T>>
+struct CartesianTree {
+    T inf = std::numeric_limits<T>::max();
+
+    struct Node {
+        int idx;               // 原数组下标
+        T val;                 // 权值
+        int par, siz;          // 父节点索引，子树大小
+        std::array<T, 2> son;  // 左儿子，右儿子
+
+        Node(int idx = 0, T val = 0, int par = 0, int siz = 0) : idx(idx), val(val), par(par), siz(siz), son{} {}
+    };
+
+    std::vector<Node> t;
+
+    CartesianTree() { init(); }
+
+    void init(Compare comp = Compare()) {
+        t.assign(1, {0, 0, 0});
+        t[0].son.fill(0);
+        if (comp(-inf, inf))
+            t[0].val = -inf;
+        else
+            t[0].val = inf;
+    }  // 自动建立虚拟节点
+
+    void add(int idx, T val, int par = 0) { t.emplace_back(idx, val, par); }  // 负责把元素加进末尾，需要使用1-based
+
+    int work(Compare comp = Compare()) {
+        for (int i = 1; i < t.size(); i++) {
+            int k = i - 1;
+            while (comp(t[i].val, t[k].val)) k = t[k].par;
+            t[i].son[0] = t[k].son[1];
+            t[k].son[1] = i;
+            t[i].par = k;
+            t[t[i].son[0]].par = i;
+        }  // 遍历，砍树枝
+        auto dfs = [&](auto&& dfs, int u) -> void {
+            if (!u) return;
+            t[u].siz = 1;
+            dfs(dfs, ls(u));
+            dfs(dfs, rs(u));
+            t[u].siz += t[ls(u)].siz + t[rs(u)].siz;
+        };  // 进行一个dfs
+        dfs(dfs, t[0].son[1]);
+        return t[0].son[1];
+    }
+
+    int depth() {
+        int ans = 0;
+        auto dfs = [&](auto&& dfs, int u, int d) -> void {
+            if (!u) return;
+            ans = max(ans, d);
+            dfs(dfs, ls(u), d + 1);
+            dfs(dfs, rs(u), d + 1);
+            return;
+        };
+        dfs(dfs, t[0].son[1], 1);
+        return ans;
+    }
+
+    int Left(int p) { return p - size(ls(p)); }  // 左边最远
+
+    int Right(int p) { return p + size(rs(p)); }  // 右边最远
+
+    int size(int p) { return t[p].siz; }
+
+    int ls(int p) { return t[p].son[0]; }
+
+    int rs(int p) { return t[p].son[1]; }
+
+    int par(int p) { return t[p].par; }
+};
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    CartesianTree<int> tree;
+    int ans = 0;
+    rep(i, 0, n - 1) { tree.add(i + 1, a[i]); }
+    int root = tree.work();
+    cout << n - tree.depth() << endl;
+    return;
+}
+```
+
+当然，此处还有一种参考朋友的做法，显而易见的是最后的数组必然形成先递减后递增的结构（如果只有递减或者只有递增，则视为退化后的）。
+
+于是，可以进行前后缀分解，枚举当前谷底，并取最值。
+
+但是，这里要注意的是，某一端的贡献必须使用单调栈来做而不是 LIS ，因为可以从题目读出，这里采用的是两个小数吃掉一个大数的机制。
+
+[Kita3's submission](https://codeforces.com/contest/2205/submission/364541847)
 
 ### E
+题目大意：给定一个大小为 $m$ 的数组 $a$ ，现在需要对它进行一次以下操作：
 
-### E类题
+将它划分为若干个子段，然后每个子段分别反转。
+
+现在给定一个数组 $T$ ，问能通过上述操作转变为 $T$ 的数组个数，并模998244353。
+
+数据范围： $1 \leq n \leq 8000, 1 \leq T_i \leq 8000$ 。
+
+思路：看到这个题目马上就想到可能是DP，哈哈哈。
+
+随后，对于重复计数问题，最关键的就是要找到怎么样才是重复的，通过画图发现如果 $[l1,r1] \cup [r1+1,r2]$ 翻转后的效果与 $[l1,r2]$ 一样，则 $[l1,r2]$ 的 border 长度必然大于0。
+
+于是，显然需要使用 KMP 算法在 $O(n^2)$ 复杂度下求出任意子串的border ，然后使用 $O(n^2)$ 的DP，如果当前子串的 border 长度大于0则不发生转移，结束了。
+
+非常trivial的一道题，体感比D简单~
+
+```cpp
+const int MOD = 998244353;
+vector<int> kmp(const vi& pattern) {
+    int m = pattern.size();
+    vector<int> pi(m);
+    int cnt = 0;
+    for (int i = 1; i < m; i++) {
+        int b = pattern[i];
+        while (cnt && pattern[cnt] != b) cnt = pi[cnt - 1];
+        if (pattern[cnt] == b) cnt++;
+        pi[i] = cnt;
+    }
+    return pi;
+}
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vvi border(n + 1);
+    rep(i, 0, n - 1) cin >> a[i];
+    rep(i, 0, n - 1) {
+        vi tem(a.begin() + i, a.end());
+        auto tem2 = kmp(tem);
+        border[i + 1] = tem2;
+    }
+    vi dp(n + 1);
+    dp[0] = 1;
+    rep(i, 1, n) {
+        rep(j, 0, i - 1) {
+            if (border[j + 1][i - j - 1])
+                continue;
+            else {
+                dp[i] += dp[j] % MOD;
+                dp[i] %= MOD;
+            }
+        }
+    }
+    cout << dp[n] << endl;
+    return;
+}
+```
+
+## Codeforces Round #1084(Div.3)
+这场也没打，感觉D偏难了，其他的题都比较trivial~
+### C
+题目大意：给定一个只包含小写英文字母的字符串，现在可以选择一对整数 $1 \leq i < j \leq n$ ，它们相等且都不是``*``，且它们之间的字符都是``*``，然后把它们都变为``*``。
+
+如果无法变了，游戏结束，此时如果每个字符都是``*``，则输出YES,否则输出NO。
+
+数据范围： $1 \leq n \leq 5000,1 \leq sum(n) \leq 5000$ 。
+
+思路：看到这种类似邻项消除的题目，肯定要想着用栈做，然后最后只需要检查栈是否为空即可，不过这种题目容易忘记。
+
+```py
+import sys
+
+input = lambda: sys.stdin.readline().rstrip()
+ii = lambda: int(input())
+mii = lambda: map(int, input().split())
+lii = lambda: list(mii())
+
+
+def solve():
+    n = ii()
+    s = input()
+    st = []
+    for i in range(n):
+        st.append(s[i])
+        if len(st) >= 2 and st[-1] == st[-2]:
+            st.pop()
+            st.pop()
+    print("NO" if st else "YES")
+    return
+
+
+for _ in range(ii()):
+    solve()
+```
+
+### D
+题目大意：给定 $n$ 的排列，现在数组中间有两个传送门，可以把左边传送门左边的数传到右边传送门的右边，或者把左边传送门右边的数传到右边传送门的左边，问最终能得到的最小字典序序列是什么。
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 0 \leq x < y \leq n$ 。
+
+思路：显然中间是自产自销，先把中间的调成字典序最小的形式，于是就转化为一个把中间序列插入前后合并后序列的问题，比对第一个数的大小和当前大小即可。
+
+```cpp
+void solve() {
+    int n, x, y;
+    cin >> n >> x >> y;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    int mixx = INT_MAX;
+    rep(i, x, y - 1) mixx = min(mixx, a[i]);
+    int tem = 0;
+    rep(i, x, y - 1) {
+        if (a[i] == mixx) tem = i - x;
+    }
+    auto tem2 = a;
+    int l = y - x;
+    rep(i, x, y - 1) { a[x + (i - x - tem + l) % l] = tem2[i]; }
+    bool flag = false;
+    rep(i, 0, x - 1) {
+        if (a[i] > a[x] && flag == false) {
+            flag = true;
+            rep(j, x, y - 1) cout << a[j] << ' ';
+        }
+        cout << a[i] << ' ';
+    }
+    rep(i, y, n - 1) {
+        if (a[i] > a[x] && flag == false) {
+            flag = true;
+            rep(j, x, y - 1) cout << a[j] << ' ';
+        }
+        cout << a[i] << ' ';
+    }
+    if (!flag) {
+        rep(i, x, y - 1) cout << a[i] << ' ';
+    }
+    cout << endl;
+    return;
+}
+```
+
+### E 
+题目大意：给定一个 $n$ 个元素的数组 $a$ ，Alice和Bob在上面博弈。
+
+Alice先开始，轮到每个玩家的时候，如果 $a$ 是非递减的，那么游戏结束，否则可以将某个 $x$ 拆成 $y,z,yz=x$ ，同时 $y$ 和 $z$ 需要位于 $x$ 的原来位置，但顺序可以自由分配，如果无法拆则游戏结束。
+
+游戏结束的时候，如果 $a$ 是非递减的，那么Bob获胜，反之Alice获胜，现在需要你给出双方都以最优最优策略进行游戏的结果。
+
+数据范围： $1 \leq n \leq 10^5,1 \leq a_i \leq 10^6$ 。
+
+思路：首先考虑 Alice 只需要每次将一个数的最小素因子丢在后面，那么她就赢了。
+
+因此，只需要计算一个数是否只是某个素因子的幂次，然后后续再比较即可。
+
+```cpp
+constexpr int MX = 1e6 + 1;
+int lpf[MX];  // 存储每个数的最小素因子，复杂度O(NloglogN)
+auto init = [] {
+    for (int i = 2; i < MX; i++) {
+        if (lpf[i] == 0) {
+            for (int j = i; j < MX; j += i) {
+                if (lpf[j] == 0) lpf[j] = i;
+            }
+        }
+    }
+    return 0;
+}();
+// 质因数分解，返回值为pair<素因子，素因子次幂>，复杂度O(logN)
+vector<pair<int, int>> cnt(int x) {
+    vector<pair<int, int>> res;
+    while (x > 1) {
+        int p = lpf[x];
+        int e = 1;
+        for (x /= p; x % p == 0; x /= p) {
+            e++;
+        }
+        res.emplace_back(p, e);
+    }
+    return res;
+}
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    bool flag = true;
+    rep(i, 1, n - 1) {
+        if (a[i] < a[i - 1]) {
+            flag = false;
+            break;
+        }
+    }
+    if (flag) {
+        cout << "Bob" << endl;
+        return;
+    }
+    rep(i, 0, n - 1) {
+        if (a[i] == 1) continue;
+        auto tem = cnt(a[i]);
+        if (sz(tem) >= 2) {
+            cout << "Alice" << endl;
+            return;
+        }
+        a[i] = tem[0].first;
+    }
+    flag = true;
+    rep(i, 1, n - 1) {
+        if (a[i] < a[i - 1]) {
+            flag = false;
+            break;
+        }
+    }
+    if (flag)
+        cout << "Bob" << endl;
+    else
+        cout << "Alice" << endl;
+    return;
+}
+```
+
+### F
+题目大意：现在有 $n$ 个粒子，每个粒子的能量为 $x$ ，压力为 $y$ ，这表示它最多与 $y$ 个粒子一起共存。
+
+现在有一个商店，这个商店出售 $m$ 个粒子，每个粒子的能量和压力都给出，现在要求出对于每个商店的粒子，将它加入原来粒子群后，取出某些粒子（买来的粒子不一定要取出）所能获得的最大能量值。
+
+数据范围： $1 \leq n,m \leq 2 \cdot 10^5, 1 \leq x \leq 10^9, 0 \leq y \leq n, 1 \leq sum(n+m) \leq 2 \cdot 10^5$ 。
+
+思路：对于这种题有个套路，就是要先计算出总体的粒子的最大数，然后再考虑选入这个粒子后的最大数。
+
+首先，很容易想到枚举集合中最小压力数，因此考虑倒序遍历。
+
+然后，考虑选入当前商店粒子，设它的压力值为 $y$ ，则需要求出压力值大于等于 $y$ ，且集合数小于等于 $y$ 的合法集合最大值。
+
+随后，只需要使用堆倒序遍历确定集合大小，并取前缀最大值使得可以进行 $O(1)$ 查询。
+
+比较trivial，但是ds对我来说比较难想，就卡了一下后面取看题解了。
+
+```cpp
+void solve() {
+    int n, m;
+    cin >> n >> m;
+    vector<pii> ma(n);
+    vector<pii> ma2(m);
+    rep(i, 0, n - 1) cin >> ma[i].first >> ma[i].second;
+    rep(i, 0, m - 1) cin >> ma2[i].first >> ma2[i].second;
+    vl suf(n + 2);
+    priority_queue<ll, vector<ll>, greater<>> q;
+    map<int, vector<int>> ma3;
+    rep(i, 0, n - 1) ma3[ma[i].second].push_back(ma[i].first);
+    ll tem = 0;
+    ll ans = 0;
+    frep(i, n, 0) {
+        if (ma3.count(i)) {
+            for (auto& p : ma3[i]) {
+                q.push(p);
+                tem += 1LL * p;
+            }
+        }
+        while (sz(q) > i + 1) {
+            auto node = q.top();
+            q.pop();
+            tem -= node;
+        }
+        suf[i + 1] = tem;
+        if (sz(q) == i + 1) suf[i + 1] -= q.top();
+        ans = max(ans, tem);
+    }
+    rep(i, 1, n + 1) suf[i] = max(suf[i - 1], suf[i]);
+    rep(i, 0, m - 1) { cout << max(ans, 1LL * ma2[i].first + suf[ma2[i].second + 1]) << ' '; }
+    cout << endl;
+    return;
+}
+```
+ 
+### G
+题目大意：现在给定一个 $x$ 和 $n$ 个计算操作，计算操作分为加减乘除四种，问按照任意次序执行这些操作后，得到的数的期望是多少，并模 $10^9+7$ 。
+
+数据范围： $1 \leq n \leq 3000, 1 \leq x \leq 10^9, 1 \leq sum(n^2) \leq 3000^2$ 。
+
+思路：首先考虑把减法和除法分别变成加法和乘逆元，这是显然的。
+
+随后，注意到一个加法的贡献只跟后面它乘的数有关系，考虑现在 $m$ 个乘数的排列，加法的数就是插空法。
+
+现在，考虑插入一个加数，它的背后有 $x$ 个乘数的概率，计算方案数显然是 $\frac{x!(m-x)!}{(m+1)!}$ 。
+
+由于对每个加数，它们的位置都可以互换，因此只需要把加数的总和丢进去。
+
+接着，还需要计算在 $m$ 个乘数中取 $x$ 个乘数乘起来的期望，这个可以用子序列DP做出来。
+
+最后，不要忘了 $x$ 也是有贡献的。
+
+其实很trivial，感觉比D简单多了~
+
+```cpp
+constexpr int MOD = 1e9 + 7;
+constexpr int MX = 3001;
+ll F[MX];      // 预处理阶乘
+ll INV_F[MX];  // 预处理逆元
+ll qpow(ll x, int n) {
+    ll res = 1;
+    for (; n; n >>= 1) {
+        if (n % 2) res = res * x % MOD;
+        x = x * x % MOD;
+    }
+    return res;
+}
+auto init = [] {
+    F[0] = 1;
+    for (int i = 1; i < MX; i++) F[i] = F[i - 1] * i % MOD;  // 预处理阶乘
+    INV_F[MX - 1] = qpow(F[MX - 1], MOD - 2);
+    for (int i = MX - 1; i; i--) {
+        INV_F[i - 1] = INV_F[i] * i % MOD;
+    }  // 预处理逆元
+    return 0;
+}();
+// 计算C(n,m),即从n个数中取m个数
+ll comb(int n, int m) { return m < 0 || m > n ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD; }
+void solve() {
+    int n;
+    ll x;
+    cin >> n >> x;
+    map<char, vl> ma;
+    string s;
+    ll tot = 0;
+    rep(i, 0, n - 1) {
+        cin >> s;
+        if (s[0] == '/') {
+            s[0] = 'x';
+            ma[s[0]].push_back(qpow(stoll(s.substr(1)), MOD - 2));
+        } else if (s[0] == '-') {
+            s[0] = '+';
+            ma[s[0]].push_back(-stoll(s.substr(1)));
+        } else
+            ma[s[0]].push_back(stoll(s.substr(1)));
+    }
+    ll ans = 0;
+    int m = sz(ma['x']);
+    vvl dp(m + 1, vl(m + 1));
+    dp[0][0] = 1;
+    rep(i, 1, m) {
+        dp[i] = dp[i - 1];
+        rep(j, 1, m) {
+            dp[i][j] += dp[i - 1][j - 1] * ma['x'][i - 1] % MOD;
+            dp[i][j] %= MOD;
+        }
+    }
+    rep(i, 0, sz(ma['+']) - 1) { tot = (tot + ma['+'][i] + MOD) % MOD; }
+    vl pre(m + 1);
+    pre[0] = 1;
+    rep(i, 1, m) { pre[i] = (pre[i - 1] + dp[m][i]) % MOD; }
+    ll tem = x * dp[m][m] % MOD;
+    rep(i, 0, m) {
+        ans += tot * F[m - i] % MOD * F[i] % MOD * INV_F[m + 1] % MOD * dp[m][i] % MOD;
+        ans %= MOD;
+    }
+    ans = (ans + tem) % MOD;
+    cout << ans << endl;
+    return;
+}
+```
