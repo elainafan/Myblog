@@ -40,10 +40,10 @@ links:
     description: 探索未知，解码未来
     website: https://www.laneljc.cn/
     image: https://www.laneljc.cn/assets/favicon.png
-  - title: Nebula Blog
-    description: Nebula.SYS
-    website: https://www.996icu.eu.org/
-    image: https://img.scdn.io/i/692d847f79589_1764590719.webp
+  - title: CcoMm
+    description: 你要吃C4吗？
+    website: https://blog.ccomm.top/
+    image: https://avatars.githubusercontent.com/u/147143261
   - title: Masttf
     description: 退役Acmer 是个菜鸡
     website: https://epiphyllum.masttf.fun
@@ -81,7 +81,7 @@ comments: true
 参考样式&本站信息：
 ```
 title: Elainafan's blog
-description: 只因"现在"深爱其中
+description: 编织相遇与离别
 website: https://www.elainafan.one/
 image: https://www.elainafan.one/avatars/elainafan.jpg
 ```

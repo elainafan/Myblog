@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Testing Polynomial Identities 给定某个域下2个 $n$ 元多项式 $P,Q$ ，判定是否 $P \\equiv Q$ 。 作差后问题等价于判定 $P \\equiv 0$ 是否成立，同时给出条件 $deg(P) \\leq d$ 。 确定性算法的复杂度较高，考虑随机">
+<title>Lecture 2</title>
+
+<link rel='canonical' href='http://localhost:1313/p/lecture-2/'>
+
+<link rel="stylesheet" href="/scss/style.min.82568993da6d0d9326d0d4958b59258062a1a23931738af45377eedd5102d227.css"><meta property='og:title' content="Lecture 2">
+<meta property='og:description' content="Testing Polynomial Identities 给定某个域下2个 $n$ 元多项式 $P,Q$ ，判定是否 $P \\equiv Q$ 。 作差后问题等价于判定 $P \\equiv 0$ 是否成立，同时给出条件 $deg(P) \\leq d$ 。 确定性算法的复杂度较高，考虑随机">
+<meta property='og:url' content='http://localhost:1313/p/lecture-2/'>
+<meta property='og:site_name' content='Elainafan'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-03-11T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-03-11T00:00:00&#43;00:00'/><meta property='og:image' content='http://localhost:1313/images/2.png' />
+<meta name="twitter:title" content="Lecture 2">
+<meta name="twitter:description" content="Testing Polynomial Identities 给定某个域下2个 $n$ 元多项式 $P,Q$ ，判定是否 $P \\equiv Q$ 。 作差后问题等价于判定 $P \\equiv 0$ 是否成立，同时给出条件 $deg(P) \\leq d$ 。 确定性算法的复杂度较高，考虑随机"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/images/2.png' />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/elainafan_hu5552899699379341841.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😉</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Elainafan</a></h1>
+            <h2 class="site-description">编织相遇与离别</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/elainafan'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页 | Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于 | About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档 | Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索 | Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/friends/' >
+                
+                
+                
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-friends"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" /><path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" /></svg>
+                
+                <span>友链 | Friends</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/photos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+                
+                <span>图库 | Photos</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/anime/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                
+                <span>番剧 | Anime</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接 | Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#testing-polynomial-identities">Testing Polynomial Identities</a></li>
+    <li><a href="#bipartie-matching">Bipartie Matching</a></li>
+    <li><a href="#隔离引理的另一种严谨证明单射构造法">隔离引理的另一种严谨证明（单射构造法）</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/lecture-2/">
+                
+                    <img src="/images/2.png" loading="lazy" alt="Featured image of post Lecture 2" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/lecture-2/">Lecture 2</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-03-11</time>
+            </div>
+    
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+
+         
+        <div id="viewCount">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-time--reading">
+                
+                <span id="vercount_value_page_pv">loading... </span>次
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    <h2 id="testing-polynomial-identities">Testing Polynomial Identities
+</h2><p>给定某个域下2个 $n$ 元多项式 $P,Q$ ，判定是否 $P \equiv Q$ 。</p>
+<p>作差后问题等价于判定 $P \equiv 0$ 是否成立，同时给出条件 $deg(P) \leq d$ 。</p>
+<p>确定性算法的复杂度较高，考虑随机算法。</p>
+<p>一个随机算法是随机选一项 $x_1^{d_1}x_2^{d_2} \ldots x_n^{d_n}$ ，检查 $P$ 中以上项的系数是否是 $0$ ，这是一个one-sided error，计算一个值是线性时间的，很快。</p>
+<p>考虑正确率，最坏情况下，需要遍历所有多项式的项数，不被我们接受。</p>
+<p>考虑另一个随机算法，从有限集 $S$ 中均匀取值 $r_1,r_2,\ldots,r_n$ ，并代入 $P$ 计算。</p>
+<p>下面计算一下正确率，首先给出结论，如果 $P \neq 0$ ，则 $Pr[P(r_1,\ldots,r_n)=0] \leq \frac{d}{|S|}$ ，这里 $d=deg P$ 。</p>
+<p>考虑数学归纳法，当 $n=1$ 时显然至多有 $d$ 个根，结论成立。</p>
+<p>设 $k$ 是 $P$ 关于 $x_1$ 的最大度数，则 $P(x_1,\ldots,x_n)=M(x_2,\ldots,x_n)x_1^k+N(x_1,\ldots,x_n)$</p>
+<p>其中 $deg M \leq d-k$</p>
+<p>若 $M(x_2,\ldots,x_n)=0$ ，则由归纳假设， $Pr[M(x_2,\ldots,x_n)] \leq \frac{d-k}{|S|}$ 。</p>
+<p>若 $M(x_2,\ldots,x_n) \neq 0,$ 则固定 $x_2,\ldots,x_n$ 时，能使 $P=0$ 的 $x_1$ 不超过 $k$ 个，则 $Pr[P(x_1,\ldots,x_n)=0] \leq \frac{k}{|S|}$ 。</p>
+<p>对以上两者使用 Union Bound 即得证。</p>
+<p>思路：代入随机输入。</p>
+<h2 id="bipartie-matching">Bipartie Matching
+</h2><p>给定一个二分图 $G= \langle V_1,V_2,E \rangle,|V_1|=|V_2|=n$ ，问是否存在完美匹配？</p>
+<p>完美匹配概念回顾：图中每一个顶点都被选出的边独立集覆盖到了。</p>
+<p>考虑二分图的邻接矩阵，现在对原本矩阵中的 $1$ 赋为一个变量，只需要检查它的行列式恒不为0即可，这个矩阵也被称为 $Tutte$ 矩阵。</p>
+<p>为什么只需要检查它的行列式恒不为0？</p>
+<p>设构造出的 $n \times n$ 矩阵为 $A$ ，行代表 $V_1$ 中的点，列代表 $V_2$ 中的点。若 $i \in V_1, j \in V_2$ 之间有边相连，则 $A_{ij} = x_{ij}$ （ $x_{ij}$ 是一个独立的变量），否则 $A_{ij} = 0$ 。这个矩阵在二分图的情况下也被称为 Edmonds 矩阵。</p>
+<p>根据线性代数中行列式的定义（莱布尼茨公式）：</p>
+<p>$$ \det(A) = \sum_{\sigma \in S_n} \text{sgn}(\sigma) \prod_{i=1}^n A_{i, \sigma(i)} $$</p>
+<p>其中 $\sigma$ 是一个对列的全排列，对应了从 $V_1$ 到 $V_2$ 的一种映射。</p>
+<p>仔细观察乘积项 $\prod_{i=1}^n A_{i, \sigma(i)}$ ：它不为0当且仅当每一项 $A_{i, \sigma(i)}$ 都不为0，这意味着图 $G$ 中存在边 $(i, \sigma(i))$ 。因为 $\sigma$ 是一个全排列，这就相当于在图中找到了 $n$ 条互不相交的边，即一个<strong>完美匹配</strong>。</p>
+<p>更关键的是，由于每个非零元素 $x_{ij}$ 都是独立的变量，所以没有任何两个不同的全排列 $\sigma_1$ 和 $\sigma_2$ 能够产生相同的单项式变量组合。因此，在求和过程中，<strong>这些单项式绝对不会互相抵消</strong>。</p>
+<p>综上所述：</p>
+<ul>
+<li>如果图 $G$ <strong>不存在</strong>完美匹配，那么对于任何全排列，乘积项中都一定包含至少一个 $0$，导致 $\det(A) \equiv 0$ 。</li>
+<li>如果图 $G$ <strong>存在</strong>完美匹配，那么其中至少存在一项为非零单项式，导致多项式 $\det(A) \not\equiv 0$ 。</li>
+</ul>
+<p>然后运用上文中判断多项式是否为0的方法即可。</p>
+<p>这个算法是易于并行的，论文中提到在 $O(n^{3.5})$ 个处理器上用双log时间计算。</p>
+<p>现在，要找到具体的完美匹配，怎么使用并行算法进行处理？</p>
+<p>对于每一条边 $(i,j)$ ，检查 $A_{-ij}$ 的行列式是否为0。</p>
+<p>现在，将每个边权随机为 $2^w$ ，则 $det=2^{w_1+w_2+\ldots +w_n}+\ldots +2^{w_1&rsquo;+w_2&rsquo;+\ldots +w_n}$ ，每一个非零的乘积项刚好对应一个完美匹配。</p>
+<p>为了防止随机后的匹配导致刚好碰到行列式为0，因此指数随机后，如果存在最小完美匹配，可以更好地防止抵消。</p>
+<p>假设最小完美匹配唯一，则最后 $det(A)=2^w \cdot odd$ 。</p>
+<p>根据这个性质，提出新的并行算法，对于每一条边，检查 $2^{w_{ij}} det(A_{-ij})$ 是否等于 $2^w \cdot odd&rsquo;$ ，如果是，那么加入到答案集合。</p>
+<p>现在令 $w_{ij}$ 的取值集合为 $S$ ，给出以下结论：高概率存在唯一最小完美匹配，这个概率的下界是 $\frac{(|S|-1)^{|E|}}{|S|^{|E|}}$ 。</p>
+<p><strong>关于这一下界的证明思路（隔离引理 Isolation Lemma 的核心）：</strong></p>
+<p>在这个定理中，目标是证明“由于边权的随机性，最小权重完美匹配极大概率是唯一的”。</p>
+<p>这里运用到了<strong>延迟决策</strong>的技巧。我们单独盯住图中的任意一条边 $e$ 。</p>
+<p>假设上帝已经抛好了骰子，除了边 $e$ 以外的<strong>所有其他边的权重都已经固定</strong>。</p>
+<p>在剩余图固定的情况下，图中所有的完美匹配分为两类：</p>
+<ul>
+<li>一类是<strong>必须包含</strong>边 $e$ 的匹配，由于其他边已固定，这些匹配中其他边的权重和会有一个最小值，记为 $W_{\text{包含}}(e)$ 。</li>
+<li>另有一类是<strong>绝对不包含</strong>边 $e$ 的完美匹配，它在剩余图中也有一个最小权重，记为 $W_{\text{不包含}}(e)$ 。</li>
+</ul>
+<p>注意以上两个值完全是由其他边决定的，跟 $e$ 自己最终抽到的权重 $w_e$ 毫无关系。</p>
+<p>此时，上帝来揭晓 $w_e$ 的值：</p>
+<ul>
+<li>若 $w_e + W_{\text{包含}}(e) &lt; W_{\text{不包含}}(e)$，则全局真正的最小匹配必定包含 $e$ 。</li>
+<li>若 $w_e + W_{\text{包含}}(e) &gt; W_{\text{不包含}}(e)$，则全局真正的最小匹配必定不包含 $e$。</li>
+</ul>
+<p><strong>唯一会造成麻烦的是平局：</strong>
+当且仅当 $w_e + W_{\text{包含}}(e) = W_{\text{不包含}}(e)$ ，即 $w_e = W_{\text{不包含}}(e) - W_{\text{包含}}(e)$ 时，包含与不包含 $e$ 的最小匹配权值相等，从而导致最小匹配不唯一（发生歧义）。</p>
+<p>但是，由于 $w_e$ 是从大小为 $|S|$ 的集合中<strong>均匀随机</strong>抽取的，它刚好抽中这个“唯一能造成平局的特定差值”的概率至多为 $\frac{1}{|S|}$ 。</p>
+<p>也就是说，不发生扯皮（边 $e$ 很“安全”）的概率至少是 $1 - \frac{1}{|S|} = \frac{|S|-1}{|S|}$ 。</p>
+<p>更进一步，要求<strong>图中所有 $|E|$ 条边都不发生扯皮</strong>（即不管怎么选，都不存在权重相同的并列第一名组合）。由于每条边的分析界都是如此，将它们连乘后，即可得到全局唯一最小完美匹配的概率下界为：</p>
+<p>$$ \left( \frac{|S|-1}{|S|} \right)^{|E|} $$</p>
+<h2 id="隔离引理的另一种严谨证明单射构造法">隔离引理的另一种严谨证明（单射构造法）
+</h2><p>除上述延迟决策法外，我们可以通过<strong>构造映射计算方案数</strong>的方法提供一个非常干净的证明：</p>
+<p>设有 $|S|$ 个元素，每个元素在 $\{1,2,\dots,l \}$ 之间均匀随机抽取权值。</p>
+<p>所有可能的权值分配方案集合记为 $\mathcal{W}$ ，显然 $|\mathcal{W}| = l^{|S|}$ 。</p>
+<p>我们再定义一个<strong>保守的赋值方案子集</strong> $\mathcal{W}^+$ ：要求所有元素的权值都严格大于 1（即在 $\{2,\dots,l \}$ 中取值）。</p>
+<p>显然，保守方案的总数为 $|\mathcal{W}^+| = (l-1)^{|S|}$ 。</p>
+<p>由于对于任意 $w \in \mathcal{W}^+$，都至少存在一些总权值最小的集合（可能不唯一）。我们人为在这些最小集合中任选一个作为代表，记为 $S_*$ 。</p>
+<p>接着构造一种从“保守方案集合”到“拥有唯一最小集合方案”的映射函数，获得新的权重分配方案 $w&rsquo;$ 。</p>
+<div>
+$$
+w'_{x} = \begin{cases}
+w_x - 1 & (x \in S_{\ast}) \\\\
+w_x & (x \notin S_{\ast}) \\\\
+\end{cases}
+$$
+</div>
+<p>此时， $w&rsquo;$ 这个新分配方案具有极强的特性：<strong>它必定有唯一的最小集合，且这个集合就是刚才的 $S_*$</strong>。因为我们把原本可能并列第一的若干选手中的<strong>仅仅一个</strong>（即 $S_*$ 里包含的所有元素）强制减轻了重量（减去1），就强行将它塑造成了唯一的冠军。</p>
+<p>由于原本 $w \ge 2$ ，减 1 后权重依然合法。</p>
+<p>更重要的是，对于做完手术的 $w&rsquo;$，我们通过找出它的这个唯一最小集合 $S_*$，然后给该集合的元素统统加上 1，就能<strong>完美复原</strong>出原本的 $w$ 。</p>
+<p>这说明该映射是一个<strong>单射</strong>。</p>
+<p>由此可知，“拥有唯一最小集合的好方案”必然存在，且数量大于等于源头样本也就是保守方案 $\mathcal{W}^+$ 的数量！</p>
+<p>因此，满足条件的概率：</p>
+<p>$$ Pr \ge \frac{|\mathcal{W}^+|}{|\mathcal{W}|} = \frac{(l-1)^{|S|}}{l^{|S|}} = \left( \frac{l-1}{l} \right)^{|S|} $$</p>
+<p>立刻得证。此映射技巧非常精妙，它避免了处理复杂的概率事件交集，而是直接通过降维数方案的基数实现证明。</p>
+<p>刚才提到对于每一条边，检查 $2^{w_{ij}} \det(A_{-ij})$ 与原多项式首项的关系。在计组算术与工程实现中，这其实等价于常见的 <code>lowbit</code>（取最低位二进制中 1 的位置）操作：</p>
+<ol>
+<li>
+<p>为了找最小完美权匹配，我们令原本不带权邻接矩阵中的元素转为带幂次的独立数字方案： $A_{ij} = 2^{w_{ij}}$ ，新矩阵记为 $B$。</p>
+</li>
+<li>
+<p>此时，当 $\det(B) \neq 0$ （存在完美匹配时），全局最小完美匹配的权值之和 $\omega$ ，实际上就等于 $\det(B)$ 提取出来的末尾全 0 部分：</p>
+</li>
+</ol>
+<p>$$ \text{lowbit}(|\det(B)|) = 2^{\omega} \ (\text{即 } 2^{\text{minimal weights perfect match}})$$</p>
+<ol start="3">
+<li><strong>求解出匹配边的并行算法步骤</strong>即可提炼为：
+<ul>
+<li><strong>Step 1:</strong> 首先计算 $2^\omega = \text{lowbit}(|\det(B)|)$ 提取全局最小值对应的 2 次幂基准线。</li>
+<li><strong>Step 2:</strong> 并行地扫描或派发所有的边 $(i, j)$，计算对应余子式，如果满足：
+$$2^{w_{ij}} \times \text{lowbit}(|\det(B_{ij})|) == 2^\omega$$
+也就是说：当强制把这条边加进去以后，得到的新图全域最小匹配，连一点额外的重量（幂次）都没加上，跟全局最优解<strong>严丝合缝对标上了</strong>。</li>
+<li><strong>Step 3:</strong> 满足该等式的边 $(i, j)$，就是那“唯一最小完美匹配”里的合法成员，将其输出！</li>
+</ul>
+</li>
+</ol>
+
+    
+</section>
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+<div class="math-katex"></div>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="elainafan/Myblog"
+    data-repo-id="R_kgDOQQ-HmA"
+    data-category="General"
+    data-category-id="DIC_kwDOQQ-HmM4CyEyD"
+    data-mapping="url"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark');
+            }
+        }
+    })();
+</script>
+    <div class="comment"></div>
+
+    
+
+    <footer class="site-footer">
+    
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        发表了48篇文章 · 
+        总计308.43k字
+    </section>
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 elainafan
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<div id="aplayer"></div>
+
+<script>
+    const staticDir = "http://localhost:1313/";
+    console.log(staticDir);
+    const ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        fixed: true,
+        audio: [
+            {
+                name: 'Everyday world',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Everyday-world/music.mp3',
+                cover: staticDir + 'music/Everyday-world/cover.png'
+            },
+            {
+                name: 'Hello Alone',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Hello-Alone/music.mp3',
+                cover: staticDir + 'music/Hello-Alone/cover.jpg'
+            },
+            {
+                name: 'LOVE2000',
+                artist: '八奈见杏菜',
+                url: staticDir + 'music/LOVE2000/music.mp3',
+                cover: staticDir + 'music/LOVE2000/cover.jpg'
+            },
+            {
+                name: 'No,thank you!',
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/No,thank you!/music.mp3',
+                cover: staticDir + 'music/No,thank you!/cover.jpg'
+            },
+            {
+                name: 'Hello Alone(Yui)',
+                artist: '东山奈央',
+                url: staticDir + 'music/Hello-Alone-Yui/music.mp3',
+                cover: staticDir + 'music/Hello-Alone-Yui/cover.jpg'
+            },
+            {
+                name: '轻飘飘の时间',
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/轻飘飘の时间/music.mp3',
+                cover: staticDir + 'music/轻飘飘の时间/cover.png'
+            },
+            {
+                name: "Don't Say Lazy",
+                artist: '秋山澪/樱高轻音部',
+                url: staticDir + 'music/Don-Say-Lazy/music.mp3',
+                cover: staticDir + 'music/Don-Say-Lazy/cover.jpg'
+            },
+            {
+                name: '钻石の纯度',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/钻石の纯度/music.mp3',
+                cover: staticDir + 'music/钻石の纯度/cover.jpg'
+            },
+            {
+                name: 'Inside Identity',
+                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
+                url: staticDir + 'music/Inside-Identity/music.mp3',
+                cover: staticDir + 'music/Inside-Identity/cover.jpg'
+            },
+            {
+                name: 'Van!shment Th!s world',
+                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
+                url: staticDir + 'music/Van!shment-Th!s-World/music.mp3',
+                cover: staticDir + 'music/Van!shment-Th!s-World/cover.jpg'
+            },
+            {
+                name: 'Sparkling Daydream',
+                artist: 'ZAQ',
+                url: staticDir + 'music/Sparkling-Daydream/music.mp3',
+                cover: staticDir + 'music/Sparkling-Daydream/cover.jpg'
+            },
+            {
+                name: 'Everyday world(Instrumental)',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Everyday-world-Instrumental/music.mp3',
+                cover: staticDir + 'music/Everyday-world-Instrumental/cover.png'
+            },
+            {
+                name: 'Hello Alone(Instrumental)',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/Hello-Alone-Instrumental/music.mp3',
+                cover: staticDir + 'music/Hello-Alone-Instrumental/cover.jpg'
+            },
+            {
+                name: 'Hello Alone(Yui Instrumental)',
+                artist: '东山奈央',
+                url: staticDir + 'music/Hello-Alone-Yui-Instrumental/music.mp3',
+                cover: staticDir + 'music/Hello-Alone-Yui-Instrumental/cover.jpg'
+            },
+            {
+                name: '钻石の纯度(Instrumental)',
+                artist: '早见沙织/东山奈央',
+                url: staticDir + 'music/钻石の纯度-Instrumental/music.mp3',
+                cover: staticDir + 'music/钻石の纯度-Instrumental/cover.jpg'
+            }
+        ],
+    });
+    
+
+    window.onbeforeunload = () => {
+        
+        const playInfo = {
+            index: ap.list.index,
+            currentTime: ap.audio.currentTime,
+            paused: ap.paused
+        };
+        localStorage.setItem("playInfo", JSON.stringify(playInfo));
+    };
+
+    
+
+    window.onload = () => {
+        
+        const playInfo = JSON.parse(localStorage.getItem("playInfo"));
+        if (!playInfo) {
+            return;
+        }
+        
+        ap.list.switch(playInfo.index);
+        
+        setTimeout(() => {
+            
+            ap.seek(playInfo.currentTime);
+            
+            if (!playInfo.paused) {
+                ap.play()
+            }
+        }, 500);
+    };
+</script>
+
+
+
+<script src=http://localhost:1313/js/topbar.min.js></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
+<script>
+    var pjax = new Pjax({
+        selectors: [
+            ".main-container", ".js-Pjax", "Timer"
+        ]
+    })
+
+    pjax._handleResponse = pjax.handleResponse;
+
+    pjax.handleResponse = function (responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            if (responseText) {
+                
+                let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+                
+                let bodyClass = newDom.body.className;
+                document.body.setAttribute("class", bodyClass)
+            }
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+        }
+    }
+
+    async function renderKaTeX() {
+        
+        let katex = document.querySelector(".math-katex");
+        if (!katex) {
+            return;
+        }
+        
+        while (typeof renderMathInElement !== 'function') {
+            await delay(500);
+        }
+        
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });
+    }
+
+    
+
+    function delay(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time)
+        })
+    }
+
+    document.addEventListener('pjax:send', () => {
+        
+        topbar.show();
+    })
+
+    document.addEventListener('pjax:complete', () => {
+        
+        let url = new URL(window.location.href);
+        url.searchParams.delete('t');  
+        history.replaceState(null, '', url.toString());  
+        renderKaTeX();
+        
+        window.Stack.init();
+        topbar.hide();
+        
+    })
+</script><div class="js-Pjax">
+    <script>
+            (function () {
+                
+                let comment = document.querySelector(".comment");
+                if (!comment) {
+                    return;
+                }
+                function injectGiscusScript() {
+                    let script = document.createElement('script');
+                    
+                    script.setAttribute('src', 'https://giscus.app/client.js');
+                    script.setAttribute('data-repo', 'elainafan\/Myblog');
+                    script.setAttribute('data-repo-id', 'R_kgDOQQ-HmA');
+                    script.setAttribute('data-category', 'General');
+                    script.setAttribute('data-category-id', 'DIC_kwDOQQ-HmM4CyEyD');
+                    script.setAttribute('data-mapping', 'url');
+                    script.setAttribute('data-strict', '0');
+                    script.setAttribute('data-reactions-enabled', '1');
+                    script.setAttribute('data-emit-metadata', '0');
+                    script.setAttribute('data-input-position', 'top');
+                    script.setAttribute('data-theme', 'light');
+                    script.setAttribute('data-lang', 'en');
+                    script.setAttribute('data-loading', 'lazy');
+                    script.setAttribute('crossorigin', 'anonymous');
+                    script.async = true;
+
+                    
+                    let footer = document.querySelector('.site-footer');
+                    if (footer) {
+                        footer.before(script);
+                    }
+                }
+
+                
+                injectGiscusScript();
+
+                
+                document.addEventListener('pjax:complete', function () {
+                    injectGiscusScript();
+                });
+            })(document);
+    </script>
+    <div><script defer src="https://cn.vercount.one/js"></script>
+
+        <script>
+            function showHideView() {
+                
+                let viewCounts = document.querySelectorAll("#viewCount");
+                if (viewCounts) {
+                    
+                    let article = document.querySelector(".article-page");
+                    if (!article) {
+                        viewCounts.forEach(ele => {
+                            ele.style.display = 'none';
+                        });
+                    }
+                }
+            }
+            showHideView();
+        </script>
+
+        <div class="Timer">
+            
+            <script>
+                function updateRunningDays() {
+                    let s1 = '2025-6-23'; 
+                    s1 = new Date(s1.replace(/-/g, "/"));
+                    let s2 = new Date();
+                    let timeDifference = s2.getTime() - s1.getTime();
+
+                    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+                    let result = days + "天" + hours + "小时" + minutes + "分钟";
+                    const elem = document.getElementById('runningdays');
+                    if (elem) elem.innerHTML = result;
+                }
+
+                updateRunningDays();
+
+                document.addEventListener('pjax:complete', function () {
+                    updateRunningDays();
+                });
+            </script>
+            <div>
+
+                
+    </body>
+</html>
