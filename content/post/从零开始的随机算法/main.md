@@ -12,3 +12,5 @@ categories:
 [Lecture 1]({{< ref "Lec1.md" >}})
 
 [Lecture 2]({{< ref "Lec2.md" >}})
+
+[Lecture 3]({{< ref "Lec3.md" >}})
