@@ -2192,6 +2192,7 @@ void solve() {
 }
 ```
 ## Codeforces Round #1081(Div.2)
+很trivial的场~
 ### C
 题目大意：给定一个数组 $a$ ，每个 $a_i$ 会造成 $a_i$ 点伤害，敌人的生命值从 $h$ 开始，当生命值小于等于0时，敌人就会死亡。
 
@@ -2247,11 +2248,222 @@ void solve() {
 ```
 
 ### D
-题目大意：给定一棵有根 $r$ 的树 $T$ ，每个节点都有一个值 $a_i$ ，这棵树的成本定义为
+题目大意：给定一棵有根 $r$ 的树 $T$ ，每个节点都有一个值 $a_i$ ，这棵树的成本定义为 $\sum_{u \in T}(a_u \cdot d(r,u))$ 。
+
+这里的总和是树 $T$ 所有节点 $u$ 的总和， $d(r,u)$ 表示节点 $r$ 到节点 $u$ 的最短路径的边数。
+
+现在给你一棵由 $n$ 个节点组成的树，根节点为 $1$ 。每个节点都有一个值 $a_i$ ，对于从 $1$ 到 $n$ 的每个 $r$ ，请求出以顶点 $r$ 为根的子树中，执行最多一次操作后能得到的最大成本。
+
+操作： 选择任意节点 $u(u \not ={r})$ ，删除从 $u$ 到其父节点的边，然后添加一条从 $u$ 到任何仍可从 $r$ 到达的节点 $v$ 的边。
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq 2 \cdot 10^5$
+
+思路：首先，是换根么？因为一个节点跟它的父节点没关系，因此不是换根。
+
+然后来看一个贪心思路，由于所有点的值都是整数，因此把割下来的接到当前最深的地方肯定是对的。
+
+同时，更有趣的是，对于当前节点，如果它只有一个儿子，那么就直接在它的子树中找用来接上的，否则将一个儿子接到除掉这个儿子后当前最深的地方。
+
+好了，看看我们要维护什么，首先可以认识到接过去，只跟最大深度和当前子树的所有值总和有关系，因此只需要维护两个深度（参考树的直径思想，因为无法自己接到自己身上），以及一个子树的所有值总和即可。
+
+```cpp
+void solve() {
+    int n, x, y;
+    cin >> n;
+    vl a(n);
+    vvi ma(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vl res(n);
+    rep(i, 1, n - 1) {
+        cin >> x >> y;
+        ma[x - 1].push_back(y - 1);
+        ma[y - 1].push_back(x - 1);
+    }
+    vi dep(n);
+    vi maxx(n);
+    vl tem(n);
+    vl tem2(n);
+    vl tem3(n);
+    vl cnt(n);
+    auto dfs = [&](this auto&& dfs, int x, int pa, int d) -> void {
+        dep[x] = d;
+        maxx[x] = dep[x];
+        tem2[x] = a[x];
+        int idx = -1;
+        ll d1 = d, d2 = d;
+        for (int& p : ma[x]) {
+            if (p == pa) continue;
+            dfs(p, x, d + 1);
+            tem2[x] += tem2[p];
+            tem3[x] += tem3[p] + tem2[p];
+            if (maxx[p] > d1) {
+                d2 = d1;
+                d1 = maxx[p];
+                idx = p;
+            } else if (maxx[p] > d2)
+                d2 = maxx[p];
+        }
+        if (idx != -1) {
+            cnt[x] = max(cnt[x], cnt[idx]);
+            cnt[x] = max(cnt[x], tem2[idx] * (d2 - dep[idx] + 1));
+        }
+        for (int& p : ma[x]) {
+            if (p == pa || p == idx) continue;
+            cnt[x] = max(cnt[x], tem2[p] * (d1 - dep[p] + 1));
+        }
+        res[x] = tem3[x] + cnt[x];
+        maxx[x] = d1;
+        return;
+    };
+    dfs(0, -1, 0);
+    rep(i, 0, n - 1) cout << res[i] << ' ';
+    cout << endl;
+    return;
+}
+```
 
 ### E
+题目大意：给定两个数组 $a$ 和 $b$ ，长度都是 $n$ ，可以进行任意次次数的以下操作： 选择索引 $i$ ，将 $a_i$ 和 $b_i$ 互换，问是否能将 $a$ 转化为 $b$ 的重排。
+
+数据范围： $1 \leq a \leq 10^6, 1 \leq a_i,b_i \leq n$
+
+思路：这道题，其实是一个knowledge check，它的主要知识点是欧拉路径。
+
+首先考虑，将每个数抽象为一个点， $a_i \rightarrow b_i$ 为从 $a_i$ 指向 $b_i,$ 编号为 $i$ 的一条有向边，从而可以观察到，每个节点的入度都应该等于出度，这就形成了欧拉回路。
+
+随后，为了跑可以反转边的欧拉回路，我们完全可以采用一种方式，也就是存无向边，在无向基图中跑出一个欧拉回路，然后按照遍历的顺序进行定向，如果从 $x$ 到 $to$ 的一条边， $x$ 在 $a$ 中，那么就不需要反向，反之需要反向。
+
+最后，由于这个值域比较大，因此考虑离散化，总的时间复杂度为 $O(n \log n)$ 。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    vi sorted;
+    rep(i, 0, n - 1) cin >> a[i], sorted.push_back(a[i]);
+    rep(i, 0, n - 1) cin >> b[i], sorted.push_back(b[i]);
+    ranges::sort(sorted);
+    sorted.erase(unique(all(sorted)), sorted.end());
+    int cnt = sz(sorted);
+    vi tot(cnt);
+    vi cnta(n), cntb(n);
+    vi res;
+    vector<vector<pii>> ma3(cnt);
+    rep(i, 0, n - 1) {
+        cnta[i] = ranges::lower_bound(sorted, a[i]) - sorted.begin();
+        cntb[i] = ranges::lower_bound(sorted, b[i]) - sorted.begin();
+        tot[cnta[i]]++, tot[cntb[i]]++;
+        ma3[cnta[i]].emplace_back(cntb[i], i);
+        ma3[cntb[i]].emplace_back(cnta[i], i);
+    }
+    rep(i, 0, cnt - 1) {
+        if (tot[i] % 2) {
+            cout << -1 << endl;
+            return;
+        }
+    }
+    vector<bool> vis(n, false);
+    vi head(cnt);
+    auto dfs = [&](this auto&& dfs, int x) -> void {
+        for (int& i = head[x]; i < sz(ma3[x]);) {
+            auto [to, id] = ma3[x][i++];
+            if (vis[id]) continue;
+            vis[id] = true;
+            if (cnta[id] != x) res.push_back(id);
+            dfs(to);
+        }
+    };
+    rep(i, 0, cnt - 1) { dfs(i); }
+    cout << sz(res) << endl;
+    rep(i, 0, sz(res) - 1) cout << res[i] + 1 << ' ';
+    cout << endl;
+    return;
+}
+```
 
 ### E类题
+出处：CF2110E
+
+题目描述：给定 $n$ 种不同的声音，每种声音的特点是音量和音高，一连串的声音被称为音乐，如果任何两个连续的声音仅在音量和音高上有所不同，那么音乐被认为是优美的，如果连着三个连续声音的音量或者音高都相同，那么音乐被认为是乏味的。
+
+现在，给定 $n$ 种不同的声音，是否能构成优美而不乏味的声音？
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 1 \leq u_i,p_i \leq 10^9$ 。
+
+思路：跟上题其实差不多，首先观察到相邻的两个点必然是只有声音或者音高相同，因此这里可以看出是一个二分图，并且两边的声音跟音高要分开看，将一个声音视为连接 $u_i$ 跟 $v_i$ 的无向边。
+
+接着，同样可以看出这里的条件是在二分图中跑出一个欧拉路径，同样还需要做离散化，于是就可以开始编写代码了。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<pii> ma(n);
+    rep(i, 0, n - 1) cin >> ma[i].first >> ma[i].second;
+    vi sorteda;
+    vi sortedb;
+    rep(i, 0, n - 1) {
+        sorteda.push_back(ma[i].first);
+        sortedb.push_back(ma[i].second);
+    }
+    ranges::sort(sorteda);
+    sorteda.erase(unique(all(sorteda)), sorteda.end());
+    ranges::sort(sortedb);
+    sortedb.erase(unique(all(sortedb)), sortedb.end());
+    int m = sz(sorteda) + sz(sortedb);
+    vi cnta(n);
+    vi cntb(n);
+    vi tot(m);
+    vector<vector<pii>> ma2(m);
+    rep(i, 0, n - 1) {
+        cnta[i] = ranges::lower_bound(sorteda, ma[i].first) - sorteda.begin();
+        cntb[i] = ranges::lower_bound(sortedb, ma[i].second) - sortedb.begin() + sz(sorteda);
+        ma2[cnta[i]].emplace_back(cntb[i], i);
+        ma2[cntb[i]].emplace_back(cnta[i], i);
+        tot[cnta[i]]++, tot[cntb[i]]++;
+    }
+    int st = 0, cnt = 0;
+    frep(i, m - 1, 0) {
+        if (!ma2[i].empty()) {
+            if (sz(ma2[i]) % 2) {
+                st = i;
+                cnt++;
+            } else if (cnt == 0) {
+                st = i;
+            }
+        }
+    }
+    if (cnt > 2) {
+        cout << "NO" << endl;
+        return;
+    }
+    vi head(m);
+    vi res;
+    vector<bool> vis(n, false);
+    auto dfs = [&](this auto&& dfs, int x) -> void {
+        for (int& i = head[x]; i < sz(ma2[x]);) {
+            auto [to, id] = ma2[x][i++];
+            if (vis[id]) continue;
+            vis[id] = true;
+            dfs(to);
+            res.push_back(id);
+        }
+        return;
+    };
+    dfs(st);
+    if (sz(res) != n) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    ranges::reverse(res);
+    rep(i, 0, sz(res) - 1) cout << res[i] + 1 << ' ';
+    cout << endl;
+    return;
+}
+```
 
 ## Educational Codeforces Round #187
 这场也没打，但是C比较恶心，VP的时候没开出来，D很简单，E是火箭毛毛虫，需要一些ds功底，整体确实很Edu。
