@@ -2191,6 +2191,279 @@ void solve() {
     return;
 }
 ```
+## Codeforces Round #1081(Div.2)
+很trivial的场~
+### C
+题目大意：给定一个数组 $a$ ，每个 $a_i$ 会造成 $a_i$ 点伤害，敌人的生命值从 $h$ 开始，当生命值小于等于0时，敌人就会死亡。
+
+这把枪每秒发射一颗子弹，发射完所有子弹后，必须重新装弹，重新装弹需要 $k$ 秒，接着按照顺序发射。
+
+战斗开始前，最多可以交换一次 $a_i$ 和 $a_j$ ，请给出杀死敌人的最少秒数。
+
+数据范围： $2 \leq n \leq 2 \cdot 10^5, 1 \leq h,k \leq 10^9, 1 \leq a_i \leq 10^9$
+
+思路：首先对于整发弹夹，是没有影响的。
+
+因此贪心的思路就是，怎么弄来让整个弹夹的前缀和最大。
+
+一个贪心的想法是，把当前的元素和前缀最小值互换，以达到最大的效果。
+
+```cpp
+void solve() {
+    int n, h, k;
+    cin >> n >> h >> k;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    ll tot = 0;
+    rep(i, 0, n - 1) tot += 1LL * a[i];
+    int cnt = h / tot, r = h % tot;
+    ll res;
+    if (r == 0)
+        res = 1LL * (cnt - 1) * k + 1LL * n * cnt;
+    else
+        res = 1LL * cnt * k + 1LL * n * cnt;
+    if (r == 0) {
+        cout << res << endl;
+        return;
+    }
+    vi suf(n);
+    suf[n - 1] = a[n - 1];
+    frep(i, n - 2, 0) { suf[i] = max(suf[i + 1], a[i]); }
+    ll tem = 0;
+    ll mixx = LLONG_MAX;
+    rep(i, 0, n - 1) {
+        mixx = min(mixx, 1LL * a[i]);
+        tem += 1LL * a[i];
+        if (tem >= r) {
+            cout << res + 1LL * i + 1LL << endl;
+            return;
+        }
+        if (i < n - 1 && tem + 1LL * suf[i + 1] - mixx >= r) {
+            cout << res + 1LL * i + 1LL << endl;
+            return;
+        }
+    }
+    return;
+}
+```
+
+### D
+题目大意：给定一棵有根 $r$ 的树 $T$ ，每个节点都有一个值 $a_i$ ，这棵树的成本定义为 $\sum_{u \in T}(a_u \cdot d(r,u))$ 。
+
+这里的总和是树 $T$ 所有节点 $u$ 的总和， $d(r,u)$ 表示节点 $r$ 到节点 $u$ 的最短路径的边数。
+
+现在给你一棵由 $n$ 个节点组成的树，根节点为 $1$ 。每个节点都有一个值 $a_i$ ，对于从 $1$ 到 $n$ 的每个 $r$ ，请求出以顶点 $r$ 为根的子树中，执行最多一次操作后能得到的最大成本。
+
+操作： 选择任意节点 $u(u \not ={r})$ ，删除从 $u$ 到其父节点的边，然后添加一条从 $u$ 到任何仍可从 $r$ 到达的节点 $v$ 的边。
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq 2 \cdot 10^5$
+
+思路：首先，是换根么？因为一个节点跟它的父节点没关系，因此不是换根。
+
+然后来看一个贪心思路，由于所有点的值都是整数，因此把割下来的接到当前最深的地方肯定是对的。
+
+同时，更有趣的是，对于当前节点，如果它只有一个儿子，那么就直接在它的子树中找用来接上的，否则将一个儿子接到除掉这个儿子后当前最深的地方。
+
+好了，看看我们要维护什么，首先可以认识到接过去，只跟最大深度和当前子树的所有值总和有关系，因此只需要维护两个深度（参考树的直径思想，因为无法自己接到自己身上），以及一个子树的所有值总和即可。
+
+```cpp
+void solve() {
+    int n, x, y;
+    cin >> n;
+    vl a(n);
+    vvi ma(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vl res(n);
+    rep(i, 1, n - 1) {
+        cin >> x >> y;
+        ma[x - 1].push_back(y - 1);
+        ma[y - 1].push_back(x - 1);
+    }
+    vi dep(n);
+    vi maxx(n);
+    vl tem(n);
+    vl tem2(n);
+    vl tem3(n);
+    vl cnt(n);
+    auto dfs = [&](this auto&& dfs, int x, int pa, int d) -> void {
+        dep[x] = d;
+        maxx[x] = dep[x];
+        tem2[x] = a[x];
+        int idx = -1;
+        ll d1 = d, d2 = d;
+        for (int& p : ma[x]) {
+            if (p == pa) continue;
+            dfs(p, x, d + 1);
+            tem2[x] += tem2[p];
+            tem3[x] += tem3[p] + tem2[p];
+            if (maxx[p] > d1) {
+                d2 = d1;
+                d1 = maxx[p];
+                idx = p;
+            } else if (maxx[p] > d2)
+                d2 = maxx[p];
+        }
+        if (idx != -1) {
+            cnt[x] = max(cnt[x], cnt[idx]);
+            cnt[x] = max(cnt[x], tem2[idx] * (d2 - dep[idx] + 1));
+        }
+        for (int& p : ma[x]) {
+            if (p == pa || p == idx) continue;
+            cnt[x] = max(cnt[x], tem2[p] * (d1 - dep[p] + 1));
+        }
+        res[x] = tem3[x] + cnt[x];
+        maxx[x] = d1;
+        return;
+    };
+    dfs(0, -1, 0);
+    rep(i, 0, n - 1) cout << res[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### E
+题目大意：给定两个数组 $a$ 和 $b$ ，长度都是 $n$ ，可以进行任意次次数的以下操作： 选择索引 $i$ ，将 $a_i$ 和 $b_i$ 互换，问是否能将 $a$ 转化为 $b$ 的重排。
+
+数据范围： $1 \leq a \leq 10^6, 1 \leq a_i,b_i \leq n$
+
+思路：这道题，其实是一个knowledge check，它的主要知识点是欧拉路径。
+
+首先考虑，将每个数抽象为一个点， $a_i \rightarrow b_i$ 为从 $a_i$ 指向 $b_i,$ 编号为 $i$ 的一条有向边，从而可以观察到，每个节点的入度都应该等于出度，这就形成了欧拉回路。
+
+随后，为了跑可以反转边的欧拉回路，我们完全可以采用一种方式，也就是存无向边，在无向基图中跑出一个欧拉回路，然后按照遍历的顺序进行定向，如果从 $x$ 到 $to$ 的一条边， $x$ 在 $a$ 中，那么就不需要反向，反之需要反向。
+
+最后，由于这个值域比较大，因此考虑离散化，总的时间复杂度为 $O(n \log n)$ 。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    vi sorted;
+    rep(i, 0, n - 1) cin >> a[i], sorted.push_back(a[i]);
+    rep(i, 0, n - 1) cin >> b[i], sorted.push_back(b[i]);
+    ranges::sort(sorted);
+    sorted.erase(unique(all(sorted)), sorted.end());
+    int cnt = sz(sorted);
+    vi tot(cnt);
+    vi cnta(n), cntb(n);
+    vi res;
+    vector<vector<pii>> ma3(cnt);
+    rep(i, 0, n - 1) {
+        cnta[i] = ranges::lower_bound(sorted, a[i]) - sorted.begin();
+        cntb[i] = ranges::lower_bound(sorted, b[i]) - sorted.begin();
+        tot[cnta[i]]++, tot[cntb[i]]++;
+        ma3[cnta[i]].emplace_back(cntb[i], i);
+        ma3[cntb[i]].emplace_back(cnta[i], i);
+    }
+    rep(i, 0, cnt - 1) {
+        if (tot[i] % 2) {
+            cout << -1 << endl;
+            return;
+        }
+    }
+    vector<bool> vis(n, false);
+    vi head(cnt);
+    auto dfs = [&](this auto&& dfs, int x) -> void {
+        for (int& i = head[x]; i < sz(ma3[x]);) {
+            auto [to, id] = ma3[x][i++];
+            if (vis[id]) continue;
+            vis[id] = true;
+            if (cnta[id] != x) res.push_back(id);
+            dfs(to);
+        }
+    };
+    rep(i, 0, cnt - 1) { dfs(i); }
+    cout << sz(res) << endl;
+    rep(i, 0, sz(res) - 1) cout << res[i] + 1 << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### E类题
+出处：CF2110E
+
+题目描述：给定 $n$ 种不同的声音，每种声音的特点是音量和音高，一连串的声音被称为音乐，如果任何两个连续的声音仅在音量和音高上有所不同，那么音乐被认为是优美的，如果连着三个连续声音的音量或者音高都相同，那么音乐被认为是乏味的。
+
+现在，给定 $n$ 种不同的声音，是否能构成优美而不乏味的声音？
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 1 \leq u_i,p_i \leq 10^9$ 。
+
+思路：跟上题其实差不多，首先观察到相邻的两个点必然是只有声音或者音高相同，因此这里可以看出是一个二分图，并且两边的声音跟音高要分开看，将一个声音视为连接 $u_i$ 跟 $v_i$ 的无向边。
+
+接着，同样可以看出这里的条件是在二分图中跑出一个欧拉路径，同样还需要做离散化，于是就可以开始编写代码了。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<pii> ma(n);
+    rep(i, 0, n - 1) cin >> ma[i].first >> ma[i].second;
+    vi sorteda;
+    vi sortedb;
+    rep(i, 0, n - 1) {
+        sorteda.push_back(ma[i].first);
+        sortedb.push_back(ma[i].second);
+    }
+    ranges::sort(sorteda);
+    sorteda.erase(unique(all(sorteda)), sorteda.end());
+    ranges::sort(sortedb);
+    sortedb.erase(unique(all(sortedb)), sortedb.end());
+    int m = sz(sorteda) + sz(sortedb);
+    vi cnta(n);
+    vi cntb(n);
+    vi tot(m);
+    vector<vector<pii>> ma2(m);
+    rep(i, 0, n - 1) {
+        cnta[i] = ranges::lower_bound(sorteda, ma[i].first) - sorteda.begin();
+        cntb[i] = ranges::lower_bound(sortedb, ma[i].second) - sortedb.begin() + sz(sorteda);
+        ma2[cnta[i]].emplace_back(cntb[i], i);
+        ma2[cntb[i]].emplace_back(cnta[i], i);
+        tot[cnta[i]]++, tot[cntb[i]]++;
+    }
+    int st = 0, cnt = 0;
+    frep(i, m - 1, 0) {
+        if (!ma2[i].empty()) {
+            if (sz(ma2[i]) % 2) {
+                st = i;
+                cnt++;
+            } else if (cnt == 0) {
+                st = i;
+            }
+        }
+    }
+    if (cnt > 2) {
+        cout << "NO" << endl;
+        return;
+    }
+    vi head(m);
+    vi res;
+    vector<bool> vis(n, false);
+    auto dfs = [&](this auto&& dfs, int x) -> void {
+        for (int& i = head[x]; i < sz(ma2[x]);) {
+            auto [to, id] = ma2[x][i++];
+            if (vis[id]) continue;
+            vis[id] = true;
+            dfs(to);
+            res.push_back(id);
+        }
+        return;
+    };
+    dfs(st);
+    if (sz(res) != n) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    ranges::reverse(res);
+    rep(i, 0, sz(res) - 1) cout << res[i] + 1 << ' ';
+    cout << endl;
+    return;
+}
+```
 
 ## Educational Codeforces Round #187
 这场也没打，但是C比较恶心，VP的时候没开出来，D很简单，E是火箭毛毛虫，需要一些ds功底，整体确实很Edu。
@@ -3000,6 +3273,613 @@ void solve() {
     }
     ans = (ans + tem) % MOD;
     cout << ans << endl;
+    return;
+}
+```
+
+## Codeforces Round #1086(Div.2)
+很有意思的一场，上大分啦~
+### B
+题目大意： 有 $n$ 张牌放在一个队列中，每张牌的值为 $a_i$ ，在任何时刻，都只能打出队列中前 $k$ 位的牌，然后把同一张牌放回牌堆底部。
+
+有一张起初位置位于 $p$ 的牌，打出就胜利，但是要求所有牌出牌的总花费不能超过 $m$ ，现在要问你这张牌最多能打出多少次？
+
+数据范围： $1 \leq k,p \leq n \leq 5000, 1 \leq m \leq 5000,1 \leq a_i \leq m$ 
+
+思路：容易知道如果前 $k$ 个中不含胜利牌，则每次从其中取出最小的，如果含胜利牌，那么肯定取出它，因此可以将它视为 $-1$ ，用一个优先队列维护。
+
+然后，后面的部分就用一个队列维护。
+
+```cpp
+void solve() {
+    int n, k, p, m;
+    cin >> n >> k >> p >> m;
+    p--;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    int ans = 0;
+    int tot = a[p];
+    int tem = 0;
+    a[p] = -1;
+    deque<int> d;
+    priority_queue<int, vector<int>, greater<>> q;
+    rep(i, 0, k - 1) q.push(a[i]);
+    rep(i, k, n - 1) d.push_back(a[i]);
+    while (tem <= m) {
+        auto node = q.top();
+        q.pop();
+        if (node == -1) {
+            if (tem + tot > m) break;
+            ans++;
+            tem += tot;
+            d.push_back(-1);
+            auto tem2 = d.front();
+            d.pop_front();
+            q.push(tem2);
+        } else {
+            if (tem + node > m) break;
+            tem += node;
+            d.push_back(node);
+            auto tem2 = d.front();
+            d.pop_front();
+            q.push(tem2);
+        }
+    }
+    cout << ans << endl;
+    return;
+}
+```
+
+### C
+题目大意：给定 $n$ 个任务，起初你的体力为 $1$ ，对于每个任务，它的整数值为 $c_i$ ，难度为 $p_i$ ，如果你不完成它，那么什么都不会发生，如果完成它，可以拿到 $S \cdot c_i$ 分， $S$ 为当前体力，随后 $S$ 会变成 $S \cdot(1-\frac{p_i}{100})$ ，求能达到的最大得分。
+
+数据范围： $1 \leq n \leq 10^5,1 \leq c_i \leq 100,0 \leq p_i \leq 100$ 。
+
+思路：首先观察到，无论当前的 $S$ 如何，后续能获取的最大值是固定的，也就是 $S \cdot k$ ，这里 $k$ 是与 $S$ 无关的某个常数。
+
+也就是说，完全可以假设 $dp[i]$ 为从这里开始的强度，然后倒着遍历，有 $dp[i]=max(dp[i+1],c[i]+(1-\frac{p[i]}{100})dp[i+1])$ 。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<pii> ma(n);
+    rep(i, 0, n - 1) cin >> ma[i].first >> ma[i].second;
+    double ans = 0.0;
+    frep(i, n - 1, 0) { ans = max(ans, (double)ma[i].first + (1.0 - (double)(ma[i].second) / 100.0) * ans); }
+    cout << fixed << setprecision(10) << ans << endl;
+    return;
+}
+```
+
+### D1
+题目大意：给定一棵带有 $n$ 个节点的无向树，现在给每个边加了一个方向，给定所有元素之间能不能互相到达的矩阵，问是否能还原出加方向后树的结构？
+
+数据范围： $2 \leq n\leq 500, 1 \leq sum(n^3) \leq 500^3$
+
+思路：看到这个必然考虑弗洛伊德，这里有一个反向的思路，就是对于一个已经处理好弗洛伊德的矩阵，怎么把它还原回原来的矩阵，那么就是如果一个点是间接连上的，那么就把它还原。
+
+接着，判断一下处理出来的基图是否是一棵树，并且边数跟连通性对不对即可，赛时确实有点蠢。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<string> a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vvi ma(n, vi(n));
+    rep(i, 0, n - 1) { rep(j, 0, n - 1) ma[i][j] = a[i][j] - '0'; }
+    auto ma2 = ma;
+    rep(i, 0, n - 1) {
+        if (ma[i][i] == 0) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    rep(k, 0, n - 1) {
+        rep(i, 0, n - 1) {
+            rep(j, 0, n - 1) {
+                if (ma[i][k] == 1 && ma[k][j] == 1) {
+                    if (k == i || k == j) continue;
+                    if (ma[i][j] == 0) {
+                        cout << "NO" << endl;
+                        return;
+                    }
+                    if (ma[i][j] == 1) ma2[i][j] = 0;
+                }
+            }
+        }
+    }
+    vector<pii> res;
+    vector<vector<bool>> vis(n, vector<bool>(n, false));
+    rep(i, 0, n - 1) vis[i][i] = true;
+    auto dfs2 = [&](this auto&& dfs2, int x, int pa) -> void {
+        rep(i, 0, n - 1) {
+            if (!ma2[x][i] || i == x) continue;
+            if (vis[x][i]) continue;
+            res.emplace_back(x + 1, i + 1);
+            vis[x][i] = true;
+            dfs2(i, x);
+        }
+        return;
+    };
+    rep(i, 0, n - 1) { dfs2(i, -1); }
+    map<int, int> ma3;
+    for (auto& p : res) {
+        ma3[p.first]++;
+        ma3[p.second]++;
+    }
+    if (sz(res) != n - 1 || sz(ma3) != n) {
+        cout << "NO" << endl;
+        return;
+    }
+    vvi ma4(n);
+    for (auto& p : res) {
+        ma4[p.first - 1].push_back(p.second - 1);
+        ma4[p.second - 1].push_back(p.first - 1);
+    }
+    int ans = 0;
+    vector<bool> vis2(n, false);
+    auto dfs = [&](this auto&& dfs, int x, int pa) -> void {
+        vis2[x] = true;
+        for (auto& p : ma4[x]) {
+            if (p == pa || vis2[p]) continue;
+            dfs(p, x);
+        }
+        return;
+    };
+    rep(i, 0, n - 1) {
+        if (!vis2[i]) {
+            ans++;
+            dfs(i, -1);
+        }
+    }
+    if (ans >= 2) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    for (auto& p : res) cout << p.first << ' ' << p.second << endl;
+    return;
+}
+```
+
+### D2
+题目大意与上题相同。
+
+数据范围： $2 \leq n \leq 8000, 1 \leq sum(n^2) \leq 8000^2$ 。
+
+思路：非常显然地，上题的做法过不去，且本题正解应该是 $O(n^2)$ 或者 $O(n^2 \log n)$ ，不过赛时竟然放 $O(\frac{n^3}{w})$ 复杂度的过去了，到底是何意味。
+
+首先考虑 $O(n^2)$ 的算法有哪些，结合树是有向无环图的性质，很容易想到的是拓扑排序，然后这里有一个关键观察：在当前元素能到达的点中，拓扑序最小的那个必定与它相连，而这个相连点连的边就要从原先的点中删除，因为它们是间接的。
+
+这样就可以处理出所有的边了，然后还是需要验一下整个是不是树。
+
+另外，这题卡常。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<string> ma(n);
+    rep(i, 0, n - 1) cin >> ma[i];
+    rep(i, 0, n - 1) {
+        if (ma[i][i] == '0') {
+            cout << "NO" << '\n';
+            return;
+        }
+    }
+    rep(i, 0, n - 1) {
+        rep(j, i + 1, n - 1) {
+            if (ma[i][j] == '1' && ma[j][i] == '1') {
+                cout << "NO" << '\n';
+                return;
+            }
+        }
+    }
+    vi deg(n);
+    vvi ma2(n);
+    rep(i, 0, n - 1) {
+        rep(j, 0, n - 1) {
+            if (i == j || ma[i][j] == '0') continue;
+            ma2[i].push_back(j);
+            deg[j]++;
+        }
+    }
+    queue<int> q;
+    rep(i, 0, n - 1) {
+        if (!deg[i]) q.push(i);
+    }
+    vi tem;
+    while (!q.empty()) {
+        auto node = q.front();
+        tem.push_back(node);
+        q.pop();
+        for (int& p : ma2[node]) {
+            if (--deg[p] == 0) q.push(p);
+        }
+    }
+    if (sz(tem) != n) {
+        cout << "NO" << '\n';
+        return;
+    }
+    vector<pii> res;
+    rep(i, 0, n - 1) {
+        int t = tem[i];
+        rep(j, i + 1, n - 1) {
+            int v = tem[j];
+            if (ma[t][v] == '1') {
+                res.emplace_back(t + 1, v + 1);
+                if (sz(res) > n - 1) {
+                    cout << "NO" << '\n';
+                    return;
+                }
+                for (int& p : ma2[v]) {
+                    if (ma[t][p] == '1') {
+                        ma[t][p] = '0';
+                    } else {
+                        cout << "NO" << '\n';
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    if (sz(res) != n - 1) {
+        cout << "NO" << '\n';
+        return;
+    }
+    vector<bool> vis(n, false);
+    int ans = 0;
+    vvi ma3(n);
+    for (auto& p : res) {
+        ma3[p.first - 1].push_back(p.second - 1);
+        ma3[p.second - 1].push_back(p.first - 1);
+    }
+    auto dfs = [&](this auto&& dfs, int x) -> void {
+        vis[x] = true;
+        for (auto& p : ma3[x]) {
+            if (!vis[p]) dfs(p);
+        }
+    };
+    rep(i, 0, n - 1) {
+        if (!vis[i]) {
+            ans++;
+            dfs(i);
+        }
+    }
+    if (ans >= 2) {
+        cout << "NO" << '\n';
+        return;
+    }
+    cout << "YES" << '\n';
+    for (auto& p : res) cout << p.first << ' ' << p.second << '\n';
+    return;
+}
+```
+
+## Educational Codeforces Round #188
+这场是不是有点太简单~依旧上大分。
+### C
+题目大意：Alice,Bob和Carol到泉水边取水。Alice每隔 $a$ 天去一次，Bob每隔 $b$ 天去一次，Carol每隔 $c$ 天去一次。
+
+每天，去的人会平分 $6$ 升水，问他们在 $m$ 天内各收集了多少水？
+
+数据范围： $1 \leq a,b,c \leq 10^6, 1 \leq m \leq 10^{17}$
+
+思路：非常典的容斥。
+
+```cpp
+oid solve() {
+    ll a, b, c;
+    ll m;
+    cin >> a >> b >> c >> m;
+    auto check = [&](ll x, ll y) {
+        ll g = __gcd(x, y);
+        if (x / g > (m + 1) / y) return m + 1;
+        return (x / g) * y;
+    };
+    ll tem = check(a, b);
+    ll tot = check(tem, c);
+    ll re = m / tot;
+    ll tem2 = check(a, c);
+    ll tem3 = check(b, c);
+    ll re1 = m / tem - re;
+    ll re2 = m / tem2 - re;
+    ll re3 = m / tem3 - re;
+    ll res1 = m / a - (re1 + re2) - re;
+    ll res2 = m / b - (re1 + re3) - re;
+    ll res3 = m / c - (re2 + re3) - re;
+    ll resa = 1LL * 6 * res1 + 1LL * 3 * (re1 + re2) + 1LL * 2 * re;
+    ll resb = 1LL * 6 * res2 + 1LL * 3 * (re1 + re3) + 1LL * 2 * re;
+    ll resc = 1LL * 6 * res3 + 1LL * 3 * (re2 + re3) + 1LL * 2 * re;
+    cout << resa << ' ' << resb << ' ' << resc << endl;
+    return;
+}
+```
+
+### D
+题目大意：给定一个 $n$ 个点和 $m$ 条边的无向图，顶点的编号为 $1$ 到 $n$ ，这张图没有自环和重边。
+
+现在需要为每条边选择一个方向，确定边的方向后，我们称一条形如 $v_1 \rightarrow v_2 \leftarrow v_3 \rightarrow v_4 \ldots$ 的路径为交替路径。
+
+如果原始图中以顶点 $v$ 为起点的所有路径（不一定是简单路径）在生成的有向图中都是交替出现的，那么称顶点 $v$ 为美丽顶点，现在请求出美丽顶点的最大数目。
+
+数据范围： $1 \leq n \leq 2 \cdot 10^5, 0 \leq m \leq 2 \cdot 10^5$
+
+思路：首先非常显然地，看到类似交替路径的字眼，就会想到二分图，然后由于这里可以不是简单路径，因此不难验证这边不存在奇环，也确实是二分图。
+
+然后考虑染色（毕竟这个分段能出的只有染色），对于每个联通分量，首先染色判断它是不是二分图，如果是，则贡献为两种染色数量的最大值，如果不是则贡献为0。
+
+```cpp
+oid solve() {
+    int n, m, x, y;
+    cin >> n >> m;
+    vvi ma(n);
+    rep(i, 0, m - 1) {
+        cin >> x >> y;
+        ma[x - 1].push_back(y - 1);
+        ma[y - 1].push_back(x - 1);
+    }
+    vector<int> vis(n);
+    int ans = 0, ans2 = 0;
+    bool flag = true;
+    auto dfs = [&](this auto&& dfs, int x, int c) -> void {
+        vis[x] = c;
+        if (c == 1)
+            ans++;
+        else
+            ans2++;
+        for (int& p : ma[x]) {
+            if (!vis[p])
+                dfs(p, 3 - c);
+            else if (vis[p] == c) {
+                flag = false;
+            }
+        }
+        return;
+    };
+    int res = 0;
+    rep(i, 0, n - 1) {
+        if (vis[i]) continue;
+        ans = 0, ans2 = 0;
+        flag = true;
+        dfs(i, 1);
+        if (flag) res += max(ans, ans2);
+    }
+    cout << res << endl;
+    return;
+}
+```
+
+### E
+题目大意：对于正整数 $x$ ，字符串 $S(x)$ 是这么形成的：
+
+首先把当前 $x$ 连接到字符串末尾。
+
+随后，如果 $x \leq 9$ ，则退出，否则 $x=digit(x)$ ，这里 $digit(x)$ 是 $x$ 在十进制下数位和。
+
+给定一个由数字组成的字符串 $S$ ，请重新排列该字符串中的字符，使其组成某个数字 $x$ 的 $S(x)$ ，题目保证有解。
+
+数据范围： $1 \leq |S| \leq 10^5,1 \leq sum(|S|) \leq 10^5$ 
+
+思路：一看下去其实有点无从下手的题，其实大多数时候都是在找性质。
+
+首先观察到， $x_1+x_2+\ldots +x_k+x_k=digit(S)$ ，其中每个 $x_i$ 是第 $i$ 个数的数位和。
+
+那么，这里可以考虑到 $digit(S) \leq 9 \cdot 10^5$ ，因此可以暴力枚举 $x_1$ ，有了 $x_1$ 之后，其实就得到了第二个数，然后就可以算出后面所有的数了，只需考虑所有的和是否等于 $digit(S)$ ，以及给出的所有数字是否刚好用完即可。
+
+不过有点史，还是需要好好写一下。
+
+```cpp
+void solve() {
+    string s;
+    cin >> s;
+    if (sz(s) == 1) {
+        cout << s << endl;
+        return;
+    }
+    vi cnt(10);
+    rep(i, 0, sz(s) - 1) { cnt[s[i] - '0']++; }
+    int ans = 0;
+    rep(i, 0, 9) ans += cnt[i] * i;
+    int maxx = 0;
+    rep(i, 1, ans) {
+        int sum = i;
+        int tem = i;
+        vi temp;
+        temp.push_back(i);
+        while (tem > 0) {
+            if (0 <= tem && tem <= 9) {
+                sum += tem;
+                temp.push_back(i);
+                break;
+            }
+            int tem2 = 0;
+            int tem3 = tem;
+            while (tem3 > 0) {
+                tem2 += tem3 % 10;
+                tem3 /= 10;
+            }
+            sum += tem2;
+            temp.push_back(tem2);
+            tem = tem2;
+        }
+        if (1 <= i && i <= 9) {
+            if (sum != ans || !cnt[i]) continue;
+        } else {
+            if (sum != ans) continue;
+        }
+        int sum2 = i;
+        vi cnt2(10);
+        while (sum2 >= 10) {
+            int tem2 = sum2;
+            int tem3 = 0;
+            while (tem2 > 0) {
+                tem3 += tem2 % 10;
+                cnt2[tem2 % 10]++;
+                tem2 /= 10;
+            }
+            sum2 = tem3;
+        }
+        cnt2[sum2]++;
+        int sum3 = 0;
+        bool flag = true;
+        frep(i, 9, 0) {
+            if (cnt2[i] > cnt[i]) {
+                flag = false;
+                break;
+            }
+            sum3 += i * (cnt[i] - cnt2[i]);
+        }
+        if (sum3 != i || !flag) continue;
+        maxx = i;
+        break;
+    }
+    string res = "";
+    int maxx2 = maxx;
+    vi cnt2(10);
+    while (maxx2 >= 10) {
+        int tem2 = maxx2;
+        int tem3 = 0;
+        while (tem2 > 0) {
+            tem3 += tem2 % 10;
+            cnt2[tem2 % 10]++;
+            tem2 /= 10;
+        }
+        maxx2 = tem3;
+    }
+    cnt2[maxx2]++;
+    frep(i, 9, 0) { rep(j, 0, cnt[i] - cnt2[i] - 1) res.push_back('0' + i); }
+    vector<string> tem2;
+    tem2.push_back(res);
+    while (maxx >= 10) {
+        tem2.push_back(to_string(maxx));
+        int tem = 0;
+        while (maxx > 0) {
+            tem += maxx % 10;
+            maxx /= 10;
+        }
+        maxx = tem;
+    }
+    tem2.push_back(to_string(maxx));
+    int tot = 0;
+    for (auto& p : tem2) {
+        rep(i, 0, sz(p) - 1) { tot += (p[i] == '0'); }
+    }
+    rep(i, 0, cnt[0] - tot - 1) res.push_back('0');
+    rep(i, 1, sz(tem2) - 1) res += tem2[i];
+    cout << res << endl;
+    return;
+}
+```
+
+### F
+题目大意： 我们称分数 $\frac{x}{y}$ 的一次增长为以下两种情况之一：
+
+要么把分子 $x$ 加一，要么当分母 $y > 1$ 时，将其减一。
+
+定义 $MSF(b,k)$ 为给定一个整数数组 $b_1,b_2,\ldots,b_m$ 和一个整数 $k$ 时，构造数组 $\frac{1}{b_1},\ldots,\frac{1}{b_m}$ ，一共执行 $k$ 次增长操作（每次增长的对象可以不同）后，得到的分数和的最大值。
+
+现在给定两个整数数组 $a_1,\ldots,a_n$ 和 $k_1,\ldots,k_m$ ，请对每个 $k_i$ 计算 $\sum\limits_{l=1}^{n}\sum\limits_{r=l}^{n}MSF(a[l \ldots r],k_i) \pmod{998244353}$ 。
+
+数据范围： $1 \leq n,m \leq 5 \cdot 10^5,1 \leq a_i \leq 10^8,0 \leq k_1 \leq k_2 \leq k_m \leq 10^8$ 。
+
+思路：非常迷的是这些 $k_i$ 为啥要排好序，明明可以用在线的说，神秘出题人。
+
+首先，看到这种双求和，在我的分段第一反应一定是单调栈贡献法，此题在Round 1082的d2C2亦有记载。
+
+总的原始和的求法就不讲了，你都做到这里了，没必要吧。
+
+好的，现在我们来看一下，怎么来考虑贡献。
+
+首先，对于 $\frac{a}{b},b > 1$ 时，单次加分子的贡献为 $\frac{1}{b}$ ，减分母的贡献为 $\frac{a}{b(b-1)}$ ，因此当单次加分子的贡献大于等于单次减分母的贡献时，有 $\frac{1}{b} \leq \frac{a}{b(b-1)}$ ，也就是 $b-1 \leq a$ ，而 $b=1$ 时最优策略也是加分子，因此单步的最大贡献必然是加分子。
+
+考虑整个区间，由于显然无论加分子还是减分母，都在分母最小的元素上做文章是最优的，因此这里单调栈的轮廓就浮现出来了，考虑当前元素作为最小的范围。
+
+随后，当 $k$ 很大的时候，又出现了一种策略，那就是首先把 $a_i$ 减到 $1$ ，然后再每次加分子，而当 $k$ 很小的时候直接加分子就可以。
+
+不过，为什么没有别的策略？例如给分子加一些，分母减一些，这个用数学可以证明，此处不提了。
+
+接着，考虑它们之间的分界点，一直加分子的贡献是 $\frac{k}{b}$ ，而先减到 $1$ 再加分子的贡献为 $k-(b-1)+1-\frac{1}{b}=k-b+2-\frac{1}{b}$ ，计算可以得出，一直加分子在 $k \geq b-1$ 的时候是最优的，也就是 $k > b$ 。
+
+于是，由于这里具有单调性，完全可以对 $a$ 进行排序，然后每次查找对应的位置，再做一下前缀和跟后缀和，这里前缀和需要做的是 $\sum\limits_{j=1}^{i} c_j$ 跟 $\sum\limits_{j=1}^{i} -b+2-\frac{1}{b}$ ，后缀和需要做的是 $\sum\limits_{i=1}^{j}\frac{c_i}{b}$ ，这里的 $c_i$ 指的都是当前元素作为最小值的范围。
+
+最后，注意一下C++需要按步取模，第一次交忘了一个取模就wa19了，有点难受，不过这题作为edu的F，最多就是个d2D的水平，不知道出题人在干什么。
+
+```cpp
+constexpr int MOD = 998244353;
+ll qpow(ll x, int n) {
+    ll res = 1;
+    for (; n; n >>= 1) {
+        if (n % 2) res = res * x % MOD;
+        x = x * x % MOD;
+    }
+    return res;
+}
+void solve() {
+    ll n, m, k;
+    cin >> n >> m;
+    vector<pii> a(n);
+    rep(i, 0, n - 1) {
+        cin >> a[i].second;
+        a[i].first = 1;
+    }
+    vector<pll> b(n);
+    ll tot = 0;
+    vi r(n, n);
+    vi l(n, -1);
+    stack<int> s;
+    for (int i = n - 1; i >= 0; i--) {
+        while (!s.empty() && a[s.top()].second > a[i].second) s.pop();
+        if (!s.empty()) r[i] = s.top();
+        s.push(i);
+    }  // 求右边第一个小于的下标
+    while (!s.empty()) s.pop();
+    for (int i = 0; i <= n - 1; i++) {
+        while (!s.empty() && a[s.top()].second >= a[i].second) s.pop();
+        if (!s.empty()) l[i] = s.top();
+        s.push(i);
+    }  // 求左边第一个小于的下标
+    rep(i, 0, n - 1) {
+        b[i].first = a[i].second;
+        b[i].second = 1LL * (r[i] - i) * (i - l[i]);
+    }
+    rep(i, 0, n - 1) {
+        tot += 1LL * (i + 1) * (n - i) % MOD * qpow(a[i].second, MOD - 2) % MOD;
+        tot %= MOD;
+    }
+    ranges::sort(b);
+    vl pre1(n);
+    vl suf1(n);
+    vl pre2(n);
+    pre1[0] = b[0].second % MOD;
+    rep(i, 1, n - 1) { pre1[i] = (pre1[i - 1] + b[i].second % MOD) % MOD; }
+    pre2[0] = b[0].second % MOD * (((2 - b[0].first % MOD - qpow(b[0].first, MOD - 2)) % MOD + MOD) % MOD) % MOD;
+    rep(i, 1, n - 1) {
+        ll tem = b[i].second % MOD * (((2 - b[i].first % MOD - qpow(b[i].first, MOD - 2)) % MOD + MOD) % MOD) % MOD;
+        pre2[i] = (pre2[i - 1] + tem) % MOD;
+    }
+    suf1[n - 1] = b[n - 1].second % MOD * qpow(b[n - 1].first, MOD - 2) % MOD;
+    frep(i, n - 2, 0) {
+        ll tem = b[i].second % MOD * qpow(b[i].first, MOD - 2) % MOD;
+        suf1[i] = (suf1[i + 1] + tem) % MOD;
+    }
+    rep(i, 0, m - 1) {
+        cin >> k;
+        auto x = ranges::upper_bound(b, make_pair(k, LLONG_MAX));
+        int tem = x - b.begin();
+        ll tem2, tem3;
+        if (tem == 0)
+            tem2 = 0;
+        else
+            tem2 = (k * pre1[tem - 1] % MOD + pre2[tem - 1]) % MOD;
+        if (tem == n)
+            tem3 = 0;
+        else
+            tem3 = k * suf1[tem] % MOD;
+        cout << (tot + tem2 + tem3) % MOD << endl;
+    }
     return;
 }
 ```
