@@ -1288,7 +1288,7 @@ void solve() {
 思路：首先考虑一条空白的，那么配置形式肯定是 $01001001 \ldots$ 这样的，现在只需要处理边界就可以了，一种简单的方式是在两侧加上 $01$ ，这样可以避免讨论。
 
 ```cpp
-oid solve() {
+void solve() {
     int n;
     cin >> n;
     string s;
@@ -3570,7 +3570,7 @@ void solve() {
 思路：非常典的容斥。
 
 ```cpp
-oid solve() {
+void solve() {
     ll a, b, c;
     ll m;
     cin >> a >> b >> c >> m;
@@ -3612,7 +3612,7 @@ oid solve() {
 然后考虑染色（毕竟这个分段能出的只有染色），对于每个联通分量，首先染色判断它是不是二分图，如果是，则贡献为两种染色数量的最大值，如果不是则贡献为0。
 
 ```cpp
-oid solve() {
+void solve() {
     int n, m, x, y;
     cin >> n >> m;
     vvi ma(n);
