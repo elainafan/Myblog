@@ -18,3 +18,5 @@ categories:
 [Lecture 4]({{< ref "Lec4.md" >}})
 
 [Lecture 5]({{< ref "Lec5.md" >}})
+
+[Lecture 6]({{< ref "Lec6.md" >}})
