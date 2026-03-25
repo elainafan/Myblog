@@ -3883,3 +3883,191 @@ void solve() {
     return;
 }
 ```
+
+## Codeforces Round #1087(Div,2)
+### C
+题目大意：交互题，现在有 $2n$ 个元素，其中有 $n$ 个0，和 $1 \sim n$ ，每次查询可以查询两个数，问它们是否相等，现在问你能否在 $n+1$ 次查询内找出任意0的位置？
+
+数据范围： $2 \leq n \leq 10^4$
+
+思路：首先考虑两两分组，于是得到了 $n+2$ 的解法。
+
+然后，我们就死活差一个做不出来了！怎么办？
+
+考虑前面卡牌题做过的，小量调整思想，于是看到这里有个 $n \geq 2$ ，把 $1,2,3,4$ 拿出来单打，看看能不能找到用 $3$ 个找出一个0的方法。
+
+于是有以下思路，查询 $(1,2),(1,3),(2,3)$ 如果它们都两两不等的花，说明其中有两个不为0的数，于是4就是剩下的零了。
+
+这个思路感觉在构造题中，还蛮常见的，包子出的题确实不错。
+
+```cpp
+void ask(int l, int r) {
+    cout << "? " << l << ' ' << r << '\n';
+    cout.flush();
+}
+void report(ll sum) {
+    cout << "! " << sum << '\n';
+    cout.flush();
+}
+void solve() {
+    int n;
+    cin >> n;
+    vi a(2 * n);
+    int op;
+    ask(1, 2);
+    cin >> op;
+    if (op == 1) {
+        report(1);
+        return;
+    }
+    ask(2, 3);
+    cin >> op;
+    if (op == 1) {
+        report(2);
+        return;
+    }
+    ask(1, 3);
+    cin >> op;
+    if (op == 1) {
+        report(3);
+        return;
+    }
+    for (int i = 5; i <= 2 * n; i += 2) {
+        ask(i, i + 1);
+        cin >> op;
+        if (op == 1) {
+            report(i);
+            return;
+        }
+    }
+    report(4);
+    return;
+}
+```
+
+### D
+题目大意：现在有 $r$ 个R字母， $g$ 个G字母， $b$ 个B字母，要求构造最长的符合以下条件的字符串 $s$ ，$s$ 中相邻字母不能相等，同时不能间隔两个字母相等。
+
+数据范围： $0 \leq r,g,b \leq 10^6, 1 \leq sum(r+g+b) \leq 10^6$
+
+思路：红色青蛙出的大份题，跟包子的题形成了鲜明对比啊。
+
+其实思路有很多，一种是考虑最大的跟其他两个之和的关系，然后构造，这种赛时写一半没写出来。
+
+后来转变的思路是，贪心构造，每次选一个符合条件的剩余数目最多的字符加入当前字符串，同时如果有多个符合条件的话，就选与当前倒数第二个字符相同的字符进去（此时必定只有两个符合条件的，不过好像选另一种也可以，不知道诶），时间复杂度约为 $O(n)$ ，也有看到用排序跟什么硬搜的，因为只有三种所以剩下的都是常数的事情了，都没有关系，而且这题数据看样子也比较弱。
+
+另外，这里可以使用``pair``来做，这就避免了复杂的分类讨论。
+
+```cpp
+void solve() {
+    int r, g, b;
+    cin >> r >> g >> b;
+    string res = "";
+    vector<pair<char, int>> ma;
+    int ans = r + g + b;
+    ma.emplace_back('R', r);
+    ma.emplace_back('G', g);
+    ma.emplace_back('B', b);
+    sort(all(ma), [&](const pair<char, int>& x, const pair<char, int>& y) { return x.second > y.second; });
+    rep(t, 1, ans) {
+        vector<bool> vis(3, true);
+        if (t >= 2) {
+            rep(i, 0, 2) {
+                if (ma[i].first == res[sz(res) - 1]) vis[i] = false;
+            }
+        }
+        if (t >= 4) {
+            rep(i, 0, 2) {
+                if (ma[i].first == res[sz(res) - 3]) vis[i] = false;
+            }
+        }
+        int idx = -1;
+        rep(i, 0, 2) {
+            if (!vis[i] || !ma[i].second) continue;
+            if (idx == -1) {
+                idx = i;
+                continue;
+            }
+            if (ma[idx].second == ma[i].second) {
+                if (sz(res) >= 2 && ma[i].first == res[sz(res) - 2]) idx = i;
+            }
+        }
+        if (idx == -1) break;
+        res.push_back(ma[idx].first);
+        ma[idx].second--;
+        sort(all(ma), [&](const pair<char, int>& x, const pair<char, int>& y) { return x.second > y.second; });
+    }
+    cout << res << endl;
+    return;
+}
+```
+
+### E
+题目大意：定义 $f(t)$ 是 $t$ 可以分割为的最大份数，使得每份都是 $t$ 的非空前缀，现在给定一个长度为 $n$ 的字符串 $s$ ，它只由小写英文字母组成，让 $s[x..y]$ 表示 $s$ 从 $x$ 到 $y$ 的子串，现在给定 $q$ 个查询，每个查询给定 $l$ 和 $r$ ，请你给出 $\sum\limits_{i=l}^{r}f(s[l..i])$ 。
+
+数据范围： $1 \leq n \leq 10^6,1 \leq q \leq 100$
+
+思路：这题也是包子的题，题目叫A Trivial String Problem，可惜对我们这种菜鸡并不trivial。
+
+总之，还是能加深一下对kmp算法的理解，它确实有很多非常优美的性质。
+
+首先看一下这里的数据范围，这一定是 $O(nq)$ 吧？如果有 $\log$ 感觉卡常会被卡到死，出题人的浮木就要不保了，所以肯定是 $O(nq)$ 。
+
+然后开始挖性质了，考虑到这些东西都是前缀，显然地，最后一段就是border，同时为了尽量分多段，则最后一段是最短border，也就是最长border的最短border（如果它有border的话），或者最长border本身（如果它没有border），这里可以自行用反证法验证，同时一样可以验证最短border没有border。
+
+同时注意到，如果一段字符串没有border，那么它只能分成自己了。
+
+这里还有一个推论（写这篇的时候我也没想起来，去翻了题解），就是一个字符串只存在一种将其划分为无border前缀的方式，这个可以用归纳法证明。
+
+于是，就想着说既然是划分，那么一定符合划分型DP的方式，所以就开心地使用最短border进行转移啦。
+
+好题，确实好题，最近好几道kmp+dp的题目了，挺不错的。
+
+```cpp
+void solve() {
+    int n, q;
+    cin >> n >> q;
+    string s;
+    cin >> s;
+    int l, r;
+    auto kmp = [&](const string& pattern) -> vi {
+        int m = sz(pattern);
+        int cnt = 0;
+        vi pi(m);
+        rep(i, 1, m - 1) {
+            char b = pattern[i];
+            while (cnt && pattern[cnt] != b) cnt = pi[cnt - 1];
+            if (pattern[cnt] == b) cnt++;
+            pi[i] = cnt;
+        }
+        return pi;
+    };
+    rep(i, 0, q - 1) {
+        cin >> l >> r;
+        int len = r - l + 1;
+        l--;
+        string tem = s.substr(l, len);
+        auto pi = kmp(tem);
+        vi dp(len);
+        vi b(len);
+        rep(j, 0, len - 1) {
+            if (pi[j] == 0)
+                b[j] = 0;
+            else if (pi[pi[j] - 1] == 0)
+                b[j] = pi[j];
+            else
+                b[j] = b[pi[j] - 1];
+        }
+        ll ans = 0;
+        rep(j, 0, len - 1) {
+            if (b[j] == 0)
+                dp[j] = 1;
+            else
+                dp[j] = dp[j - b[j]] + 1;
+            ans += dp[j];
+        }
+        cout << ans << endl;
+    }
+    return;
+}
+```
