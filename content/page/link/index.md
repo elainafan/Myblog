@@ -68,6 +68,10 @@ links:
     description: 莫西莫西(=^..^=)
     website: https://lvyovo-wiki.tech
     image: /avatars/lvyneko.png
+  - title: rhino
+    description: 希言自然
+    website: https://rhinospace.website
+    image: https://www.rhinospace.website/friends/avatar
 
 menu:
     main: 
