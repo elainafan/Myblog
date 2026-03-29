@@ -4071,3 +4071,226 @@ void solve() {
     return;
 }
 ```
+
+## Codeforces Round #1088(Div.1+2)
+感觉这场题不错，但是赛时有点烧脑子了~
+
+很意外的是竟然打上了1800？好耶！
+### C1
+题目大意：给定长度为 $n$ 的数组 $a$ 和给定数组 $b$ , $b$ 中的每个元素都是 $1 \sim n$ 或者 $-1$ ，如果 $b_i=-1$ ，那么它可以写上任何数。现在要求对于其每个大小为 $k$ 的窗口中，$b$ 都是 $a$ 的一个重排，请问能做到吗？
+
+注意，本题中 $a$ 是 $1 \sim n$ 的一个排列。
+
+数据范围： $1 \leq k \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq n,1 \leq b_i \leq n or b_i = -1$ 。
+
+思路：很自然地，我们会考察两个相邻窗口滑动，造成了什么影响。
+
+考虑 $a_i,\ldots,a_{i+k-1}(b_i,\ldots,b_{i+k-1})$ 和 $a_{i+1},\ldots,a_{i+k}$ 和 $b_{i+1},\ldots,b_{i+k}$ 。
+
+不妨设滑之前的窗口的集合为 $A,B$ ，那么滑完后就是 $A-\\{a_i\\}+\\{a_{i+k}\\}$ 和 $B-\\{b_i\\}+\\{b_{i+k}\\}$ ，同时 $A=B$ 。
+
+刚好又由于这里有排列的性质，因此必然有 $a_i=b_i,a_{i+k}=b_{i+k}$ 。
+
+然后符合以上条件之后，只需要考虑不会被插入/滑出的元素是不是具体的一个重排即可。
+
+```cpp
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    rep(i, 0, n - k - 1) {
+        if (a[i] != b[i] && b[i] != -1) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    rep(i, k, n - 1) {
+        if (a[i] != b[i] && b[i] != -1) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    map<int, int> ma;
+    map<int, int> ma2;
+    int tot = 0;
+    rep(i, n - k, k - 1) { ma[a[i]]++; }
+    rep(i, n - k, k - 1) {
+        if (b[i] == -1)
+            tot++;
+        else
+            ma2[b[i]]++;
+        if (b[i] != -1 && !ma.count(b[i])) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if (sz(ma2) + tot != sz(ma)) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    return;
+}
+```
+
+### C2
+题目大意：跟上题一样，但是此时 $a$ 中的元素可能相等。
+
+数据范围：跟上题一样。
+
+思路：我们还是考察对应的滑入滑出，此时有两种情况，一种是 $a_i \not ={a_{i+k}}$ ，显然这跟上题是一样的。
+
+还有一种情况就是，$a_i=a_{i+k}$ ，此时可以推出 $b_i=b_{i+k}$ 即可，然后这种我们会想到什么？当然是用并查集维护。
+
+于是，用并查集维护当前的所有元素，如果发生冲突了，那么就报错，否则直接合并即可。
+
+```cpp
+class UnionFind {
+    vector<int> fa;
+    vector<int> siz;  // 集合大小
+
+public:
+    int cc;  // 连通块个数
+    vi val;
+    UnionFind(int n) : fa(n), siz(n, 1), cc(n), val(n, -1) { ranges::iota(fa, 0); }
+    int get(int x) {
+        if (fa[x] != x) fa[x] = get(fa[x]);
+        return fa[x];
+    }
+    bool is_same(int x, int y) { return get(x) == get(y); }
+    bool merge(int from, int to) {
+        int x = get(from), y = get(to);
+        if (x == y) return false;
+        fa[x] = y;
+        siz[y] += siz[x];
+        cc--;
+        return true;
+    }
+    int get_size(int x) {  // 查询x所在集合大小
+        return siz[get(x)];
+    }
+    int get_val(int x) { return val[get(x)]; }
+};
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    UnionFind u(n);
+    rep(i, 0, n - k - 1) {
+        if (a[i] == a[i + k]) u.merge(i, i + k);
+    }
+    rep(i, 0, n - 1) {
+        if (b[i] != -1) {
+            if (u.get_val(i) != -1 && u.get_val(i) != b[i]) {
+                cout << "NO" << endl;
+                return;
+            }
+            u.val[u.get(i)] = b[i];
+        }
+    }
+    rep(i, 0, n - k - 1) {
+        if (a[i] != a[i + k]) {
+            if (u.val[u.get(i)] != -1 && u.val[u.get(i)] != a[i]) {
+                cout << "NO" << endl;
+                return;
+            }
+            if (u.val[u.get(i + k)] != -1 && u.val[u.get(i + k)] != a[i + k]) {
+                cout << "NO" << endl;
+                return;
+            }
+            u.val[u.get(i)] = a[i];
+            u.val[u.get(i + k)] = a[i + k];
+        }
+    }
+    rep(i, 0, n - 1) {
+        if (u.val[u.get(i)] != -1) b[i] = u.val[u.get(i)];
+    }
+    map<int, int> ma;
+    rep(i, 0, k - 1) { ma[a[i]]++; }
+    int tot = 0;
+    rep(i, 0, k - 1) {
+        if (b[i] != -1) {
+            if (!ma.count(b[i])) {
+                cout << "NO" << endl;
+                return;
+            }
+            if (--ma[b[i]] == 0) ma.erase(ma.find(b[i]));
+        } else
+            tot++;
+    }
+    int tot2 = 0;
+    for (auto& [x, y] : ma) tot2 += y;
+    if (tot == tot2)
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl;
+    return;
+}
+```
+
+### D
+题目大意：现在定义 $f(a)_k$ 为所有 $a$ 中长度为 $k$ 的子序列，他们各自的按位与加起来的总和，给出 $f(a)_1 \pmod{10^9+7},\ldots,f(a)_n \pmod{10^9+7}$ ，请还原出原本的 $a_i$ ，如果有多个结果，请输出其中任意一个。
+
+数据范围： $0 \leq a_i < 2^{29},1 \leq n \leq 10^5, 0 \leq b_i < 10^9+7$ 。
+
+思路：显然地，我们会注意到 $f_a(k)=\sum\limits_{i=0}^{28}\dbinom{k}{cnt_i} \cdot 2^{i}$ ，这里 $cnt_i$ 是 $a$ 中 $2^i$ 是 $1$ 的元素个数。
+
+于是，这些位运算完全可以自己独立出来算，而我们可以采取一种更显然的直觉：考虑刚好有 $i$ 个元素的和 $tem_i$ ，则至多只有 $29$ 个 $tem_i$ 不为0。
+
+然后考虑倒着遍历 $b_i$ ，因为这样可以避免 $i$ 较小的 $tem_i$ 去影响 $i$ 较大的 $tem_i$ 。
+
+每次遍历完后，可以考虑把当前 $b_i$ 前面的 $tem_{i+1},\ldots,tem_n$ 项都预先算好，这样，由于上面所说， $tem_i$ 至多只有 $29$ 个不为0，因此如果对于 $b_i$ 先全部减掉的话， $b_i$ 也至多只有29个不为0，于是剪枝即可，时间复杂度 $O(29n)$ 。
+
+```cpp
+const ll MOD = 1e9 + 7;
+constexpr int MX = 1e5 + 1;
+ll F[MX];      // 预处理阶乘
+ll INV_F[MX];  // 预处理逆元
+ll qpow(ll x, int n) {
+    ll res = 1;
+    for (; n; n >>= 1) {
+        if (n % 2) res = res * x % MOD;
+        x = x * x % MOD;
+    }
+    return res;
+}
+auto init = [] {
+    F[0] = 1;
+    for (int i = 1; i < MX; i++) F[i] = F[i - 1] * i % MOD;  // 预处理阶乘
+    INV_F[MX - 1] = qpow(F[MX - 1], MOD - 2);
+    for (int i = MX - 1; i; i--) {
+        INV_F[i - 1] = INV_F[i] * i % MOD;
+    }  // 预处理逆元
+    return 0;
+}();
+// 计算C(n,m),即从n个数中取m个数
+ll comb(int n, int m) { return m < 0 || m > n ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD; }
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    vi tem(n);
+    ll tot = 0;
+    frep(i, n - 1, 0) {
+        if (b[i] == 0) continue;
+        tem[i] = b[i];
+        frep(j, i - 1, 0) {
+            ll tem2 = 1LL * tem[i] * comb(i + 1, j + 1) % MOD;
+            b[j] = (b[j] - tem2 + MOD) % MOD;
+        }
+    }
+    a[n - 1] = tem[n - 1];
+    frep(i, n - 2, 0) { a[i] = a[i + 1] + tem[i]; }
+    rep(i, 0, n - 1) cout << a[i] << ' ';
+    cout << endl;
+    return;
+}
+```
