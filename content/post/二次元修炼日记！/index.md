@@ -4081,7 +4081,7 @@ void solve() {
 
 注意，本题中 $a$ 是 $1 \sim n$ 的一个排列。
 
-数据范围： $1 \leq k \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq n,1 \leq b_i \leq n or b_i = -1$ 。
+数据范围： $1 \leq k \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq n,1 \leq b_i \leq n \\ or b_i = -1$ 。
 
 思路：很自然地，我们会考察两个相邻窗口滑动，造成了什么影响。
 
