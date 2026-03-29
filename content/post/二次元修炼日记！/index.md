@@ -4085,7 +4085,7 @@ void solve() {
 
 思路：很自然地，我们会考察两个相邻窗口滑动，造成了什么影响。
 
-考虑 $a_i,\ldots,a_{i+k-1}(b_i,\ldots,b_{i+k-1})$ 和 $a_{i+1},\ldots,a_{i+k}$ 和 $b_{i+1},\ldots,b_{i+k}$ 。
+考虑 $a_i,\ldots,a_{i+k-1}(b_i,\ldots,b_{i+k-1})$ 和 $a_{i+1},\ldots,a_{i+k}(b_{i+1},\ldots,b_{i+k})$ 。
 
 不妨设滑之前的窗口的集合为 $A,B$ ，那么滑完后就是 $A-\\{a_i\\}+\\{a_{i+k}\\}$ 和 $B-\\{b_i\\}+\\{b_{i+k}\\}$ ，同时 $A=B$ 。
 
