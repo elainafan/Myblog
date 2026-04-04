@@ -4071,3 +4071,231 @@ void solve() {
     return;
 }
 ```
+
+## Codeforces Round #1090(Div.4)
+闲得没事干打了一下，题目不难，赛时AK了~
+
+### C
+题目大意：请构造一个 $1 \sim 3 \times n$ 的排列，使得每三个数为一组，所有组的中位数之和最大。
+
+数据范围： $1 \leq n \leq 10^5$ 
+
+思路：考虑中位数分别是 $3 \times n-1,3 \times n-3,\ldots n+1$ ，于是第 $i$ 组就是 $(i,3 \times n+2-2 \times i,3 \times n+1-2 \times i)$ 啦。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(3 * n);
+    int cnt = 1;
+    for (int i = 0; i <= 3 * n - 1; i += 3) {
+        a[i] = cnt;
+        a[i + 1] = 3 * n + 1 - 2 * cnt;
+        a[i + 2] = 3 * n + 2 - 2 * cnt;
+        cnt++;
+    }
+    rep(i, 0, 3 * n - 1) cout << a[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### D
+题目大意：请给出一个长度为 $n$ 序列 $a_i$ ，使得对于所有 $gcd(a_i,a_{i+1})$ ，它们两两不同。
+
+数据范围： $2 \leq n \leq 10^4,1 \leq a_i \leq 10^{18}$ 。
+
+思路：考虑两两不同的公因数是质数，于是 $a_i=p_i \times p_{i+1}$ 即可，不会爆的。
+
+```cpp
+constexpr int M = 2e7;
+bool is_prime[M];
+vector<int> primes;
+auto init = [] {
+    ranges::fill(is_prime, true);
+    is_prime[0] = is_prime[1] = false;
+    for (int i = 2; i < M; i++) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (ll j = 1LL * i * i; j < M; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+    return 0;
+}();
+// 函数指针在创建时自动调用
+void solve() {
+    int n;
+    cin >> n;
+    vl a(n);
+    rep(i, 0, n - 1) { a[i] = 1LL * primes[i] * primes[i + 1]; }
+    rep(i, 0, n - 1) cout << a[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+### E
+题目大意：给定一个数组 $a$ ，每次从当前还剩下的 $a$ 内选一个元素，其它元素都跟这个元素异或，然后删除这个元素，问对于所有操作顺序，最后最大能得到多少？
+
+数据范围： $1 \leq n \leq 3105,1 \leq a_i \leq 10^9$
+
+思路：首先，对于当前异或的两个数，不难看出其是 $(a_i \bigoplus a_{k_1} \ldots \bigoplus a_{k_l}) \bigoplus (a_j \bigoplus a_{k_1} \ldots \bigoplus a_{k_l})=a_i \bigoplus a_j$ ，于是最后的答案就是求任意两数的异或最大值，这里的数据给的可以 $O(n^2)$ ，赛时没看范围就用了试填法。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    int ans = 0;
+    map<int, int> ma;
+    frep(i, 30, 0) {
+        int tem = ans;
+        tem |= (1 << i);
+        int mask = (1 << 31 >> (31 - i));
+        bool flag = false;
+        for (int& p : a) {
+            int tem2 = p & mask;
+            if (ma.count(tem ^ tem2)) {
+                flag = true;
+                break;
+            }
+            ma[tem2]++;
+        }
+        ma.clear();
+        if (flag) ans = tem;
+    }
+    cout << ans << endl;
+    return;
+}
+```
+
+### F
+题目大意：给定一棵树，给定当前节点为根子树大小为偶数的节点数目 $x$ 和当前节点为根子树大小为奇数的节点数目 $y$ ，它的根为 $1$ ，问是否能构造出来，如果能，那么请输出树的结构。
+
+数据范围： $0 \leq x,y \leq 2 \cdot 10^5,1 \leq sum(x+y) \leq 2 \cdot 10^5$
+
+思路：我做的时候竟然想的是二叉树，也能出来，数据太弱了。
+
+首先考虑一个子树大小偶数的节点，可以看出它必然有奇数大小子节点，从而用一一对应的思想可知 $x \leq y$ 。
+
+然后对根节点跟 $x,y$ 的关系进一步特判。
+
+接着特判一下根节点，可以看出 $y=x$ 的那部分，可以用一条长度为 $2$ 的链来表示，剩下的奇数节点就当叶子挂着，这样是有解的。
+
+这里有个彩蛋，就是赛时的cf better插件会把判作弊的那句话翻译出来，然后本人不幸看到并按照上面所说交了代码，看了一眼群友一堆这样的，笑死了。
+
+```cpp
+void solve() {
+    int x, y;
+    cin >> x >> y;
+    int n = x + y;
+    vvi ma(n);
+    if (x > y) {
+        cout << "NO" << endl;
+        return;
+    }
+    if (n % 2 == 0 && x == 0) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    if (n % 2 == 0) {
+        x--;
+        for (int i = 1; i <= 2 * x; i += 2) {
+            ma[0].push_back(i);
+            ma[i].push_back(i + 1);
+        }
+        rep(i, 2 * x + 1, n - 1) ma[0].push_back(i);
+    } else if (n % 2 == 1) {
+        y--;
+        for (int i = 1; i <= 2 * x; i += 2) {
+            ma[0].push_back(i);
+            ma[i].push_back(i + 1);
+        }
+        rep(i, 2 * x + 1, n - 1) ma[0].push_back(i);
+    }
+    rep(i, 0, n - 1) {
+        for (int& p : ma[i]) cout << i + 1 << ' ' << p + 1 << endl;
+    }
+    return;
+}
+```
+
+### G
+题目大意：现在给出 $n$ 个人的坐下时间 $b$ ，他们原始的值为 $a$ ，其坐下规则如下：
+
+- 如果 $a_i=0$ ，那么就在 $t=0$ 的时候坐下。
+- 否则，必须满足以下两个条件：
+  - 已经至少有 $a_i$ 个人坐下。
+  - 它的邻居至少有一个人坐下了。
+
+给出坐下时间的上限 $m$ ，问有多少种 $a$ 可以形成 $b$ ？最后答案请模 $676767667$ 。
+
+数据范围： $1 \leq m \leq n \leq 2 \cdot 10^5,0 \leq b_i <m$ 。
+
+思路：最近怎么老是出现这么奇怪的模数。
+
+首先找性质，对于当前 $b_i$ ，如果它不为 $0$ ，必然存在它的邻居坐下的时间小于它，即 $\min(b_{i-1},b_{i+1}) < b_i$ 。
+
+于是先特判无法构造的情况。
+
+接着考虑当前 $b_i$ ，它坐下的前一时刻，分为两种可能：
+- 因为邻居没坐，但是坐下的人数已经到达了 $a_i$ ，从而邻居在 $b_i-1$ 的时候坐下了，它也跟着坐，下界为 $1$ ，上界为 $b_i-1$ 时的人数。
+- 邻居早就坐下了，但是人数在 $b_i-1$ 才达到它的上界，但是此时如果 $b_i-1$ 无人坐下，那么 $b_i-1$ 的时候这个人就该坐下了，因此 $b_i-1$ 的人数跟 $b_i-2$ 的人数必然不同，于是下界为 $b_i-2$ 时的人数 $+1$ ，上界为 $b_i-1$ 时的人数。
+
+ 
+```cpp
+const int MOD = 676767677;
+void solve() {
+    int n, m;
+    cin >> n >> m;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    if (n == 1) {
+        cout << ((a[0] == 0) ? 1 : 0) << endl;
+        return;
+    }
+    rep(i, 0, n - 1) {
+        if (a[i] == 0) continue;
+        if (i == 0 && a[i] <= a[i + 1]) {
+            cout << 0 << endl;
+            return;
+        } else if (i == n - 1 && a[i] <= a[i - 1]) {
+            cout << 0 << endl;
+            return;
+        } else if (a[i] <= a[i - 1] && a[i] <= a[i + 1]) {
+            cout << 0 << endl;
+            return;
+        }
+    }
+    vi pre(m + 1);
+    ll res = 1;
+    rep(i, 0, n - 1) { pre[a[i]]++; }
+    rep(i, 1, m) pre[i] += pre[i - 1];
+    rep(i, 0, n - 1) {
+        if (a[i] == 0) continue;
+        if (i == 0) {
+            if (a[1] < a[0] - 1) {
+                res = res * (pre[a[0] - 1] - (a[0] == 1 ? 0 : pre[a[0] - 2])) % MOD;
+            } else
+                res = res * pre[a[0] - 1] % MOD;
+        } else if (i == n - 1) {
+            if (a[n - 2] < a[n - 1] - 1) {
+                res = res * (pre[a[n - 1] - 1] - (a[n - 1] == 1 ? 0 : pre[a[n - 1] - 2])) % MOD;
+            } else
+                res = res * pre[a[n - 1] - 1] % MOD;
+        } else {
+            int tem = min(a[i - 1], a[i + 1]);
+            if (tem < a[i] - 1) {
+                res = res * (pre[a[i] - 1] - (a[i] == 1 ? 0 : pre[a[i] - 2])) % MOD;
+            } else
+                res = res * pre[a[i] - 1] % MOD;
+        }
+    }
+    cout << res << endl;
+    return;
+}
+```
