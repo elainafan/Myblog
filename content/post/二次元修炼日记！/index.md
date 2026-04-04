@@ -4072,6 +4072,430 @@ void solve() {
 }
 ```
 
+## Codeforces Round #1088(Div.1+2)
+感觉这场题不错，但是赛时有点烧脑子了~
+
+很意外的是竟然打上了1800？好耶！
+### C1
+题目大意：给定长度为 $n$ 的数组 $a$ 和给定数组 $b$ , $b$ 中的每个元素都是 $1 \sim n$ 或者 $-1$ ，如果 $b_i=-1$ ，那么它可以写上任何数。现在要求对于其每个大小为 $k$ 的窗口中，$b$ 都是 $a$ 的一个重排，请问能做到吗？
+
+注意，本题中 $a$ 是 $1 \sim n$ 的一个排列。
+
+数据范围： $1 \leq k \leq n \leq 2 \cdot 10^5, 1 \leq a_i \leq n,1 \leq b_i \leq n \\ or \\ b_i = -1$ 。
+
+思路：很自然地，我们会考察两个相邻窗口滑动，造成了什么影响。
+
+考虑 $a_i,\ldots,a_{i+k-1}(b_i,\ldots,b_{i+k-1})$ 和 $a_{i+1},\ldots,a_{i+k}(b_{i+1},\ldots,b_{i+k})$ 。
+
+不妨设滑之前的窗口的集合为 $A,B$ ，那么滑完后就是 $A-\\{a_i\\}+\\{a_{i+k}\\}$ 和 $B-\\{b_i\\}+\\{b_{i+k}\\}$ ，同时 $A=B$ 。
+
+刚好又由于这里有排列的性质，因此必然有 $a_i=b_i,a_{i+k}=b_{i+k}$ 。
+
+然后符合以上条件之后，只需要考虑不会被插入/滑出的元素是不是具体的一个重排即可。
+
+```cpp
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    rep(i, 0, n - k - 1) {
+        if (a[i] != b[i] && b[i] != -1) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    rep(i, k, n - 1) {
+        if (a[i] != b[i] && b[i] != -1) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    map<int, int> ma;
+    map<int, int> ma2;
+    int tot = 0;
+    rep(i, n - k, k - 1) { ma[a[i]]++; }
+    rep(i, n - k, k - 1) {
+        if (b[i] == -1)
+            tot++;
+        else
+            ma2[b[i]]++;
+        if (b[i] != -1 && !ma.count(b[i])) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if (sz(ma2) + tot != sz(ma)) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
+    return;
+}
+```
+
+### C2
+题目大意：跟上题一样，但是此时 $a$ 中的元素可能相等。
+
+数据范围：跟上题一样。
+
+思路：我们还是考察对应的滑入滑出，此时有两种情况，一种是 $a_i \not ={a_{i+k}}$ ，显然这跟上题是一样的。
+
+还有一种情况就是，$a_i=a_{i+k}$ ，此时可以推出 $b_i=b_{i+k}$ 即可，然后这种我们会想到什么？当然是用并查集维护。
+
+于是，用并查集维护当前的所有元素，如果发生冲突了，那么就报错，否则直接合并即可。
+
+```cpp
+class UnionFind {
+    vector<int> fa;
+    vector<int> siz;  // 集合大小
+
+public:
+    int cc;  // 连通块个数
+    vi val;
+    UnionFind(int n) : fa(n), siz(n, 1), cc(n), val(n, -1) { ranges::iota(fa, 0); }
+    int get(int x) {
+        if (fa[x] != x) fa[x] = get(fa[x]);
+        return fa[x];
+    }
+    bool is_same(int x, int y) { return get(x) == get(y); }
+    bool merge(int from, int to) {
+        int x = get(from), y = get(to);
+        if (x == y) return false;
+        fa[x] = y;
+        siz[y] += siz[x];
+        cc--;
+        return true;
+    }
+    int get_size(int x) {  // 查询x所在集合大小
+        return siz[get(x)];
+    }
+    int get_val(int x) { return val[get(x)]; }
+};
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    vi a(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    UnionFind u(n);
+    rep(i, 0, n - k - 1) {
+        if (a[i] == a[i + k]) u.merge(i, i + k);
+    }
+    rep(i, 0, n - 1) {
+        if (b[i] != -1) {
+            if (u.get_val(i) != -1 && u.get_val(i) != b[i]) {
+                cout << "NO" << endl;
+                return;
+            }
+            u.val[u.get(i)] = b[i];
+        }
+    }
+    rep(i, 0, n - k - 1) {
+        if (a[i] != a[i + k]) {
+            if (u.val[u.get(i)] != -1 && u.val[u.get(i)] != a[i]) {
+                cout << "NO" << endl;
+                return;
+            }
+            if (u.val[u.get(i + k)] != -1 && u.val[u.get(i + k)] != a[i + k]) {
+                cout << "NO" << endl;
+                return;
+            }
+            u.val[u.get(i)] = a[i];
+            u.val[u.get(i + k)] = a[i + k];
+        }
+    }
+    rep(i, 0, n - 1) {
+        if (u.val[u.get(i)] != -1) b[i] = u.val[u.get(i)];
+    }
+    map<int, int> ma;
+    rep(i, 0, k - 1) { ma[a[i]]++; }
+    int tot = 0;
+    rep(i, 0, k - 1) {
+        if (b[i] != -1) {
+            if (!ma.count(b[i])) {
+                cout << "NO" << endl;
+                return;
+            }
+            if (--ma[b[i]] == 0) ma.erase(ma.find(b[i]));
+        } else
+            tot++;
+    }
+    int tot2 = 0;
+    for (auto& [x, y] : ma) tot2 += y;
+    if (tot == tot2)
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl;
+    return;
+}
+```
+
+### D
+题目大意：现在定义 $f(a)_k$ 为所有 $a$ 中长度为 $k$ 的子序列，他们各自的按位与加起来的总和，给出 $f(a)_1 \pmod{10^9+7},\ldots,f(a)_n \pmod{10^9+7}$ ，请还原出原本的 $a_i$ ，如果有多个结果，请输出其中任意一个。
+
+数据范围： $0 \leq a_i < 2^{29},1 \leq n \leq 10^5, 0 \leq b_i < 10^9+7$ 。
+
+思路：显然地，我们会注意到 $f_a(k)=\sum\limits_{i=0}^{28}\dbinom{cnt_i}{k} \cdot 2^{i}$ ，这里 $cnt_i$ 是 $a$ 中 $2^i$ 是 $1$ 的元素个数。
+
+于是，这些位运算完全可以自己独立出来算，而我们可以采取一种更显然的直觉：考虑刚好有 $i$ 个元素的和 $tem_i$ ，则至多只有 $29$ 个 $tem_i$ 不为0。
+
+然后考虑倒着遍历 $b_i$ ，因为这样可以避免 $i$ 较小的 $tem_i$ 去影响 $i$ 较大的 $tem_i$ 。
+
+每次遍历完后，可以考虑把当前 $b_i$ 前面的 $tem_{i+1},\ldots,tem_n$ 项都预先算好，这样，由于上面所说， $tem_i$ 至多只有 $29$ 个不为0，因此如果对于 $b_i$ 先全部减掉的话， $b_i$ 也至多只有 $29$ 个不为0，于是剪枝即可，时间复杂度 $O(29n)$ 。
+
+```cpp
+const ll MOD = 1e9 + 7;
+constexpr int MX = 1e5 + 1;
+ll F[MX];      // 预处理阶乘
+ll INV_F[MX];  // 预处理逆元
+ll qpow(ll x, int n) {
+    ll res = 1;
+    for (; n; n >>= 1) {
+        if (n % 2) res = res * x % MOD;
+        x = x * x % MOD;
+    }
+    return res;
+}
+auto init = [] {
+    F[0] = 1;
+    for (int i = 1; i < MX; i++) F[i] = F[i - 1] * i % MOD;  // 预处理阶乘
+    INV_F[MX - 1] = qpow(F[MX - 1], MOD - 2);
+    for (int i = MX - 1; i; i--) {
+        INV_F[i - 1] = INV_F[i] * i % MOD;
+    }  // 预处理逆元
+    return 0;
+}();
+// 计算C(n,m),即从n个数中取m个数
+ll comb(int n, int m) { return m < 0 || m > n ? 0 : F[n] * INV_F[m] % MOD * INV_F[n - m] % MOD; }
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    rep(i, 0, n - 1) cin >> b[i];
+    vi tem(n);
+    ll tot = 0;
+    frep(i, n - 1, 0) {
+        if (b[i] == 0) continue;
+        tem[i] = b[i];
+        frep(j, i - 1, 0) {
+            ll tem2 = 1LL * tem[i] * comb(i + 1, j + 1) % MOD;
+            b[j] = (b[j] - tem2 + MOD) % MOD;
+        }
+    }
+    a[n - 1] = tem[n - 1];
+    frep(i, n - 2, 0) { a[i] = a[i + 1] + tem[i]; }
+    rep(i, 0, n - 1) cout << a[i] << ' ';
+    cout << endl;
+    return;
+}
+```
+
+## Codeforces Round #1089(Div.2)
+上了点分，这场感觉评价不高，好多电波题。
+### B
+题目大意：给定 $n$ 个元素的数组 $a$ ，它是 $1 \sim n$ 的一个排列，现在挨个遍历它，对于当前的 $a_i(1 \leq i \leq n)$ ，如果 $a_i$ 已经被标记了，那么就结束游戏。否则可以选择坐下或者跳过，如果坐下，则会标记 $a_{a_i}$ ，现在问你，最多可以坐下多少次？
+
+数据范围: $1 \leq n \leq 2 \cdot 10^5$
+
+思路：贪心题，按照常理来说应该枚举每个会炸掉的位置，这可以用一个堆来维护，不过这里有个 $O(n)$ 的解法，就是争取将游戏进行到最后，也就是不坐所有会炸掉的椅子，电波题。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n + 1);
+    rep(i, 1, n) cin >> a[i];
+    vi b(n + 1);
+    rep(i, 1, n) b[a[i]] = i;
+    int ans = 0, tem = 0;
+    rep(i, 1, n) {
+        if (b[i] < i) tem++;
+        ans = max(ans, i - tem);
+    }
+    cout << ans << endl;
+    return;
+}
+```
+
+### C1
+题目大意：给定长度为 $n$ 的数组 $a$ 和长度为 $n$ 的数组 $b$，现在可以对 $a$ 的每个下标进行最多一次操作：选取 $1 \leq m \leq b_i$ 且 $m \not ={a_i}$ ，将 $a_i$ 变为 $m$ 。
+
+现在要求变化后的任意子数组的最大公因数都跟原数组相同，问最多能变化多少次？
+
+注意：在简单版本中， $b_i=a_i$
+
+数据范围： $1 \leq a_i \leq 10^9,2 \leq n \leq 2 \cdot 10^5$ 
+
+思路：赛时五分钟开了，算是弥补了一下B开太慢的差距。
+
+首先，不难注意到如果所有相邻的数最大公因数都相同，那么最后的所有最大公因数都相同，于是贪心地，将一个数转化为它与相邻数的最大公约数的最小公倍数，那么如果能转化，就计数，否则不行。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    rep(i, 0, n - 1) cin >> b[i];
+    vi tem(n);
+    auto lcm = [&](ll x, ll y) -> ll {
+        ll tem = __gcd(x, y);
+        return x / tem * y;
+    };
+    rep(i, 0, n - 1) {
+        if (i == 0) {
+            tem[i] = __gcd(a[i], a[i + 1]);
+        } else if (i == n - 1) {
+            tem[i] = __gcd(a[i], a[i - 1]);
+        } else {
+            tem[i] = lcm(__gcd(a[i], a[i + 1]), __gcd(a[i], a[i - 1]));
+        }
+    }
+    int ans = 0;
+    rep(i, 0, n - 1) {
+        if (a[i] != tem[i]) ans++;
+    }
+    cout << ans << endl;
+    return;
+}
+```
+
+### C2
+题目大意：跟上题一样，注意本题不再存在 $b_i=a_i$ 的限制。
+
+数据范围： $2 \leq n \leq 5 \cdot 10^4,1 \leq a_i,b_i \leq 10^9$
+
+思路：先想想这道题跟上道题的区别在哪，首先就是，如果能变成最小的，那么还是变成最小的，随后，之前有一些无法变化的，由于 $b_i$ 变大了，因此可以往上变化，但是仍然需要保持公因数条件。
+
+从而不难想到，往上变化，是怎么个往上变化的法子呢？一个显然的思路就是将C1中求出的数（此时刚好是 $a_i$ ）乘上某个质数，而乘上的这个质数，由于需要保证跟旁边的数没有进一步的公因数，因此在前二十个质数中必然存在（可以通过连乘的方法验证），于是看到这里的状态数少，考虑二维DP即可，时间复杂度 $O(400n)$ 。
+
+```cpp
+vl primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+void solve() {
+    int n;
+    cin >> n;
+    vi a(n);
+    vi b(n);
+    rep(i, 0, n - 1) cin >> a[i];
+    rep(i, 0, n - 1) cin >> b[i];
+    vi tem(n);
+    auto lcm = [&](ll x, ll y) -> ll {
+        ll tem = __gcd(x, y);
+        return x / tem * y;
+    };
+    rep(i, 0, n - 1) {
+        if (i == 0) {
+            tem[i] = __gcd(a[i], a[i + 1]);
+        } else if (i == n - 1) {
+            tem[i] = __gcd(a[i], a[i - 1]);
+        } else {
+            tem[i] = lcm(__gcd(a[i], a[i + 1]), __gcd(a[i], a[i - 1]));
+        }
+    }
+    vvl tem2(n);
+    rep(i, 0, n - 1) {
+        tem2[i].push_back(a[i]);
+        if (tem[i] <= b[i] && tem[i] != a[i]) {
+            tem2[i].push_back(tem[i]);
+        }
+        if (tem[i] == a[i]) {
+            for (auto& p : primes) {
+                if (1LL * p * tem[i] <= b[i]) {
+                    tem2[i].push_back(1LL * p * tem[i]);
+                } else
+                    break;
+            }
+        }
+        sort(all(tem2[i]));
+        tem2[i].erase(unique(all(tem2[i])), tem2[i].end());
+    }
+    vvi dp(n, vi(26, INT_MIN));
+    rep(i, 0, sz(tem2[0]) - 1) dp[0][i] = (tem2[0][i] == a[0] ? 0 : 1);
+    rep(i, 1, n - 1) {
+        rep(j, 0, sz(tem2[i]) - 1) {
+            int tem3 = (tem2[i][j] == a[i] ? 0 : 1);
+            rep(k, 0, sz(tem2[i - 1]) - 1) {
+                if (__gcd(tem2[i][j], tem2[i - 1][k]) == __gcd(a[i], a[i - 1])) {
+                    dp[i][j] = max(dp[i][j], dp[i - 1][k] + tem3);
+                }
+            }
+        }
+    }
+    int ans = 0;
+    rep(i, 0, sz(tem2[n - 1]) - 1) ans = max(ans, dp[n - 1][i]);
+    cout << ans << endl;
+    return;
+}
+```
+
+### D
+题目大意：给定一个RBS（合法括号序列） $s$ 和一个合法括号序列 $t$ ，每次可以选取 $s$ 的两个不相交RBS并交换位置，问任意次是否能把 $s$ 转化为 $t$ ？
+
+数据范围： $4 \leq n \leq 5 \cdot 10^5$
+
+思路：赛后补的，首先说明，对于这类任意的题目，首先就是需要一个观察，比如找不变量或者一次就行。
+
+这里给了一个新的思路，就是将RBS看做一个树形结构。
+
+考虑``(()()())``，则外层的``()``作为父节点，里面并列的三个``()``都作为它的孩子。对于任意的RBS也是这样，外层父节点，内层兄弟节点。
+
+然后观察样例，将 ``s`` 和 ``t`` 画出来，不难发现：它们有多个叉的最高节点深度相同，同时叶子数相同。
+
+再考虑题目给出的定义，就是交换 ``u`` 跟 ``v`` 的连续不相交一段子树，或者交换 ``u`` 的两段连续不相交子树。
+
+这里给出一个证明：如果多个叉最高节点的深度不同，那么对于它们上面的节点，由于只有一个叉，因此无法交换，所以始终不能相同；而对于叶子树，由于交换不改变叶子数，显然这是相同的。
+
+然后，最高多叉节点的深度，就是从两侧开始双指针遍历，如果检测两侧没有嵌套的括号树，而叶子就是紧挨的``()``数。
+
+这种题还是练得比较少，同时这种思路需要注意力，还是要多练。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    string s, t;
+    cin >> s >> t;
+    auto cnt_leaves = [&](const string& s) -> int {
+        int cnt = 0;
+        rep(i, 0, n - 2) {
+            if (s[i] == '(' && s[i + 1] == ')') cnt++;
+        }
+        return cnt;
+    };
+    auto cnt_matches = [&](const string& s) -> int {
+        int cnt = 0;
+        vi match(n);
+        stack<int> st;
+        rep(i, 0, n - 1) {
+            if (s[i]=='(') {
+                st.push(i);
+                continue;
+            }
+            match[st.top()]=i;
+            st.pop();
+        }
+        int l = 0, r = n - 1;
+        while (match[l] == r) {
+            l++;
+            r--;
+            cnt++;
+        }
+        return cnt;
+    };
+    if (cnt_leaves(s) == cnt_leaves(t) && cnt_matches(s) == cnt_matches(t))
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl;
+    return;
+}
+```
+
 ## Codeforces Round #1090(Div.4)
 闲得没事干打了一下，题目不难，赛时AK了~
 
