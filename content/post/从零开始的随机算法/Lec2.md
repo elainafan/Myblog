@@ -2,7 +2,7 @@
 title: Lecture 2
 date: 2026-03-11
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Testing Polynomial Identities
@@ -107,11 +107,11 @@ $$ \det(A) = \sum_{\sigma \in S_n} \text{sgn}(\sigma) \prod_{i=1}^n A_{i, \sigma
 
 $$ \left( \frac{|S|-1}{|S|} \right)^{|E|} $$
 
-## 隔离引理的另一种严谨证明（单射构造法）
+## 单射构造法
 
 除上述延迟决策法外，我们可以通过**构造映射计算方案数**的方法提供一个非常干净的证明：
 
-设有 $|S|$ 个元素，每个元素在 $\{1,2,\dots,l\}$ 之间均匀随机抽取权值。
+设有 $|S|$ 个元素，每个元素在 $\\{1,2,\dots,l \\}$ 之间均匀随机抽取权值。
 
 所有可能的权值分配方案集合记为 $\mathcal{W}$ ，显然 $|\mathcal{W}| = l^{|S|}$ 。
 
@@ -123,12 +123,14 @@ $$ \left( \frac{|S|-1}{|S|} \right)^{|E|} $$
 
 接下来构造一种从“保守方案集合”到“拥有唯一最小集合方案”的映射函数，获得新的权重分配方案 $w'$ ：
 
+<div>
 $$ 
 w'_x = \begin{cases} 
-w_x - 1, & (x \in S_{\ast}) \\ 
-w_x, & (x \notin S_{\ast}) 
+w_x - 1, & (x \in S_{\ast}) \\\\
+w_x, & (x \notin S_{\ast}) \\\\
 \end{cases} 
 $$
+</div>
 
 此时， $w'$ 这个新分配方案具有极强的特性：**它必定有唯一的最小集合，且这个集合就是刚才的 $S_*$**。因为我们把原本可能并列第一的若干选手中的**仅仅一个**（即 $S_*$ 里包含的所有元素）强制减轻了重量（减去1），就强行将它塑造成了唯一的冠军。
 

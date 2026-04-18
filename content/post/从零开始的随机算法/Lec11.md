@@ -2,7 +2,7 @@
 title: Lecture 11
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Balls and Bins
@@ -211,15 +211,17 @@ $$
 
 基于这段等价观察，我们有以下全概率放缩过程：
 
+<div>
 $$
 \begin{aligned}
-\Pr[\forall i, Y_i \le c] &= \sum_k \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = k\right] \Pr\left[\sum_i Y_i = k\right] \\
-&\ge \sum_{k \le m} \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = k\right] \Pr\left[\sum_i Y_i = k\right] \\
-&\ge \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = m\right] \sum_{k \le m} \Pr\left[\sum_i Y_i = k\right] \\
-&= \Pr[\forall i, X_i \le c] \cdot \Pr\left[\sum_i Y_i \le m\right] \\
+\Pr[\forall i, Y_i \le c] &= \sum_k \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = k\right] \Pr\left[\sum_i Y_i = k\right] \\\\
+&\ge \sum_{k \le m} \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = k\right] \Pr\left[\sum_i Y_i = k\right] \\\\
+&\ge \Pr\left[\forall i, Y_i \le c \Big| \sum_i Y_i = m\right] \sum_{k \le m} \Pr\left[\sum_i Y_i = k\right] \\\\
+&= \Pr[\forall i, X_i \le c] \cdot \Pr\left[\sum_i Y_i \le m\right] \\\\
 &\ge \Pr[\forall i, X_i \le c] \cdot \frac{1}{4}
 \end{aligned}
 $$
+</div>
 
 **针对最后推导步骤的详细解释：**
 

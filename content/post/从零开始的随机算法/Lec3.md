@@ -2,7 +2,7 @@
 title: Lecture 3
 date: 2026-03-13
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Fingerprinting
@@ -43,7 +43,7 @@ hidden: true
 我们需要证明 $m$ 能够整除 $n$ 。这个证明的核心思想是利用 **陪集（Coset）** 将整个群 $G$ 进行均匀划分。
 
 1. **定义左陪集：**
-   对于群 $G$ 中的任意元素 $g$ ，我们定义 $H$ 的一个左陪集为 $gH = \{gh \mid h \in H\}$ 。
+   对于群 $G$ 中的任意元素 $g$ ，我们定义 $H$ 的一个左陪集为 $gH = \\{gh \mid h \in H \\}$ 。
 
 2. **性质一：所有左陪集的大小都等于 $H$ 的大小。**
    我们要说明集合 $H$ 和集合 $gH$ 的元素个数一样多。考虑映射 $f: H \to gH$ ，定义为 $f(h) = gh$ 。
@@ -115,7 +115,7 @@ Miller-Rabin使用了一个更强的性质，也就是设 $n-1=2^{s} \cdot d$ �
 
 则前一个算法对它失效。
 
-我们先来分析不考虑 Carmichael Number时的算法，设 $G$ 是所有与 $n$ 互素的数， $H$ 是 $\{a|a^{n-1} \equiv 1 \ \mathrm{mod} n,(a,n)=1\}$ 。
+我们先来分析不考虑 Carmichael Number时的算法，设 $G$ 是所有与 $n$ 互素的数， $H$ 是 $\\{a|a^{n-1} \equiv 1 \ \mathrm{mod} n,(a,n)=1 \\}$ 。
 
 则错误率为 $\frac{|H|}{|G|}$ 。
 
@@ -144,11 +144,11 @@ Miller-Rabin使用了一个更强的性质，也就是设 $n-1=2^{s} \cdot d$ �
 ### 定义群与子群
 只需考虑满足 $(a, p) = 1$ 的这些经过初步筛选的数字（若 $(a,p)\neq 1$，算法直接判定为合数，不犯错）。
 - **群 $G$**：
-  $G = \{a \mid (a,p) = 1\}$，即模 $p$ 意义下所有与 $p$ 互素的元素构成的乘法群。
+  $G = \\{a \mid (a,p) = 1 \\}$，即模 $p$ 意义下所有与 $p$ 互素的元素构成的乘法群。
 - **寻找最大指数 $s^{\*}$**：
-  在算法序列的指数集合 $\{O, 2O, 2^2O, \cdots, 2^\omega O\}$ 中，找到**最大**的一个幂次 $s^{\*}$，使得方程 $\exists x, x^{s^{\*}} \equiv -1 \pmod p$ 成立。（如果 $p$ 能通过测试，序列中必然要出现 $-1$ 或者一开始就是 $1$）。
+  在算法序列的指数集合 $\\{O, 2O, 2^2O, \cdots, 2^\omega O \\}$ 中，找到**最大**的一个幂次 $s^{\*}$，使得方程 $\exists x, x^{s^{\*}} \equiv -1 \pmod p$ 成立。（如果 $p$ 能通过测试，序列中必然要出现 $-1$ 或者一开始就是 $1$）。
 - **子群 $H$**：
-  $H = \{a \mid (a,p) = 1, \ a^{s^{\*}} \equiv \pm 1 \pmod p\}$
+  $H = \\{a \mid (a,p) = 1, \ a^{s^{\*}} \equiv \pm 1 \pmod p \\}$
   $H$ 是 $G$ 的一个子群。所有能够骗过算法、让算法输出“素数”的强伪素数底数 $a$，都必然包含在集合 $H$ 中。只要证明 $H$ 是 $G$ 的**真子群**，结论自然得出。
 
 ### 核心证明： $H$ 是真子群
@@ -166,25 +166,29 @@ Miller-Rabin使用了一个更强的性质，也就是设 $n-1=2^{s} \cdot d$ �
 
 **中国剩余定理 (CRT) 回顾：** 假设整数 $m_1, m_2, \dots, m_k$ 两两互素，则对于任意整数 $a_1, a_2, \dots, a_k$，同余方程组
 
+<div>
 $$
 \begin{cases} 
-x \equiv a_1 \pmod{m_1} \\ 
-x \equiv a_2 \pmod{m_2} \\
-\vdots \\
+x \equiv a_1 \pmod{m_1} \\\\ 
+x \equiv a_2 \pmod{m_2} \\\\
+\vdots \\\\
 x \equiv a_k \pmod{m_k}
 \end{cases}
 $$
+</div>
 
 在模 $M = m_1 m_2 \dots m_k$ 下有唯一解。
    
 根据上述的中国剩余定理（CRT），由于 $(p_1, p_2) = 1$ ，我们可以构造出唯一的 $a \in [0, p-1]$ 满足以下方程组：
 
+<div>
 $$
 \begin{cases} 
-a \equiv x \pmod{p_1} \\ 
+a \equiv x \pmod{p_1} \\\\ 
 a \equiv 1 \pmod{p_2} 
 \end{cases}
 $$
+</div>
 
 由于 $(x, p_1)=1$ 且 $(1, p_2)=1$ ， $a$ 与 $p$ 必然互素，所以 $a \in G$ 。
 

@@ -2,7 +2,7 @@
 title: Lecture 5
 date: 2026-03-19
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Monotone Circuits for the Majority Function
@@ -130,11 +130,13 @@ $$ 3^{c \log_2 n} = (2^{\log_2 3})^{c \log_2 n} = (2^{\log_2 n})^{c \log_2 3} = 
 
    由于
 
+<div>
 $$\begin{aligned}
-\text{Var}[X] &= \sum_C \text{Var}[X_C] + \sum_{C, D} \text{Cov}[X_C, X_D] \\
-&\le \Theta(n^3 p^3) + \binom{n}{4}\binom{4}{2}p^5 \\
+\text{Var}[X] &= \sum_C \text{Var}[X_C] + \sum_{C, D} \text{Cov}[X_C, X_D] \\\\
+&\le \Theta(n^3 p^3) + \binom{n}{4}\binom{4}{2}p^5 \\\\
 &= \Theta(n^3 p^3) + \Theta(n^4 p^5)
 \end{aligned}$$
+</div>
 
    在这里：
    * 第一项 $\sum_C \text{Var}[X_C]$ 指的是所有单个三角形的方差，由于有 $\binom{n}{3}$ 种可能的三角形，概率为 $p^3$，所以量级是 $\Theta(n^3 p^3)$ 。

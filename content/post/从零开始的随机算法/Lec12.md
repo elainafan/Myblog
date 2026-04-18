@@ -2,7 +2,7 @@
 title: Lecture 12
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Power of Two Choice
@@ -103,12 +103,14 @@ $$
 
 为计算 $B_{i+1}$ 超过阈值 $\beta_{i+1}$ 的概率，基于前提事件 $B_i$ 的状态进行全概率展开并放缩：
 
+<div>
 $$
 \begin{aligned}
-\Pr[B_{i+1} > \beta_{i+1}] &= \Pr[B_{i+1} > \beta_{i+1} \mid B_i \le \beta_i] \Pr[B_i \le \beta_i] + \Pr[B_{i+1} > \beta_{i+1} \mid B_i > \beta_i] \Pr[B_i > \beta_i] \\
+\Pr[B_{i+1} > \beta_{i+1}] &= \Pr[B_{i+1} > \beta_{i+1} \mid B_i \le \beta_i] \Pr[B_i \le \beta_i] + \Pr[B_{i+1} > \beta_{i+1} \mid B_i > \beta_i] \Pr[B_i > \beta_i] \\\\
 &\le \Pr[B_{i+1} > \beta_{i+1} \mid B_i \le \beta_i] + \Pr[B_i > \beta_i]
 \end{aligned}
 $$
+</div>
 
 对该不等式的第一项进行分析（即条件限制 $B_i \le \beta_i$ 下层级的递进概率）：
 

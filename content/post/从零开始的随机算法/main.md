@@ -1,7 +1,7 @@
 ---
 title: 从零开始的随机算法
 date: 2026-03-10
-image: "/images/2.png"
+image: "/images/4.jpg"
 categories: 
     - 算法
     - 随机算法

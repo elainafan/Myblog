@@ -2,7 +2,7 @@
 title: Lecture 7
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Universal Hashing
@@ -10,7 +10,7 @@ hidden: true
 
 对于任何**确定性的哈希函数**（或压缩方式） $h(\cdot)$，对手 (adversary) 都可以精心构造一个输入集合 $S$，使得：
 
-1. $h(S) = \{h(s) \mid s \in S\}$ 的大小尽可能地小。
+1. $h(S) = \\{h(s) \mid s \in S \\}$ 的大小尽可能地小。
 
 2. **最大化碰撞个数**。碰撞 (collision) 的定义为：
 
@@ -50,13 +50,17 @@ $$
 
 根据期望的线性性质 (Linearity of Expectation)，我们可以枚举 $S$ 中所有可能的元素对 $(x,y)$，计算它们碰撞的指示变量的期望：
 
+<div>
 $$
-\mathbb{E}_h[\text{碰撞对数}] = \mathbb{E}_h \left[ \sum_{\{x,y\} \subseteq S, x \neq y} \mathbb{I}(h(x) = h(y)) \right]
+\mathbb{E}_h[\text{碰撞对数}] = \mathbb{E}_h \left[ \sum_{ \\{x,y \\} \subseteq S, x \neq y} \mathbb{I}(h(x) = h(y)) \right]
 $$
+</div>
 
+<div>
 $$
 = \sum_{x \neq y} \Pr_h[h(x) = h(y)] \leq \binom{|S|}{2} \times \frac{1}{|T|}
 $$
+</div>
 
 > **推论：哈希表平方级大小的情况**
 >
@@ -72,7 +76,7 @@ $$
 
 如果 $h(\cdot)$ 仅仅是理论上存在的一族映射函数：
 
-- 如果 $h(\cdot)$ 是从所有全映射 $\{h \mid h: U \to T\}$ 中真正均匀随机抽取的，那么需要的**随机性过大**。
+- 如果 $h(\cdot)$ 是从所有全映射 $\\{h \mid h: U \to T \\}$ 中真正均匀随机抽取的，那么需要的**随机性过大**。
 
 - 同时，我们在算法中**存储 $h(\cdot)$** 映射关系需要的比特数量也就过多（甚至比直接存储集合 $S$ 还要大），这完全丧失了哈希作为一种压缩结构的意义。
 
@@ -324,9 +328,11 @@ $$
 
 然后我们从中取**中位数**作为最终结果：
 
+<div>
 $$
 \hat{X} = \text{中位数}(\bar{X}_s)_{s=1}^S
 $$
+</div>
 
 如果最终取出的中位数是错的（超出了误差区间），意味着这 $S$ 个结果里，有超过一半以上的局部估计都失败了。
 

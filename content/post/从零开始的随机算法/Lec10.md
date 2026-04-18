@@ -2,7 +2,7 @@
 title: Lecture 10
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Hamilton Cycles
@@ -122,7 +122,7 @@ $$
 
 有定理为其成立约束基底：
 
-**Claim**：在不超过 $4n \ln n$ 步运行中，w.h.p 对 $\forall x, \quad N_{G'}(x) \setminus OLD(x) \neq \emptyset$。
+**Claim**：在不超过 $4n \ln n$ 步运行中，w.h.p 对 $\forall x, N_{G'}(x) \setminus OLD(x) \neq \emptyset$。
 
 证明依赖设立基准量 $\mu^* = 24 \ln n$，运用联合限与特异极端 Chernoff 边界分探，只要证明 $|N_{G'}(x)| > |OLD(x)|$ 始终成立，池子 $N_{G'}(x) \setminus OLD(x)$ 必然非空。
 

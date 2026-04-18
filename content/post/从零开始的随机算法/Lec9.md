@@ -2,7 +2,7 @@
 title: Lecture 9
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Chernoff Bounds
@@ -119,13 +119,15 @@ $$
 
 **上界 $\ge (1 + \beta)\mu$**： 对于 $\beta > 0$
 
+<div>
 $$
 \text{Pr}[X \ge (1 + \beta)\mu] \le 
 \begin{cases} 
-\exp\left(-\frac{\beta^2 \mu}{2 + \beta}\right) & (\text{当 } \forall \beta > 0) \\ 
+\exp\left(-\frac{\beta^2 \mu}{2 + \beta}\right) & (\text{当 } \forall \beta > 0) \\\\ 
 \exp\left(-\frac{\beta^2 \mu}{3}\right) & (\text{当 } 0 < \beta \le 1 \text{时})
 \end{cases}
 $$
+</div>
 
 ### Hoeffding 界
 
@@ -161,7 +163,7 @@ $$
 
 ### 问题定义
 
-考虑 $n$ 维超立方体，网络的顶点为 $\{0, 1\}^n$，共 $N = 2^n$ 个。每条边双向，同一条边每个时间只有 **1** 个数据包通过。
+考虑 $n$ 维超立方体，网络的顶点为 $\\{0, 1 \\}^n$，共 $N = 2^n$ 个。每条边双向，同一条边每个时间只有 **1** 个数据包通过。
 
 令 $\pi$ 是任意排列，目标是在**同一时刻（ $t=0$ ）**，从每个 $i$ **同步出发**发送一个数据包到对应的终点 $\pi(i)$。
 
@@ -217,7 +219,7 @@ $$ \text{Pr}[\exists i, D(i) > cn] \le \sum_{i=1}^N \text{Pr}[D(i) > cn] \le 2^n
 
 用 $P_i$ 表示 $i \to \delta(i)$ 的期望路径所经过的点的集合。定义集合：
 
-$$ S_i = \{ j \neq i \mid P_j \cap P_i \neq \emptyset \} $$
+$$ S_i = \\{ j \neq i \mid P_j \cap P_i \neq \emptyset \\} $$
 
 即 $S_i$ 表示所有与数据包 $i$ 的路径 **发生了相交（重叠）** 的其它数据包的集合。
 
@@ -246,13 +248,15 @@ $$ S_i = \{ j \neq i \mid P_j \cap P_i \neq \emptyset \} $$
 
 我们定义 0-1 指示变量，观察两两是否碰撞：
 
+<div>
 $$ 
-H_{ij} = \begin{cases} 1 & P_i \cap P_j \neq \emptyset \\ 0 & P_i \cap P_j = \emptyset \end{cases} 
+H_{ij} = \begin{cases} 1 & P_i \cap P_j \neq \emptyset \\\\ 0 & P_i \cap P_j = \emptyset \end{cases} 
 $$
+</div>
 
 由此可以将总延迟的上限转化为求和问题： $D(i) \le \sum_{j \neq i} H_{ij} = |S(i)|$。
 
-由于所有的中间节点 $\delta(\cdot)$ 都是完全随机且独立选取的，这意味着指示变量 $\{H_{ij}\}$ 之间是相互独立的！这完美契合了使用 **Chernoff bound（切尔诺夫界）** 的前提条件。
+由于所有的中间节点 $\delta(\cdot)$ 都是完全随机且独立选取的，这意味着指示变量 $\\{H_{ij} \\}$ 之间是相互独立的！这完美契合了使用 **Chernoff bound（切尔诺夫界）** 的前提条件。
 
 **第一步：计算期望值 $\mathbb{E}[|S(i)|]$**
 

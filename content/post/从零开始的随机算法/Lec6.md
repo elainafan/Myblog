@@ -2,7 +2,7 @@
 title: Lecture 6
 date: 2026-03-21
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## Probability Amplification Using Pairwise Independence
@@ -21,7 +21,7 @@ hidden: true
 由于纯随机比特在理论计算机科学中是非常昂贵的资源，我们希望能用更少的随机比特达到类似的概率放大效果。
 
 > **形式化补充（来自同学笔记）：**
-> 假设已有一个随机算法 $A$，依赖 $m$ 个随机 bits，用来判断 $x \in L \subseteq \{0,1\}^n$ 是否成立，满足
+> 假设已有一个随机算法 $A$，依赖 $m$ 个随机 bits，用来判断 $x \in L \subseteq \\{0,1 \\}^n$ 是否成立，满足
 > 
 > $$ x \in L \Rightarrow \Pr[A \text{ output Yes}] \ge \frac{1}{2} $$
 > 
@@ -59,12 +59,14 @@ $$ \Pr[ax+b = c] = \frac{q}{q^2} = \frac{1}{q} $$
 **2. 等式左边（同时发生的概率）：**
 考虑 $ax+b=c$ 和 $ax'+b=c'$ 同时成立，这构成了关于未知变量 $a$ 和 $b$ 的二元一次方程组：
 
+<div>
 $$
 \begin{cases} 
-ax + b = c \\ 
+ax + b = c \\\\ 
 ax' + b = c' 
 \end{cases}
 $$
+</div>
 
 两式相减得到 $a(x - x') = c - c'$。
 

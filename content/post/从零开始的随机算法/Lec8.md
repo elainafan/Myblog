@@ -2,7 +2,7 @@
 title: Lecture 8
 date: 2026-04-18
 encrypt: false
-image: "/images/2.png"
+image: "/images/4.jpg"
 hidden: true
 ---
 ## DNF Counting
@@ -37,7 +37,7 @@ hidden: true
 
 - **解决**：我们给每个元素指定一个唯一的“归属”。如果某元素属于多个集合，我们**只在他作为编号最小的那个集合的元素被抽中时才算数**。
 
-- **数学表达**：计数当且仅当该元素被抽出的集合编号 $k = \min\{i \mid a \in A_i\}$。
+- **数学表达**：计数当且仅当该元素被抽出的集合编号 $k = \min \\{i \mid a \in A_i \\}$。
 
 **完整估算步骤**：
 
