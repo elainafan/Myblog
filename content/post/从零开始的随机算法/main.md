@@ -20,3 +20,15 @@ categories:
 [Lecture 5]({{< ref "Lec5.md" >}})
 
 [Lecture 6]({{< ref "Lec6.md" >}})
+
+[Lecture 7]({{< ref "Lec7.md" >}})
+
+[Lecture 8]({{< ref "Lec8.md" >}})
+
+[Lecture 9]({{< ref "Lec9.md" >}})
+
+[Lecture 10]({{< ref "Lec10.md" >}})
+
+[Lecture 11]({{< ref "Lec11.md" >}})
+
+[Lecture 12]({{< ref "Lec12.md" >}})
