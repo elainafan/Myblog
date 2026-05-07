@@ -20,7 +20,7 @@ menu:
 - 如果你觉得你跟我很熟，那么可以私信我获取加密博文的密码，但是我不一定会给哈哈哈。
 - 什么？你连我的联系方式都没有，那哪里熟了的说~
 ## 关于本博客
-- 头像：伊地知虹夏(Ijichi Nijika)，出自动漫《孤独摇滚》。
+- 头像：丘比，出自动漫《魔法少女小圆》。
 - 站名：我是伊蕾娜小姐的粉丝（伊蕾娜，elaina，出自动漫《魔女之旅》）！自由自在旅行、写下自己的故事太吸引人啦~
 ## 博客是怎么建的？
 - 博客由[hugo](https://gohugo.io/getting-started/quick-start/)搭建，采用了Jimmy Cai的[Stack](https://github.com/CaiJimmy/hugo-theme-stack)主题。  
