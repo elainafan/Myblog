@@ -85,7 +85,7 @@ comments: true
 参考样式&本站信息：
 ```
 title: Elainafan's blog
-description: 编织相遇与离别
+description: 痛饮所有踌躇之后？
 website: https://www.elainafan.one/
 image: https://www.elainafan.one/avatars/elainafan.jpg
 ```

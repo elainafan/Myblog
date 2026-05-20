@@ -1,5 +1,28 @@
 <!-- 【custom.html】 -->
 
+{{ $backgroundImages := resources.Match "background/*.{jpg,jpeg,png,webp,avif}" }}
+{{ with $backgroundImages }}
+{{ with index . 0 }}
+<style>
+    body {
+        background:
+            linear-gradient(rgba(245, 245, 250, 0.72), rgba(245, 245, 250, 0.72)),
+            url({{ .Permalink }}) no-repeat center top;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    [data-scheme="dark"] body {
+        background:
+            linear-gradient(rgba(48, 48, 48, 0.62), rgba(48, 48, 48, 0.62)),
+            url({{ .Permalink }}) no-repeat center top;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+</style>
+{{ end }}
+{{ end }}
+
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 
 <div id="aplayer"></div>
@@ -222,7 +245,6 @@
         // Stack脚本初始化
         window.Stack.init();
         topbar.hide();
-        // 加载Giscus评论脚本
     })
 </script>
 
@@ -230,12 +252,27 @@
 <div class="js-Pjax">
     <script>
             (function () {
-                // 判断当前是否有文章评论标识
-                let comment = document.querySelector(".comment");
-                if (!comment) {
-                    return;
+                function shouldSkipGiscus() {
+                    return document.body.classList.contains("template-search");
                 }
+
+                function getGiscusTheme() {
+                    return document.documentElement.dataset.scheme === "dark"
+                        ? '{{- default `dark_dimmed` .darkTheme -}}'
+                        : '{{- default `light` .lightTheme -}}';
+                }
+
                 function injectGiscusScript() {
+                    if (shouldSkipGiscus()) {
+                        return;
+                    }
+
+                    // 判断当前是否有文章评论标识
+                    let comment = document.querySelector(".comment");
+                    if (!comment) {
+                        return;
+                    }
+
                     let script = document.createElement('script');
                     // 将对应评论的脚本内容填进去
                     script.setAttribute('src', 'https://giscus.app/client.js');
@@ -248,7 +285,7 @@
                     script.setAttribute('data-reactions-enabled', '{{- default 1 .reactionsEnabled -}}');
                     script.setAttribute('data-emit-metadata', '{{- default 0 .emitMetadata -}}');
                     script.setAttribute('data-input-position', '{{- default `top` .inputPosition -}}');
-                    script.setAttribute('data-theme', '{{- default `light` .lightTheme -}}');
+                    script.setAttribute('data-theme', getGiscusTheme());
                     script.setAttribute('data-lang', '{{- default `en` .lang -}}');
                     script.setAttribute('data-loading', 'lazy');
                     script.setAttribute('crossorigin', 'anonymous');
