@@ -1,5 +1,5 @@
 ---
-title: 从零开始的音乐播放器与PJAX
+title: 在博客中优雅地引入音乐播放器
 date: 2026-05-20
 categories: 
     - 建站

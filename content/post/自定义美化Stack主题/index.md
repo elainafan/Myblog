@@ -1,5 +1,5 @@
 ---
-title: 从零开始的博客美化记录
+title: 自定义美化Stack主题
 date: 2026-05-20
 categories: 
     - 建站
