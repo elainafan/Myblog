@@ -66,7 +66,7 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 
 原来的紧凑列表是一列到底，比较稳，但是内容多了以后会显得很长。改成两列后，归档页的信息密度会高一些。友链和链接页面使用的也是这一类 compact 列表结构，因此这个样式同样会让友链卡片变成多列显示。需要注意的是，`.article-list--compact` 原本自己带背景和阴影，如果直接改成 grid，会出现一个大背景包着小卡片的感觉，所以这里把外层背景去掉，再给每个 `article` 单独加回卡片样式。
 
-## 封面图高度
+## 封面与分类页比例
 然后是封面图高度。相关代码同样加在 `assets/scss/custom.scss` 中：
 
 ```scss
@@ -86,6 +86,111 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 ```
 
 这里用 `object-fit: cover` 保证封面图不会被压扁。高度则根据屏幕尺寸逐步增加，使宽屏下的文章卡片更舒展。
+
+分类页还有一个容易被忽略的地方：Stack 主题的分类页顶部会用 `.section-card` 显示分类封面、文章数量、分类名和描述。默认样式在桌面端还算正常，但到了手机端，如果封面图和文字仍然挤在同一行，就很容易出现文字被压成竖排、图片比例也不舒服的问题。
+
+因此笔者把分类页头图在手机端改成上下结构，图片固定为 `16:9`；到了桌面端再恢复成左右结构，让图片占据更大的横向空间。这段也加在 `assets/scss/custom.scss` 中：
+
+```scss
+.section-card {
+  align-items: stretch;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+
+  .section-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+  }
+
+  .section-details {
+    min-width: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, .18);
+    padding: 18px 20px 20px;
+  }
+
+  .section-count,
+  .section-term,
+  .section-description {
+    word-break: break-word;
+  }
+
+  @include respond(md) {
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: var(--small-card-padding);
+
+    .section-image {
+      flex: 0 0 58%;
+      max-width: 58%;
+    }
+
+    .section-details {
+      border-top: 0;
+      border-left: 5px solid rgba(255, 255, 255, .85);
+      padding: 0 0 0 15px;
+    }
+  }
+
+  @include respond(xl) {
+    .section-image {
+      flex-basis: 62%;
+      max-width: 62%;
+    }
+  }
+}
+```
+
+同一类问题还会出现在归档页、分类页的子分类横卡上。原版 Stack 的 tile 卡片更偏固定尺寸，手机端容易溢出或需要横向滚动。这里把 `.subsection-list` 里的 tile 改成响应式网格：手机端一列，平板以上两列，宽屏三列。相关代码同样加在 `assets/scss/custom.scss` 中：
+
+```scss
+.subsection-list {
+  overflow-x: visible;
+
+  .article-list--tile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    overflow: visible;
+
+    article {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      margin-right: 0;
+    }
+  }
+
+  @include respond(md) {
+    .article-list--tile {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      article {
+        aspect-ratio: 5 / 3;
+      }
+    }
+  }
+
+  @include respond(xl) {
+    .article-list--tile {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}
+```
+
+这样处理以后，首页文章封面、分类页头图和子分类横卡各自有自己的比例：普通文章列表按高度控制，分类头图按 `16:9` 控制，子分类横卡则在手机端优先保证完整横图，桌面端再提高信息密度。
 
 ## 卡片悬浮动画
 接下来是卡片悬浮动画，这段加在 `assets/scss/custom.scss` 中：
