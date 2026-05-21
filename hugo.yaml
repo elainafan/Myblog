@@ -199,6 +199,11 @@ menu:
           url: https://github.com/elainafan
           params:
               icon: brand-github
+        - identifier: codeforces
+          name: Codeforces
+          url: https://codeforces.com/profile/PaperMemory
+          params:
+              icon: codeforces
 
 related:
     includeNewer: true
