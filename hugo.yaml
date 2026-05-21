@@ -196,11 +196,13 @@ menu:
     social:
         - identifier: github
           name: GitHub
+          weight: 10
           url: https://github.com/elainafan
           params:
               icon: brand-github
         - identifier: codeforces
           name: Codeforces
+          weight: 20
           url: https://codeforces.com/profile/PaperMemory
           params:
               icon: codeforces
