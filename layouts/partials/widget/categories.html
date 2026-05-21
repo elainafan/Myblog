@@ -7,7 +7,14 @@
     <h2 class="widget-title section-title">{{ T "widget.categoriesCloud.title" }}</h2>
 
     <div class="tagCloud-tags">
-        {{ range first $limit $context.Site.Taxonomies.categories.ByCount }}
+        {{- $categories := slice -}}
+        {{- range $context.Site.Taxonomies.categories.ByCount -}}
+            {{- if ne .Page.Params.hideFromCategoryList true -}}
+                {{- $categories = $categories | append . -}}
+            {{- end -}}
+        {{- end -}}
+
+        {{ range first $limit $categories }}
             <a href="{{ .Page.RelPermalink }}" class="font_size_{{ .Count }}">
                 {{ .Page.Title }}
             </a>

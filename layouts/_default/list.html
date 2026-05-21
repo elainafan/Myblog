@@ -8,9 +8,11 @@
             {{ end }}
         </h3>
 
+        {{- $displayPages := where .Pages "Params.hideFromCategoryList" "!=" true -}}
+
         <div class="section-card">
             <div class="section-details">
-                <h3 class="section-count">{{ T "list.page" (len .Pages) }}</h3>
+                <h3 class="section-count">{{ T "list.page" (len $displayPages) }}</h3>
                 <h1 class="section-term">{{ .Title }}</h1>
                 {{ with .Params.description }}
                     <h2 class="section-description">{{ . }}</h2>
@@ -44,8 +46,8 @@
         </div>
     </header>
 
-    {{- $subsections := .Sections -}}
-    {{- $pages := .Pages | complement $subsections -}}
+    {{- $subsections := where .Sections "Params.hideFromCategoryList" "!=" true -}}
+    {{- $pages := where (.Pages | complement .Sections) "Params.hideFromCategoryList" "!=" true -}}
     
     {{- if eq (len $pages) 0 -}}
         {{/* If there are no normal pages, display subsections in list style, with pagination */}}

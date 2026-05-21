@@ -2,7 +2,13 @@
 {{ define "main" }}
     <header>
         {{- $taxonomy := $.Site.GetPage "taxonomyTerm" "categories" -}}
-        {{- $terms := $taxonomy.Pages -}}
+        {{- $terms := slice -}}
+        {{- range $taxonomy.Pages -}}
+            {{- $visiblePages := where .RegularPages "Params.hidden" "!=" true -}}
+            {{- if and (ne .Params.hideFromCategoryList true) (gt (len $visiblePages) 0) -}}
+                {{- $terms = $terms | append . -}}
+            {{- end -}}
+        {{- end -}}
         {{ if $terms }}
         <h2 class="section-title">{{ $taxonomy.Title }}</h2>
         <div class="subsection-list">
