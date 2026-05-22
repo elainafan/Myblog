@@ -72,6 +72,10 @@ links:
     description: 希言自然
     website: https://rhinospace.website
     image: https://www.rhinospace.website/friends/avatar
+  - title: Equinox
+    description: I like it and I'm good at it.
+    website: https://equinox.wiki/
+    image: https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png
 
 menu:
     main: 
