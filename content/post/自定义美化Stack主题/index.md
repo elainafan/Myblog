@@ -320,6 +320,66 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 
 这里的 `max-width: 96%` 是为了让图片不要完全贴满正文宽度，尤其是带阴影或圆角时，留一点余地会舒服很多。
 
+## 静态图片放大查看
+这里还遇到过一个比较隐蔽的问题：普通文章里的图片一般和 Markdown 文件放在同一个 Page Bundle 下，比如 `content/post/某篇文章/1.png`。这种图片会被 Hugo 的 Markdown image render hook 识别为页面资源，于是自动拿到宽高，并加上 `gallery-image`，最后交给 Stack 主题的 PhotoSwipe 处理。
+
+但有些拆成多个子页面的长期更新文章，比如 `content/post/二次元修炼日记！/cf-1072.md`，图片不一定适合继续放在原来的文章目录里。笔者把共用图片放到了 `static/images/anime-diary/`，然后在文章中用 `![](/images/anime-diary/4.png)` 引用。这样图片能显示，但一开始不会像普通文章图片那样进入图库，也就不能居中和点击放大。
+
+原因在 `layouts/_default/_markup/render-image.html`。原来的逻辑只有在 `.Page.Resources.GetMatch` 找到图片资源时，才会设置 `gallery-image`。所以需要把以 `/` 开头、不是外链、不是 SVG 的本地静态图片也纳入图库：
+
+```go-html-template
+{{- $notSVG := ne (lower (path.Ext .Destination)) ".svg" -}}
+{{- $isExternal := or (strings.HasPrefix .Destination "http://") (strings.HasPrefix .Destination "https://") -}}
+{{- $isProtocolRelative := strings.HasPrefix .Destination "//" -}}
+{{- $isStaticImage := and (strings.HasPrefix .Destination "/") (not $isExternal) (not $isProtocolRelative) $notSVG -}}
+```
+
+接着在同一个文件里保留原来的 Page Bundle 处理逻辑，并给静态本地图补上 `gallery-image`：
+
+```go-html-template
+{{- if $image -}}
+    {{- $Permalink = $image.RelPermalink -}}
+
+    {{- if $notSVG -}}
+        {{- $Width = $image.Width -}}
+        {{- $Height = $image.Height -}}
+        {{- $galleryImage = true -}}
+    {{- end -}}
+{{- else if $isStaticImage -}}
+    {{- $galleryImage = true -}}
+{{- end -}}
+```
+
+不过这样还不够。Page Bundle 图片有 Hugo 提前写好的 `width` 和 `height`，但 `static` 里的图片没有。PhotoSwipe 打开图片时需要宽高，如果直接读空值，就容易出现缩放不正常的问题。因此还要改 `assets/ts/gallery.ts`，给图片尺寸加一个兜底：
+
+```ts
+private static imageDimensions(img: HTMLImageElement) {
+    const width = parseInt(img.getAttribute('width') || ''),
+        height = parseInt(img.getAttribute('height') || ''),
+        rect = img.getBoundingClientRect();
+
+    return {
+        w: width || img.naturalWidth || Math.round(rect.width) || 1200,
+        h: height || img.naturalHeight || Math.round(rect.height) || 675
+    };
+}
+```
+
+然后在点击图片打开 PhotoSwipe 前，再用当前图片重新刷新一次尺寸：
+
+```ts
+const img = item.el.querySelector('img');
+if (img) {
+    const dimensions = StackGallery.imageDimensions(img);
+    item.w = dimensions.w;
+    item.h = dimensions.h;
+    item.src = img.src;
+    item.msrc = img.getAttribute('data-thumb') || img.src;
+}
+```
+
+这样处理后，`/images/anime-diary/4.png` 这种从 `static` 目录来的图片，也能和普通文章图片一样被包进 `figure.gallery-image`，在正文中居中显示，并且点击后进入 PhotoSwipe 放大查看。
+
 ## 引用块和长链接换行
 引用块也改了样式，这段加在 `assets/scss/custom.scss` 中：
 
