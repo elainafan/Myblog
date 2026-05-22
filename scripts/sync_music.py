@@ -51,6 +51,15 @@ def write_json(path: Path, data: Any) -> None:
     )
 
 
+def load_music_overrides() -> dict[str, dict[str, Any]]:
+    local_entries = load_json(LOCAL_META, [])
+    return {
+        entry["folder"]: entry
+        for entry in local_entries
+        if isinstance(entry, dict) and entry.get("folder")
+    }
+
+
 def url_for_static_file(path: Path) -> str:
     rel = path.relative_to(STATIC_MUSIC).parts
     encoded = "/".join(urllib.parse.quote(part) for part in rel)
@@ -116,11 +125,7 @@ def discover_track(directory: Path, overrides: dict[str, dict[str, Any]]) -> dic
 
 def build_playlist() -> list[dict[str, Any]]:
     local_entries = load_json(LOCAL_META, [])
-    overrides = {
-        entry["folder"]: entry
-        for entry in local_entries
-        if isinstance(entry, dict) and entry.get("folder")
-    }
+    overrides = load_music_overrides()
 
     seen_dirs: set[Path] = set()
     tracks: list[dict[str, Any]] = []
@@ -232,6 +237,7 @@ def has_audio(directory: Path) -> bool:
 def sync_bilibili(args: argparse.Namespace) -> None:
     cookie = load_cookie(args)
     media_id = resolve_media_id(args)
+    overrides = load_music_overrides()
     medias = fetch_bilibili_favorite(media_id, cookie)
     if args.limit:
         medias = medias[: args.limit]
@@ -269,6 +275,10 @@ def sync_bilibili(args: argparse.Namespace) -> None:
             "bvid": bvid,
             "sourceUrl": page_url,
         }
+        override = overrides.get(folder_key(directory), overrides.get(directory.name, {}))
+        for key in ("name", "artist"):
+            if override.get(key):
+                info[key] = override[key]
         write_json(directory / "info.json", info)
 
         cover_url = media.get("cover")
