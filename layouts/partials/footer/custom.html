@@ -28,114 +28,19 @@
 <div id="aplayer"></div>
 
 <script>
-    const staticDir = {{ .Site.Home.Permalink }};
-    console.log(staticDir);
-    const ap = new APlayer({
+    const playlist = {{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }};
+    const ap = playlist.length > 0 ? new APlayer({
         container: document.getElementById('aplayer'),
         fixed: true,
-        audio: [
-            {
-                name: 'Everyday world',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/Everyday-world/music.mp3',
-                cover: staticDir + 'music/Everyday-world/cover.png'
-            },
-            {
-                name: 'Hello Alone',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/Hello-Alone/music.mp3',
-                cover: staticDir + 'music/Hello-Alone/cover.jpg'
-            },
-            {
-                name: 'LOVE2000',
-                artist: '八奈见杏菜',
-                url: staticDir + 'music/LOVE2000/music.mp3',
-                cover: staticDir + 'music/LOVE2000/cover.jpg'
-            },
-            {
-                name: 'No,thank you!',
-                artist: '秋山澪/樱高轻音部',
-                url: staticDir + 'music/No,thank you!/music.mp3',
-                cover: staticDir + 'music/No,thank you!/cover.jpg'
-            },
-            {
-                name: 'Hello Alone(Yui)',
-                artist: '东山奈央',
-                url: staticDir + 'music/Hello-Alone-Yui/music.mp3',
-                cover: staticDir + 'music/Hello-Alone-Yui/cover.jpg'
-            },
-            {
-                name: '轻飘飘の时间',
-                artist: '秋山澪/樱高轻音部',
-                url: staticDir + 'music/轻飘飘の时间/music.mp3',
-                cover: staticDir + 'music/轻飘飘の时间/cover.png'
-            },
-            {
-                name: "Don't Say Lazy",
-                artist: '秋山澪/樱高轻音部',
-                url: staticDir + 'music/Don-Say-Lazy/music.mp3',
-                cover: staticDir + 'music/Don-Say-Lazy/cover.jpg'
-            },
-            {
-                name: '钻石の纯度',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/钻石の纯度/music.mp3',
-                cover: staticDir + 'music/钻石の纯度/cover.jpg'
-            },
-            {
-                name: 'Inside Identity',
-                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
-                url: staticDir + 'music/Inside-Identity/music.mp3',
-                cover: staticDir + 'music/Inside-Identity/cover.jpg'
-            },
-            {
-                name: 'Van!shment Th!s world',
-                artist: '内田真礼/赤崎千夏/上坂堇/浅仓杏美',
-                url: staticDir + 'music/Van!shment-Th!s-World/music.mp3',
-                cover: staticDir + 'music/Van!shment-Th!s-World/cover.jpg'
-            },
-            {
-                name: 'Sparkling Daydream',
-                artist: 'ZAQ',
-                url: staticDir + 'music/Sparkling-Daydream/music.mp3',
-                cover: staticDir + 'music/Sparkling-Daydream/cover.jpg'
-            },
-            {
-                name: 'Gate of Steiner',
-                artist: '未来技术研究所',
-                url: staticDir + 'music/Gate-Of-Steiner/music.mp3',
-                cover: staticDir + 'music/Gate-Of-Steiner/cover.png'
-            },
-            {
-                name: 'Everyday world(Instrumental)',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/Everyday-world-Instrumental/music.mp3',
-                cover: staticDir + 'music/Everyday-world-Instrumental/cover.png'
-            },
-            {
-                name: 'Hello Alone(Instrumental)',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/Hello-Alone-Instrumental/music.mp3',
-                cover: staticDir + 'music/Hello-Alone-Instrumental/cover.jpg'
-            },
-            {
-                name: 'Hello Alone(Yui Instrumental)',
-                artist: '东山奈央',
-                url: staticDir + 'music/Hello-Alone-Yui-Instrumental/music.mp3',
-                cover: staticDir + 'music/Hello-Alone-Yui-Instrumental/cover.jpg'
-            },
-            {
-                name: '钻石の纯度(Instrumental)',
-                artist: '早见沙织/东山奈央',
-                url: staticDir + 'music/钻石の纯度-Instrumental/music.mp3',
-                cover: staticDir + 'music/钻石の纯度-Instrumental/cover.jpg'
-            }
-        ],
-    });
+        audio: playlist,
+    }) : null;
     /**
      * 页面销毁前监听
      */
     window.onbeforeunload = () => {
+        if (!ap) {
+            return;
+        }
         // 将播放信息用对象封装，并存入到localStorage中
         const playInfo = {
             index: ap.list.index,
@@ -149,6 +54,9 @@
      * 页面加载后监听
      */
     window.onload = () => {
+        if (!ap) {
+            return;
+        }
         // 从localStorage取出播放信息
         const playInfo = JSON.parse(localStorage.getItem("playInfo"));
         if (!playInfo) {
