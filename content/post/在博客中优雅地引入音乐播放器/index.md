@@ -12,7 +12,7 @@ image: 10.jpg
 
 因此，音乐播放器和 PJAX 其实是绑在一起的。播放器负责播放音乐，PJAX 负责让站内跳转时只替换正文区域，而不是刷新整个页面。为了让页面切换时有反馈，又加了一个顶部假进度条。最后，因为页面内容是局部替换的，评论、公式、搜索、图片灯箱等脚本还要在 PJAX 完成后重新初始化。
 
-所以这篇文章会按这个逻辑来讲：先做播放器，再引入 PJAX，接着加进度条，最后处理 PJAX 带来的后遗症。虽然看起来东西很多，但思路其实是一条线。
+所以这篇文章会按这个逻辑来讲：先做播放器，再把歌单从“手动维护”改成“脚本生成”，接着引入 PJAX、顶部进度条，最后处理 PJAX 带来的后遗症。虽然看起来东西很多，但思路其实是一条线。
 
 ## 引入音乐播放器
 播放器使用的是 APlayer，主要代码放在 `layouts/partials/footer/custom.html`。
@@ -25,37 +25,27 @@ image: 10.jpg
 <div id="aplayer"></div>
 ```
 
-然后创建播放器实例：
+最开始可以直接在 APlayer 里手写 `audio` 数组，但后面歌一多，这种方式就会变得非常难维护。笔者现在的做法是：播放器不再直接写死歌单，而是读取 Hugo 的数据文件 `data/music/generated.json`。
+
+下面这段代码位于 `layouts/partials/footer/custom.html`：
 
 ```js
-const staticDir = {{ .Site.Home.Permalink }};
-const ap = new APlayer({
+const playlist = {{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }};
+const ap = playlist.length > 0 ? new APlayer({
     container: document.getElementById('aplayer'),
     fixed: true,
-    audio: [
-        {
-            name: 'Everyday world',
-            artist: '早见沙织/东山奈央',
-            url: staticDir + 'music/Everyday-world/music.mp3',
-            cover: staticDir + 'music/Everyday-world/cover.png'
-        },
-        {
-            name: 'Hello Alone',
-            artist: '早见沙织/东山奈央',
-            url: staticDir + 'music/Hello-Alone/music.mp3',
-            cover: staticDir + 'music/Hello-Alone/cover.jpg'
-        }
-    ],
-});
+    order: 'random',
+    audio: playlist,
+}) : null;
 ```
 
 这里有几个点需要注意。
 
 首先，`fixed: true` 会让播放器固定在页面底部。这样无论浏览到文章哪里，都能看到播放器。
 
-其次，`staticDir` 使用的是 Hugo 模板变量 `{{ .Site.Home.Permalink }}`。因为音乐文件放在 `static/music` 下，Hugo 构建后会把它们复制到站点根目录的 `music` 路径下。因此，歌曲地址可以写成 `staticDir + 'music/Everyday-world/music.mp3'`。
+其次，`order: 'random'` 表示播放器使用随机播放顺序。它影响的是播放队列，而不是把页面上的歌单显示顺序打乱。
 
-音乐文件的组织方式大致是：每首歌一个文件夹，里面放 `music.mp3` 和 `cover.jpg` 或 `cover.png`。例如 `static/music/Everyday-world/music.mp3` 和 `static/music/Everyday-world/cover.png`。
+最后，`{{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }}` 会把 `data/music/generated.json` 转成前端可用的数组。这样以后只要重新生成数据文件，播放器就会自动读取新歌单，不需要再到 `footer/custom.html` 里一个个改 `name`、`artist`、`url` 和 `cover`。
 
 ![播放器整体效果](1.png)
 
@@ -67,6 +57,97 @@ const ap = new APlayer({
 ```
 
 这样可以让播放器在亮色和暗色模式下分别使用不同样式，不至于暗色模式里突然冒出一块刺眼的白色控件。
+
+## 生成播放器歌单
+播放器真正读取的是 `data/music/generated.json`，这个文件由 `scripts/sync_music.py` 生成。完整脚本可以参考 [sync_music.py](https://github.com/elainafan/Myblog/blob/main/scripts/sync_music.py)。
+
+最朴素的本地音乐目录可以长这样：每首歌一个目录，例如音频放在 `static/music/歌曲名/music.mp3`，封面放在 `static/music/歌曲名/cover.jpg`。
+
+脚本会扫描 `static/music`，找到每个目录里的 `music.mp3`、`music.m4a`、`music.ogg`、`music.flac` 或 `music.wav`，再配上 `cover.jpg`、`cover.png` 等封面，最后生成 APlayer 需要的数组。
+
+如果只是整理本地已有音乐，可以在站点根目录运行：
+
+```powershell
+python scripts\sync_music.py local
+```
+
+不过只靠本地手动放歌还是麻烦。笔者的歌单本来存在 Bilibili 收藏夹里，如果每次都自己下载音频、裁封面、改 JSON，那和手写 APlayer 数组也没有本质区别。因此后面又加了一层 Bilibili 收藏夹同步。
+
+## 接入 Bilibili 收藏夹
+Bilibili 收藏夹地址放在 `data/music/sources.json`：
+
+```json
+{
+  "bilibili": {
+    "favlist_url": "https://space.bilibili.com/<你的UID>/favlist?fid=<收藏夹ID>&ftype=create"
+  }
+}
+```
+
+同步时直接运行：
+
+```powershell
+python scripts\sync_music.py bilibili
+```
+
+脚本大致做四件事。
+
+第一，通过 Bilibili 收藏夹 API 读取当前收藏夹里的视频列表。这里使用的是 `fid`，脚本会从收藏夹 URL 中解析出它。
+
+如果不想把完整收藏夹链接写进配置里，也可以只在命令行传 `media_id`：
+
+```powershell
+python scripts\sync_music.py bilibili --media-id <收藏夹ID>
+```
+
+第二，对每个视频再请求一次视频详情，检查它是不是分 P 视频。普通视频会保存到 `static/music/bilibili/<BV号>/`，分 P 视频则会拆成 `static/music/bilibili/<BV号>/p01/`、`static/music/bilibili/<BV号>/p02/` 这样的目录。
+
+第三，调用 `yt-dlp` 下载音频。Bilibili 上拿到的通常是 `music.m4a`，这里没有强制转成 `mp3`，因此不需要额外依赖 `ffmpeg`。
+
+第四，每个音频目录都会写入一个 `info.json`，里面保存曲名、歌手、来源 BV 号、分 P 页码和原链接。最后脚本重新扫描 `static/music`，生成 `data/music/generated.json`。
+
+如果收藏夹不是公开的，也可以额外传 Cookie：
+
+```powershell
+python scripts\sync_music.py bilibili --cookie-file bilibili.cookie.txt
+```
+
+这个 `bilibili.cookie.txt` 不应该提交到仓库里，只适合放在本地使用。
+
+## 拆分分 P 视频
+分 P 是这里最容易漏掉的地方。
+
+比如 K-ON 歌曲合集不是一首歌，而是一个包含很多 P 的视频。如果只下载 BV 主视频，就只能拿到其中一个音频，播放器里也只会出现一个“大合集”。这显然不适合作为歌单。
+
+因此脚本里会用 `https://api.bilibili.com/x/web-interface/view` 读取视频的 `pages` 字段。只要 `pages` 数量大于 1，就把每一 P 当成一首独立歌曲处理。比如第一 P 会保存到 `static/music/bilibili/BV1chikYJEMZ/p01/`，第二 P 会保存到 `static/music/bilibili/BV1chikYJEMZ/p02/`，每个目录里分别放自己的 `music.m4a`、`cover.jpg` 和 `info.json`。
+
+这样春物 ED 三部曲在播放器里就会变成 `Hello Alone`、`Everyday World`、`ダイヤモンドの純度` 三首，而不是一个笼统的“春物 ED 三部曲”。
+
+同理，K-ON 合集也会拆成 `Cagayake! GIRLS`、`Don't Say Lazy`、`ふわふわ時間`、`U&I` 等独立条目。播放器的体验会更像真正的歌单，而不是一堆视频标题。
+
+## 整理歌名和歌手
+Bilibili 视频标题通常很长，UP 主也不一定是歌曲原唱。如果直接把视频标题和 UP 主塞进播放器，最后就会变成“顶级品质试听……”“中日字幕完整版……”这种不太适合听歌的显示效果。
+
+所以笔者又加了 `data/music/local.json`，专门用来覆盖自动抓取到的元数据：
+
+```json
+{
+  "folder": "bilibili/BV1Q2421M7pf/p01",
+  "name": "Hello Alone",
+  "artist": "雪之下雪乃、由比滨结衣"
+}
+```
+
+这里的 `folder` 对应 `static/music` 下的相对目录。同步脚本写 `info.json` 时，会优先读取 `data/music/local.json` 里的 `name` 和 `artist`。这样即使以后重新同步收藏夹，已经整理过的歌名也不会被 Bilibili 视频标题覆盖。
+
+命名上笔者采用的规则大致是：
+
+- 原本就是英文名的歌曲保留英文，例如 `Hacking to the Gate`、`God Knows...`。
+- 有日文正式名的歌曲尽量保留日文，例如 `不可思議のカルテ`、`君色シグナル`。
+- 如果标题全是假名、读起来不太直观，则使用中文翻译，例如 `想做朋友`、`明天再见`。
+- 钢琴版、角色版这类特殊版本，会在歌名里标出来，例如 `Everyday World（钢琴版）`。
+
+最后还有一个清理问题：收藏夹里删掉的视频，本地不能一直残留。脚本在 Bilibili 同步结束后会根据当前收藏夹重新计算应该存在的目录，把已经不在收藏夹里的旧音轨从 `static/music/bilibili` 里移除，再生成新的 `data/music/generated.json`。
 
 ## 保存播放状态
 如果只是引入 APlayer，那么刷新页面后播放器仍然会从头开始。为了解决这个问题，脚本里用 `localStorage` 保存当前播放状态。
@@ -407,22 +488,30 @@ document.addEventListener('pjax:complete', function () {
 ## 需要注意的问题
 做完以后，整个链路大致是这样的：
 
-1. APlayer 固定在 footer 外层，不随着 `.main-container` 被替换。
-2. 点击站内链接时，PJAX 拦截跳转，只请求新页面并替换指定区域。
-3. `topbar.show()` 显示顶部进度条，给用户加载反馈。
-4. PJAX 完成后，同步 `body.className`，清理 URL 参数，隐藏进度条。
-5. 手动调用 `window.Stack.init()` 和 `renderKaTeX()`。
-6. Giscus、搜索、代码复制、图片灯箱、目录滚动等功能重新获得初始化机会。
+1. `scripts/sync_music.py` 从 Bilibili 收藏夹和本地 `static/music` 整理音乐文件。
+2. 分 P 视频会拆成多首歌，并保存到 `static/music/bilibili/<BV号>/pXX/`。
+3. `data/music/local.json` 负责覆盖视频标题和 UP 主名，把它们整理成真正的歌名和歌手。
+4. 脚本生成 `data/music/generated.json`，APlayer 从这个数据文件读取播放列表。
+5. APlayer 固定在 footer 外层，不随着 `.main-container` 被替换。
+6. 点击站内链接时，PJAX 拦截跳转，只请求新页面并替换指定区域。
+7. `topbar.show()` 显示顶部进度条，给用户加载反馈。
+8. PJAX 完成后，同步 `body.className`，清理 URL 参数，隐藏进度条。
+9. 手动调用 `window.Stack.init()` 和 `renderKaTeX()`。
+10. Giscus、搜索、代码复制、图片灯箱、目录滚动等功能重新获得初始化机会。
 
 这里最容易踩坑的是重复初始化。比如代码块复制按钮，如果 `Stack.init()` 在同一个页面上跑很多次，就可能重复插入按钮。当前代码没有对所有组件都做非常严格的去重，因此如果之后发现某些按钮或评论重复出现，就应该在初始化前加标记位，例如给元素设置 `data-init="true"`。
 
 另一个问题是脚本顺序。`topbar`、`Pjax`、`renderMathInElement`、`window.Stack` 都必须在使用前已经加载。这里通过把相关脚本放在 footer，并在必要处等待函数存在，基本能避免大多数时序问题。
+
+歌单同步则要注意另一类问题：Bilibili 收藏夹是外部数据源，视频标题不一定适合作为歌名，UP 主也不一定是歌手。因此 `data/music/local.json` 最好保留下来，作为人工整理过的元数据表。这样下次重新同步收藏夹时，脚本负责抓取和下载，人工只需要维护少量歌名修正。
 
 最后，PJAX 不是越多越好。如果某些页面包含非常特殊的第三方脚本，局部替换可能会比普通刷新更难维护。个人博客里使用 PJAX 的最大理由，还是为了让音乐播放器不断播。为了这个目标，多处理一点后遗症还是值得的。
 
 ## 小结
 这套改造的出发点其实很简单：笔者想让博客底部的音乐播放器在站内跳转时不要中断。
 
-为了实现这个目标，需要引入 PJAX；引入 PJAX 后，页面不再完整刷新，于是又需要顶部进度条提供反馈；页面局部替换后，KaTeX、Giscus、搜索、代码复制、图片灯箱等功能不会自动重新执行，于是还要补一轮初始化逻辑。
+但做着做着会发现，播放器本身只是第一步。歌单如果全靠手动维护，很快就会变得麻烦；于是需要脚本从 Bilibili 收藏夹同步音频，再把分 P 视频拆成真正的单曲，并用 `data/music/local.json` 修正歌名和歌手。
 
-所以它看起来像一串功能，实际上是一条因果链：播放器不断歌是目标，PJAX 是手段，假进度条是体验补丁，组件重初始化是代价。把这几个东西放在一篇里讲，会比单独说“如何添加音乐播放器”更接近真实的施工过程。
+为了让播放器不断歌，又需要引入 PJAX；引入 PJAX 后，页面不再完整刷新，于是又需要顶部进度条提供反馈；页面局部替换后，KaTeX、Giscus、搜索、代码复制、图片灯箱等功能不会自动重新执行，于是还要补一轮初始化逻辑。
+
+所以它看起来像一串功能，实际上是一条因果链：自动歌单是维护成本的补丁，播放器不断歌是体验目标，PJAX 是手段，假进度条是体验补丁，组件重初始化是代价。把这几个东西放在一篇里讲，会比单独说“如何添加音乐播放器”更接近真实的施工过程。
