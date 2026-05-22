@@ -519,6 +519,69 @@ a {
   }
 }
 
+// 系列文章导航
+.series-navigation {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 28px 0 8px;
+
+  @include respond(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.series-nav-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 88px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--card-background);
+  box-shadow: var(--shadow-l1);
+  color: var(--body-text-color);
+  transition: transform .25s ease, box-shadow .25s ease;
+
+  span {
+    margin-bottom: 6px;
+    color: var(--card-text-color-secondary);
+    font-size: 1.35rem;
+  }
+
+  strong {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 1.55rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-l2);
+  }
+}
+
+.series-nav-home {
+  text-align: center;
+}
+
+.series-nav-next {
+  text-align: right;
+}
+
+.series-nav-disabled {
+  cursor: not-allowed;
+  opacity: .55;
+
+  &:hover {
+    transform: none;
+    box-shadow: var(--shadow-l1);
+  }
+}
+
 .running-time {
   color: var(--card-text-color-secondary);
   font-weight: normal;

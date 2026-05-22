@@ -380,6 +380,75 @@ if (img) {
 
 这样处理后，`/images/anime-diary/4.png` 这种从 `static` 目录来的图片，也能和普通文章图片一样被包进 `figure.gallery-image`，在正文中居中显示，并且点击后进入 PhotoSwipe 放大查看。
 
+## 系列文章导航
+像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。
+
+因此笔者给隐藏子页面加了一个自动系列导航：只要当前文章是 `hidden: true`，并且同目录下还有其他隐藏文章，就在正文下方生成“上一篇 / 返回系列 / 下一篇”。模板入口加在 `layouts/partials/article/article.html` 中：
+
+```go-html-template
+{{ partial "article/components/series-navigation" . }}
+```
+
+真正的导航逻辑放在 `layouts/partials/article/components/series-navigation.html`。它会遍历 `.Site.RegularPages`，找出和当前页面 `.File.Dir` 相同的页面；其中 `main.md` 被当作系列主页，`hidden: true` 的页面被当作系列子页面：
+
+```go-html-template
+{{- range .Site.RegularPages -}}
+    {{- if and .File (eq .File.Dir $current.File.Dir) -}}
+        {{- if eq .File.BaseFileName "main" -}}
+            {{- $indexPage = . -}}
+        {{- end -}}
+        {{- if .Params.hidden -}}
+            {{- $siblings = $siblings | append . -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+```
+
+这里没有直接按文件名排序，而是给子页面补了一个 `seriesOrder` 字段。比如 `content/post/二次元修炼日记！/cf-1072.md` 的 frontmatter 中会有：
+
+```yaml
+seriesOrder: 1
+```
+
+这样做的好处是顺序由文章自己控制。`1400.md`、`1500.md` 这种文件名本来就好排，但 Codeforces 复盘里会混入 `edu-187.md`，如果只按文件名排序，就会和主页面里的整理顺序不一致。补上 `seriesOrder` 后，模板只需要：
+
+```go-html-template
+{{- $siblings = sort $siblings "Params.seriesOrder" "asc" -}}
+```
+
+最后是样式，仍然加在 `assets/scss/custom.scss` 中。移动端显示为一列，桌面端显示为三列：
+
+```scss
+.series-navigation {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 28px 0 8px;
+
+  @include respond(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+```
+
+为了让导航看起来像正文的一部分，而不是突兀地插入三个普通链接，单个按钮使用了卡片背景、阴影和轻微上浮效果：
+
+```scss
+.series-nav-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 88px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--card-background);
+  box-shadow: var(--shadow-l1);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+```
+
+这样拆分后的长期文章就比较顺手了：主页面仍然负责汇总，子页面保持隐藏，读者进入某篇复盘或某个难度段后，也可以直接在系列内部前后跳转。
+
 ## 引用块和长链接换行
 引用块也改了样式，这段加在 `assets/scss/custom.scss` 中：
 

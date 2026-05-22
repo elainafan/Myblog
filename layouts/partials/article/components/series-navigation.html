@@ -1,0 +1,67 @@
+{{- $current := . -}}
+{{- if and .File .Params.hidden -}}
+    {{- $siblings := slice -}}
+    {{- $indexPage := false -}}
+
+    {{- range .Site.RegularPages -}}
+        {{- if and .File (eq .File.Dir $current.File.Dir) -}}
+            {{- if eq .File.BaseFileName "main" -}}
+                {{- $indexPage = . -}}
+            {{- end -}}
+            {{- if .Params.hidden -}}
+                {{- $siblings = $siblings | append . -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- $siblings = sort $siblings "Params.seriesOrder" "asc" -}}
+
+    {{- if gt (len $siblings) 1 -}}
+        {{- $prev := false -}}
+        {{- $next := false -}}
+
+        {{- range $index, $page := $siblings -}}
+            {{- if eq $page.RelPermalink $current.RelPermalink -}}
+                {{- if gt $index 0 -}}
+                    {{- $prev = index $siblings (sub $index 1) -}}
+                {{- end -}}
+                {{- if lt (add $index 1) (len $siblings) -}}
+                    {{- $next = index $siblings (add $index 1) -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+
+        <nav class="series-navigation" aria-label="系列文章导航">
+            {{- with $prev -}}
+                <a class="series-nav-card series-nav-prev" href="{{ .RelPermalink }}">
+                    <span>上一篇</span>
+                    <strong>{{ .Title }}</strong>
+                </a>
+            {{- else -}}
+                <span class="series-nav-card series-nav-disabled">
+                    <span>上一篇</span>
+                    <strong>已经是第一篇</strong>
+                </span>
+            {{- end -}}
+
+            {{- with $indexPage -}}
+                <a class="series-nav-card series-nav-home" href="{{ .RelPermalink }}">
+                    <span>返回系列</span>
+                    <strong>{{ .Title }}</strong>
+                </a>
+            {{- end -}}
+
+            {{- with $next -}}
+                <a class="series-nav-card series-nav-next" href="{{ .RelPermalink }}">
+                    <span>下一篇</span>
+                    <strong>{{ .Title }}</strong>
+                </a>
+            {{- else -}}
+                <span class="series-nav-card series-nav-disabled">
+                    <span>下一篇</span>
+                    <strong>已经是最后一篇</strong>
+                </span>
+            {{- end -}}
+        </nav>
+    {{- end -}}
+{{- end -}}
