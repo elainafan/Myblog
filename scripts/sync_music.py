@@ -234,6 +234,45 @@ def has_audio(directory: Path) -> bool:
     return find_audio(directory) is not None
 
 
+def fetch_bilibili_pages(bvid: str, cookie: str | None) -> list[dict[str, Any]]:
+    query = urllib.parse.urlencode({"bvid": bvid})
+    payload = http_get_json(f"https://api.bilibili.com/x/web-interface/view?{query}", cookie)
+    if payload.get("code") != 0:
+        raise RuntimeError(f"Bilibili view API error for {bvid}: {payload.get('message') or payload}")
+    pages = (payload.get("data") or {}).get("pages") or []
+    return pages or [{"page": 1, "part": bvid}]
+
+
+def bilibili_track_directory(bvid: str, page_count: int, page: int) -> Path:
+    bvid_dir = BILIBILI_MUSIC / safe_name(bvid)
+    if page_count <= 1:
+        return bvid_dir
+    return bvid_dir / f"p{page:02d}"
+
+
+def prune_stale_bilibili_tracks(expected_dirs: set[Path]) -> None:
+    if not BILIBILI_MUSIC.exists():
+        return
+
+    expected = {path.resolve() for path in expected_dirs}
+    for directory in sorted((path for path in BILIBILI_MUSIC.rglob("*") if path.is_dir()), reverse=True):
+        if not has_audio(directory) or directory.resolve() in expected:
+            continue
+
+        for audio in (path for path in directory.iterdir() if path.is_file() and path.suffix.lower() in AUDIO_EXTS):
+            audio.unlink()
+        for name in ("info.json", *COVER_NAMES):
+            path = directory / name
+            if path.exists() and path.is_file():
+                path.unlink()
+
+    for directory in sorted((path for path in BILIBILI_MUSIC.rglob("*") if path.is_dir()), reverse=True):
+        try:
+            directory.rmdir()
+        except OSError:
+            pass
+
+
 def sync_bilibili(args: argparse.Namespace) -> None:
     cookie = load_cookie(args)
     media_id = resolve_media_id(args)
@@ -244,6 +283,8 @@ def sync_bilibili(args: argparse.Namespace) -> None:
     if not args.dry_run:
         BILIBILI_MUSIC.mkdir(parents=True, exist_ok=True)
 
+    expected_dirs: set[Path] = set()
+
     for media in medias:
         bvid = media.get("bvid")
         if not bvid:
@@ -251,10 +292,55 @@ def sync_bilibili(args: argparse.Namespace) -> None:
 
         title = media.get("title") or bvid
         artist = (media.get("upper") or {}).get("name") or "Bilibili"
-        page_url = f"https://www.bilibili.com/video/{bvid}"
-        directory = BILIBILI_MUSIC / safe_name(bvid)
+        pages = fetch_bilibili_pages(bvid, cookie)
+        page_count = len(pages)
 
-        if args.dry_run:
+        for page_info in pages:
+            page = int(page_info.get("page") or 1)
+            part = page_info.get("part") or title
+            page_url = f"https://www.bilibili.com/video/{bvid}"
+            if page_count > 1:
+                page_url = f"{page_url}?p={page}"
+            directory = bilibili_track_directory(bvid, page_count, page)
+            expected_dirs.add(directory.resolve())
+
+            if args.dry_run:
+                command = [
+                    args.yt_dlp,
+                    "-f",
+                    "bestaudio/best",
+                    "--no-playlist",
+                ]
+                command.extend(["-o", str(directory / "music.%(ext)s"), page_url])
+                print(f"Download audio: {bvid} p{page} {part}")
+                print(" ".join(command))
+                continue
+
+            directory.mkdir(parents=True, exist_ok=True)
+
+            display_title = part if page_count > 1 else title
+            info = {
+                "name": display_title,
+                "artist": artist,
+                "source": "bilibili",
+                "bvid": bvid,
+                "page": page,
+                "sourceUrl": page_url,
+            }
+            override = overrides.get(folder_key(directory), overrides.get(directory.name, {}))
+            for key in ("name", "artist"):
+                if override.get(key):
+                    info[key] = override[key]
+            write_json(directory / "info.json", info)
+
+            cover_url = media.get("cover")
+            if cover_url:
+                download_cover(cover_url, directory / "cover.jpg", args.force)
+
+            if has_audio(directory) and not args.force:
+                print(f"Skip existing audio: {bvid} p{page} {info['name']}")
+                continue
+
             command = [
                 args.yt_dlp,
                 "-f",
@@ -262,42 +348,11 @@ def sync_bilibili(args: argparse.Namespace) -> None:
                 "--no-playlist",
             ]
             command.extend(["-o", str(directory / "music.%(ext)s"), page_url])
-            print(f"Download audio: {bvid} {title}")
-            print(" ".join(command))
-            continue
+            print(f"Download audio: {bvid} p{page} {info['name']}")
+            subprocess.run(command, check=True)
 
-        directory.mkdir(parents=True, exist_ok=True)
-
-        info = {
-            "name": title,
-            "artist": artist,
-            "source": "bilibili",
-            "bvid": bvid,
-            "sourceUrl": page_url,
-        }
-        override = overrides.get(folder_key(directory), overrides.get(directory.name, {}))
-        for key in ("name", "artist"):
-            if override.get(key):
-                info[key] = override[key]
-        write_json(directory / "info.json", info)
-
-        cover_url = media.get("cover")
-        if cover_url:
-            download_cover(cover_url, directory / "cover.jpg", args.force)
-
-        if has_audio(directory) and not args.force:
-            print(f"Skip existing audio: {bvid} {title}")
-            continue
-
-        command = [
-            args.yt_dlp,
-            "-f",
-            "bestaudio/best",
-            "--no-playlist",
-        ]
-        command.extend(["-o", str(directory / "music.%(ext)s"), page_url])
-        print(f"Download audio: {bvid} {title}")
-        subprocess.run(command, check=True)
+    if not args.dry_run:
+        prune_stale_bilibili_tracks(expected_dirs)
 
 
 def parse_args() -> argparse.Namespace:
