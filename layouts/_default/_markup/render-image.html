@@ -4,12 +4,15 @@
 {{- $Width := 0 -}}
 {{- $Height := 0 -}}
 {{- $Srcset := "" -}}
+{{- $notSVG := ne (lower (path.Ext .Destination)) ".svg" -}}
+{{- $isExternal := or (strings.HasPrefix .Destination "http://") (strings.HasPrefix .Destination "https://") -}}
+{{- $isProtocolRelative := strings.HasPrefix .Destination "//" -}}
+{{- $isStaticImage := and (strings.HasPrefix .Destination "/") (not $isExternal) (not $isProtocolRelative) $notSVG -}}
 
 {{/* SVG and external images won't work with gallery layout, because their width and height attributes are unknown */}}
 {{- $galleryImage := false -}}
 
 {{- if $image -}}
-	{{- $notSVG := ne (path.Ext .Destination) ".svg" -}}
 	{{- $Permalink = $image.RelPermalink -}}
 
 	{{- if $notSVG -}}
@@ -23,6 +26,8 @@
 			{{- $Srcset = printf `%s 480w, %s 1024w` $small.RelPermalink $big.RelPermalink -}}
 		{{- end -}}
 	{{- end -}}
+{{- else if $isStaticImage -}}
+	{{- $galleryImage = true -}}
 {{- end -}}
 
 <img src="{{ $Permalink }}"
@@ -35,7 +40,9 @@
 	{{ end }}
 	{{ if $galleryImage }}
 		class="gallery-image" 
-		data-flex-grow="{{ div (mul $image.Width 100) $image.Height }}"
-		data-flex-basis="{{ div (mul $image.Width 240) $image.Height }}px"
+		{{- with $image }}
+			data-flex-grow="{{ div (mul .Width 100) .Height }}"
+			data-flex-basis="{{ div (mul .Width 240) .Height }}px"
+		{{- end }}
 	{{ end }}
 >

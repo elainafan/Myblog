@@ -31,6 +31,17 @@ class StackGallery {
         this.bindClick();
     }
 
+    private static imageDimensions(img: HTMLImageElement) {
+        const width = parseInt(img.getAttribute('width') || ''),
+            height = parseInt(img.getAttribute('height') || ''),
+            rect = img.getBoundingClientRect();
+
+        return {
+            w: width || img.naturalWidth || Math.round(rect.width) || 1200,
+            h: height || img.naturalHeight || Math.round(rect.height) || 675
+        };
+    }
+
     private loadItems(container: HTMLElement) {
         this.items = [];
 
@@ -39,10 +50,11 @@ class StackGallery {
         for (const el of figures) {
             const figcaption = el.querySelector('figcaption'),
                 img = el.querySelector('img');
+            const dimensions = StackGallery.imageDimensions(img);
 
             let aux: PhotoSwipeItem = {
-                w: parseInt(img.getAttribute('width')),
-                h: parseInt(img.getAttribute('height')),
+                w: dimensions.w,
+                h: dimensions.h,
                 src: img.src,
                 msrc: img.getAttribute('data-thumb') || img.src,
                 el: el
@@ -111,7 +123,8 @@ class StackGallery {
             }
         }
 
-        const figuresEl = container.querySelectorAll('figure.gallery-image');
+        const figuresEl = Array.from(container.querySelectorAll('figure.gallery-image'))
+            .filter((figure) => !figure.parentElement.classList.contains('gallery'));
 
         let currentGallery = [];
 
@@ -177,6 +190,14 @@ class StackGallery {
 
             a.addEventListener('click', (e) => {
                 e.preventDefault();
+                const img = item.el.querySelector('img');
+                if (img) {
+                    const dimensions = StackGallery.imageDimensions(img);
+                    item.w = dimensions.w;
+                    item.h = dimensions.h;
+                    item.src = img.src;
+                    item.msrc = img.getAttribute('data-thumb') || img.src;
+                }
                 this.open(index);
             })
         }
