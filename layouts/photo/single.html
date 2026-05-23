@@ -106,4 +106,127 @@
 
     }
 </style>
+<script>
+    (function () {
+        const gallery = document.getElementById('photo-masonry');
+        if (!gallery) return;
+
+        const originalFigures = Array.from(gallery.querySelectorAll('figure.photo-tile'));
+        const originals = originalFigures.map((figure) => figure.cloneNode(true));
+        const total = originals.length;
+        if (!total) return;
+
+        const batchSize = Math.min(24, total);
+        const threshold = Math.max(1400, window.innerHeight * 1.25);
+        const baseItems = originalFigures.map((figure, index) => createPhotoSwipeItem(figure, index));
+
+        let cursor = 17;
+        let appended = 0;
+        let ticking = false;
+
+        function imageDimensions(img) {
+            const width = parseInt(img.getAttribute('width') || '', 10);
+            const height = parseInt(img.getAttribute('height') || '', 10);
+            const rect = img.getBoundingClientRect();
+
+            return {
+                w: width || img.naturalWidth || Math.round(rect.width) || 1200,
+                h: height || img.naturalHeight || Math.round(rect.height) || 675
+            };
+        }
+
+        function createPhotoSwipeItem(figure, index) {
+            const img = figure.querySelector('img');
+            const link = figure.querySelector('a');
+            const dimensions = imageDimensions(img);
+
+            return {
+                w: dimensions.w,
+                h: dimensions.h,
+                src: link?.href || img.src,
+                msrc: img.getAttribute('data-thumb') || img.src,
+                el: figure,
+                originalIndex: index
+            };
+        }
+
+        function openPhoto(figure) {
+            if (!window.PhotoSwipe || !window.PhotoSwipeUI_Default) return false;
+
+            const index = parseInt(figure.dataset.originalIndex || '', 10);
+            if (Number.isNaN(index)) return false;
+
+            const pswp = document.querySelector('.pswp');
+            const ps = new window.PhotoSwipe(pswp, window.PhotoSwipeUI_Default, baseItems, {
+                index: index,
+                getThumbBoundsFn: (thumbIndex) => {
+                    const activeFigure = thumbIndex === index ? figure : originalFigures[thumbIndex];
+                    const thumbnail = activeFigure.querySelector('img');
+                    const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    const rect = thumbnail.getBoundingClientRect();
+
+                    return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+                }
+            });
+
+            ps.init();
+            return true;
+        }
+
+        function bindLoopPhoto(figure) {
+            const link = figure.querySelector('a');
+            if (!link) return;
+
+            link.addEventListener('click', (event) => {
+                if (!openPhoto(figure)) return;
+                event.preventDefault();
+            });
+        }
+
+        function appendLoopBatch() {
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < batchSize; i++) {
+                const index = cursor % total;
+                const clone = originals[index].cloneNode(true);
+                clone.classList.add('photo-loop-copy');
+                clone.dataset.originalIndex = String(index);
+                clone.dataset.loopItem = String(++appended);
+                bindLoopPhoto(clone);
+                fragment.appendChild(clone);
+                cursor += 17;
+            }
+
+            gallery.appendChild(fragment);
+        }
+
+        function ensureLoop() {
+            const distanceToBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+
+            if (distanceToBottom < threshold) {
+                appendLoopBatch();
+            }
+        }
+
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+
+            requestAnimationFrame(() => {
+                ensureLoop();
+                ticking = false;
+            });
+        }
+
+        originalFigures.forEach((figure, index) => {
+            figure.dataset.originalIndex = String(index);
+        });
+
+        while (document.documentElement.scrollHeight < window.innerHeight * 2.2 && appended < total * 2) {
+            appendLoopBatch();
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+</script>
 {{- end -}}
