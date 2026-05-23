@@ -8,47 +8,6 @@ hidden: true
 image: "/images/anime-diary/5.png"
 ---
 
-## A
-题目大意：
-
-数据范围：
-
-思路：
-
-```cpp
-void solve() {
-    int n;
-    cin >> n;
-    vector<int> a(n);
-    for (int i = 0; i <= n - 1; i++) cin >> a[i];
-    int cnt0 = 0;
-    int cnt1 = 0;
-    int tem = 0;
-    for (int i = 0; i <= n - 1; i++) {
-        if (a[i] == 1) tem++;
-        if (a[i] == 0) {
-            if (tem > 0) cnt1++;
-            tem = 0;
-        }
-        if (i == n - 1 && tem > 0) cnt1++;
-    }
-    tem = 0;
-    for (int i = 0; i <= n - 1; i++) {
-        if (a[i] == 0) tem++;
-        if (a[i] == 1) {
-            if (tem > 0) cnt0++;
-            tem = 0;
-        }
-        if (i == n - 1 && tem > 0) cnt0++;
-    }
-    if (cnt1 >= cnt0)
-        cout << "Alice" << endl;
-    else
-        cout << "Bob" << endl;
-    return;
-}
-```
-
 ## B
 题目大意：
 
