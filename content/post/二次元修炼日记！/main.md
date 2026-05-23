@@ -45,7 +45,7 @@ categories:
 | 2025.12.23 | [R1071](https://codeforces.com/contest/2179) | div3   | [2179](https://codeforces.com/contest/2179) | 5   | 1266 | 1758 | √   | √   | √   | √   | √   | B   |     |     |     |  |
 | 2025.12.29 | [Edu186](https://codeforces.com/contest/2182) | edu    | [2182](https://codeforces.com/contest/2182) | 3   | 5418 | 1256 | √   | √   | √   | B   | B   |     |     |     |     |  |
 | 2026.01.07 | [Gb 2025](https://codeforces.com/contest/2178) | div1+2 | [2178](https://codeforces.com/contest/2178) | 4   | vp   | 1642 | √   | √   | √   | √   | B   |     |     |     |     |  |
-| 2026.01.07 | [Hello 2026](https://codeforces.com/contest/2183) | div1+2 | [2183](https://codeforces.com/contest/2183) | 4   | 1989 | 1786 | √   | √   | √   | √   |     |     |     |     |     |  |
+| 2026.01.07 | [Hello 2026]({{< ref "hello-2026.md" >}}) | div1+2 | [2183](https://codeforces.com/contest/2183) | 4   | 1989 | 1786 | √   | √   | √   | √   |     |     |     |     |     |  |
 | 2026.01.12 | [R1072]({{< ref "cf-1072.md" >}}) | div3   | [2184](https://codeforces.com/contest/2184) | 6   | 822  | 1921 | √   | √   | √   | √   | √   | √   | B   |     |     |  |
 | 2026.01.17 | [R1073]({{< ref "cf-1073.md" >}}) | div1/2 | [2191](https://codeforces.com/contest/2191) | 4   | 4312 | 1330 | √   | √   | √   | √   | B   |     |     |     |     |  |
 | 2026.01.18 | [R1074]({{< ref "cf-1074.md" >}}) | div4   | [2185](https://codeforces.com/contest/2185) | 7   | 679  | 1997 | √   | √   | √   | √   | √   | √   | √   |     |     |  |
@@ -56,9 +56,31 @@ categories:
 | 2026.02.11 | [R1079]({{< ref "cf-1079.md" >}}) | div1/2 | [2197](https://codeforces.com/contest/2197) | 4   | 1643 | 1650 | √   | √   | √   | √   | B   | B   |     |     |     |  |
 | 2026.02.15 | [R1080]({{< ref "cf-1080.md" >}}) | div.3  | [2195](https://codeforces.com/contest/2195) | 6   | 401  | 2075 | √   | √   | √   | √   | √   | √   | B   |     |     |  |
 | 2026.02.21 | [R1081]({{< ref "cf-1081.md" >}}) | div.2  | [2192](https://codeforces.com/contest/2192) | 4   | 1281 | 1735 | √   | √   | √   | √   | B   |     |     |     |     |  |
+| 2026.02.23 | [R1082]({{< ref "cf-1082.md" >}}) | div2   | [2202](https://codeforces.com/contest/2202) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.02.25 | [Edu187]({{< ref "edu-187.md" >}}) | edu    | [2203](https://codeforces.com/contest/2203) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.02.26 | [R1083]({{< ref "cf-1083.md" >}}) | div2   | [2205](https://codeforces.com/contest/2205) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.02.27 | [R1084]({{< ref "cf-1084.md" >}}) | div3   | [2200](https://codeforces.com/contest/2200) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.08 | [R1085]({{< ref "cf-1085.md" >}}) | div1/2 | [2207](https://codeforces.com/contest/2207) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.14 | [R1086]({{< ref "cf-1086.md" >}}) | div2   | [2208](https://codeforces.com/contest/2208) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.16 | [Edu188]({{< ref "edu-188.md" >}}) | edu    | [2204](https://codeforces.com/contest/2204) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.22 | [R1087]({{< ref "cf-1087.md" >}}) | div2   | [2209](https://codeforces.com/contest/2209) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.28 | [R1088]({{< ref "cf-1088.md" >}}) | div1/2 | [2211](https://codeforces.com/contest/2211) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.03.29 | [R1089]({{< ref "cf-1089.md" >}}) | div2   | [2210](https://codeforces.com/contest/2210) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.04 | [R1090]({{< ref "cf-1090.md" >}}) | div4   | [2218](https://codeforces.com/contest/2218) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.09 | [R1091]({{< ref "cf-1091.md" >}}) | div2   | [2217](https://codeforces.com/contest/2217) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.12 | [R1092]({{< ref "cf-1092.md" >}}) | div2   | [2216](https://codeforces.com/contest/2216) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.13 | [R1093]({{< ref "cf-1093.md" >}}) | div2   | [2220](https://codeforces.com/contest/2220) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.21 | [Edu189]({{< ref "edu-189.md" >}}) | edu    | [2225](https://codeforces.com/contest/2225) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.25 | [R1094]({{< ref "cf-1094.md" >}}) | div1/2 | [2222](https://codeforces.com/contest/2222) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.28 | [R1095]({{< ref "cf-1095.md" >}}) | div2   | [2226](https://codeforces.com/contest/2226) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.04.30 | [R1096]({{< ref "cf-1096.md" >}}) | div3   | [2227](https://codeforces.com/contest/2227) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.05.16 | [R1098]({{< ref "cf-1098.md" >}}) | div2   | [2228](https://codeforces.com/contest/2228) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.05.21 | [R1099]({{< ref "cf-1099.md" >}}) | div2   | [2231](https://codeforces.com/contest/2231) |     |      |      |     |     |     |     |     |     |     |     |     |  |
 
 ## 比赛复盘
 下面这些是已经整理过的比赛题解，按比赛拆开，之后继续补的时候也比较好找。
+
+[Hello 2026]({{< ref "hello-2026.md" >}})
 
 [Codeforces Round #1072(Div.3)]({{< ref "cf-1072.md" >}})
 
@@ -80,11 +102,15 @@ categories:
 
 [Codeforces Round #1081(Div.2)]({{< ref "cf-1081.md" >}})
 
+[Codeforces Round #1082(Div.2)]({{< ref "cf-1082.md" >}})
+
 [Educational Codeforces Round #187]({{< ref "edu-187.md" >}})
 
 [Codeforces Round #1083(Div.2)]({{< ref "cf-1083.md" >}})
 
 [Codeforces Round #1084(Div.3)]({{< ref "cf-1084.md" >}})
+
+[Codeforces Round #1085(Div.1+2)]({{< ref "cf-1085.md" >}})
 
 [Codeforces Round #1086(Div.2)]({{< ref "cf-1086.md" >}})
 
@@ -97,3 +123,21 @@ categories:
 [Codeforces Round #1089(Div.2)]({{< ref "cf-1089.md" >}})
 
 [Codeforces Round #1090(Div.4)]({{< ref "cf-1090.md" >}})
+
+[Codeforces Round #1091(Div.2)]({{< ref "cf-1091.md" >}})
+
+[Codeforces Round #1092(Div.2)]({{< ref "cf-1092.md" >}})
+
+[Codeforces Round #1093(Div.2)]({{< ref "cf-1093.md" >}})
+
+[Educational Codeforces Round #189]({{< ref "edu-189.md" >}})
+
+[Codeforces Round #1094(Div.1+2)]({{< ref "cf-1094.md" >}})
+
+[Codeforces Round #1095(Div.2)]({{< ref "cf-1095.md" >}})
+
+[Codeforces Round #1096(Div.3)]({{< ref "cf-1096.md" >}})
+
+[Codeforces Round #1098(Div.2)]({{< ref "cf-1098.md" >}})
+
+[Codeforces Round #1099(Div.2)]({{< ref "cf-1099.md" >}})
