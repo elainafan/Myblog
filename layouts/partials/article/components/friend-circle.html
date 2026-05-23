@@ -6,7 +6,7 @@
 <section class="friend-circle-inline" data-friend-circle>
     <header class="friend-circle-inline__header">
         <div>
-            <h2>友链朋友圈</h2>
+            <h2>Friend Circle</h2>
             <p>看看朋友们最近写了什么。</p>
         </div>
         <div class="friend-circle-inline__stats">
@@ -36,11 +36,11 @@
     {{ end }}
 
     {{ if gt (len $posts) 0 }}
-        <div class="friend-circle-inline__list" data-fc-list>
+        <div class="friend-circle-inline__list" data-fc-list data-page-size="8">
             {{ range $posts }}
                 {{ $published := "" }}
                 {{ with .published }}{{ $published = time.Format "2006-01-02" (time .) }}{{ end }}
-                <article class="friend-circle-inline__item" data-fc-item data-friend="{{ .friend }}" data-text="{{ printf `%s %s %s` .friend .title .summary | plainify }}">
+                <article class="friend-circle-inline__item" data-fc-item data-friend="{{ .friend }}" data-text="{{ printf `%s %s` .friend .title | plainify }}">
                     <a class="friend-circle-inline__avatar-link" href="{{ .site }}" title="{{ .friend }}" target="_blank" rel="noopener">
                         {{ if .avatar }}
                             <img class="friend-circle-inline__avatar" src="{{ .avatar }}" alt="{{ .friend }}" loading="lazy">
@@ -48,22 +48,19 @@
                             <span class="friend-circle-inline__avatar" aria-hidden="true"></span>
                         {{ end }}
                     </a>
-                    <div class="friend-circle-inline__body">
-                        <div class="friend-circle-inline__meta">
-                            <a href="{{ .site }}" target="_blank" rel="noopener">{{ .friend }}</a>
-                            {{ with $published }}<time datetime="{{ . }}">{{ . }}</time>{{ end }}
-                        </div>
-                        <a class="friend-circle-inline__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
-                        {{ with .summary }}<p>{{ . }}</p>{{ end }}
-                    </div>
+                    <a class="friend-circle-inline__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
                 </article>
             {{ end }}
+        </div>
+        <div class="friend-circle-inline__more">
+            <span data-fc-count></span>
+            <button type="button" data-fc-more>Load More</button>
         </div>
     {{ else }}
         <p class="friend-circle-inline__empty">还没有抓到朋友的新文章。</p>
     {{ end }}
 
-    <p class="friend-circle-inline__empty" data-fc-empty hidden>没有匹配的文章。</p>
+    <p class="friend-circle-inline__empty is-hidden" data-fc-empty>没有匹配的文章。</p>
 </section>
 
 <script>
@@ -72,23 +69,52 @@
     if (!root) return;
     const search = root.querySelector('[data-fc-search]');
     const friend = root.querySelector('[data-fc-friend]');
+    const list = root.querySelector('[data-fc-list]');
     const items = [...root.querySelectorAll('[data-fc-item]')];
     const empty = root.querySelector('[data-fc-empty]');
-    const apply = () => {
+    const more = root.querySelector('[data-fc-more]');
+    const count = root.querySelector('[data-fc-count]');
+    const pageSize = Number(list?.dataset.pageSize || 8);
+    let visibleLimit = pageSize;
+
+    const matchedItems = () => {
         const keyword = (search.value || '').trim().toLowerCase();
         const selected = friend.value || '';
-        let shown = 0;
-        items.forEach((item) => {
+        return items.filter((item) => {
             const okFriend = !selected || item.dataset.friend === selected;
             const okText = !keyword || (item.dataset.text || '').toLowerCase().includes(keyword);
-            const visible = okFriend && okText;
-            item.hidden = !visible;
-            if (visible) shown += 1;
+            return okFriend && okText;
         });
-        if (empty) empty.hidden = shown !== 0;
     };
-    search.addEventListener('input', apply);
-    friend.addEventListener('change', apply);
+
+    const apply = () => {
+        const matched = matchedItems();
+        items.forEach((item) => {
+            item.classList.add('is-hidden');
+        });
+        matched.slice(0, visibleLimit).forEach((item) => {
+            item.classList.remove('is-hidden');
+        });
+
+        const shown = Math.min(visibleLimit, matched.length);
+        if (empty) empty.classList.toggle('is-hidden', matched.length !== 0);
+        if (more) more.classList.toggle('is-hidden', shown >= matched.length);
+        if (count) count.textContent = matched.length ? `已显示 ${shown} / ${matched.length}` : '';
+    };
+
+    const resetAndApply = () => {
+        visibleLimit = pageSize;
+        apply();
+    };
+
+    search.addEventListener('input', resetAndApply);
+    friend.addEventListener('change', resetAndApply);
+    if (more) {
+        more.addEventListener('click', () => {
+            visibleLimit += pageSize;
+            apply();
+        });
+    }
     apply();
 })();
 </script>

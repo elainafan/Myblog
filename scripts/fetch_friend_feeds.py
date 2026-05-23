@@ -35,6 +35,16 @@ COMMON_FEED_PATHS = (
     "/atom.xml",
 )
 
+POST_LINK_RE = re.compile(
+    r"<a\b[^>]*href=[\"'](?P<href>[^\"']+)[\"'][^>]*>(?P<body>.*?)</a>",
+    re.IGNORECASE | re.DOTALL,
+)
+HTML_TAG_RE = re.compile(r"<[^>]+>")
+DATED_LINK_RE = re.compile(
+    r"(?P<date>\d{4}-\d{2}-\d{2})\s+(?P<title>.+)"
+)
+DATED_PATH_RE = re.compile(r"/\d{4}/\d{2}/\d{2}/")
+
 
 class FeedLinkParser(HTMLParser):
     def __init__(self, base_url: str) -> None:
@@ -183,6 +193,11 @@ def clean_summary(value: str, limit: int = 180) -> str:
     return text[: limit - 1].rstrip() + "..."
 
 
+def clean_text(value: str) -> str:
+    text = HTML_TAG_RE.sub(" ", value or "")
+    return unescape(re.sub(r"\s+", " ", text)).strip()
+
+
 def normalize_post_url(url: str, site_url: str) -> str:
     if not url:
         return ""
@@ -195,6 +210,45 @@ def normalize_post_url(url: str, site_url: str) -> str:
     if not parsed.scheme and site_url:
         return urljoin(site_url.rstrip("/") + "/", url)
     return url
+
+
+def parse_html_index(html: bytes, friend: dict[str, Any]) -> list[dict[str, Any]]:
+    site_url = friend.get("site", "")
+    posts: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    for match in POST_LINK_RE.finditer(html.decode("utf-8", errors="ignore")):
+        href = match.group("href").strip()
+        text = clean_text(match.group("body"))
+        if not href or not text:
+            continue
+        if not DATED_PATH_RE.search(href):
+            continue
+        dated = DATED_LINK_RE.search(text)
+        if not dated:
+            continue
+
+        url = normalize_post_url(href, site_url)
+        if url in seen:
+            continue
+        seen.add(url)
+
+        published = parse_date(dated.group("date"))
+        posts.append(
+            {
+                "friend": friend.get("name", ""),
+                "site": site_url,
+                "feed": friend.get("feed", "") or site_url,
+                "avatar": friend.get("avatar", ""),
+                "title": dated.group("title").strip(),
+                "url": url,
+                "summary": "",
+                "published": published.isoformat() if published else "",
+                "published_text": dated.group("date"),
+            }
+        )
+
+    return posts
 
 
 def fetch_text(url: str, timeout: int, retries: int = 1) -> bytes:
@@ -300,6 +354,7 @@ def normalize_friend(friend: dict[str, Any]) -> dict[str, Any]:
         "description": str(friend.get("description", "")).strip(),
         "circle": bool(friend.get("circle", True)),
         "circle_reason": str(friend.get("circle_reason", "")).strip(),
+        "html": bool(friend.get("html", False)),
         "timeout": friend.get("timeout"),
         "retries": friend.get("retries"),
     }
@@ -334,10 +389,17 @@ def main() -> int:
         try:
             friend_timeout = int(friend.get("timeout") or timeout)
             friend_retries = int(friend.get("retries") or retries)
-            feed_url, feed_xml = discover_feed(friend, friend_timeout, friend_retries)
-            friend["feed"] = feed_url
-            friend_status[name]["feed"] = feed_url
-            posts = parse_feed(feed_xml, friend)
+            if friend["html"]:
+                posts = parse_html_index(
+                    fetch_text(friend["site"], friend_timeout, friend_retries),
+                    friend,
+                )
+                friend_status[name]["feed"] = friend["site"]
+            else:
+                feed_url, feed_xml = discover_feed(friend, friend_timeout, friend_retries)
+                friend["feed"] = feed_url
+                friend_status[name]["feed"] = feed_url
+                posts = parse_feed(feed_xml, friend)
         except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError) as exc:
             friend_status[name]["status"] = "warning"
             warnings.append({"friend": name, "message": str(exc)})
