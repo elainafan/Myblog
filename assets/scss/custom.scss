@@ -810,6 +810,14 @@ a {
   }
 }
 
+.friend-circle-inline__date {
+  display: block;
+  margin-top: 4px;
+  color: var(--card-text-color-tertiary);
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
 .friend-circle-inline__empty {
   margin: 12px 0 0;
   padding: 16px;

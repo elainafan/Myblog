@@ -48,7 +48,10 @@
                             <span class="friend-circle-inline__avatar" aria-hidden="true"></span>
                         {{ end }}
                     </a>
-                    <a class="friend-circle-inline__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
+                    <div class="friend-circle-inline__text">
+                        <a class="friend-circle-inline__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
+                        {{ with $published }}<time class="friend-circle-inline__date" datetime="{{ . }}">{{ . }}</time>{{ end }}
+                    </div>
                 </article>
             {{ end }}
         </div>

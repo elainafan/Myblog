@@ -20,9 +20,10 @@ from xml.etree import ElementTree
 
 
 DEFAULT_SETTINGS = {
-    "max_posts": 80,
-    "max_posts_per_friend": 6,
+    "max_posts": 240,
+    "max_posts_per_friend": 24,
     "max_days": 180,
+    "since": "2024-01-01",
     "timeout": 8,
     "retries": 2,
 }
@@ -373,7 +374,7 @@ def main() -> int:
     friends = [normalize_friend(friend) for friend in raw_config.get("friends", [])]
 
     now = datetime.now(timezone.utc)
-    cutoff = now - timedelta(days=int(settings["max_days"]))
+    cutoff = parse_date(str(settings.get("since") or "")) or now - timedelta(days=int(settings["max_days"]))
     timeout = int(settings["timeout"])
     retries = int(settings["retries"])
     all_posts: list[dict[str, Any]] = []
