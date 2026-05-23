@@ -2,11 +2,104 @@ settings:
   max_posts: 80
   max_posts_per_friend: 6
   max_days: 180
-  timeout: 15
+  timeout: 8
 
 friends:
-  - name: Elainafan
-    site: https://www.elainafan.one/
-    feed: https://www.elainafan.one/index.xml
-    avatar: https://www.elainafan.one/img/elainafan.jpg
-    description: 痛饮所有蹇蹇之后？
+  - name: Arthal's ink
+    site: https://arthals.ink/
+    feed: https://arthals.ink/rss.xml
+    avatar: https://cdn.arthals.ink/Arthals.png
+    description: 所见高山远暮，阔云流风；所幸岁月盈余，了无拘束
+  - name: Jing Xu's Site
+    site: https://iculizhi.github.io/
+    feed: https://iculizhi.github.io/feed.xml
+    avatar: https://iculizhi.github.io/images/xj.jpg
+    description: 上士闻道，勤而行之
+  - name: SunVapor's blog
+    site: https://www.sunvapor.site/
+    avatar: /avatars/sunvapor.png
+    description: 静水流深
+    circle: false
+    circle_reason: 域名暂时不可达
+  - name: YangTY
+    site: https://blog.imyangty.com/
+    avatar: https://blog.imyangty.com/assets/avatar.jpg
+    description: 越过山川
+    circle: false
+    circle_reason: 未发现 RSS/Atom
+  - name: Zhaoyi Tian
+    site: https://zhaoyi-tian.cn
+    feed: https://zhaoyi-tian.cn/rss.xml
+    avatar: https://zhaoyi-tian.github.io/images/profile.png
+    description: 故事的下一页
+  - name: Hinai
+    site: https://blog.woo.moe
+    feed: https://blog.woo.moe/feed/
+    avatar: https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg
+    description: 昙花一现
+  - name: Elty-Nov
+    site: https://elty-nov.github.io
+    avatar: https://elty-nov.github.io/images/sakiko.jpg
+    description: Don't be afraid daybreak has come
+    circle: false
+    circle_reason: 未发现 RSS/Atom
+  - name: Anfsity
+    site: https://www.anfstiy.me/
+    feed: https://www.anfstiy.me/index.xml
+    avatar: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
+    description: There is a reason
+  - name: Lane's Blog
+    site: https://www.laneljc.cn/
+    feed: https://www.laneljc.cn/rss.xml
+    avatar: https://www.laneljc.cn/assets/favicon.png
+    description: 探索未知，解码未来
+  - name: CcoMm
+    site: https://blog.ccomm.top/
+    feed: https://blog.ccomm.top/rss.xml
+    avatar: https://avatars.githubusercontent.com/u/147143261
+    description: 你要听T4吗？
+  - name: Masttf
+    site: https://epiphyllum.masttf.fun
+    avatar: https://epiphyllum.masttf.fun/avatar.jpg
+    description: 退役Acmer 是个菜鸡
+    circle: false
+    circle_reason: 域名暂时不可达
+  - name: Collapse179
+    site: https://collapse179.github.io/
+    feed: https://collapse179.github.io/index.xml
+    avatar: https://collapse179.github.io/img/avatar.png
+    description: Try my 120%
+  - name: Sam's blog
+    site: https://staaaaaaaaar.github.io/
+    avatar: https://staaaaaaaaar.github.io/avatar.png
+    description: So, what's the point?
+    circle: false
+    circle_reason: 未发现 RSS/Atom
+  - name: ~zzz
+    site: https://fuquan99666.github.io
+    feed: https://fuquan99666.github.io/index.xml
+    avatar: https://fuquan99666.github.io/avatar.png
+    description: not one,ont two,not seven
+  - name: Yjy's blog
+    site: https://yjyxfcy.github.io/
+    avatar: https://yjyxfcy.github.io/img/avatar.jpg
+    description: 与你若只如初见，何须感伤离别
+    circle: false
+    circle_reason: 未发现 RSS/Atom
+  - name: lvyneko
+    site: https://lvyovo-wiki.tech
+    avatar: /avatars/lvyneko.png
+    description: 莫西莫西(=^..^=)
+    circle: false
+    circle_reason: 站点暂时不可达
+  - name: rhino
+    site: https://rhinospace.website
+    avatar: https://www.rhinospace.website/friends/avatar
+    description: 希言自然
+    circle: false
+    circle_reason: 未发现 RSS/Atom
+  - name: Equinox
+    site: https://equinox.wiki/
+    feed: https://equinox.wiki/index.xml
+    avatar: https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png
+    description: I like it and I'm good at it.

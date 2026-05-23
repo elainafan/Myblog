@@ -629,3 +629,215 @@ a {
 #main-menu li.menu-bottom-section {
   margin-bottom: 50px;
 }
+
+/* 友链朋友圈 */
+.friend-circle-inline {
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(120, 130, 150, .22);
+}
+
+.friend-circle-inline__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--card-text-color-main);
+    font-size: 2.2rem;
+    line-height: 1.25;
+  }
+
+  p {
+    margin: 0;
+    color: var(--card-text-color-secondary);
+    font-size: 1.45rem;
+  }
+}
+
+.friend-circle-inline__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+
+  span {
+    padding: 5px 9px;
+    border: 1px solid rgba(120, 130, 150, .22);
+    border-radius: 8px;
+    background: var(--card-background);
+    color: var(--card-text-color-secondary);
+    font-size: 1.25rem;
+    box-shadow: var(--shadow-l1);
+  }
+}
+
+.friend-circle-inline__toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.friend-circle-inline__search,
+.friend-circle-inline__select {
+  min-height: 40px;
+  border: 1px solid rgba(120, 130, 150, .22);
+  border-radius: 10px;
+  background: var(--card-background);
+  color: var(--card-text-color-main);
+  box-shadow: var(--shadow-l1);
+  font: inherit;
+  font-size: 1.4rem;
+}
+
+.friend-circle-inline__search {
+  min-width: 0;
+  padding: 0 12px;
+}
+
+.friend-circle-inline__select {
+  padding: 0 30px 0 12px;
+}
+
+.friend-circle-inline__warnings {
+  margin: 0 0 16px;
+  padding: 10px 13px;
+  border: 1px solid rgba(233, 105, 0, .28);
+  border-radius: 12px;
+  background: rgba(233, 105, 0, .08);
+  color: var(--card-text-color-secondary);
+  font-size: 1.35rem;
+
+  p {
+    margin: 6px 0 0;
+  }
+}
+
+.friend-circle-inline__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+
+  @include respond(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.friend-circle-inline__item {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid rgba(120, 130, 150, .20);
+  border-radius: 14px;
+  background: var(--card-background);
+  box-shadow: var(--shadow-l1);
+  transition: transform .25s ease, box-shadow .25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-l2);
+  }
+}
+
+.friend-circle-inline__avatar-link {
+  width: 50px;
+  height: 50px;
+}
+
+.friend-circle-inline__avatar {
+  display: block;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 14px !important;
+  object-fit: cover;
+  background: rgba(120, 130, 150, .14);
+}
+
+.friend-circle-inline__body {
+  min-width: 0;
+
+  p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 6px 0 0;
+    color: var(--card-text-color-secondary);
+    font-size: 1.35rem;
+    line-height: 1.6;
+    word-break: break-word;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+.friend-circle-inline__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 5px;
+  color: var(--card-text-color-tertiary);
+  font-size: 1.2rem;
+
+  a {
+    color: var(--accent-color);
+    font-weight: 700;
+  }
+}
+
+.friend-circle-inline__title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--card-text-color-main);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.35;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  &:hover {
+    color: var(--accent-color);
+  }
+}
+
+.friend-circle-inline__empty {
+  margin: 12px 0 0;
+  padding: 16px;
+  border: 1px dashed rgba(120, 130, 150, .28);
+  border-radius: 12px;
+  color: var(--card-text-color-secondary);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .friend-circle-inline__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .friend-circle-inline__stats {
+    justify-content: flex-start;
+  }
+
+  .friend-circle-inline__toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .friend-circle-inline__item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding: 13px;
+  }
+
+  .friend-circle-inline__avatar-link,
+  .friend-circle-inline__avatar {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+  }
+}

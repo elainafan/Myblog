@@ -11,9 +11,11 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
+from html.parser import HTMLParser
 from html import unescape
 from pathlib import Path
 from typing import Any
+from urllib.parse import urljoin, urlparse
 from xml.etree import ElementTree
 
 
@@ -21,8 +23,35 @@ DEFAULT_SETTINGS = {
     "max_posts": 80,
     "max_posts_per_friend": 6,
     "max_days": 180,
-    "timeout": 15,
+    "timeout": 8,
 }
+
+
+COMMON_FEED_PATHS = (
+    "/index.xml",
+    "/feed.xml",
+    "/rss.xml",
+    "/atom.xml",
+)
+
+
+class FeedLinkParser(HTMLParser):
+    def __init__(self, base_url: str) -> None:
+        super().__init__()
+        self.base_url = base_url
+        self.feed_urls: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "link":
+            return
+        attr = {key.lower(): (value or "") for key, value in attrs}
+        rel = attr.get("rel", "").lower()
+        feed_type = attr.get("type", "").lower()
+        href = attr.get("href", "").strip()
+        if not href or "alternate" not in rel:
+            return
+        if "rss" in feed_type or "atom" in feed_type or href.endswith((".xml", "/feed/")):
+            self.feed_urls.append(urljoin(self.base_url, href))
 
 
 def strip_comment(line: str) -> str:
@@ -153,6 +182,20 @@ def clean_summary(value: str, limit: int = 180) -> str:
     return text[: limit - 1].rstrip() + "..."
 
 
+def normalize_post_url(url: str, site_url: str) -> str:
+    if not url:
+        return ""
+    parsed = urlparse(url)
+    if parsed.netloc == "example.org" and site_url:
+        path = parsed.path.lstrip("/")
+        if parsed.query:
+            path = f"{path}?{parsed.query}"
+        return urljoin(site_url.rstrip("/") + "/", path)
+    if not parsed.scheme and site_url:
+        return urljoin(site_url.rstrip("/") + "/", url)
+    return url
+
+
 def fetch_text(url: str, timeout: int) -> bytes:
     request = urllib.request.Request(
         url,
@@ -162,6 +205,46 @@ def fetch_text(url: str, timeout: int) -> bytes:
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return response.read()
+
+
+def find_declared_feeds(site_url: str, timeout: int) -> list[str]:
+    html = fetch_text(site_url, timeout).decode("utf-8", errors="ignore")
+    parser = FeedLinkParser(site_url)
+    parser.feed(html)
+    return parser.feed_urls
+
+
+def validate_feed(url: str, timeout: int) -> bytes:
+    feed_xml = fetch_text(url, timeout)
+    ElementTree.fromstring(feed_xml)
+    return feed_xml
+
+
+def discover_feed(friend: dict[str, Any], timeout: int) -> tuple[str, bytes]:
+    feed = friend.get("feed", "")
+    if feed:
+        return feed, validate_feed(feed, timeout)
+
+    site = friend.get("site", "")
+    candidates: list[str] = []
+    if site:
+        try:
+            candidates.extend(find_declared_feeds(site, timeout))
+        except (urllib.error.URLError, TimeoutError, ValueError):
+            pass
+        candidates.extend(urljoin(site, path) for path in COMMON_FEED_PATHS)
+
+    seen: set[str] = set()
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        try:
+            return candidate, validate_feed(candidate, timeout)
+        except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError):
+            continue
+
+    raise ValueError("feed not found")
 
 
 def parse_feed(feed_xml: bytes, friend: dict[str, Any]) -> list[dict[str, Any]]:
@@ -178,7 +261,10 @@ def parse_feed(feed_xml: bytes, friend: dict[str, Any]) -> list[dict[str, Any]]:
         )
         published = parse_date(published_raw)
         summary = first_child_text(entry, {"description", "summary", "content", "encoded"})
-        url = entry_link(entry) or first_child_text(entry, {"guid", "id"})
+        url = normalize_post_url(
+            entry_link(entry) or first_child_text(entry, {"guid", "id"}),
+            friend.get("site", ""),
+        )
         title = first_child_text(entry, {"title"}) or "Untitled"
         posts.append(
             {
@@ -203,6 +289,8 @@ def normalize_friend(friend: dict[str, Any]) -> dict[str, Any]:
         "feed": str(friend.get("feed", "")).strip(),
         "avatar": str(friend.get("avatar", "")).strip(),
         "description": str(friend.get("description", "")).strip(),
+        "circle": bool(friend.get("circle", True)),
+        "circle_reason": str(friend.get("circle_reason", "")).strip(),
     }
 
 
@@ -226,14 +314,15 @@ def main() -> int:
     friend_status: dict[str, dict[str, Any]] = {}
 
     for friend in friends:
-        name = friend["name"] or friend["feed"]
+        name = friend["name"] or friend["site"] or friend["feed"]
         friend_status[name] = {**friend, "status": "ok", "post_count": 0}
-        if not friend["feed"]:
-            friend_status[name]["status"] = "warning"
-            warnings.append({"friend": name, "message": "missing feed URL"})
+        if not friend["circle"]:
+            friend_status[name]["status"] = "skipped"
             continue
         try:
-            feed_xml = fetch_text(friend["feed"], timeout)
+            feed_url, feed_xml = discover_feed(friend, timeout)
+            friend["feed"] = feed_url
+            friend_status[name]["feed"] = feed_url
             posts = parse_feed(feed_xml, friend)
         except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError) as exc:
             friend_status[name]["status"] = "warning"
@@ -244,6 +333,8 @@ def main() -> int:
         for post in posts:
             published = parse_date(post["published"])
             if published and published < cutoff:
+                continue
+            if published and published > now + timedelta(days=1):
                 continue
             filtered.append(post)
         filtered.sort(key=lambda post: post.get("published") or "", reverse=True)

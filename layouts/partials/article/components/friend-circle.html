@@ -1,0 +1,94 @@
+{{ $data := site.Data.friend_posts | default dict }}
+{{ $posts := $data.posts | default slice }}
+{{ $friends := $data.friends | default slice }}
+{{ $warnings := $data.warnings | default slice }}
+
+<section class="friend-circle-inline" data-friend-circle>
+    <header class="friend-circle-inline__header">
+        <div>
+            <h2>友链朋友圈</h2>
+            <p>看看朋友们最近写了什么。</p>
+        </div>
+        <div class="friend-circle-inline__stats">
+            <span>{{ len $friends }} friends</span>
+            <span>{{ len $posts }} posts</span>
+            {{ with $data.generated_at }}<span>{{ time.Format "2006-01-02 15:04" (time .) }}</span>{{ end }}
+        </div>
+    </header>
+
+    <div class="friend-circle-inline__toolbar">
+        <input class="friend-circle-inline__search" type="search" placeholder="搜索文章或朋友" data-fc-search>
+        <select class="friend-circle-inline__select" data-fc-friend aria-label="Filter by friend">
+            <option value="">全部朋友</option>
+            {{ range $friends }}
+                {{ if gt .post_count 0 }}<option value="{{ .name }}">{{ .name }}</option>{{ end }}
+            {{ end }}
+        </select>
+    </div>
+
+    {{ if gt (len $warnings) 0 }}
+        <details class="friend-circle-inline__warnings">
+            <summary>有 {{ len $warnings }} 个 feed 暂时不可用</summary>
+            {{ range $warnings }}
+                <p><strong>{{ .friend }}:</strong> {{ .message }}</p>
+            {{ end }}
+        </details>
+    {{ end }}
+
+    {{ if gt (len $posts) 0 }}
+        <div class="friend-circle-inline__list" data-fc-list>
+            {{ range $posts }}
+                {{ $published := "" }}
+                {{ with .published }}{{ $published = time.Format "2006-01-02" (time .) }}{{ end }}
+                <article class="friend-circle-inline__item" data-fc-item data-friend="{{ .friend }}" data-text="{{ printf `%s %s %s` .friend .title .summary | plainify }}">
+                    <a class="friend-circle-inline__avatar-link" href="{{ .site }}" title="{{ .friend }}" target="_blank" rel="noopener">
+                        {{ if .avatar }}
+                            <img class="friend-circle-inline__avatar" src="{{ .avatar }}" alt="{{ .friend }}" loading="lazy">
+                        {{ else }}
+                            <span class="friend-circle-inline__avatar" aria-hidden="true"></span>
+                        {{ end }}
+                    </a>
+                    <div class="friend-circle-inline__body">
+                        <div class="friend-circle-inline__meta">
+                            <a href="{{ .site }}" target="_blank" rel="noopener">{{ .friend }}</a>
+                            {{ with $published }}<time datetime="{{ . }}">{{ . }}</time>{{ end }}
+                        </div>
+                        <a class="friend-circle-inline__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
+                        {{ with .summary }}<p>{{ . }}</p>{{ end }}
+                    </div>
+                </article>
+            {{ end }}
+        </div>
+    {{ else }}
+        <p class="friend-circle-inline__empty">还没有抓到朋友的新文章。</p>
+    {{ end }}
+
+    <p class="friend-circle-inline__empty" data-fc-empty hidden>没有匹配的文章。</p>
+</section>
+
+<script>
+(() => {
+    const root = document.querySelector('[data-friend-circle]');
+    if (!root) return;
+    const search = root.querySelector('[data-fc-search]');
+    const friend = root.querySelector('[data-fc-friend]');
+    const items = [...root.querySelectorAll('[data-fc-item]')];
+    const empty = root.querySelector('[data-fc-empty]');
+    const apply = () => {
+        const keyword = (search.value || '').trim().toLowerCase();
+        const selected = friend.value || '';
+        let shown = 0;
+        items.forEach((item) => {
+            const okFriend = !selected || item.dataset.friend === selected;
+            const okText = !keyword || (item.dataset.text || '').toLowerCase().includes(keyword);
+            const visible = okFriend && okText;
+            item.hidden = !visible;
+            if (visible) shown += 1;
+        });
+        if (empty) empty.hidden = shown !== 0;
+    };
+    search.addEventListener('input', apply);
+    friend.addEventListener('change', apply);
+    apply();
+})();
+</script>

@@ -28,3 +28,7 @@
         </article>
     {{ end }}
 </div>
+
+{{ if or .Params.friendCircle (eq .Params.slug "friends") }}
+    {{ partial "article/components/friend-circle" . }}
+{{ end }}
