@@ -789,6 +789,11 @@ item.msrc = img.getAttribute('data-thumb') || img.src;
 为了让图库不像普通列表那样很快见底，后面又在 `layouts/photo/single.html` 里加了一段前端循环逻辑。它不是重新请求图片，也不是一次性复制很多节点，而是把首屏已有的图片节点当成模板，快滚到底时再小批量补一段：
 
 ```js
+for (let i = originalFigures.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [originalFigures[i], originalFigures[j]] = [originalFigures[j], originalFigures[i]];
+}
+
 const batchSize = Math.min(24, total);
 const threshold = Math.max(1400, window.innerHeight * 1.25);
 let cursor = 17;
@@ -808,7 +813,7 @@ function appendLoopBatch() {
 }
 ```
 
-这里 `17` 和当前图库数量互质，所以补出来的顺序会错开，不会变成“最后一张后面马上又接第一张”的硬拼接。性能上也要注意：克隆图点击放大时不重新扫描整条瀑布流，而是通过 `data-original-index` 映射回原始图片列表。这样滚动时只增加少量 DOM，PhotoSwipe 仍然只维护原始图库的数据，页面会轻很多。
+开头的 Fisher-Yates shuffle 会先把原始图片顺序打乱，因此每次打开图库页时，首屏看到的图片都不一样。后面的 `17` 和当前图库数量互质，所以补出来的顺序也会错开，不会变成“最后一张后面马上又接第一张”的硬拼接。性能上也要注意：克隆图点击放大时不重新扫描整条瀑布流，而是通过 `data-original-index` 映射回原始图片列表。这样滚动时只增加少量 DOM，PhotoSwipe 仍然只维护原始图库的数据，页面会轻很多。
 
 这部分其实已经有点接近单独功能页了。它和追番页一样，都是通过“自定义 layout + 页面 frontmatter”实现的，只不过追番页的数据来自 Bilibili API，图库页的数据来自本地 `assets/waifus`。
 

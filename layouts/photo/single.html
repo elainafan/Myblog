@@ -112,6 +112,15 @@
         if (!gallery) return;
 
         const originalFigures = Array.from(gallery.querySelectorAll('figure.photo-tile'));
+        for (let i = originalFigures.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [originalFigures[i], originalFigures[j]] = [originalFigures[j], originalFigures[i]];
+        }
+
+        const shuffledFragment = document.createDocumentFragment();
+        originalFigures.forEach((figure) => shuffledFragment.appendChild(figure));
+        gallery.appendChild(shuffledFragment);
+
         const originals = originalFigures.map((figure) => figure.cloneNode(true));
         const total = originals.length;
         if (!total) return;
