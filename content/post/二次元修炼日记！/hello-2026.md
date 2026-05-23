@@ -16,11 +16,6 @@ image: "/images/anime-diary/5.png"
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-using namespace std;
 void solve() {
     int n;
     cin >> n;
@@ -62,11 +57,6 @@ void solve() {
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-using namespace std;
 void solve() {
     int n, k;
     cin >> n >> k;
@@ -99,11 +89,6 @@ void solve() {
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-using namespace std;
 void solve() {
     int n, m, k;
     cin >> n >> m >> k;
@@ -130,11 +115,6 @@ void solve() {
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-using namespace std;
 void solve() {
     int n;
     cin >> n;
@@ -177,26 +157,6 @@ void solve() {
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-#define rep(i, x, y) for (int i = x; i <= y; i++)
-#define frep(i, x, y) for (int i = x; i >= y; i--)
-#define all(x) (x).begin(), (x).end()
-#define all2(x) (x).rbegin(), (x).rend()
-#define sz(a) (int)a.size()
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define tri tuple<int, int, int>
-#define vi vector<int>
-#define vl vector<ll>
-#define vvi vector<vector<int>>
-#define vvl vector<vector<ll>>
-#define pq priority_queue
-#define umap unordered_map
-#define mset multiset
-using namespace std;
 void solve() {
     int n, x, y;
     cin >> n;
@@ -263,26 +223,6 @@ void solve() {
 思路：
 
 ```cpp
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define lowbit(x) (x & (-x))
-#define rep(i, x, y) for (int i = x; i <= y; i++)
-#define frep(i, x, y) for (int i = x; i >= y; i--)
-#define all(x) (x).begin(), (x).end()
-#define all2(x) (x).rbegin(), (x).rend()
-#define sz(a) (int)a.size()
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define tri tuple<int, int, int>
-#define vi vector<int>
-#define vl vector<ll>
-#define vvi vector<vector<int>>
-#define vvl vector<vector<ll>>
-#define pq priority_queue
-#define umap unordered_map
-#define mset multiset
-using namespace std;
 constexpr int MOD = 998244353;
 constexpr int MX = 1e5 + 1;
 ll F[MX];      // 预处理阶乘
