@@ -36,6 +36,13 @@ COMMON_FEED_PATHS = (
     "/atom.xml",
 )
 
+HTML_INDEX_PATHS = (
+    "",
+    "/archives/",
+    "/posts/",
+    "/post/",
+)
+
 POST_LINK_RE = re.compile(
     r"<a\b[^>]*href=[\"'](?P<href>[^\"']+)[\"'][^>]*>(?P<body>.*?)</a>",
     re.IGNORECASE | re.DOTALL,
@@ -252,6 +259,28 @@ def parse_html_index(html: bytes, friend: dict[str, Any]) -> list[dict[str, Any]
     return posts
 
 
+def parse_html_sources(friend: dict[str, Any], timeout: int, retries: int) -> list[dict[str, Any]]:
+    site = friend.get("site", "")
+    if not site:
+        return []
+
+    posts: list[dict[str, Any]] = []
+    seen_urls: set[str] = set()
+    for path in HTML_INDEX_PATHS:
+        url = urljoin(site.rstrip("/") + "/", path.lstrip("/"))
+        try:
+            page_posts = parse_html_index(fetch_text(url, timeout, retries), friend)
+        except (urllib.error.URLError, TimeoutError, ValueError):
+            continue
+        for post in page_posts:
+            if post["url"] in seen_urls:
+                continue
+            seen_urls.add(post["url"])
+            posts.append(post)
+
+    return posts
+
+
 def fetch_text(url: str, timeout: int, retries: int = 1) -> bytes:
     request = urllib.request.Request(
         url,
@@ -355,7 +384,6 @@ def normalize_friend(friend: dict[str, Any]) -> dict[str, Any]:
         "description": str(friend.get("description", "")).strip(),
         "circle": bool(friend.get("circle", True)),
         "circle_reason": str(friend.get("circle_reason", "")).strip(),
-        "html": bool(friend.get("html", False)),
         "timeout": friend.get("timeout"),
         "retries": friend.get("retries"),
     }
@@ -390,17 +418,16 @@ def main() -> int:
         try:
             friend_timeout = int(friend.get("timeout") or timeout)
             friend_retries = int(friend.get("retries") or retries)
-            if friend["html"]:
-                posts = parse_html_index(
-                    fetch_text(friend["site"], friend_timeout, friend_retries),
-                    friend,
-                )
-                friend_status[name]["feed"] = friend["site"]
-            else:
+            try:
                 feed_url, feed_xml = discover_feed(friend, friend_timeout, friend_retries)
                 friend["feed"] = feed_url
                 friend_status[name]["feed"] = feed_url
                 posts = parse_feed(feed_xml, friend)
+            except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError):
+                posts = parse_html_sources(friend, friend_timeout, friend_retries)
+                friend_status[name]["feed"] = friend["site"]
+                if not posts:
+                    raise ValueError("feed not found and no dated posts found in HTML")
         except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError) as exc:
             friend_status[name]["status"] = "warning"
             warnings.append({"friend": name, "message": str(exc)})
