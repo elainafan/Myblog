@@ -371,9 +371,10 @@ private static imageDimensions(img: HTMLImageElement) {
 const img = item.el.querySelector('img');
 if (img) {
     const dimensions = StackGallery.imageDimensions(img);
+    const link = item.el.querySelector('a');
     item.w = dimensions.w;
     item.h = dimensions.h;
-    item.src = img.src;
+    item.src = link?.href || img.src;
     item.msrc = img.getAttribute('data-thumb') || img.src;
 }
 ```
@@ -727,14 +728,63 @@ menu:
 
 Hugo 渲染菜单时就会去找 `assets/icons/photo.svg`。
 
-## 图库入口和轮播
+## 图库入口和瀑布流
 图库页使用的是 `layouts/photo/single.html`。图片资源放在 `assets/waifus`，模板里通过这段收集图片，这段加在 `layouts/photo/single.html` 中：
 
 ```go-html-template
 {{- $imgs := resources.Match "waifus/*.{jpg,jpeg,png,webp}" -}}
 ```
 
-把图片全部收集起来，再写入轮播容器的 `data-images` 属性。前端脚本会预加载图片、随机打乱顺序，并支持左右切换、点击中间全屏、方向键切换和 `Escape` 退出。
+和最早的轮播写法不同，后来的版本没有再把图片写进 `data-images` 交给前端预加载，而是直接在模板里生成瀑布流。每张图用 Hugo 的 `Fit` 生成缩略图，`a` 标签仍然指向原图，这段加在 `layouts/photo/single.html` 中：
+
+```go-html-template
+{{- range $i, $img := $imgs -}}
+    {{- $thumb := $img.Fit "640x900 q82" -}}
+    <figure class="gallery-image photo-tile">
+        <a href="{{ $img.RelPermalink }}" target="_blank" rel="noopener">
+            <img
+                src="{{ $thumb.RelPermalink }}"
+                data-thumb="{{ $thumb.RelPermalink }}"
+                width="{{ $img.Width }}"
+                height="{{ $img.Height }}"
+                loading="lazy"
+                alt="图库图片 {{ add $i 1 }}">
+        </a>
+    </figure>
+{{- end -}}
+```
+
+这样页面首屏加载的是缩略图，点击时 PhotoSwipe 打开的是原图，既保留欣赏大图的体验，也不会让页面一开始就把所有原图压上来。为了让 PhotoSwipe 读取 `a` 标签里的原图地址，`assets/ts/gallery.ts` 中点击前刷新图片信息时也改成优先读取链接：
+
+```ts
+const link = item.el.querySelector('a');
+item.src = link?.href || img.src;
+item.msrc = img.getAttribute('data-thumb') || img.src;
+```
+
+瀑布流样式直接写在 `layouts/photo/single.html` 里。桌面端三列，窄一点时两列，手机端一列；图片保持原比例，不强行裁切：
+
+```css
+.photo-gallery-content .gallery.photo-masonry {
+    display: block;
+    column-count: 3;
+    column-gap: 16px;
+}
+
+@media (max-width: 900px) {
+    .photo-gallery-content .gallery.photo-masonry {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 520px) {
+    .photo-gallery-content .gallery.photo-masonry {
+        column-count: 1;
+    }
+}
+```
+
+图片导入也没有再手动一张张改文件名。笔者加了 `scripts/import_photos.py`，先从公开 SFW 图源拉候选图，再做尺寸、比例、格式、重复图过滤，最后统一转成 WebP 放入 `assets/waifus`。正式页面只读取本地目录，不在前端运行时请求 API，因此图库质量可以通过本地筛选控制，构建时也更稳定。
 
 这部分其实已经有点接近单独功能页了。它和追番页一样，都是通过“自定义 layout + 页面 frontmatter”实现的，只不过追番页的数据来自 Bilibili API，图库页的数据来自本地 `assets/waifus`。
 
@@ -747,6 +797,6 @@ Hugo 渲染菜单时就会去找 `assets/icons/photo.svg`。
 
 第二层是 `layouts` 下的模板覆盖，比如自定义背景、页脚统计、访问量、文章加密、表格滚动、搜索过滤、外链新窗口和图库页面。
 
-第三层是少量前端脚本增强，比如代码复制按钮、图库轮播等。
+第三层是少量前端脚本增强，比如代码复制按钮、图库瀑布流等。
 
 至于 APlayer、PJAX、顶部进度条、Giscus 重载、KaTeX 重渲染这些功能，表面上也是“美化”，但它们实际上都围绕“页面切换时不要刷新播放器”这个目标展开，牵一发而动全身。因此笔者会把它们单独整理成下一篇文章，不然混在这里就又会变成标题满天飞的小缝合怪了。

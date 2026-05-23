@@ -51,11 +51,13 @@ class StackGallery {
             const figcaption = el.querySelector('figcaption'),
                 img = el.querySelector('img');
             const dimensions = StackGallery.imageDimensions(img);
+            const link = el.querySelector('a');
+            const source = link?.href || img.src;
 
             let aux: PhotoSwipeItem = {
                 w: dimensions.w,
                 h: dimensions.h,
-                src: img.src,
+                src: source,
                 msrc: img.getAttribute('data-thumb') || img.src,
                 el: el
             }
@@ -193,9 +195,10 @@ class StackGallery {
                 const img = item.el.querySelector('img');
                 if (img) {
                     const dimensions = StackGallery.imageDimensions(img);
+                    const link = item.el.querySelector('a');
                     item.w = dimensions.w;
                     item.h = dimensions.h;
-                    item.src = img.src;
+                    item.src = link?.href || img.src;
                     item.msrc = img.getAttribute('data-thumb') || img.src;
                 }
                 this.open(index);
