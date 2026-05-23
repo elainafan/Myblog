@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-05-23T07:45:09.845665+00:00",
+  "generated_at": "2026-05-23T08:05:32.017928+00:00",
   "settings": {
     "max_posts": 80,
     "max_posts_per_friend": 6,
     "max_days": 180,
-    "timeout": 8
+    "timeout": 8,
+    "retries": 2
   },
   "friends": [
     {
@@ -15,6 +16,8 @@
       "description": "所见高山远暮，阔云流风；所幸岁月盈余，了无拘束",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 3
     },
@@ -26,6 +29,8 @@
       "description": "上士闻道，勤而行之",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 0
     },
@@ -37,6 +42,8 @@
       "description": "静水流深",
       "circle": false,
       "circle_reason": "域名暂时不可达",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -48,6 +55,8 @@
       "description": "越过山川",
       "circle": false,
       "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -59,6 +68,8 @@
       "description": "故事的下一页",
       "circle": true,
       "circle_reason": "",
+      "timeout": 25,
+      "retries": 3,
       "status": "ok",
       "post_count": 1
     },
@@ -70,6 +81,8 @@
       "description": "昙花一现",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 2
     },
@@ -81,6 +94,8 @@
       "description": "Don't be afraid daybreak has come",
       "circle": false,
       "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -92,6 +107,8 @@
       "description": "There is a reason",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 6
     },
@@ -103,6 +120,8 @@
       "description": "探索未知，解码未来",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 5
     },
@@ -114,6 +133,8 @@
       "description": "你要听T4吗？",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 6
     },
@@ -125,6 +146,8 @@
       "description": "退役Acmer 是个菜鸡",
       "circle": false,
       "circle_reason": "域名暂时不可达",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -136,6 +159,8 @@
       "description": "Try my 120%",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 6
     },
@@ -147,6 +172,8 @@
       "description": "So, what's the point?",
       "circle": false,
       "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -158,6 +185,8 @@
       "description": "not one,ont two,not seven",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 6
     },
@@ -169,6 +198,8 @@
       "description": "与你若只如初见，何须感伤离别",
       "circle": false,
       "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -180,6 +211,8 @@
       "description": "莫西莫西(=^..^=)",
       "circle": false,
       "circle_reason": "站点暂时不可达",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -191,6 +224,8 @@
       "description": "希言自然",
       "circle": false,
       "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
       "status": "skipped",
       "post_count": 0
     },
@@ -202,6 +237,8 @@
       "description": "I like it and I'm good at it.",
       "circle": true,
       "circle_reason": "",
+      "timeout": null,
+      "retries": null,
       "status": "ok",
       "post_count": 6
     }

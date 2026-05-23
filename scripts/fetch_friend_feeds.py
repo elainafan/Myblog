@@ -24,6 +24,7 @@ DEFAULT_SETTINGS = {
     "max_posts_per_friend": 6,
     "max_days": 180,
     "timeout": 8,
+    "retries": 2,
 }
 
 
@@ -196,40 +197,48 @@ def normalize_post_url(url: str, site_url: str) -> str:
     return url
 
 
-def fetch_text(url: str, timeout: int) -> bytes:
+def fetch_text(url: str, timeout: int, retries: int = 1) -> bytes:
     request = urllib.request.Request(
         url,
         headers={
             "User-Agent": "hugo-friend-circle/0.1 (+https://github.com/elainafan/hugo-friend-circle)"
         },
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        return response.read()
+    last_error: Exception | None = None
+    for _ in range(max(1, retries)):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
+    if last_error:
+        raise last_error
+    raise TimeoutError(url)
 
 
-def find_declared_feeds(site_url: str, timeout: int) -> list[str]:
-    html = fetch_text(site_url, timeout).decode("utf-8", errors="ignore")
+def find_declared_feeds(site_url: str, timeout: int, retries: int) -> list[str]:
+    html = fetch_text(site_url, timeout, retries).decode("utf-8", errors="ignore")
     parser = FeedLinkParser(site_url)
     parser.feed(html)
     return parser.feed_urls
 
 
-def validate_feed(url: str, timeout: int) -> bytes:
-    feed_xml = fetch_text(url, timeout)
+def validate_feed(url: str, timeout: int, retries: int) -> bytes:
+    feed_xml = fetch_text(url, timeout, retries)
     ElementTree.fromstring(feed_xml)
     return feed_xml
 
 
-def discover_feed(friend: dict[str, Any], timeout: int) -> tuple[str, bytes]:
+def discover_feed(friend: dict[str, Any], timeout: int, retries: int) -> tuple[str, bytes]:
     feed = friend.get("feed", "")
     if feed:
-        return feed, validate_feed(feed, timeout)
+        return feed, validate_feed(feed, timeout, retries)
 
     site = friend.get("site", "")
     candidates: list[str] = []
     if site:
         try:
-            candidates.extend(find_declared_feeds(site, timeout))
+            candidates.extend(find_declared_feeds(site, timeout, retries))
         except (urllib.error.URLError, TimeoutError, ValueError):
             pass
         candidates.extend(urljoin(site, path) for path in COMMON_FEED_PATHS)
@@ -240,7 +249,7 @@ def discover_feed(friend: dict[str, Any], timeout: int) -> tuple[str, bytes]:
             continue
         seen.add(candidate)
         try:
-            return candidate, validate_feed(candidate, timeout)
+            return candidate, validate_feed(candidate, timeout, retries)
         except (urllib.error.URLError, TimeoutError, ElementTree.ParseError, ValueError):
             continue
 
@@ -291,6 +300,8 @@ def normalize_friend(friend: dict[str, Any]) -> dict[str, Any]:
         "description": str(friend.get("description", "")).strip(),
         "circle": bool(friend.get("circle", True)),
         "circle_reason": str(friend.get("circle_reason", "")).strip(),
+        "timeout": friend.get("timeout"),
+        "retries": friend.get("retries"),
     }
 
 
@@ -309,6 +320,7 @@ def main() -> int:
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=int(settings["max_days"]))
     timeout = int(settings["timeout"])
+    retries = int(settings["retries"])
     all_posts: list[dict[str, Any]] = []
     warnings: list[dict[str, str]] = []
     friend_status: dict[str, dict[str, Any]] = {}
@@ -320,7 +332,9 @@ def main() -> int:
             friend_status[name]["status"] = "skipped"
             continue
         try:
-            feed_url, feed_xml = discover_feed(friend, timeout)
+            friend_timeout = int(friend.get("timeout") or timeout)
+            friend_retries = int(friend.get("retries") or retries)
+            feed_url, feed_xml = discover_feed(friend, friend_timeout, friend_retries)
             friend["feed"] = feed_url
             friend_status[name]["feed"] = feed_url
             posts = parse_feed(feed_xml, friend)

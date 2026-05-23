@@ -3,6 +3,7 @@ settings:
   max_posts_per_friend: 6
   max_days: 180
   timeout: 8
+  retries: 2
 
 friends:
   - name: Arthal's ink
@@ -32,6 +33,8 @@ friends:
     feed: https://zhaoyi-tian.cn/rss.xml
     avatar: https://zhaoyi-tian.github.io/images/profile.png
     description: 故事的下一页
+    timeout: 25
+    retries: 3
   - name: Hinai
     site: https://blog.woo.moe
     feed: https://blog.woo.moe/feed/
