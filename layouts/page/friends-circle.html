@@ -1,0 +1,251 @@
+{{ define "body-class" }}article-page friends-circle-page{{ end }}
+
+{{ define "head" }}
+<style>
+.friend-circle {
+  --fc-border: rgba(120, 130, 150, .22);
+  --fc-muted: var(--card-text-color-secondary, #667085);
+  --fc-main: var(--card-text-color-main, #1f2937);
+  --fc-card: var(--card-background, #fff);
+  --fc-accent: var(--accent-color, #3b82f6);
+  color: var(--body-text-color, #1f2937);
+}
+.friend-circle * { box-sizing: border-box; }
+.friend-circle__hero {
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid var(--fc-border);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(59,130,246,.10), rgba(16,185,129,.08));
+  box-shadow: var(--shadow-l1, 0 10px 24px rgba(15, 23, 42, .08));
+}
+.friend-circle__hero h1 {
+  margin: 0 0 8px;
+  color: var(--fc-main);
+  font-size: 2.4rem;
+  line-height: 1.2;
+}
+.friend-circle__hero p {
+  margin: 0;
+  color: var(--fc-muted);
+  font-size: 1.5rem;
+}
+.friend-circle__stats,
+.friend-circle__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+}
+.friend-circle__stat,
+.friend-circle__select,
+.friend-circle__search {
+  min-height: 38px;
+  border: 1px solid var(--fc-border);
+  border-radius: 10px;
+  background: var(--fc-card);
+  color: var(--fc-main);
+  box-shadow: var(--shadow-l1, none);
+}
+.friend-circle__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  color: var(--fc-muted);
+  font-size: 1.35rem;
+}
+.friend-circle__stat strong { color: var(--fc-main); }
+.friend-circle__select,
+.friend-circle__search {
+  padding: 0 12px;
+  font: inherit;
+  font-size: 1.4rem;
+}
+.friend-circle__search {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.friend-circle__select { flex: 0 0 auto; }
+.friend-circle__warnings {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(233, 105, 0, .28);
+  border-radius: 12px;
+  background: rgba(233, 105, 0, .08);
+  color: var(--fc-main);
+}
+.friend-circle__warnings h2 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+}
+.friend-circle__warnings p {
+  margin: 4px 0;
+  color: var(--fc-muted);
+  font-size: 1.35rem;
+}
+.friend-circle__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+.friend-circle__item {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid var(--fc-border);
+  border-radius: 16px;
+  background: var(--fc-card);
+  box-shadow: var(--shadow-l1, 0 10px 24px rgba(15, 23, 42, .08));
+}
+.friend-circle__avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  object-fit: cover;
+  background: rgba(120, 130, 150, .14);
+}
+.friend-circle__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 5px;
+  color: var(--fc-muted);
+  font-size: 1.25rem;
+}
+.friend-circle__friend {
+  color: var(--fc-accent);
+  font-weight: 700;
+}
+.friend-circle__title {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: var(--fc-main);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  word-break: break-word;
+}
+.friend-circle__title:hover { color: var(--fc-accent); }
+.friend-circle__summary {
+  margin: 0;
+  color: var(--fc-muted);
+  font-size: 1.4rem;
+  line-height: 1.65;
+  word-break: break-word;
+}
+.friend-circle__empty {
+  padding: 22px;
+  border: 1px dashed var(--fc-border);
+  border-radius: 16px;
+  color: var(--fc-muted);
+  text-align: center;
+}
+@media (min-width: 720px) {
+  .friend-circle__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .friend-circle__hero { padding: 18px; }
+  .friend-circle__item { grid-template-columns: 44px minmax(0, 1fr); padding: 14px; }
+  .friend-circle__avatar { width: 44px; height: 44px; border-radius: 13px; }
+  .friend-circle__select { width: 100%; }
+}
+</style>
+{{ end }}
+
+{{ define "main" }}
+{{ $data := site.Data.friend_posts | default dict }}
+{{ $posts := $data.posts | default slice }}
+{{ $friends := $data.friends | default slice }}
+{{ $warnings := $data.warnings | default slice }}
+
+<section class="friend-circle" data-friend-circle>
+  <header class="friend-circle__hero">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="friend-circle__stats" aria-label="Friend circle stats">
+    <span class="friend-circle__stat"><strong>{{ len $friends }}</strong> friends</span>
+    <span class="friend-circle__stat"><strong>{{ len $posts }}</strong> posts</span>
+    {{ with $data.generated_at }}<span class="friend-circle__stat">updated {{ time.Format "2006-01-02 15:04" (time .) }}</span>{{ end }}
+  </div>
+
+  <div class="friend-circle__toolbar">
+    <input class="friend-circle__search" type="search" placeholder="搜索文章或朋友" data-fc-search>
+    <select class="friend-circle__select" data-fc-friend aria-label="Filter by friend">
+      <option value="">全部朋友</option>
+      {{ range $friends }}
+        <option value="{{ .name }}">{{ .name }}</option>
+      {{ end }}
+    </select>
+  </div>
+
+  {{ if gt (len $warnings) 0 }}
+    <aside class="friend-circle__warnings">
+      <h2>Feed warnings</h2>
+      {{ range $warnings }}
+        <p><strong>{{ .friend }}:</strong> {{ .message }}</p>
+      {{ end }}
+    </aside>
+  {{ end }}
+
+  <div class="friend-circle__list" data-fc-list>
+    {{ range $posts }}
+      {{ $published := "" }}
+      {{ with .published }}{{ $published = time.Format "2006-01-02" (time .) }}{{ end }}
+      <article class="friend-circle__item" data-fc-item data-friend="{{ .friend }}" data-text="{{ printf `%s %s %s` .friend .title .summary | plainify }}">
+        <a href="{{ .site }}" title="{{ .friend }}">
+          {{ if .avatar }}
+            <img class="friend-circle__avatar" src="{{ .avatar }}" alt="{{ .friend }}" loading="lazy">
+          {{ else }}
+            <span class="friend-circle__avatar" aria-hidden="true"></span>
+          {{ end }}
+        </a>
+        <div>
+          <div class="friend-circle__meta">
+            <a class="friend-circle__friend" href="{{ .site }}">{{ .friend }}</a>
+            {{ with $published }}<time datetime="{{ . }}">{{ . }}</time>{{ end }}
+          </div>
+          <a class="friend-circle__title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
+          {{ with .summary }}<p class="friend-circle__summary">{{ . }}</p>{{ end }}
+        </div>
+      </article>
+    {{ end }}
+  </div>
+
+  <p class="friend-circle__empty" data-fc-empty hidden>没有匹配的文章。</p>
+</section>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-friend-circle]');
+  if (!root) return;
+  const search = root.querySelector('[data-fc-search]');
+  const friend = root.querySelector('[data-fc-friend]');
+  const items = [...root.querySelectorAll('[data-fc-item]')];
+  const empty = root.querySelector('[data-fc-empty]');
+  const apply = () => {
+    const keyword = (search.value || '').trim().toLowerCase();
+    const selected = friend.value || '';
+    let shown = 0;
+    items.forEach((item) => {
+      const okFriend = !selected || item.dataset.friend === selected;
+      const okText = !keyword || (item.dataset.text || '').toLowerCase().includes(keyword);
+      const visible = okFriend && okText;
+      item.hidden = !visible;
+      if (visible) shown += 1;
+    });
+    empty.hidden = shown !== 0;
+  };
+  search.addEventListener('input', apply);
+  friend.addEventListener('change', apply);
+  apply();
+})();
+</script>
+{{ if templates.Exists "partials/footer/footer.html" }}{{ partialCached "footer/footer" . }}{{ end }}
+{{ end }}

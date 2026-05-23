@@ -1,0 +1,89 @@
+{
+  "generated_at": "2026-05-23T06:35:30.362015+00:00",
+  "settings": {
+    "max_posts": 80,
+    "max_posts_per_friend": 6,
+    "max_days": 180,
+    "timeout": 15
+  },
+  "friends": [
+    {
+      "name": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "description": "痛饮所有蹇蹇之后？",
+      "status": "ok",
+      "post_count": 6
+    }
+  ],
+  "warnings": [],
+  "posts": [
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "在博客中优雅地引入音乐播放器",
+      "url": "https://www.elainafan.one/p/%E5%9C%A8%E5%8D%9A%E5%AE%A2%E4%B8%AD%E4%BC%98%E9%9B%85%E5%9C%B0%E5%BC%95%E5%85%A5%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/",
+      "summary": "前言 给博客加音乐播放器这件事，乍一看似乎非常简单：引入一个播放器库，填几首歌，然后固定在页面底部就好了。 但是实际做下来会发现一个很致命的问题：只要点击站内链接，浏览器就会重新加载整个页面，底部播放器自然也会被销毁。也就是说，歌还没听几句，点进下一篇文章就断了，体验非常割裂。 因此，音乐播放器和 PJAX 其实是绑在一起的。播放器负责播放音乐，PJAX...",
+      "published": "2026-05-20T00:00:00+00:00",
+      "published_text": "Wed, 20 May 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "自定义美化Stack主题",
+      "url": "https://www.elainafan.one/p/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BE%8E%E5%8C%96stack%E4%B8%BB%E9%A2%98/",
+      "summary": "前言 之前写过一篇在博客中添加 Bilibili 追番页面的文章，那篇文章主要讲的是一个独立功能：如何通过 layouts/page/bilibili.html 和 layouts/shortcodes/bangumi.html 做出一面追番墙。 这一篇则整理博客里更零散、更基础的美化工作。笔者现在用的是 Hugo v0.131.0 和 Stack 主题...",
+      "published": "2026-05-20T00:00:00+00:00",
+      "published_text": "Wed, 20 May 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "欧拉反演与莫比乌斯反演",
+      "url": "https://www.elainafan.one/p/%E6%AC%A7%E6%8B%89%E5%8F%8D%E6%BC%94%E4%B8%8E%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94/",
+      "summary": "前言 其实不想更新，本期来自bupt算法皇后、本硕acm兼推理加速第一人、数据结构专家、华为天之骄子L女士的催更。 之前写 CF1900D Small GCD 的时候，做到一半就卡住了，属于是看着式子发呆了三分钟，呜呜。 题目本身看起来只是一个很普通的 $\\gcd$ 贡献，排序之后也很自然地可以变成 $$ \\sum\\limits_{i=2}^{n}(n-i...",
+      "published": "2026-05-07T00:00:00+00:00",
+      "published_text": "Thu, 07 May 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "在博客中优雅地添加 Bilibili 追番页面",
+      "url": "https://www.elainafan.one/p/%E5%9C%A8%E5%8D%9A%E5%AE%A2%E4%B8%AD%E4%BC%98%E9%9B%85%E5%9C%B0%E6%B7%BB%E5%8A%A0-bilibili-%E8%BF%BD%E7%95%AA%E9%A1%B5%E9%9D%A2/",
+      "summary": "前言 作为一个二次元爱好者，在个人博客里拥有一面专属的「追番墙」，展示自己最近正在看或者喜欢的番剧，是一件非常有成就感的事情。通过一些简单的代码配置，可以借助 Hugo 强大的 resources.GetRemote 功能，在博客静态生成阶段直接拉取 Bilibili 的公开追番 API 数据，从而实现一个无需依靠前端跨域请求、加载极快且完全属于自己的优雅...",
+      "published": "2026-03-13T00:00:00+00:00",
+      "published_text": "Fri, 13 Mar 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "从零开始的Proxy Lab",
+      "url": "https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84proxy-lab/",
+      "summary": "从零开始的Proxy Lab [!CAUTION] 本笔记仅供参考，请勿抄袭。 声明 本笔记的写作初衷在于，笔者在做Proxy Lab的时候受到Arthals学长很大启发，同时25Fall的计算机系统导论课程改制增加了10分的Lab测试（虽然往年的期中期末中也会有一两道Lab相关选择题，但分值不大）。故将心路历程写成此笔记，以便复习，并供后续选课同学参考。...",
+      "published": "2026-01-11T00:00:00+00:00",
+      "published_text": "Sun, 11 Jan 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Elainafan",
+      "site": "https://www.elainafan.one/",
+      "feed": "https://www.elainafan.one/index.xml",
+      "avatar": "https://www.elainafan.one/img/elainafan.jpg",
+      "title": "图库 | Photos",
+      "url": "https://www.elainafan.one/photos/",
+      "summary": "",
+      "published": "2026-01-09T00:00:00+00:00",
+      "published_text": "Fri, 09 Jan 2026 00:00:00 +0000"
+    }
+  ]
+}

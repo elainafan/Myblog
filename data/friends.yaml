@@ -1,0 +1,12 @@
+settings:
+  max_posts: 80
+  max_posts_per_friend: 6
+  max_days: 180
+  timeout: 15
+
+friends:
+  - name: Elainafan
+    site: https://www.elainafan.one/
+    feed: https://www.elainafan.one/index.xml
+    avatar: https://www.elainafan.one/img/elainafan.jpg
+    description: 痛饮所有蹇蹇之后？

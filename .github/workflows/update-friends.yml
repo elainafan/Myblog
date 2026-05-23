@@ -1,0 +1,29 @@
+name: update friend circle
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/friends.yaml"
+      - "scripts/fetch_friend_feeds.py"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Fetch feeds
+        run: python scripts/fetch_friend_feeds.py
+      - name: Commit generated data
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update friend circle data"
+          file_pattern: data/friend_posts.json
