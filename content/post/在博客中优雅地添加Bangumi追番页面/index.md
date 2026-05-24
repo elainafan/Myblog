@@ -1,11 +1,12 @@
 ---
-title: 在博客里优雅地添加Bangumi追番页面
+title: 在博客中优雅地添加Bangumi追番页面
 date: 2026-03-13
 categories:
     - 建站
 updates:
     - date: 2026-05-24
       content: 将原 Bilibili 追番方案整体升级为 Bangumi 收藏墙。
+image: 1.jpg
 ---
 ## 前言
 之前笔者在博客里做过一个 Bilibili 追番页面：构建时通过 `resources.GetRemote` 拉取 B 站公开追番 API，然后把结果渲染成一面番剧海报墙。这个方案胜在简单，但继续用下来会发现一个问题：Bilibili 更像播放平台，而不是作品数据库。很多番没有版权、下架、地区不可见，或者剧场版、OVA、续作分得不够稳定，用它来做“番剧收藏页”总觉得差一点。

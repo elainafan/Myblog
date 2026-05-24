@@ -9,7 +9,7 @@ menu:
     main: 
         weight: -50
         params:
-            icon: eye
+            icon: bilibili
 
 comments: true
 ---
