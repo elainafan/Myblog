@@ -14,6 +14,97 @@ import { setupScrollspy } from 'ts/scrollspy';
 import { setupSmoothAnchors } from "ts/smoothAnchors";
 import { searchInit } from "ts/search";
 
+const LONG_CODE_LINE_THRESHOLD = 80;
+
+function setupCodeBlocks() {
+    const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
+    const copyText = `Copy`,
+        copiedText = `Copied!`;
+
+    highlights.forEach(highlight => {
+        if (highlight.dataset.enhanced === 'true') return;
+        highlight.dataset.enhanced = 'true';
+
+        const codeBlock = highlight.querySelector('code[data-lang]') as HTMLElement;
+        if (!codeBlock) return;
+
+        const copyButton = document.createElement('button');
+        copyButton.innerHTML = copyText;
+        copyButton.classList.add('copyCodeButton');
+        highlight.appendChild(copyButton);
+
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(codeBlock.textContent)
+                .then(() => {
+                    copyButton.textContent = copiedText;
+
+                    setTimeout(() => {
+                        copyButton.textContent = copyText;
+                    }, 1000);
+                })
+                .catch(err => {
+                    alert(err)
+                    console.log('Something went wrong', err);
+                });
+        });
+
+        const lineCount = highlight.querySelectorAll('.lnt').length || (codeBlock.textContent || '').split('\n').length;
+        if (lineCount <= LONG_CODE_LINE_THRESHOLD) return;
+
+        highlight.classList.add('is-collapsible', 'is-collapsed');
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'codeFoldButton';
+        expandButton.textContent = `展开完整代码（${lineCount} 行）`;
+        highlight.appendChild(expandButton);
+
+        expandButton.addEventListener('click', () => {
+            const collapsed = highlight.classList.toggle('is-collapsed');
+            expandButton.textContent = collapsed ? `展开完整代码（${lineCount} 行）` : '收起代码';
+        });
+    });
+}
+
+function setupReadingProgress() {
+    const existing = document.querySelector('.reading-progress') as HTMLElement;
+    const article = document.querySelector('.article-page .main-article') as HTMLElement;
+    const content = document.querySelector('.article-content') as HTMLElement;
+
+    if (!article || !content) {
+        existing?.remove();
+        window.removeEventListener('scroll', updateReadingProgress);
+        window.removeEventListener('resize', updateReadingProgress);
+        return;
+    }
+
+    const bar = existing || document.createElement('div');
+    bar.className = 'reading-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    if (!existing) document.body.appendChild(bar);
+
+    updateReadingProgress();
+    window.removeEventListener('scroll', updateReadingProgress);
+    window.removeEventListener('resize', updateReadingProgress);
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+    window.addEventListener('resize', updateReadingProgress);
+}
+
+function updateReadingProgress() {
+    const bar = document.querySelector('.reading-progress') as HTMLElement;
+    const content = document.querySelector('.article-content') as HTMLElement;
+    if (!bar || !content) return;
+
+    const rect = content.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const start = scrollTop + rect.top;
+    const total = Math.max(content.scrollHeight - window.innerHeight * 0.55, 1);
+    const current = Math.min(Math.max(scrollTop - start, 0), total);
+    const progress = current / total;
+
+    bar.style.transform = `scaleX(${progress})`;
+}
+
 let Stack = {
     init: () => {
         /**
@@ -30,6 +121,7 @@ let Stack = {
 
         // 调用search脚本初始化方法
         searchInit();
+        setupReadingProgress();
 
         /**
          * Add linear gradient background to tile style article
@@ -65,37 +157,7 @@ let Stack = {
         */
 
 
-        /**
-         * Add copy button to code block
-        */
-        const highlights = document.querySelectorAll('.article-content div.highlight');
-        const copyText = `Copy`,
-            copiedText = `Copied!`;
-
-        highlights.forEach(highlight => {
-            const copyButton = document.createElement('button');
-            copyButton.innerHTML = copyText;
-            copyButton.classList.add('copyCodeButton');
-            highlight.appendChild(copyButton);
-
-            const codeBlock = highlight.querySelector('code[data-lang]');
-            if (!codeBlock) return;
-
-            copyButton.addEventListener('click', () => {
-                navigator.clipboard.writeText(codeBlock.textContent)
-                    .then(() => {
-                        copyButton.textContent = copiedText;
-
-                        setTimeout(() => {
-                            copyButton.textContent = copyText;
-                        }, 1000);
-                    })
-                    .catch(err => {
-                        alert(err)
-                        console.log('Something went wrong', err);
-                    });
-            });
-        });
+        setupCodeBlocks();
 
         new StackColorScheme(document.getElementById('dark-mode-toggle'));
     }

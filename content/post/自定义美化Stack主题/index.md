@@ -6,6 +6,8 @@ categories:
 image: 10.jpg
 updates:
     - date: 2026-05-24
+      content: 增加长代码块折叠和文章阅读进度条。
+    - date: 2026-05-24
       content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
     - date: 2026-05-24
       content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
@@ -655,6 +657,132 @@ highlights.forEach(highlight => {
 它的思路很直接：页面加载后找到代码块，插入按钮，点击后把代码内容写入剪贴板。按钮的显示隐藏则由 `.highlight:hover .copyCodeButton` 控制。
 
 ![代码块样式](4.png)
+
+## 长代码块折叠
+后来写 Lab 和建站教程时，代码块经常会一下子占掉很长一段页面。完整代码当然需要保留，但如果默认全部展开，读者其实很难快速扫到后面的解释。
+
+因此笔者把代码块增强逻辑整理到了 `assets/ts/main.ts` 的 `setupCodeBlocks()` 中：复制按钮和长代码块折叠都在这里处理。为了避免 PJAX 后重复插入按钮，每个代码块初始化后会打上 `data-enhanced` 标记：
+
+```ts
+const LONG_CODE_LINE_THRESHOLD = 80;
+
+function setupCodeBlocks() {
+    const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
+
+    highlights.forEach(highlight => {
+        if (highlight.dataset.enhanced === 'true') return;
+        highlight.dataset.enhanced = 'true';
+
+        const codeBlock = highlight.querySelector('code[data-lang]') as HTMLElement;
+        if (!codeBlock) return;
+
+        const lineCount = highlight.querySelectorAll('.lnt').length || (codeBlock.textContent || '').split('\n').length;
+        if (lineCount <= LONG_CODE_LINE_THRESHOLD) return;
+
+        highlight.classList.add('is-collapsible', 'is-collapsed');
+    });
+}
+```
+
+这里优先通过 Chroma 生成的 `.lnt` 行号来统计行数。如果没有行号，就退回到按换行符计算。超过 80 行的代码块默认折叠，并在底部加一个按钮：
+
+```ts
+const expandButton = document.createElement('button');
+expandButton.type = 'button';
+expandButton.className = 'codeFoldButton';
+expandButton.textContent = `展开完整代码（${lineCount} 行）`;
+highlight.appendChild(expandButton);
+
+expandButton.addEventListener('click', () => {
+    const collapsed = highlight.classList.toggle('is-collapsed');
+    expandButton.textContent = collapsed ? `展开完整代码（${lineCount} 行）` : '收起代码';
+});
+```
+
+样式上则给折叠状态设置一个最大高度，并在底部加一层渐变遮罩。这段加在 `assets/scss/custom.scss` 中：
+
+```scss
+.article-content {
+  .highlight.is-collapsed {
+    max-height: 520px;
+  }
+
+  .highlight.is-collapsed::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 120px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0), var(--card-background) 72%);
+  }
+}
+```
+
+这样短代码块仍然保持原样，长代码块则先露出开头和结构，读者需要时再展开。对 Lab 文章和长脚本教程会友好很多。
+
+## 文章阅读进度条
+阅读进度条也是在 `assets/ts/main.ts` 中处理。它不需要写进模板里，而是由脚本在文章页动态创建：
+
+```ts
+function setupReadingProgress() {
+    const existing = document.querySelector('.reading-progress') as HTMLElement;
+    const article = document.querySelector('.article-page .main-article') as HTMLElement;
+    const content = document.querySelector('.article-content') as HTMLElement;
+
+    if (!article || !content) {
+        existing?.remove();
+        window.removeEventListener('scroll', updateReadingProgress);
+        window.removeEventListener('resize', updateReadingProgress);
+        return;
+    }
+
+    const bar = existing || document.createElement('div');
+    bar.className = 'reading-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    if (!existing) document.body.appendChild(bar);
+}
+```
+
+注意这里要处理非文章页：如果从文章页通过 PJAX 切到首页或搜索页，就把进度条移除，并解绑滚动监听。否则顶部会残留一条已经没有意义的进度条。
+
+真正计算进度时，参考的是 `.article-content` 的位置和高度：
+
+```ts
+function updateReadingProgress() {
+    const bar = document.querySelector('.reading-progress') as HTMLElement;
+    const content = document.querySelector('.article-content') as HTMLElement;
+    if (!bar || !content) return;
+
+    const rect = content.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const start = scrollTop + rect.top;
+    const total = Math.max(content.scrollHeight - window.innerHeight * 0.55, 1);
+    const current = Math.min(Math.max(scrollTop - start, 0), total);
+
+    bar.style.transform = `scaleX(${current / total})`;
+}
+```
+
+样式则很轻，只是一条固定在顶部的细线：
+
+```scss
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: var(--accent-color);
+  pointer-events: none;
+}
+```
+
+这个功能不改变文章结构，但读长文时会比较有方向感。尤其是 CS Lab、建站教程和算法长文，读者能直观看到自己大概读到哪里了。
 
 ## 记录博客运行时间
 页脚覆盖文件是 `layouts/partials/footer/footer.html`。这里主要加了两类信息：博客运行时间，以及文章数量和总字数。
