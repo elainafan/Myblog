@@ -5,6 +5,8 @@ categories:
     - 建站
 updates:
     - date: 2026-05-25
+      content: 精简番剧卡片默认信息，将短评、进度和排名收纳到悬停层。
+    - date: 2026-05-25
       content: 增加状态切换导航和分组内 Load More 展开。
     - date: 2026-05-24
       content: 调整 Bangumi 页面头部样式。
@@ -160,30 +162,42 @@ python scripts/sync_bangumi.py
 </nav>
 ```
 
-卡片本身只需要从条目里取出封面、标题、年份、评分、进度和短评即可：
+卡片本身默认只露出封面、标题、年份和评分。个人短评、观看进度和 Bangumi 排名虽然有用，但如果全部铺在卡片上，页面很快就会显得拥挤。因此这里把这些细节收纳到封面悬停层里：平时当作海报墙扫视，鼠标移上去时再看补充信息。
 
 ```go-html-template
 {{ range $groupItems }}
     {{ $subject := .subject }}
     {{ $title := $subject.name_cn | default $subject.name | default "Untitled" }}
     {{ $cover := $subject.images.common | default $subject.images.medium | default $subject.images.large }}
+    {{ $eps := $subject.eps | default 0 }}
+    {{ $epStatus := .ep_status | default 0 }}
+    {{ $siteScore := $subject.score | default 0 }}
+    {{ $rank := $subject.rank | default 0 }}
+    {{ $hasProgress := and (gt $eps 0) (gt $epStatus 0) }}
     <a class="bangumi-card" href="https://bangumi.tv/subject/{{ .subject_id }}" target="_blank" rel="noopener noreferrer">
         <div class="bangumi-cover">
             <img src="{{ $cover }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">
             {{ if gt .rate 0 }}
                 <span class="bangumi-score">{{ .rate }}</span>
             {{ end }}
+            <div class="bangumi-extra">
+                {{ if gt $rank 0 }}
+                    <span class="bangumi-extra-line">Bangumi #{{ $rank }}</span>
+                {{ end }}
+                {{ if $hasProgress }}
+                    <span class="bangumi-extra-line">进度 {{ $epStatus }} / {{ $eps }}</span>
+                {{ end }}
+                {{ with .comment }}
+                    <span class="bangumi-extra-comment">{{ . }}</span>
+                {{ end }}
+            </div>
         </div>
         <div class="bangumi-info">
-            <h4 class="bangumi-name">{{ $title }}</h4>
+            <div class="bangumi-name" role="heading" aria-level="4">{{ $title }}</div>
             <div class="bangumi-meta">
-                {{ with $subject.date }}{{ substr . 0 4 }}{{ end }}
-                {{ with $subject.score }} · Bangumi {{ . }}{{ end }}
-                {{ with $subject.rank }} · #{{ . }}{{ end }}
+                {{ with $subject.date }}<span>{{ substr . 0 4 }}</span>{{ end }}
+                {{ if gt $siteScore 0 }}<span>Bangumi {{ $siteScore }}</span>{{ end }}
             </div>
-            {{ with .comment }}
-                <div class="bangumi-comment">{{ . }}</div>
-            {{ end }}
         </div>
     </a>
 {{ end }}

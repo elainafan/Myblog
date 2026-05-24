@@ -178,6 +178,7 @@
         .bangumi-card {
             display: grid;
             grid-template-rows: auto 1fr;
+            position: relative;
             min-width: 0;
             overflow: hidden;
             border-radius: 16px;
@@ -204,6 +205,16 @@
             background: var(--card-separator-color);
         }
 
+        .bangumi-cover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(18, 18, 18, 0) 35%, rgba(18, 18, 18, 0.78) 100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease;
+        }
+
         .bangumi-cover img {
             display: block;
             width: 100%;
@@ -215,6 +226,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
+            z-index: 2;
             display: inline-flex;
             align-items: center;
             min-height: 30px;
@@ -227,10 +239,50 @@
             backdrop-filter: blur(8px);
         }
 
+        .bangumi-extra {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            left: 12px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: #fff;
+            font-size: 1.18rem;
+            line-height: 1.45;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+
+        .bangumi-card:hover .bangumi-cover::after,
+        .bangumi-card:focus-visible .bangumi-cover::after,
+        .bangumi-card:hover .bangumi-extra,
+        .bangumi-card:focus-visible .bangumi-extra {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bangumi-extra-line,
+        .bangumi-extra-comment {
+            display: -webkit-box;
+            overflow: hidden;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+        }
+
+        .bangumi-extra-comment {
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+
         .bangumi-info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 7px;
             padding: 12px 13px 14px;
             min-width: 0;
         }
@@ -248,20 +300,13 @@
             line-clamp: 2;
         }
 
-        .bangumi-meta,
-        .bangumi-comment,
-        .bangumi-progress {
+        .bangumi-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
             color: var(--card-text-color-secondary);
             font-size: 1.22rem;
             line-height: 1.45;
-        }
-
-        .bangumi-comment {
-            display: -webkit-box;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
         }
 
         .bangumi-empty {
@@ -384,6 +429,9 @@
                             {{ $cover := $subject.images.common | default $subject.images.medium | default $subject.images.large }}
                             {{ $eps := $subject.eps | default 0 }}
                             {{ $epStatus := $item.ep_status | default 0 }}
+                            {{ $siteScore := $subject.score | default 0 }}
+                            {{ $rank := $subject.rank | default 0 }}
+                            {{ $hasProgress := and (gt $eps 0) (gt $epStatus 0) }}
                             <a class="bangumi-card{{ if and (gt $initial 0) (ge $index $initial) }} is-hidden{{ end }}" href="https://bangumi.tv/subject/{{ $item.subject_id }}" target="_blank" rel="noopener noreferrer">
                                 <div class="bangumi-cover">
                                     {{ with $cover }}
@@ -392,20 +440,26 @@
                                     {{ if gt $item.rate 0 }}
                                         <span class="bangumi-score">{{ $item.rate }}</span>
                                     {{ end }}
+                                    {{ if or $hasProgress $item.comment (gt $rank 0) }}
+                                        <div class="bangumi-extra">
+                                            {{ if gt $rank 0 }}
+                                                <span class="bangumi-extra-line">Bangumi #{{ $rank }}</span>
+                                            {{ end }}
+                                            {{ if $hasProgress }}
+                                                <span class="bangumi-extra-line">进度 {{ $epStatus }} / {{ $eps }}</span>
+                                            {{ end }}
+                                            {{ with $item.comment }}
+                                                <span class="bangumi-extra-comment">{{ . }}</span>
+                                            {{ end }}
+                                        </div>
+                                    {{ end }}
                                 </div>
                                 <div class="bangumi-info">
-                                    <h4 class="bangumi-name">{{ $title }}</h4>
+                                    <div class="bangumi-name" role="heading" aria-level="4">{{ $title }}</div>
                                     <div class="bangumi-meta">
-                                        {{ with $subject.date }}{{ substr . 0 4 }}{{ end }}
-                                        {{ with $subject.score }} · Bangumi {{ . }}{{ end }}
-                                        {{ with $subject.rank }} · #{{ . }}{{ end }}
+                                        {{ with $subject.date }}<span>{{ substr . 0 4 }}</span>{{ end }}
+                                        {{ if gt $siteScore 0 }}<span>Bangumi {{ $siteScore }}</span>{{ end }}
                                     </div>
-                                    {{ if and (gt $eps 0) (gt $epStatus 0) }}
-                                        <div class="bangumi-progress">进度 {{ $epStatus }} / {{ $eps }}</div>
-                                    {{ end }}
-                                    {{ with $item.comment }}
-                                        <div class="bangumi-comment">{{ . }}</div>
-                                    {{ end }}
                                 </div>
                             </a>
                         {{ end }}
