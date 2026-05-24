@@ -21,12 +21,19 @@
 
 {{- $items := $bangumiData.data | default slice -}}
 {{- $groups := slice
-    (dict "type" 3 "label" "在看" "name" "watching")
-    (dict "type" 2 "label" "看过" "name" "watched")
-    (dict "type" 1 "label" "想看" "name" "wish")
-    (dict "type" 4 "label" "搁置" "name" "on-hold")
-    (dict "type" 5 "label" "抛弃" "name" "dropped")
+    (dict "type" 3 "label" "在看" "name" "watching" "initial" 0 "step" 8)
+    (dict "type" 2 "label" "看过" "name" "watched" "initial" 12 "step" 12)
+    (dict "type" 1 "label" "想看" "name" "wish" "initial" 8 "step" 8)
+    (dict "type" 4 "label" "搁置" "name" "on-hold" "initial" 8 "step" 8)
+    (dict "type" 5 "label" "抛弃" "name" "dropped" "initial" 8 "step" 8)
 -}}
+{{- $activeGroup := "" -}}
+{{- range $groups -}}
+    {{- $groupItems := where $items "type" .type -}}
+    {{- if and (eq $activeGroup "") (gt (len $groupItems) 0) -}}
+        {{- $activeGroup = .name -}}
+    {{- end -}}
+{{- end -}}
 
 <div class="article-content bangumi-page">
     <style>
@@ -100,6 +107,38 @@
             white-space: nowrap;
         }
 
+        .bangumi-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 24px;
+        }
+
+        .bangumi-tab {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            border: 1px solid var(--card-separator-color);
+            border-radius: 999px;
+            padding: 0 16px;
+            background: var(--card-background);
+            color: var(--card-text-color-secondary);
+            box-shadow: var(--shadow-l1);
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.35rem;
+            font-weight: 700;
+            transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+        }
+
+        .bangumi-tab:hover,
+        .bangumi-tab[aria-selected="true"] {
+            border-color: #ff5a5f;
+            color: #ff5a5f;
+            transform: translateY(-1px);
+        }
+
         .bangumi-section {
             margin-top: 26px;
         }
@@ -152,6 +191,10 @@
         .bangumi-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-l3);
+        }
+
+        .bangumi-card.is-hidden {
+            display: none;
         }
 
         .bangumi-cover {
@@ -230,6 +273,32 @@
             color: var(--card-text-color-secondary);
         }
 
+        .bangumi-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 22px;
+        }
+
+        .bangumi-load {
+            min-height: 38px;
+            border: 1px solid #ff5a5f;
+            border-radius: 999px;
+            padding: 0 18px;
+            background: transparent;
+            color: #ff5a5f;
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.32rem;
+            font-weight: 700;
+            transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+
+        .bangumi-load:hover {
+            background: #ff5a5f;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 1280px) {
             .bangumi-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -277,28 +346,51 @@
     {{ if not $items }}
         <p class="bangumi-empty">暂时没有可展示的 Bangumi 收藏数据。</p>
     {{ else }}
+        <nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
+            {{ range $groups }}
+                {{ $groupItems := where $items "type" .type }}
+                {{ if gt (len $groupItems) 0 }}
+                    <button
+                        class="bangumi-tab"
+                        type="button"
+                        data-bangumi-tab="{{ .name }}"
+                        aria-controls="bangumi-panel-{{ .name }}"
+                        aria-selected="{{ eq .name $activeGroup }}">
+                        {{ .label }}
+                    </button>
+                {{ end }}
+            {{ end }}
+        </nav>
         {{ range $groups }}
             {{ $groupItems := where $items "type" .type }}
             {{ if gt (len $groupItems) 0 }}
-                <section class="bangumi-section bangumi-section-{{ .name }}">
+                {{ $initial := .initial }}
+                {{ $step := .step }}
+                <section
+                    class="bangumi-section bangumi-section-{{ .name }}"
+                    id="bangumi-panel-{{ .name }}"
+                    data-bangumi-panel="{{ .name }}"
+                    data-bangumi-initial="{{ $initial }}"
+                    data-bangumi-step="{{ $step }}"
+                    {{ if ne .name $activeGroup }}hidden{{ end }}>
                     <div class="bangumi-section-header">
                         <div class="bangumi-section-title" role="heading" aria-level="3">{{ .label }}</div>
                         <span class="bangumi-count">{{ len $groupItems }} 部</span>
                     </div>
                     <div class="bangumi-grid">
-                        {{ range $groupItems }}
-                            {{ $subject := .subject }}
+                        {{ range $index, $item := $groupItems }}
+                            {{ $subject := $item.subject }}
                             {{ $title := $subject.name_cn | default $subject.name | default "Untitled" }}
                             {{ $cover := $subject.images.common | default $subject.images.medium | default $subject.images.large }}
                             {{ $eps := $subject.eps | default 0 }}
-                            {{ $epStatus := .ep_status | default 0 }}
-                            <a class="bangumi-card" href="https://bangumi.tv/subject/{{ .subject_id }}" target="_blank" rel="noopener noreferrer">
+                            {{ $epStatus := $item.ep_status | default 0 }}
+                            <a class="bangumi-card{{ if and (gt $initial 0) (ge $index $initial) }} is-hidden{{ end }}" href="https://bangumi.tv/subject/{{ $item.subject_id }}" target="_blank" rel="noopener noreferrer">
                                 <div class="bangumi-cover">
                                     {{ with $cover }}
                                         <img src="{{ . }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">
                                     {{ end }}
-                                    {{ if gt .rate 0 }}
-                                        <span class="bangumi-score">{{ .rate }}</span>
+                                    {{ if gt $item.rate 0 }}
+                                        <span class="bangumi-score">{{ $item.rate }}</span>
                                     {{ end }}
                                 </div>
                                 <div class="bangumi-info">
@@ -311,13 +403,18 @@
                                     {{ if and (gt $eps 0) (gt $epStatus 0) }}
                                         <div class="bangumi-progress">进度 {{ $epStatus }} / {{ $eps }}</div>
                                     {{ end }}
-                                    {{ with .comment }}
+                                    {{ with $item.comment }}
                                         <div class="bangumi-comment">{{ . }}</div>
                                     {{ end }}
                                 </div>
                             </a>
                         {{ end }}
                     </div>
+                    {{ if and (gt $initial 0) (gt (len $groupItems) $initial) }}
+                        <div class="bangumi-actions">
+                            <button class="bangumi-load" type="button" data-bangumi-load>Load More</button>
+                        </div>
+                    {{ end }}
                 </section>
             {{ end }}
         {{ end }}

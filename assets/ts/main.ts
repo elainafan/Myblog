@@ -146,6 +146,52 @@ function setupRandomWalk() {
     });
 }
 
+function setupBangumiCollection() {
+    const roots = document.querySelectorAll('.bangumi-page') as NodeListOf<HTMLElement>;
+
+    roots.forEach(root => {
+        if (root.dataset.bangumiEnhanced === 'true') return;
+        root.dataset.bangumiEnhanced = 'true';
+
+        const tabs = root.querySelectorAll('[data-bangumi-tab]') as NodeListOf<HTMLButtonElement>;
+        const panels = root.querySelectorAll('[data-bangumi-panel]') as NodeListOf<HTMLElement>;
+        if (!tabs.length || !panels.length) return;
+
+        const activatePanel = (name: string) => {
+            tabs.forEach(tab => {
+                tab.setAttribute('aria-selected', String(tab.dataset.bangumiTab === name));
+            });
+
+            panels.forEach(panel => {
+                panel.hidden = panel.dataset.bangumiPanel !== name;
+            });
+        };
+
+        panels.forEach(panel => {
+            const button = panel.querySelector('[data-bangumi-load]') as HTMLButtonElement;
+            if (!button) return;
+
+            button.addEventListener('click', () => {
+                const step = Number(panel.dataset.bangumiStep || 8);
+                const hiddenCards = Array.from(panel.querySelectorAll('.bangumi-card.is-hidden')) as HTMLElement[];
+
+                hiddenCards.slice(0, step).forEach(card => card.classList.remove('is-hidden'));
+                if (!panel.querySelector('.bangumi-card.is-hidden')) button.hidden = true;
+            });
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const name = tab.dataset.bangumiTab;
+                if (name) activatePanel(name);
+            });
+        });
+
+        const activeTab = Array.from(tabs).find(tab => tab.getAttribute('aria-selected') === 'true') || tabs[0];
+        if (activeTab.dataset.bangumiTab) activatePanel(activeTab.dataset.bangumiTab);
+    });
+}
+
 let Stack = {
     init: () => {
         /**
@@ -164,6 +210,7 @@ let Stack = {
         searchInit();
         setupReadingProgress();
         setupRandomWalk();
+        setupBangumiCollection();
 
         /**
          * Add linear gradient background to tile style article

@@ -4,6 +4,8 @@ date: 2026-03-13
 categories:
     - 建站
 updates:
+    - date: 2026-05-25
+      content: 增加状态切换导航和分组内 Load More 展开。
     - date: 2026-05-24
       content: 调整 Bangumi 页面头部样式。
     - date: 2026-05-24
@@ -133,12 +135,29 @@ python scripts/sync_bangumi.py
 
 ```go-html-template
 {{- $groups := slice
-    (dict "type" 3 "label" "在看" "name" "watching")
-    (dict "type" 2 "label" "看过" "name" "watched")
-    (dict "type" 1 "label" "想看" "name" "wish")
-    (dict "type" 4 "label" "搁置" "name" "on-hold")
-    (dict "type" 5 "label" "抛弃" "name" "dropped")
+    (dict "type" 3 "label" "在看" "name" "watching" "initial" 0 "step" 8)
+    (dict "type" 2 "label" "看过" "name" "watched" "initial" 12 "step" 12)
+    (dict "type" 1 "label" "想看" "name" "wish" "initial" 8 "step" 8)
+    (dict "type" 4 "label" "搁置" "name" "on-hold" "initial" 8 "step" 8)
+    (dict "type" 5 "label" "抛弃" "name" "dropped" "initial" 8 "step" 8)
 -}}
+```
+
+这里的 `initial` 表示初始显示数量，`step` 表示每次点击 `Load More` 继续展开多少张。`在看` 通常数量很少，所以这里用 `initial: 0` 表示全部显示；`看过` 会比较长，因此默认只显示 12 张。
+
+状态导航不放“全部”，只保留具体状态。点击某个按钮时，页面只显示对应的状态面板：
+
+```go-html-template
+<nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
+    {{ range $groups }}
+        {{ $groupItems := where $items "type" .type }}
+        {{ if gt (len $groupItems) 0 }}
+            <button class="bangumi-tab" type="button" data-bangumi-tab="{{ .name }}">
+                {{ .label }}
+            </button>
+        {{ end }}
+    {{ end }}
+</nav>
 ```
 
 卡片本身只需要从条目里取出封面、标题、年份、评分、进度和短评即可：
