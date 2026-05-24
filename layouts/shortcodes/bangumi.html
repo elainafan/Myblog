@@ -1,121 +1,304 @@
-<div class="article-content">
+{{- $user := .Get "user" | default (.Page.Params.bangumi.user | default (.Site.Params.bangumi.user | default "1020990")) -}}
+{{- $limit := .Get "limit" | default (.Page.Params.bangumi.limit | default (.Site.Params.bangumi.limit | default 100)) -}}
+{{- $live := .Get "live" | default (.Page.Params.bangumi.live | default (.Site.Params.bangumi.live | default false)) -}}
+{{- $bangumiData := .Site.Data.bangumi.anime | default dict -}}
+{{- $source := "cache" -}}
+{{- if $live -}}
+    {{- $apiURL := printf "https://api.bgm.tv/v0/users/%s/collections?subject_type=2&limit=%v&offset=0" $user $limit -}}
+    {{- $opts := dict "headers" (dict "Accept" "application/json" "User-Agent" "ElainafanBlog/1.0 (https://www.elainafan.one)") -}}
+    {{- $res := resources.GetRemote $apiURL $opts -}}
+    {{- if and $res (not $res.Err) -}}
+        {{- $bangumiData = $res.Content | transform.Unmarshal -}}
+        {{- $source = "live" -}}
+    {{- else -}}
+        {{- if and $res $res.Err -}}
+            {{- warnf "获取 Bangumi 收藏数据失败，使用本地缓存: %s" $res.Err -}}
+        {{- else -}}
+            {{- warnf "获取 Bangumi 收藏数据失败，使用本地缓存。" -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $items := $bangumiData.data | default slice -}}
+{{- $groups := slice
+    (dict "type" 3 "label" "在看" "name" "watching")
+    (dict "type" 2 "label" "看过" "name" "watched")
+    (dict "type" 1 "label" "想看" "name" "wish")
+    (dict "type" 4 "label" "搁置" "name" "on-hold")
+    (dict "type" 5 "label" "抛弃" "name" "dropped")
+-}}
+
+<div class="article-content bangumi-page">
     <style>
-        .bili-grid {
+        .bangumi-page {
+            --bangumi-gap: 18px;
+        }
+
+        .bangumi-hero {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .bangumi-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 6px;
+            color: var(--card-text-color-main);
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .bangumi-title svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .bangumi-desc {
+            margin: 0;
+            color: var(--card-text-color-secondary);
+            font-size: 1.45rem;
+        }
+
+        .bangumi-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .bangumi-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            border-radius: 999px;
+            padding: 0 12px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l1);
+            color: var(--card-text-color-secondary);
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+
+        .bangumi-section {
+            margin-top: 26px;
+        }
+
+        .bangumi-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .bangumi-section-title {
+            margin: 0;
+            color: var(--card-text-color-main);
+            font-size: 1.65rem;
+            font-weight: 700;
+        }
+
+        .bangumi-count {
+            color: var(--card-text-color-tertiary);
+            font-size: 1.25rem;
+        }
+
+        .bangumi-grid {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: var(--bangumi-gap);
             align-items: stretch;
         }
 
-        .bili-card {
+        .bangumi-card {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            min-width: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l2);
+            color: var(--card-text-color-main);
+            text-decoration: none;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .bangumi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-l3);
+        }
+
+        .bangumi-cover {
+            position: relative;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            background: var(--card-separator-color);
+        }
+
+        .bangumi-cover img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bangumi-score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            border-radius: 999px;
+            padding: 0 10px;
+            background: rgba(28, 28, 28, 0.72);
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+        }
+
+        .bangumi-info {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            overflow: hidden;
-            border-radius: 14px;
-            padding: 10px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
-            backdrop-filter: blur(6px);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            gap: 8px;
+            padding: 12px 13px 14px;
+            min-width: 0;
         }
 
-        .bili-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.18);
-        }
-
-        .bili-card img {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 3 / 4;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
-        }
-
-        .bili-card h3 {
-            width: 100%;
-            font-size: 1.35rem;
-            margin: 12px 0 0 0;
-            padding: 0;
-            font-weight: 600;
-            color: var(--body-text-color);
-            text-align: center;
+        .bangumi-name {
             display: -webkit-box;
+            margin: 0;
+            overflow: hidden;
+            color: var(--card-text-color-main);
+            font-size: 1.45rem;
+            font-weight: 700;
+            line-height: 1.35;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             line-clamp: 2;
+        }
+
+        .bangumi-meta,
+        .bangumi-comment,
+        .bangumi-progress {
+            color: var(--card-text-color-secondary);
+            font-size: 1.22rem;
+            line-height: 1.45;
+        }
+
+        .bangumi-comment {
+            display: -webkit-box;
             overflow: hidden;
-            text-overflow: ellipsis;
-            border-left: none;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
         }
 
-        .bili-card h3::before {
-            display: none;
+        .bangumi-empty {
+            margin: 0;
+            padding: 18px;
+            border-radius: 14px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l1);
+            color: var(--card-text-color-secondary);
         }
 
-        @media (max-width: 1200px) {
-            .bili-grid {
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 900px) {
-            .bili-grid {
+        @media (max-width: 1280px) {
+            .bangumi-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
 
-        @media (max-width: 640px) {
-            .bili-grid {
+        @media (max-width: 860px) {
+            .bangumi-hero {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .bangumi-stats {
+                justify-content: flex-start;
+            }
+
+            .bangumi-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
+
+        @media (max-width: 520px) {
+            .bangumi-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
     </style>
-    <!-- 追番列表开始 -->
-    {{ $vmid := "502066312" }}
-    {{ $url := printf "https://api.bilibili.com/x/space/bangumi/follow/list?type=1&follow_status=0&pn=1&ps=20&vmid=%s"
-    $vmid }}
 
-    {{ $opts := dict "headers" (dict "User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "Referer"
-    "https://space.bilibili.com/") }}
+    <header class="bangumi-hero">
+        <div>
+            <h2 class="bangumi-title">
+                {{ partial "helper/icon" "eye" }}
+                <span>Bangumi 收藏</span>
+            </h2>
+            <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
+        </div>
+        <div class="bangumi-stats">
+            <span class="bangumi-pill">{{ len $items }} 部动画</span>
+            <span class="bangumi-pill">{{ cond (eq $source "live") "实时数据" "缓存数据" }}</span>
+            {{ with $bangumiData.fetched_at }}
+                <span class="bangumi-pill">缓存 {{ time.Format "2006-01-02" . }}</span>
+            {{ end }}
+        </div>
+    </header>
 
-    {{ $biliData := dict }}
-    {{ $err := false }}
-
-    {{ $res := resources.GetRemote $url $opts }}
-
-    {{ if or (not $res) $res.Err }}
-    {{ $err = true }}
-    {{ if $res.Err }}
-    {{ warnf "获取B站追番数据失败: %s" $res.Err }}
-    {{ end }}
+    {{ if not $items }}
+        <p class="bangumi-empty">暂时没有可展示的 Bangumi 收藏数据。</p>
     {{ else }}
-    {{ $biliData = $res.Content | unmarshal }}
+        {{ range $groups }}
+            {{ $groupItems := where $items "type" .type }}
+            {{ if gt (len $groupItems) 0 }}
+                <section class="bangumi-section bangumi-section-{{ .name }}">
+                    <div class="bangumi-section-header">
+                        <h3 class="bangumi-section-title">{{ .label }}</h3>
+                        <span class="bangumi-count">{{ len $groupItems }} 部</span>
+                    </div>
+                    <div class="bangumi-grid">
+                        {{ range $groupItems }}
+                            {{ $subject := .subject }}
+                            {{ $title := $subject.name_cn | default $subject.name | default "Untitled" }}
+                            {{ $cover := $subject.images.common | default $subject.images.medium | default $subject.images.large }}
+                            {{ $eps := $subject.eps | default 0 }}
+                            {{ $epStatus := .ep_status | default 0 }}
+                            <a class="bangumi-card" href="https://bangumi.tv/subject/{{ .subject_id }}" target="_blank" rel="noopener noreferrer">
+                                <div class="bangumi-cover">
+                                    {{ with $cover }}
+                                        <img src="{{ . }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">
+                                    {{ end }}
+                                    {{ if gt .rate 0 }}
+                                        <span class="bangumi-score">{{ .rate }}</span>
+                                    {{ end }}
+                                </div>
+                                <div class="bangumi-info">
+                                    <h4 class="bangumi-name">{{ $title }}</h4>
+                                    <div class="bangumi-meta">
+                                        {{ with $subject.date }}{{ substr . 0 4 }}{{ end }}
+                                        {{ with $subject.score }} · Bangumi {{ . }}{{ end }}
+                                        {{ with $subject.rank }} · #{{ . }}{{ end }}
+                                    </div>
+                                    {{ if and (gt $eps 0) (gt $epStatus 0) }}
+                                        <div class="bangumi-progress">进度 {{ $epStatus }} / {{ $eps }}</div>
+                                    {{ end }}
+                                    {{ with .comment }}
+                                        <div class="bangumi-comment">{{ . }}</div>
+                                    {{ end }}
+                                </div>
+                            </a>
+                        {{ end }}
+                    </div>
+                </section>
+            {{ end }}
+        {{ end }}
     {{ end }}
-
-    <div
-        style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 1.25rem; font-weight: bold; color: var(--body-text-color);">
-        {{ partial "helper/icon" "bilibili" }}
-        <span>Bilibili 追番</span>
-    </div>
-
-    <div class="bili-grid">
-        {{ if or $err (not $biliData.data) (not $biliData.data.list) }}
-        <p>無法在服務端獲取到追番數據。可能是 API 限制或網絡問題。</p>
-        {{ else }}
-        {{ range first 15 $biliData.data.list }}
-        {{ $coverUrl := replace .cover "http://" "https://" }}
-        <a href="{{ .url }}" target="_blank" class="bili-card">
-            <img src="{{ $coverUrl }}" alt="{{ .title }}" loading="lazy" referrerpolicy="no-referrer">
-            <h3>{{ .title }}</h3>
-        </a>
-        {{ end }}
-        {{ end }}
-    </div>
-    <!-- 追番列表结束 -->
 </div>

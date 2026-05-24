@@ -6,6 +6,8 @@ categories:
 image: 10.jpg
 updates:
     - date: 2026-05-24
+      content: 将追番页相关描述同步为 Bangumi 收藏墙。
+    - date: 2026-05-24
       content: 增加左侧菜单栏的站内随机漫游入口。
     - date: 2026-05-24
       content: 增加长代码块折叠和文章阅读进度条。
@@ -15,7 +17,7 @@ updates:
       content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ---
 ## 前言
-之前写过一篇在博客中添加 Bilibili 追番页面的文章，那篇文章主要讲的是一个独立功能：如何通过 `layouts/page/bilibili.html` 和 `layouts/shortcodes/bangumi.html` 做出一面追番墙。
+之前写过一篇在博客里添加 Bangumi 追番页面的文章，那篇文章主要讲的是一个独立功能：如何通过 `layouts/page/bilibili.html` 和 `layouts/shortcodes/bangumi.html` 做出一面 Bangumi 收藏墙。
 
 这一篇则整理博客里更零散、更基础的美化工作。笔者现在用的是 Hugo `v0.131.0` 和 Stack 主题 `v3.26.0`，为了弄清楚每个地方到底改了什么，这次把原版 Hugo 和 Stack 主题源码也放到了本地，再对比 `Blog/elainafan` 里的覆盖文件来看。
 
@@ -1070,7 +1072,7 @@ function appendLoopBatch() {
 
 开头的 Fisher-Yates shuffle 会先把原始图片顺序打乱，因此每次打开图库页时，首屏看到的图片都不一样。后面的 `17` 和当前图库数量互质，所以补出来的顺序也会错开，不会变成“最后一张后面马上又接第一张”的硬拼接。性能上也要注意：克隆图点击放大时不重新扫描整条瀑布流，而是通过 `data-original-index` 映射回原始图片列表。这样滚动时只增加少量 DOM，PhotoSwipe 仍然只维护原始图库的数据，页面会轻很多。
 
-这部分其实已经有点接近单独功能页了。它和追番页一样，都是通过“自定义 layout + 页面 frontmatter”实现的，只不过追番页的数据来自 Bilibili API，图库页的数据来自本地 `assets/waifus`。
+这部分其实已经有点接近单独功能页了。它和追番页一样，都是通过“自定义 layout + 页面 frontmatter”实现的，只不过追番页的数据来自 Bangumi API 和本地缓存，图库页的数据来自本地 `assets/waifus`。
 
 ![图库页面效果](7.png)
 

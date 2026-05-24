@@ -2,18 +2,16 @@
 title: "番剧 | Anime"
 date: 2025-10-26
 readingTime: true
-layout: "bilibili"
+layout: "anime"
 slug: "anime"
 url: "/anime/" 
 menu:
     main: 
         weight: -50
         params:
-            icon: bilibili
+            icon: eye
 
 comments: true
 ---
 
 {{< bangumi >}}
-
-{{< bilibili BV1fx411K7km >}}
