@@ -5,6 +5,8 @@ categories:
     - 建站
 updates:
     - date: 2026-05-25
+      content: 将看过列表改为按个人评分排序，并加入 Bangumi 公共动画随机推荐。
+    - date: 2026-05-25
       content: 精简番剧卡片默认信息，将短评、进度和排名收纳到悬停层。
     - date: 2026-05-25
       content: 增加状态切换导航和分组内 Load More 展开。
@@ -161,6 +163,25 @@ python scripts/sync_bangumi.py
     {{ end }}
 </nav>
 ```
+
+其中 `看过` 这一组可以按自己的评分排序。这样页面打开时，最先看到的是笔者真正喜欢的作品，而不是单纯按照同步时间或作品年份排列：
+
+```go-html-template
+{{ if eq .name "watched" }}
+    {{ $groupItems = sort $groupItems "rate" "desc" }}
+{{ end }}
+```
+
+导航右侧还可以放一个随机推荐按钮。这个按钮不从自己的收藏里抽，而是从 Bangumi 公共动画条目里抽一部站内评分不低于 6 的作品，适合作为“随便看看今天补什么”的入口：
+
+```ts
+const offset = Math.floor(Math.random() * 1800);
+const response = await fetch(
+    `https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`
+);
+```
+
+前端拿到结果后再筛一遍 `rating.score >= 6`，最后把标题、封面、年份、Bangumi 分数和排名渲染到按钮下方的小卡片里。
 
 卡片本身默认只露出封面、标题、年份和评分。个人短评、观看进度和 Bangumi 排名虽然有用，但如果全部铺在卡片上，页面很快就会显得拥挤。因此这里把这些细节收纳到封面悬停层里：平时当作海报墙扫视，鼠标移上去时再看补充信息。
 

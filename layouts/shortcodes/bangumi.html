@@ -107,11 +107,20 @@
             white-space: nowrap;
         }
 
-        .bangumi-tabs {
+        .bangumi-controls {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
             gap: 10px;
             margin: 0 0 24px;
+        }
+
+        .bangumi-tabs {
+            display: flex;
+            flex: 1;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0;
         }
 
         .bangumi-tab {
@@ -137,6 +146,101 @@
             border-color: #ff5a5f;
             color: #ff5a5f;
             transform: translateY(-1px);
+        }
+
+        .bangumi-random {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            border: 1px solid #ff5a5f;
+            border-radius: 999px;
+            padding: 0 16px;
+            background: #ff5a5f;
+            color: #fff;
+            box-shadow: var(--shadow-l1);
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.35rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: opacity 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .bangumi-random:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-l2);
+        }
+
+        .bangumi-random:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            transform: none;
+        }
+
+        .bangumi-random-result {
+            display: none;
+            align-items: center;
+            gap: 14px;
+            margin: -6px 0 24px;
+            border-radius: 16px;
+            padding: 14px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l2);
+        }
+
+        .bangumi-random-result.is-visible {
+            display: flex;
+        }
+
+        .bangumi-random-cover {
+            width: 72px;
+            aspect-ratio: 3 / 4;
+            flex: 0 0 auto;
+            overflow: hidden;
+            border-radius: 10px;
+            background: var(--card-separator-color);
+        }
+
+        .bangumi-random-cover img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bangumi-random-body {
+            min-width: 0;
+        }
+
+        .bangumi-random-label {
+            color: var(--card-text-color-tertiary);
+            font-size: 1.18rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .bangumi-random-title {
+            display: -webkit-box;
+            margin-top: 4px;
+            overflow: hidden;
+            color: var(--card-text-color-main);
+            font-size: 1.55rem;
+            font-weight: 800;
+            line-height: 1.35;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+
+        .bangumi-random-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            margin-top: 8px;
+            color: var(--card-text-color-secondary);
+            font-size: 1.22rem;
+            line-height: 1.45;
         }
 
         .bangumi-section {
@@ -364,6 +468,19 @@
             .bangumi-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .bangumi-controls {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .bangumi-random {
+                width: 100%;
+            }
+
+            .bangumi-random-result {
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 520px) {
@@ -391,24 +508,38 @@
     {{ if not $items }}
         <p class="bangumi-empty">暂时没有可展示的 Bangumi 收藏数据。</p>
     {{ else }}
-        <nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
-            {{ range $groups }}
-                {{ $groupItems := where $items "type" .type }}
-                {{ if gt (len $groupItems) 0 }}
-                    <button
-                        class="bangumi-tab"
-                        type="button"
-                        data-bangumi-tab="{{ .name }}"
-                        aria-controls="bangumi-panel-{{ .name }}"
-                        aria-selected="{{ eq .name $activeGroup }}">
-                        {{ .label }}
-                    </button>
+        <div class="bangumi-controls">
+            <nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
+                {{ range $groups }}
+                    {{ $groupItems := where $items "type" .type }}
+                    {{ if gt (len $groupItems) 0 }}
+                        <button
+                            class="bangumi-tab"
+                            type="button"
+                            data-bangumi-tab="{{ .name }}"
+                            aria-controls="bangumi-panel-{{ .name }}"
+                            aria-selected="{{ eq .name $activeGroup }}">
+                            {{ .label }}
+                        </button>
+                    {{ end }}
                 {{ end }}
-            {{ end }}
-        </nav>
+            </nav>
+            <button class="bangumi-random" type="button" data-bangumi-random>随机一部</button>
+        </div>
+        <a class="bangumi-random-result" data-bangumi-random-result href="#" target="_blank" rel="noopener noreferrer">
+            <div class="bangumi-random-cover" data-bangumi-random-cover></div>
+            <div class="bangumi-random-body">
+                <div class="bangumi-random-label" data-bangumi-random-label></div>
+                <div class="bangumi-random-title" data-bangumi-random-title></div>
+                <div class="bangumi-random-meta" data-bangumi-random-meta></div>
+            </div>
+        </a>
         {{ range $groups }}
             {{ $groupItems := where $items "type" .type }}
             {{ if gt (len $groupItems) 0 }}
+                {{ if eq .name "watched" }}
+                    {{ $groupItems = sort $groupItems "rate" "desc" }}
+                {{ end }}
                 {{ $initial := .initial }}
                 {{ $step := .step }}
                 <section
@@ -432,7 +563,11 @@
                             {{ $siteScore := $subject.score | default 0 }}
                             {{ $rank := $subject.rank | default 0 }}
                             {{ $hasProgress := and (gt $eps 0) (gt $epStatus 0) }}
-                            <a class="bangumi-card{{ if and (gt $initial 0) (ge $index $initial) }} is-hidden{{ end }}" href="https://bangumi.tv/subject/{{ $item.subject_id }}" target="_blank" rel="noopener noreferrer">
+                            <a
+                                class="bangumi-card{{ if and (gt $initial 0) (ge $index $initial) }} is-hidden{{ end }}"
+                                href="https://bangumi.tv/subject/{{ $item.subject_id }}"
+                                target="_blank"
+                                rel="noopener noreferrer">
                                 <div class="bangumi-cover">
                                     {{ with $cover }}
                                         <img src="{{ . }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">

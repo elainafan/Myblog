@@ -21,6 +21,27 @@ interface RandomPostItem {
     url: string;
 }
 
+interface BangumiSearchSubject {
+    id: number;
+    name: string;
+    name_cn?: string;
+    date?: string;
+    rank?: number;
+    rating?: {
+        score?: number;
+    };
+    images?: {
+        grid?: string;
+        common?: string;
+        medium?: string;
+        large?: string;
+    };
+}
+
+interface BangumiSearchResponse {
+    data?: BangumiSearchSubject[];
+}
+
 function setupCodeBlocks() {
     const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
     const copyText = `Copy`,
@@ -155,6 +176,12 @@ function setupBangumiCollection() {
 
         const tabs = root.querySelectorAll('[data-bangumi-tab]') as NodeListOf<HTMLButtonElement>;
         const panels = root.querySelectorAll('[data-bangumi-panel]') as NodeListOf<HTMLElement>;
+        const randomButton = root.querySelector('[data-bangumi-random]') as HTMLButtonElement;
+        const randomResult = root.querySelector('[data-bangumi-random-result]') as HTMLAnchorElement;
+        const randomCover = root.querySelector('[data-bangumi-random-cover]') as HTMLElement;
+        const randomLabel = root.querySelector('[data-bangumi-random-label]') as HTMLElement;
+        const randomTitle = root.querySelector('[data-bangumi-random-title]') as HTMLElement;
+        const randomMeta = root.querySelector('[data-bangumi-random-meta]') as HTMLElement;
         if (!tabs.length || !panels.length) return;
 
         const activatePanel = (name: string) => {
@@ -187,9 +214,79 @@ function setupBangumiCollection() {
             });
         });
 
+        if (randomButton && randomResult && randomCover && randomLabel && randomTitle && randomMeta) {
+            randomButton.addEventListener('click', () => {
+                pickBangumiSubject(randomButton, randomResult, randomCover, randomLabel, randomTitle, randomMeta);
+            });
+        }
+
         const activeTab = Array.from(tabs).find(tab => tab.getAttribute('aria-selected') === 'true') || tabs[0];
         if (activeTab.dataset.bangumiTab) activatePanel(activeTab.dataset.bangumiTab);
     });
+}
+
+async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement) {
+    const originalText = button.textContent || '随机一部';
+    button.disabled = true;
+    button.textContent = '抽取中...';
+
+    try {
+        let candidates: BangumiSearchSubject[] = [];
+
+        for (let attempt = 0; attempt < 3 && !candidates.length; attempt++) {
+            const offset = Math.floor(Math.random() * 1800);
+            const response = await fetch(`https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error(`Bangumi request failed: ${response.status}`);
+
+            const payload = await response.json() as BangumiSearchResponse;
+            candidates = (payload.data || []).filter(subject => {
+                return subject.id && (subject.rating?.score || 0) >= 6;
+            });
+        }
+
+        if (!candidates.length) throw new Error('No Bangumi candidates');
+
+        const subject = candidates[Math.floor(Math.random() * candidates.length)];
+        const subjectTitle = subject.name_cn || subject.name || 'Untitled';
+        const image = subject.images?.common || subject.images?.medium || subject.images?.large || subject.images?.grid;
+        const year = subject.date ? subject.date.slice(0, 4) : '';
+        const score = subject.rating?.score || 0;
+        const metaItems = [
+            year,
+            score ? `Bangumi ${score}` : '',
+            subject.rank ? `#${subject.rank}` : ''
+        ].filter(Boolean);
+
+        result.href = `https://bangumi.tv/subject/${subject.id}`;
+        label.textContent = 'Bangumi 随机推荐';
+        title.textContent = subjectTitle;
+        meta.textContent = metaItems.join(' · ');
+        cover.innerHTML = image ? `<img src="${image}" alt="${escapeHTML(subjectTitle)}" loading="lazy" referrerpolicy="no-referrer">` : '';
+        result.classList.add('is-visible');
+        button.textContent = '再抽一部';
+    } catch (err) {
+        console.log('Failed to pick Bangumi subject', err);
+        button.textContent = '稍后再试';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 1600);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function escapeHTML(value: string) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 let Stack = {
