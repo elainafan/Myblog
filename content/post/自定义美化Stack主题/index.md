@@ -381,6 +381,27 @@ if (img) {
 
 这样处理后，`/images/anime-diary/4.png` 这种从 `static` 目录来的图片，也能和普通文章图片一样被包进 `figure.gallery-image`，在正文中居中显示，并且点击后进入 PhotoSwipe 放大查看。
 
+后来接入 PJAX 之后，这里又遇到过一次类似但原因不同的问题：直接打开文章时图片可以放大，但从首页或归档页无刷新切进文章后，正文图片只会像普通链接一样跳转，PhotoSwipe 预览没有生效。
+
+这时 `render-image.html` 其实已经正常工作了，生成出来的图片也有 `gallery-image`、`width` 和 `height`。真正的问题在于 PhotoSwipe 的根节点和外部脚本原本放在文章页面的 `main` 区域里，例如 `layouts/_default/single.html` 末尾：
+
+```go-html-template
+{{ partialCached "article/components/photoswipe" . }}
+```
+
+但 PJAX 只替换页面中的 `.main-container`、`.js-Pjax` 和 `Timer`。新页面里的普通 HTML 会被换进来，脚本标签却不会像整页刷新那样重新执行。于是图片本身进入了图库结构，但 PhotoSwipe 依赖和根节点在 PJAX 切页场景下不够稳定。
+
+解决办法是把 PhotoSwipe 挪到全站 footer，让它和播放器、PJAX 初始化一样，成为页面常驻部分。也就是在 `layouts/partials/footer/include.html` 中加入：
+
+```go-html-template
+{{ partialCached "footer/components/script.html" . }}
+{{ partialCached "footer/components/custom-font.html" . }}
+{{ partialCached "article/components/photoswipe" . }}
+{{ partial "footer/custom.html" . }}
+```
+
+然后把 `layouts/_default/single.html`、`layouts/photo/single.html`、`layouts/page/bilibili.html` 里原本单独插入的 `article/components/photoswipe` 去掉，避免同一个页面生成多份 `.pswp`。这样不管是直接打开文章，还是通过 PJAX 从别的页面切进文章，PhotoSwipe 的 DOM 和脚本都已经存在，`window.Stack.init()` 重新扫描 `.article-content` 时就能正常给正文图片绑定预览事件。
+
 ## 系列文章导航
 像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。
 
