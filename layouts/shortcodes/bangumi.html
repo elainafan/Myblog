@@ -48,8 +48,11 @@
 
         .bangumi-title {
             margin: 0;
+            margin-inline-start: 0;
             padding: 0;
+            padding-inline-start: 0;
             border: 0;
+            border-inline-start: 0;
             color: var(--card-text-color-main);
             font-size: 3.2rem;
             font-weight: 800;
@@ -111,8 +114,11 @@
 
         .bangumi-section-title {
             margin: 0;
+            margin-inline-start: 0;
             padding: 0;
+            padding-inline-start: 0;
             border: 0;
+            border-inline-start: 0;
             color: var(--card-text-color-main);
             font-size: 1.65rem;
             font-weight: 700;
@@ -255,7 +261,7 @@
 
     <header class="bangumi-hero">
         <div>
-            <h2 class="bangumi-title">Bangumi 动画收藏</h2>
+            <div class="bangumi-title" role="heading" aria-level="2">Bangumi 动画收藏</div>
             <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
             <div class="bangumi-stats">
                 共 {{ len $items }} 条收藏
@@ -276,7 +282,7 @@
             {{ if gt (len $groupItems) 0 }}
                 <section class="bangumi-section bangumi-section-{{ .name }}">
                     <div class="bangumi-section-header">
-                        <h3 class="bangumi-section-title">{{ .label }}</h3>
+                        <div class="bangumi-section-title" role="heading" aria-level="3">{{ .label }}</div>
                         <span class="bangumi-count">{{ len $groupItems }} 部</span>
                     </div>
                     <div class="bangumi-grid">

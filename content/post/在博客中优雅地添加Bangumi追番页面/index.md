@@ -114,7 +114,7 @@ python scripts/sync_bangumi.py
 ```go-html-template
 <header class="bangumi-hero">
     <div>
-        <h2 class="bangumi-title">Bangumi 动画收藏</h2>
+        <div class="bangumi-title" role="heading" aria-level="2">Bangumi 动画收藏</div>
         <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
         <div class="bangumi-stats">
             共 {{ len $items }} 条收藏
