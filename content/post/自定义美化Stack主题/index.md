@@ -6,6 +6,8 @@ categories:
 image: 10.jpg
 updates:
     - date: 2026-05-24
+      content: 增加左侧菜单栏的站内随机漫游入口。
+    - date: 2026-05-24
       content: 增加长代码块折叠和文章阅读进度条。
     - date: 2026-05-24
       content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
@@ -262,6 +264,42 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 移动端展开菜单时，这个样式会让菜单更像一个独立卡片，而不是一块硬邦邦的列表。到了桌面端，主题会恢复透明背景和正常布局。
 
 ![首页与卡片整体效果](1.png)
+
+## 站内随机漫游
+左侧菜单里还加了一个 `随机 | Random` 入口，用来在站内文章之间随机跳转。这个功能本身不复杂，但有一个需要额外注意的点：站内有些文章是加密的，随机入口不能为了方便跳转就把文章内容提前暴露出来。
+
+因此这里的做法是，在 `layouts/partials/sidebar/left.html` 里只生成一个很轻量的文章池，里面只保留文章标题和链接：
+
+```go-html-template
+{{- $randomPosts := slice -}}
+{{- $mainSections := .Site.Params.mainSections | default (slice "post") -}}
+{{- range .Site.RegularPages -}}
+    {{- if and (in $mainSections .Section) (ne .Params.hidden true) -}}
+        {{- $randomPosts = $randomPosts | append (dict "title" .Title "url" .RelPermalink) -}}
+    {{- end -}}
+{{- end -}}
+```
+
+这里用 `.Site.Params.mainSections` 限制随机范围，默认只抽 `post` 下面的正式文章；同时过滤掉 `hidden: true` 的页面，避免把系列文章里的隐藏子页也抽出来。加密文章不需要在这里特殊排除，因为随机漫游只是跳转到原始链接，真正打开文章时仍然会经过原来的加密模板。
+
+菜单项本身仍然放在 Stack 的主菜单结构里，这样可以直接继承左侧菜单的图标、间距和暗色模式样式：
+
+```go-html-template
+<li>
+    <a href='{{ "/archives/" | relLangURL }}' data-random-post>
+        {{ partial "helper/icon" "infinity" }}
+        <span>随机 | Random</span>
+    </a>
+</li>
+```
+
+文章池则放在 `application/json` 类型的脚本标签里。这里需要用 `safeJS`，否则 Hugo 在脚本语境里可能会把 JSON 数组再包成一个字符串，前端解析时就会多一层。
+
+```go-html-template
+<script type="application/json" id="random-posts-data">{{ . | jsonify | safeJS }}</script>
+```
+
+最后在 `assets/ts/main.ts` 里绑定点击事件，从文章池里随机取一篇并跳转即可。为了避免在当前文章原地打转，脚本会优先排除当前页面；如果站内只有一篇文章，再退回原始文章池。这样功能比较轻，不需要后端，也不会影响原来的加密逻辑。
 
 ## 自定义背景图
 背景图参考的是 [Hugo Stack 主题装修笔记](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-background/) 里的做法：把图片作为 Hugo 的资源读取出来，再给 `body` 设置背景。笔者这里稍微改了一下，没有在模板里写死具体文件名，而是读取 `assets/background/` 下的第一张图片。这样之后想换背景时，只需要替换这个目录里的图片，不需要再改模板。

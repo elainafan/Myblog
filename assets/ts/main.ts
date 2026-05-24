@@ -16,6 +16,11 @@ import { searchInit } from "ts/search";
 
 const LONG_CODE_LINE_THRESHOLD = 80;
 
+interface RandomPostItem {
+    title: string;
+    url: string;
+}
+
 function setupCodeBlocks() {
     const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
     const copyText = `Copy`,
@@ -105,6 +110,42 @@ function updateReadingProgress() {
     bar.style.transform = `scaleX(${progress})`;
 }
 
+function setupRandomWalk() {
+    const links = document.querySelectorAll('[data-random-post]') as NodeListOf<HTMLAnchorElement>;
+    const data = document.getElementById('random-posts-data');
+    if (!links.length || !data?.textContent) return;
+
+    let posts: RandomPostItem[];
+    try {
+        const parsed = JSON.parse(data.textContent);
+        posts = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+    } catch (err) {
+        console.log('Failed to parse random post list', err);
+        return;
+    }
+
+    if (!Array.isArray(posts) || !posts.length) return;
+
+    links.forEach(link => {
+        if (link.dataset.randomBound === 'true') return;
+        link.dataset.randomBound = 'true';
+
+        link.addEventListener('click', event => {
+            event.preventDefault();
+
+            const currentPath = window.location.pathname.replace(/\/$/, '');
+            const candidates = posts.filter(post => {
+                const postPath = new URL(post.url, window.location.origin).pathname.replace(/\/$/, '');
+                return postPath !== currentPath;
+            });
+            const pool = candidates.length ? candidates : posts;
+            const post = pool[Math.floor(Math.random() * pool.length)];
+
+            window.location.assign(post.url);
+        });
+    });
+}
+
 let Stack = {
     init: () => {
         /**
@@ -122,6 +163,7 @@ let Stack = {
         // 调用search脚本初始化方法
         searchInit();
         setupReadingProgress();
+        setupRandomWalk();
 
         /**
          * Add linear gradient background to tile style article
