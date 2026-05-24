@@ -531,6 +531,91 @@ a {
   }
 }
 
+// 文章更新记录
+.article-updates {
+  margin: 28px var(--card-padding) 8px;
+  padding: 18px 20px;
+  border: 1px solid rgba(66, 136, 185, .20);
+  border-radius: 16px;
+  background: rgba(66, 136, 185, .07);
+  color: var(--card-text-color-main);
+
+  [data-scheme="dark"] & {
+    border-color: rgba(160, 200, 230, .18);
+    background: rgba(66, 136, 185, .14);
+  }
+}
+
+.article-updates__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-color);
+    stroke-width: 1.8;
+  }
+
+  h2 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 1.65rem;
+    line-height: 1.35;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.article-updates__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-updates__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  color: var(--card-text-color-secondary);
+  font-size: 1.42rem;
+  line-height: 1.65;
+
+  time {
+    color: var(--accent-color);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.article-list .article-time--updated {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .article-updates {
+    padding: 16px;
+  }
+
+  .article-updates__item {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
 .series-nav-card {
   display: flex;
   flex-direction: column;

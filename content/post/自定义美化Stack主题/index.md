@@ -4,6 +4,11 @@ date: 2026-05-20
 categories: 
     - 建站
 image: 10.jpg
+updates:
+    - date: 2026-05-24
+      content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
+    - date: 2026-05-24
+      content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ---
 ## 前言
 之前写过一篇在博客中添加 Bilibili 追番页面的文章，那篇文章主要讲的是一个独立功能：如何通过 `layouts/page/bilibili.html` 和 `layouts/shortcodes/bangumi.html` 做出一面追番墙。
@@ -401,6 +406,69 @@ if (img) {
 ```
 
 然后把 `layouts/_default/single.html`、`layouts/photo/single.html`、`layouts/page/bilibili.html` 里原本单独插入的 `article/components/photoswipe` 去掉，避免同一个页面生成多份 `.pswp`。这样不管是直接打开文章，还是通过 PJAX 从别的页面切进文章，PhotoSwipe 的 DOM 和脚本都已经存在，`window.Stack.init()` 重新扫描 `.article-content` 时就能正常给正文图片绑定预览事件。
+
+## 文章更新记录
+建站类文章经常会在发布后继续修补。比如这篇文章一开始只是整理 Stack 主题美化，后来又陆续补了静态图片放大、图库瀑布流、PJAX 下 PhotoSwipe 的处理。如果只改正文，读者很难知道哪些内容是后来补上的，笔者自己过一段时间也容易忘。
+
+所以这里加了一个很轻量的更新记录组件。文章 frontmatter 中可以写：
+
+```yaml
+updates:
+    - date: 2026-05-24
+      content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
+    - date: 2026-05-24
+      content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
+```
+
+真正的渲染逻辑放在 `layouts/partials/article/components/updates.html`。它会读取 `.Params.updates`，如果文章没有配置这个字段，就什么都不显示：
+
+```go-html-template
+{{- with .Params.updates -}}
+<section class="article-updates" aria-labelledby="article-updates-title">
+    <div class="article-updates__header">
+        {{ partial "helper/icon" "clock" }}
+        <h2 id="article-updates-title">更新记录</h2>
+    </div>
+    <ol class="article-updates__list">
+        {{- range . -}}
+            <li class="article-updates__item">
+                <time datetime="{{ .date }}">{{ time.Format "2006-01-02" (time .date) }}</time>
+                <div>{{ .content | markdownify }}</div>
+            </li>
+        {{- end -}}
+    </ol>
+</section>
+{{- end -}}
+```
+
+组件入口加在 `layouts/partials/article/article.html`，放在正文之后、系列导航之前：
+
+```go-html-template
+{{ partial "article/components/content" . }}
+
+{{ partial "article/components/updates" . }}
+
+{{ partial "article/components/series-navigation" . }}
+```
+
+这样读者读完正文后，就能直接看到这篇文章后续修过什么。对于普通随笔来说可以不写 `updates`，但教程、Lab、长期维护页面就很适合保留这类记录。
+
+同时，首页文章卡片也可以显示最近更新。本站的首页使用 `layouts/partials/article-list/default.html` 渲染文章卡片，因此可以在卡片的 `article-time` 中增加一项：
+
+```go-html-template
+{{ with .Params.updates }}
+    {{ with index . 0 }}
+        <div class="article-time--updated">
+            {{ partial "helper/icon" "infinity" }}
+            <time datetime="{{ time.Format "2006-01-02" (time .date) }}">
+                更新 {{ time.Format "2006-01-02" (time .date) }}
+            </time>
+        </div>
+    {{ end }}
+{{ end }}
+```
+
+这样最近修过的文章会在首页卡片里显示一个“更新 YYYY-MM-DD”。它不会替代发布日期，只是告诉读者：这篇文章后来又被维护过。
 
 ## 系列文章导航
 像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。

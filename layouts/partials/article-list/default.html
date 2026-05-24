@@ -1,4 +1,107 @@
 {{ $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" }}
 <article class="{{ if $image.exists }}has-image{{ end }}">
-    {{ partial "article/components/header" . }}
+    <header class="article-header">
+        {{- $image := partialCached "helper/image" (dict "Context" . "Type" "article") .RelPermalink "article" -}}
+        {{ if $image.exists }}
+            <div class="article-image">
+                <a href="{{ .RelPermalink }}">
+                    {{ if $image.resource }}
+                        {{- $Permalink := $image.resource.RelPermalink -}}
+                        {{- $Width := $image.resource.Width -}}
+                        {{- $Height := $image.resource.Height -}}
+                        {{- $Srcset := "" -}}
+
+                        {{- if (default true .Page.Site.Params.imageProcessing.cover.enabled) -}}
+                            {{- $thumbnail := $image.resource.Resize "800x" -}}
+                            {{- $thumbnailRetina := $image.resource.Resize "1600x" -}}
+                            {{- $Srcset = printf "%s 800w, %s 1600w" $thumbnail.RelPermalink $thumbnailRetina.RelPermalink -}}
+                            {{- $Permalink = $thumbnail.RelPermalink -}}
+                            {{- $Width = $thumbnail.Width -}}
+                            {{- $Height = $thumbnail.Height -}}
+                        {{- end -}}
+
+                        <img src="{{ $Permalink }}"
+                            {{ with $Srcset }}srcset="{{ . }}"{{ end }}
+                            width="{{ $Width }}"
+                            height="{{ $Height }}"
+                            loading="lazy"
+                            alt="Featured image of post {{ .Title }}" />
+                    {{ else }}
+                        <img src="{{ $image.permalink }}" loading="lazy" alt="Featured image of post {{ .Title }}" />
+                    {{ end }}
+                </a>
+            </div>
+        {{ end }}
+
+        <div class="article-details">
+            {{ if .Params.categories }}
+            <header class="article-category">
+                {{ range (.GetTerms "categories") }}
+                    <a href="{{ .RelPermalink }}" {{ with .Params.style }}style="background-color: {{ .background }}; color: {{ .color }};"{{ end }}>
+                        {{ .LinkTitle }}
+                    </a>
+                {{ end }}
+            </header>
+            {{ end }}
+
+            <div class="article-title-wrapper">
+                <h2 class="article-title">
+                    <a href="{{ .RelPermalink }}">
+                        {{- .Title -}}
+                    </a>
+                </h2>
+
+                {{ with .Params.description }}
+                <h3 class="article-subtitle">
+                    {{ . }}
+                </h3>
+                {{ end }}
+            </div>
+
+            {{ $showReadingTime := .Params.readingTime | default (.Site.Params.article.readingTime) }}
+            {{ $showDate := not .Date.IsZero }}
+            {{ $latestUpdate := "" }}
+            {{ with .Params.updates }}
+                {{ with index . 0 }}
+                    {{ if reflect.IsMap . }}
+                        {{ $latestUpdate = .date }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+            {{ if and (not $latestUpdate) (ne .Lastmod .Date) }}
+                {{ $latestUpdate = .Lastmod }}
+            {{ end }}
+            {{ $showFooter := or $showDate $showReadingTime $latestUpdate }}
+            {{ if $showFooter }}
+            <footer class="article-time">
+                {{ if $showDate }}
+                    <div>
+                        {{ partial "helper/icon" "date" }}
+                        <time class="article-time--published">
+                            {{- .Date.Format (or .Site.Params.dateFormat.published "Jan 02, 2006") -}}
+                        </time>
+                    </div>
+                {{ end }}
+
+                {{ if $showReadingTime }}
+                    <div>
+                        {{ partial "helper/icon" "clock" }}
+                        <time class="article-time--reading">
+                            {{ T "article.readingTime" .ReadingTime }}
+                        </time>
+                    </div>
+                {{ end }}
+
+                {{ with $latestUpdate }}
+                    <div class="article-time--updated">
+                        {{ partial "helper/icon" "infinity" }}
+                        <time datetime="{{ time.Format "2006-01-02" (time .) }}">
+                            更新 {{ time.Format "2006-01-02" (time .) }}
+                        </time>
+                    </div>
+                {{ end }}
+            </footer>
+            {{ end }}
+        </div>
+    </header>
 </article>
