@@ -5,6 +5,8 @@ categories:
     - 建站
 updates:
     - date: 2026-05-24
+      content: 调整 Bangumi 页面头部样式。
+    - date: 2026-05-24
       content: 将原 Bilibili 追番方案整体升级为 Bangumi 收藏墙。
 image: 1.jpg
 ---
@@ -106,6 +108,26 @@ python scripts/sync_bangumi.py
 ```
 
 这里保留了一个可选的 `live` 开关。如果之后想在某个页面里强制构建期实时请求，可以写成 `{{</* bangumi live=true */>}}`；平时则让它读本地缓存，速度和稳定性都会更好。
+
+页面头部则单独做成一块卡片式 hero。这里不再把“缓存数据”做成一排小徽章，而是只保留用户真正关心的信息：标题、说明、收藏总数、最近更新时间，以及跳转到 Bangumi 主页的链接。
+
+```go-html-template
+<header class="bangumi-hero">
+    <div>
+        <h2 class="bangumi-title">Bangumi 动画收藏</h2>
+        <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
+        <div class="bangumi-stats">
+            共 {{ len $items }} 条收藏
+            {{ with $bangumiData.fetched_at }}
+                · 最近更新：{{ time.Format "2006-01-02" . }}
+            {{ end }}
+        </div>
+    </div>
+    <a class="bangumi-home" href="https://bangumi.tv/user/{{ $user }}" target="_blank" rel="noopener noreferrer">查看 Bangumi 主页 ↝</a>
+</header>
+```
+
+这个头部看起来会更像一个独立功能页，而不是普通文章里临时塞进去的一段列表。副标题保留“记录最近在看、看过和想看的动画。”，也能让第一次点进来的访客立刻知道这个页面在做什么。
 
 然后按 Bangumi 收藏状态分组：
 

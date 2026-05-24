@@ -38,48 +38,55 @@
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 24px;
+            gap: 28px;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            padding: 34px 36px 30px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l2);
         }
 
         .bangumi-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 6px;
+            margin: 0;
             color: var(--card-text-color-main);
-            font-size: 1.9rem;
-            font-weight: 700;
-        }
-
-        .bangumi-title svg {
-            width: 26px;
-            height: 26px;
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
         }
 
         .bangumi-desc {
-            margin: 0;
+            margin: 26px 0 0;
             color: var(--card-text-color-secondary);
-            font-size: 1.45rem;
+            font-size: 1.55rem;
+            line-height: 1.7;
+        }
+
+        .bangumi-title::after {
+            content: "";
+            display: block;
+            width: 42px;
+            height: 8px;
+            margin-top: 18px;
+            border-radius: 999px;
+            background: #ff5a5f;
+            box-shadow: 0 0 14px rgba(255, 90, 95, 0.55);
         }
 
         .bangumi-stats {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 8px;
+            margin-top: 18px;
+            color: var(--card-text-color-tertiary);
+            font-size: 1.4rem;
+            line-height: 1.6;
         }
 
-        .bangumi-pill {
+        .bangumi-home {
             display: inline-flex;
             align-items: center;
-            min-height: 34px;
-            border-radius: 999px;
-            padding: 0 12px;
-            background: var(--card-background);
-            box-shadow: var(--shadow-l1);
-            color: var(--card-text-color-secondary);
-            font-size: 1.3rem;
+            color: #ff5a5f;
+            font-size: 1.55rem;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 4px;
             white-space: nowrap;
         }
 
@@ -218,10 +225,11 @@
             .bangumi-hero {
                 align-items: flex-start;
                 flex-direction: column;
+                padding: 28px 24px;
             }
 
-            .bangumi-stats {
-                justify-content: flex-start;
+            .bangumi-title {
+                font-size: 2.55rem;
             }
 
             .bangumi-grid {
@@ -238,19 +246,17 @@
 
     <header class="bangumi-hero">
         <div>
-            <h2 class="bangumi-title">
-                {{ partial "helper/icon" "eye" }}
-                <span>Bangumi 收藏</span>
-            </h2>
+            <h2 class="bangumi-title">Bangumi 动画收藏</h2>
             <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
+            <div class="bangumi-stats">
+                共 {{ len $items }} 条收藏
+                {{ with $bangumiData.fetched_at }}
+                    · 最近更新：{{ time.Format "2006-01-02" . }}
+                {{ end }}
+                {{ if eq $source "live" }} · 实时数据{{ end }}
+            </div>
         </div>
-        <div class="bangumi-stats">
-            <span class="bangumi-pill">{{ len $items }} 部动画</span>
-            <span class="bangumi-pill">{{ cond (eq $source "live") "实时数据" "缓存数据" }}</span>
-            {{ with $bangumiData.fetched_at }}
-                <span class="bangumi-pill">缓存 {{ time.Format "2006-01-02" . }}</span>
-            {{ end }}
-        </div>
+        <a class="bangumi-home" href="https://bangumi.tv/user/{{ $user }}" target="_blank" rel="noopener noreferrer">查看 Bangumi 主页 ↝</a>
     </header>
 
     {{ if not $items }}
