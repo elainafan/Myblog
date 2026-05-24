@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T15:23:22.758472+00:00",
+  "generated_at": "2026-05-24T18:18:20.932190+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -267,6 +267,17 @@
       "summary": "⌈你連死都不怕，還怕活著嗎？⌋這句話聽起來很有力，像當頭一棒喝，似乎是想把人從深淵裏拉出來。它的邏輯也很直觀—— 如果連「死亡」這件事都不害怕，那麼「活著」這件事，理應更容易才對。但人不是這麼運...",
       "published": "2026-05-23T09:00:00+00:00",
       "published_text": "Sat, 23 May 2026 17:00:00 +0800"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "MIT_6.S184_4 — Building Large-Scale Image or Video Generators",
+      "url": "https://fuquan99666.github.io/p/mit_6.s184_4-building-large-scale-image-or-video-generators/",
+      "summary": "引 通过前面几节课的学习，我们已经基本掌握了flow matching和score matching的原理和算法，并且学会了如何根据prompt来训练一个conditional flow matching model, 接下来我们将学习如何如何使用具体的神经网络实现这些模型。 本篇内容主要分为3个部分：首先介绍具体的神经网络架构；其次介绍一下隐空间以及如何...",
+      "published": "2026-05-21T07:23:00+00:00",
+      "published_text": "Thu, 21 May 2026 15:23:00 +0800"
     },
     {
       "friend": "Equinox",
@@ -916,17 +927,6 @@
       "summary": "自用查分脚本，在此保留其README，仅作纪念",
       "published": "2026-01-30T00:00:00+00:00",
       "published_text": "Fri, 30 Jan 2026 00:00:00 GMT"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_4 — Compilation,Assembly,Linking and Loading",
-      "url": "https://fuquan99666.github.io/p/cs61c_4-compilationassemblylinking-and-loading/",
-      "summary": "CAll Compiling,Assembling,Linking and Loading. ISA之下都是硬件，ISA之上就是软件。 解释器和编译器 Interpreter is a program that executes other programs. Translator converts a program from the source la...",
-      "published": "2026-01-21T11:02:32+00:00",
-      "published_text": "Wed, 21 Jan 2026 19:02:32 +0800"
     },
     {
       "friend": "Anfsity",
