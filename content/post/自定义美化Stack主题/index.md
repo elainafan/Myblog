@@ -6,7 +6,7 @@ categories:
 image: 10.jpg
 updates:
     - date: 2026-05-25
-      content: 增加文章系列总览页，调整系列卡片分色，并补充长系列 Load More 展开。
+      content: 增加文章系列总览页，并调整系列卡片分色样式。
     - date: 2026-05-24
       content: 将追番页相关描述同步为 Bangumi 收藏墙。
     - date: 2026-05-24
@@ -629,7 +629,7 @@ comments: false
 <article class="series-card" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
 ```
 
-然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和操作按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
+然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和“进入系列”按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
 
 ```scss
 .series-card__title {
@@ -641,14 +641,6 @@ comments: false
   color: #172033;
 }
 ```
-
-对于篇数比较多的系列，卡片会横跨整行，内部文章列表改成两列，底部不再显示“进入系列”，而是显示当前展开数量和 `Load More`。模板会先把全部文章输出到页面里，再用 `hidden` 把超过初始数量的部分收起来：
-
-```go-html-template
-<a class="series-card__post" href="{{ $page.RelPermalink }}" data-series-post{{ if and $isLong (ge $index $initial) }} hidden{{ end }}>
-```
-
-交互逻辑放在 `assets/ts/main.ts` 的 `setupSeriesCards()` 中。每次点击按钮时，只展开接下来一组文章，并同步更新 `8 / 32` 这样的计数。这样长系列可以直接在总览页里继续往下看，短系列则保留“进入系列”的入口。布局上也避免了两列卡片被强行拉成同高后出现大块空白。
 
 最后顺手补了两个和加密有关的保护：`layouts/page/search.json` 在遇到 `encrypt: true` 时只写入“本文已加密”的提示，`layouts/_default/rss.xml` 也不再把加密正文输出到 RSS。也就是说，系列总览页只负责整理入口，搜索索引和订阅源不会绕过文章页本身的加密逻辑。
 

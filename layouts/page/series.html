@@ -43,7 +43,7 @@
                 {{- $latest = $home -}}
                 {{- $visibleCount = 1 -}}
             {{- end -}}
-            {{- $cards = $cards | append (dict "entry" $entry "pages" $pages "sortedPages" $sortedPages "latestPages" $latestPages "latest" $latest "home" $home "count" (len $pages) "visibleCount" $visibleCount "locked" $locked) -}}
+            {{- $cards = $cards | append (dict "entry" $entry "pages" $pages "latestPages" $latestPages "latest" $latest "home" $home "count" (len $pages) "visibleCount" $visibleCount "locked" $locked) -}}
         {{- end -}}
     {{- end -}}
 
@@ -69,15 +69,7 @@
             <section class="series-index__grid" aria-label="文章系列列表">
                 {{ range $cards }}
                     {{ $entry := .entry }}
-                    {{ $longThreshold := $entry.loadThreshold | default 10 }}
-                    {{ $isLong := and (not .locked) (gt .count $longThreshold) }}
-                    {{ $initial := .count }}
-                    {{ if $isLong }}
-                        {{ $initial = $entry.longPreview | default 8 }}
-                    {{ end }}
-                    {{ $step := $entry.step | default $initial }}
-                    {{ $listID := printf "series-list-%s" (anchorize $entry.title) }}
-                    <article class="series-card{{ if $isLong }} series-card--long{{ end }}" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
+                    <article class="series-card" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
                         <div class="series-card__top">
                             <span class="series-card__badge">{{ $entry.badge | default "SER" }}</span>
                             <div class="series-card__meta">
@@ -103,26 +95,19 @@
                         {{ if .locked }}
                             <p class="series-card__locked">这个系列主页已加密，子页面不会在总览页公开列出。</p>
                         {{ else }}
-                            <div class="series-card__recent" id="{{ $listID }}" aria-label="{{ $entry.title }} 最近文章" data-series-list>
-                                {{ range $index, $page := .sortedPages }}
-                                    <a class="series-card__post" href="{{ $page.RelPermalink }}" data-series-post{{ if and $isLong (ge $index $initial) }} hidden{{ end }}>
-                                        <span>{{ $page.Title }}</span>
-                                        <time datetime="{{ $page.Date.Format "2006-01-02" }}">{{ $page.Date.Format "2006-01-02" }}</time>
+                            <div class="series-card__recent" aria-label="{{ $entry.title }} 最近文章">
+                                {{ range .latestPages }}
+                                    <a class="series-card__post" href="{{ .RelPermalink }}">
+                                        <span>{{ .Title }}</span>
+                                        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
                                     </a>
                                 {{ end }}
                             </div>
                         {{ end }}
 
-                        <div class="series-card__footer">
-                            {{ if $isLong }}
-                                <span class="series-card__status" data-series-status data-series-total="{{ .count }}">{{ $initial }} / {{ .count }}</span>
-                                <button class="series-card__load" type="button" data-series-load data-series-step="{{ $step }}" aria-controls="{{ $listID }}">Load More</button>
-                            {{ else }}
-                                {{ with .home }}
-                                    <a class="series-card__link" href="{{ .RelPermalink }}">进入系列</a>
-                                {{ end }}
-                            {{ end }}
-                        </div>
+                        {{ with .home }}
+                            <a class="series-card__link" href="{{ .RelPermalink }}">进入系列</a>
+                        {{ end }}
                     </article>
                 {{ end }}
             </section>
