@@ -64,6 +64,9 @@ const BANGUMI_FALLBACK_SUBJECTS: BangumiSearchSubject[] = [
 
 let bangumiRandomPool: BangumiSearchSubject[] = [];
 let bangumiRandomRequest: Promise<BangumiSearchSubject[]> | null = null;
+let activeBangumiModalCard: HTMLAnchorElement | null = null;
+let bangumiModalReturnFocus: HTMLElement | null = null;
+let bangumiModalPreviousBodyOverflow = '';
 
 function setupCodeBlocks() {
     const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
@@ -199,6 +202,7 @@ function setupBangumiCollection() {
 
         const tabs = root.querySelectorAll('[data-bangumi-tab]') as NodeListOf<HTMLButtonElement>;
         const panels = root.querySelectorAll('[data-bangumi-panel]') as NodeListOf<HTMLElement>;
+        const searchInput = root.querySelector('[data-bangumi-search]') as HTMLInputElement;
         const randomButton = root.querySelector('[data-bangumi-random]') as HTMLButtonElement;
         const randomResult = root.querySelector('[data-bangumi-random-result]') as HTMLAnchorElement;
         const randomCover = root.querySelector('[data-bangumi-random-cover]') as HTMLElement;
@@ -215,6 +219,8 @@ function setupBangumiCollection() {
         const modalLink = root.querySelector('[data-bangumi-modal-link]') as HTMLAnchorElement;
         if (!tabs.length || !panels.length) return;
 
+        const getActivePanel = () => Array.from(panels).find(panel => !panel.hidden) || null;
+
         const activatePanel = (name: string) => {
             tabs.forEach(tab => {
                 tab.setAttribute('aria-selected', String(tab.dataset.bangumiTab === name));
@@ -223,6 +229,11 @@ function setupBangumiCollection() {
             panels.forEach(panel => {
                 panel.hidden = panel.dataset.bangumiPanel !== name;
             });
+
+            const activePanel = getActivePanel();
+            if (!activePanel) return;
+            activePanel.dataset.bangumiSearch = searchInput?.value || '';
+            renderPanel(activePanel);
         };
 
         const renderPanel = (panel: HTMLElement) => {
@@ -232,14 +243,18 @@ function setupBangumiCollection() {
             const cards = Array.from(grid.querySelectorAll('[data-bangumi-card]')) as HTMLElement[];
             const initial = Number(panel.dataset.bangumiInitial || 0);
             const mode = panel.dataset.bangumiView || 'rating';
+            const query = normalizeBangumiSearch(panel.dataset.bangumiSearch || '');
             const limit = Number(panel.dataset.bangumiVisibleCount || (initial > 0 ? initial : cards.length));
             const sortedCards = sortBangumiCards(cards, mode);
+            const matchedCards = sortedCards.filter(card => matchesBangumiSearch(card, query));
 
             grid.querySelectorAll('.bangumi-year-divider').forEach(divider => divider.remove());
 
             let currentYear = '';
             sortedCards.forEach((card, index) => {
-                const visible = index < limit || initial === 0;
+                const matched = matchesBangumiSearch(card, query);
+                const matchedIndex = matchedCards.indexOf(card);
+                const visible = matched && (query || initial === 0 || matchedIndex < limit);
                 card.classList.toggle('is-hidden', !visible);
 
                 if (mode === 'year' && visible) {
@@ -257,7 +272,15 @@ function setupBangumiCollection() {
             });
 
             const button = panel.querySelector('[data-bangumi-load]') as HTMLButtonElement;
-            if (button) button.hidden = initial === 0 || limit >= sortedCards.length;
+            if (button) button.hidden = Boolean(query) || initial === 0 || limit >= matchedCards.length;
+
+            const empty = panel.querySelector('[data-bangumi-empty]') as HTMLElement;
+            if (empty) empty.hidden = matchedCards.length > 0;
+
+            const count = panel.querySelector('[data-bangumi-count]') as HTMLElement;
+            if (count) {
+                count.textContent = query ? `${matchedCards.length} / ${cards.length} 部` : `${cards.length} 部`;
+            }
         };
 
         panels.forEach(panel => {
@@ -268,15 +291,16 @@ function setupBangumiCollection() {
 
             const button = panel.querySelector('[data-bangumi-load]') as HTMLButtonElement;
             renderPanel(panel);
-            if (!button) return;
 
-            button.addEventListener('click', () => {
-                const step = Number(panel.dataset.bangumiStep || 8);
-                const current = Number(panel.dataset.bangumiVisibleCount || 0);
+            if (button) {
+                button.addEventListener('click', () => {
+                    const step = Number(panel.dataset.bangumiStep || 8);
+                    const current = Number(panel.dataset.bangumiVisibleCount || 0);
 
-                panel.dataset.bangumiVisibleCount = String(current + step);
-                renderPanel(panel);
-            });
+                    panel.dataset.bangumiVisibleCount = String(current + step);
+                    renderPanel(panel);
+                });
+            }
 
             const viewButtons = panel.querySelectorAll('[data-bangumi-view]') as NodeListOf<HTMLButtonElement>;
             viewButtons.forEach(viewButton => {
@@ -293,6 +317,16 @@ function setupBangumiCollection() {
                 });
             });
         });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const activePanel = getActivePanel();
+                if (!activePanel) return;
+
+                activePanel.dataset.bangumiSearch = searchInput.value;
+                renderPanel(activePanel);
+            });
+        }
 
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -347,7 +381,30 @@ function sortBangumiCards(cards: HTMLElement[], mode: string) {
     });
 }
 
+function normalizeBangumiSearch(value: string) {
+    return value.trim().toLocaleLowerCase();
+}
+
+function matchesBangumiSearch(card: HTMLElement, query: string) {
+    if (!query) return true;
+
+    const searchText = [
+        card.dataset.bangumiSearchText,
+        card.dataset.bangumiTitle,
+        card.dataset.bangumiYear
+    ].filter(Boolean).join(' ').toLocaleLowerCase();
+
+    return query.split(/\s+/).every(part => searchText.includes(part));
+}
+
 function openBangumiModal(card: HTMLAnchorElement, modal: HTMLElement, cover: HTMLElement, title: HTMLElement, meta: HTMLElement, comment: HTMLElement, link: HTMLAnchorElement) {
+    if (modal.hidden) {
+        bangumiModalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        bangumiModalPreviousBodyOverflow = document.body.style.overflow;
+    }
+
+    activeBangumiModalCard = card;
+
     const subjectTitle = card.dataset.bangumiTitle || card.textContent?.trim() || 'Untitled';
     const image = card.dataset.bangumiCover || '';
     const metaItems = [
@@ -365,11 +422,44 @@ function openBangumiModal(card: HTMLAnchorElement, modal: HTMLElement, cover: HT
     link.href = card.href;
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+    modal.focus({ preventScroll: true });
 }
 
-function closeBangumiModal(modal: HTMLElement) {
+function closeBangumiModal(modal: HTMLElement, restoreFocus = true) {
+    if (modal.hidden) return;
+
     modal.hidden = true;
-    document.body.style.overflow = '';
+    document.body.style.overflow = bangumiModalPreviousBodyOverflow;
+
+    const returnFocus = bangumiModalReturnFocus;
+    activeBangumiModalCard = null;
+    bangumiModalReturnFocus = null;
+
+    if (restoreFocus && returnFocus?.isConnected) {
+        returnFocus.focus({ preventScroll: true });
+    }
+}
+
+function moveBangumiModal(modal: HTMLElement, direction: number) {
+    if (modal.hidden || !activeBangumiModalCard) return;
+
+    const root = modal.closest('.bangumi-page') as HTMLElement;
+    const activePanel = root?.querySelector('[data-bangumi-panel]:not([hidden])') as HTMLElement;
+    const cards = Array.from(activePanel?.querySelectorAll('[data-bangumi-card]:not(.is-hidden)') || []) as HTMLAnchorElement[];
+    if (cards.length <= 1) return;
+
+    const activeIndex = Math.max(0, cards.indexOf(activeBangumiModalCard));
+    const nextIndex = (activeIndex + direction + cards.length) % cards.length;
+    const nextCard = cards[nextIndex];
+    const cover = modal.querySelector('[data-bangumi-modal-cover]') as HTMLElement;
+    const title = modal.querySelector('[data-bangumi-modal-title]') as HTMLElement;
+    const meta = modal.querySelector('[data-bangumi-modal-meta]') as HTMLElement;
+    const comment = modal.querySelector('[data-bangumi-modal-comment]') as HTMLElement;
+    const link = modal.querySelector('[data-bangumi-modal-link]') as HTMLAnchorElement;
+
+    if (nextCard && cover && title && meta && comment && link) {
+        openBangumiModal(nextCard, modal, cover, title, meta, comment, link);
+    }
 }
 
 async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement) {
@@ -565,8 +655,18 @@ window.Stack = Stack;
 window.createElement = createElement;
 
 window.addEventListener('keydown', event => {
-    if (event.key !== 'Escape') return;
-    document.querySelectorAll('[data-bangumi-modal]').forEach(modal => {
-        closeBangumiModal(modal as HTMLElement);
-    });
+    const activeModal = Array.from(document.querySelectorAll('[data-bangumi-modal]'))
+        .find(modal => !(modal as HTMLElement).hidden) as HTMLElement;
+    if (!activeModal) return;
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeBangumiModal(activeModal);
+        return;
+    }
+
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        moveBangumiModal(activeModal, event.key === 'ArrowRight' ? 1 : -1);
+    }
 });

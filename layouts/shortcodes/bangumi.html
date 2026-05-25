@@ -123,6 +123,36 @@
             margin: 0;
         }
 
+        .bangumi-search {
+            flex: 0 1 320px;
+            min-width: 240px;
+        }
+
+        .bangumi-search input {
+            width: 100%;
+            min-height: 38px;
+            border: 1px solid var(--card-separator-color);
+            border-radius: 999px;
+            padding: 0 16px;
+            background: var(--card-background);
+            color: var(--card-text-color-main);
+            box-shadow: var(--shadow-l1);
+            font: inherit;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .bangumi-search input:focus {
+            outline: none;
+            border-color: #ff5a5f;
+            box-shadow: var(--shadow-l2);
+        }
+
+        .bangumi-search input::placeholder {
+            color: var(--card-text-color-tertiary);
+        }
+
         .bangumi-tab {
             display: inline-flex;
             align-items: center;
@@ -343,6 +373,21 @@
         }
 
         .bangumi-card.is-hidden {
+            display: none;
+        }
+
+        .bangumi-no-results {
+            margin: 18px 0 0;
+            border: 1px dashed var(--card-separator-color);
+            border-radius: 14px;
+            padding: 18px;
+            color: var(--card-text-color-secondary);
+            font-size: 1.32rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .bangumi-no-results[hidden] {
             display: none;
         }
 
@@ -624,6 +669,11 @@
                 flex-direction: column;
             }
 
+            .bangumi-search {
+                flex-basis: auto;
+                min-width: 0;
+            }
+
             .bangumi-random {
                 width: 100%;
             }
@@ -687,6 +737,9 @@
                     {{ end }}
                 {{ end }}
             </nav>
+            <label class="bangumi-search">
+                <input type="search" data-bangumi-search placeholder="搜索当前分区" autocomplete="off" aria-label="搜索当前分区动画">
+            </label>
             <button class="bangumi-random" type="button" data-bangumi-random>随机一部</button>
         </div>
         <a class="bangumi-random-result" data-bangumi-random-result target="_blank" rel="noopener noreferrer">
@@ -707,16 +760,16 @@
                 {{ $step := .step }}
                 {{ $groupName := .name }}
                 <section
-                    class="bangumi-section bangumi-section-{{ .name }}"
-                    id="bangumi-panel-{{ .name }}"
-                    data-bangumi-panel="{{ .name }}"
-                    data-bangumi-initial="{{ $initial }}"
-                    data-bangumi-step="{{ $step }}"
+                            class="bangumi-section bangumi-section-{{ .name }}"
+                            id="bangumi-panel-{{ .name }}"
+                            data-bangumi-panel="{{ .name }}"
+                            data-bangumi-initial="{{ $initial }}"
+                            data-bangumi-step="{{ $step }}"
                     {{ if ne .name $activeGroup }}hidden{{ end }}>
                     <div class="bangumi-section-header">
                         <div class="bangumi-section-heading">
                             <div class="bangumi-section-title" role="heading" aria-level="3">{{ .label }}</div>
-                            <span class="bangumi-count">{{ len $groupItems }} 部</span>
+                            <span class="bangumi-count" data-bangumi-count data-bangumi-total="{{ len $groupItems }}">{{ len $groupItems }} 部</span>
                         </div>
                         {{ if eq .name "watched" }}
                             <div class="bangumi-view-switch" aria-label="看过排序方式">
@@ -747,6 +800,7 @@
                                 data-bangumi-card
                                 data-bangumi-panel-name="{{ $groupName }}"
                                 data-bangumi-title="{{ $title }}"
+                                data-bangumi-search-text="{{ printf "%s %s %s %s" $title $subject.name $subject.name_cn $year }}"
                                 data-bangumi-cover="{{ $cover }}"
                                 data-bangumi-year="{{ $year }}"
                                 data-bangumi-rate="{{ $item.rate }}"
@@ -785,6 +839,7 @@
                             </a>
                         {{ end }}
                     </div>
+                    <p class="bangumi-no-results" data-bangumi-empty hidden>没有匹配的动画。</p>
                     {{ if and (gt $initial 0) (gt (len $groupItems) $initial) }}
                         <div class="bangumi-actions">
                             <button class="bangumi-load" type="button" data-bangumi-load>Load More</button>
@@ -793,7 +848,7 @@
                 </section>
             {{ end }}
         {{ end }}
-        <div class="bangumi-modal" data-bangumi-modal hidden role="dialog" aria-modal="true" aria-labelledby="bangumi-modal-title">
+        <div class="bangumi-modal" data-bangumi-modal hidden role="dialog" aria-modal="true" aria-labelledby="bangumi-modal-title" tabindex="-1">
             <div class="bangumi-modal-card" data-bangumi-modal-card>
                 <button class="bangumi-modal-close" type="button" data-bangumi-modal-close aria-label="关闭">×</button>
                 <div class="bangumi-modal-cover" data-bangumi-modal-cover></div>
