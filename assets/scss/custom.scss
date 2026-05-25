@@ -651,15 +651,16 @@ a {
 }
 
 .series-card {
+  --series-accent: var(--accent-color);
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 360px;
-  border: 1px solid var(--card-separator-color);
+  border: 1px solid color-mix(in srgb, var(--series-accent) 32%, var(--card-separator-color));
   border-radius: 20px;
   padding: 22px;
   background: var(--card-background);
-  box-shadow: var(--shadow-l2);
+  box-shadow: var(--shadow-l2), inset 0 1px color-mix(in srgb, var(--series-accent) 24%, transparent);
   color: var(--card-text-color-main);
 }
 
@@ -679,8 +680,9 @@ a {
   min-height: 32px;
   border-radius: 999px;
   padding: 0 10px;
-  background: var(--accent-color);
-  color: #fff;
+  background: color-mix(in srgb, var(--series-accent) 74%, #fff);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--series-accent) 26%, transparent);
+  color: #172033;
   font-size: 1.15rem;
   font-weight: 800;
   line-height: 1;
@@ -689,16 +691,21 @@ a {
 .series-card__meta {
   flex-wrap: wrap;
   justify-content: flex-end;
-  color: var(--card-text-color-tertiary);
   font-size: 1.18rem;
   font-weight: 700;
 
+  span {
+    color: color-mix(in srgb, var(--series-accent) 72%, var(--card-text-color-secondary));
+  }
+
   time {
+    color: var(--card-text-color-tertiary);
     white-space: nowrap;
   }
 }
 
 .series-card__title {
+  color: color-mix(in srgb, var(--series-accent) 86%, var(--card-text-color-main));
   margin: 18px 0 10px !important;
   padding: 0 !important;
   border: 0 !important;
@@ -710,7 +717,12 @@ a {
   }
 
   a {
-    color: var(--card-text-color-main);
+    color: inherit;
+    transition: color .18s ease;
+  }
+
+  a:hover {
+    color: color-mix(in srgb, var(--series-accent) 68%, #fff);
   }
 }
 
@@ -732,9 +744,10 @@ a {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: baseline;
+  border: 1px solid color-mix(in srgb, var(--series-accent) 18%, transparent);
   border-radius: 12px;
   padding: 9px 10px;
-  background: rgba(66, 136, 185, .06);
+  background: color-mix(in srgb, var(--series-accent) 10%, var(--card-background));
   color: var(--card-text-color-main);
   transition: background .18s ease, transform .18s ease;
 
@@ -754,16 +767,17 @@ a {
   }
 
   &:hover {
-    background: rgba(66, 136, 185, .12);
+    background: color-mix(in srgb, var(--series-accent) 18%, var(--card-background));
     transform: translateX(2px);
   }
 }
 
 .series-card__locked {
   margin: auto 0 0;
-  border: 1px dashed var(--card-separator-color);
+  border: 1px dashed color-mix(in srgb, var(--series-accent) 42%, var(--card-separator-color));
   border-radius: 14px;
   padding: 14px;
+  background: color-mix(in srgb, var(--series-accent) 9%, transparent);
   color: var(--card-text-color-secondary);
   font-size: 1.32rem;
   font-weight: 700;
@@ -779,14 +793,15 @@ a {
   margin-top: 18px;
   border-radius: 999px;
   padding: 0 16px;
-  background: var(--accent-color);
-  color: #fff;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--series-accent) 68%, #fff), var(--series-accent));
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--series-accent) 24%, transparent);
+  color: #172033;
   font-size: 1.3rem;
   font-weight: 800;
   transition: transform .18s ease, opacity .18s ease;
 
   &:hover {
-    color: #fff;
+    color: #172033;
     opacity: .92;
     transform: translateY(-1px);
   }
@@ -803,13 +818,16 @@ a {
 }
 
 [data-scheme="dark"] {
-  .series-index__stats span,
-  .series-card__post {
+  .series-index__stats span {
     background: rgba(120, 170, 210, .12);
   }
 
+  .series-card__post {
+    background: color-mix(in srgb, var(--series-accent) 15%, rgba(255, 255, 255, .04));
+  }
+
   .series-card__post:hover {
-    background: rgba(120, 170, 210, .18);
+    background: color-mix(in srgb, var(--series-accent) 23%, rgba(255, 255, 255, .06));
   }
 }
 

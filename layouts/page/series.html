@@ -69,7 +69,7 @@
             <section class="series-index__grid" aria-label="文章系列列表">
                 {{ range $cards }}
                     {{ $entry := .entry }}
-                    <article class="series-card" id="{{ anchorize $entry.title }}">
+                    <article class="series-card" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
                         <div class="series-card__top">
                             <span class="series-card__badge">{{ $entry.badge | default "SER" }}</span>
                             <div class="series-card__meta">

@@ -5,6 +5,8 @@ categories:
     - 建站
 image: 10.jpg
 updates:
+    - date: 2026-05-25
+      content: 增加文章系列总览页，并调整系列卡片分色样式。
     - date: 2026-05-24
       content: 将追番页相关描述同步为 Bangumi 收藏墙。
     - date: 2026-05-24
@@ -276,13 +278,13 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 {{- $randomPosts := slice -}}
 {{- $mainSections := .Site.Params.mainSections | default (slice "post") -}}
 {{- range .Site.RegularPages -}}
-    {{- if and (in $mainSections .Section) (ne .Params.hidden true) -}}
+    {{- if and (in $mainSections .Section) (ne .Params.hidden true) (ne (.Params.encrypt | default false) true) -}}
         {{- $randomPosts = $randomPosts | append (dict "title" .Title "url" .RelPermalink) -}}
     {{- end -}}
 {{- end -}}
 ```
 
-这里用 `.Site.Params.mainSections` 限制随机范围，默认只抽 `post` 下面的正式文章；同时过滤掉 `hidden: true` 的页面，避免把系列文章里的隐藏子页也抽出来。加密文章不需要在这里特殊排除，因为随机漫游只是跳转到原始链接，真正打开文章时仍然会经过原来的加密模板。
+这里用 `.Site.Params.mainSections` 限制随机范围，默认只抽 `post` 下面的正式文章；同时过滤掉 `hidden: true` 和 `encrypt: true` 的页面，避免把系列文章里的隐藏子页或加密文章放进随机池。随机漫游本身不渲染正文，但既然左侧菜单会把标题和链接写进页面，最稳妥的做法还是直接不让加密文章参与随机抽取。
 
 菜单项本身仍然放在 Stack 的主菜单结构里，这样可以直接继承左侧菜单的图标、间距和暗色模式样式：
 
@@ -580,6 +582,67 @@ seriesOrder: 1
 ```
 
 这样拆分后的长期文章就比较顺手了：主页面仍然负责汇总，子页面保持隐藏，读者进入某篇复盘或某个难度段后，也可以直接在系列内部前后跳转。
+
+## 文章系列总览页
+系列导航解决的是“进入某个系列之后怎么前后切换”，但如果读者只是想知道站内到底有哪些长期更新的内容，仍然缺一个更集中的入口。因此博客里又加了一个 `/series/` 页面，用来把课程笔记、Lab 记录、建站日志和长期复盘整理成系列卡片。
+
+页面入口放在 `content/page/series/index.md`，使用单独的 `series` layout：
+
+```yaml
+---
+title: "系列 | Series"
+layout: "series"
+url: "/series/"
+comments: false
+---
+```
+
+真正的系列配置放在 `data/series.yaml`。比如一个普通分类系列可以这样写：
+
+```yaml
+- title: 计算机系统导论
+  badge: ICS
+  color: "#5aa8ff"
+  category: 计算机系统导论
+  description: CSAPP / ICS Labs 的施工记录，主要记录每个 Lab 的任务、调试过程和踩坑点。
+  preview: 5
+```
+
+其中 `category` 表示按文章分类收集页面，`preview` 表示卡片上最多展示几篇最近文章。像 Codeforces 复盘这种目录式系列，则用 `directory` 和 `home` 指定同一目录下的系列主页：
+
+```yaml
+- title: Codeforces 复盘
+  badge: CF
+  color: "#ff6b88"
+  directory: post/二次元修炼日记！/
+  home: post/二次元修炼日记！/main.md
+  includeHidden: true
+  description: 长期更新的 Codeforces 比赛复盘，把赛时表现、补题思路和题目套路串起来。
+  preview: 5
+```
+
+这里需要额外注意加密系列。`includeHidden: true` 只是允许模板知道这个目录下面有一组隐藏子页面，但如果系列主页本身带有 `encrypt: true`，总览页不会公开列出子文章，只显示“加密系列”和进入主页的按钮。这样可以保留入口，又不会把隐藏页面的标题和时间线摊开。
+
+配色也放在同一个数据文件里。`layouts/page/series.html` 会把 `color` 写成卡片上的 CSS 变量：
+
+```go-html-template
+<article class="series-card" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
+```
+
+然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和“进入系列”按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
+
+```scss
+.series-card__title {
+  color: color-mix(in srgb, var(--series-accent) 86%, var(--card-text-color-main));
+}
+
+.series-card__link {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--series-accent) 68%, #fff), var(--series-accent));
+  color: #172033;
+}
+```
+
+最后顺手补了两个和加密有关的保护：`layouts/page/search.json` 在遇到 `encrypt: true` 时只写入“本文已加密”的提示，`layouts/_default/rss.xml` 也不再把加密正文输出到 RSS。也就是说，系列总览页只负责整理入口，搜索索引和订阅源不会绕过文章页本身的加密逻辑。
 
 ## 引用块和长链接换行
 引用块也改了样式，这段加在 `assets/scss/custom.scss` 中：
