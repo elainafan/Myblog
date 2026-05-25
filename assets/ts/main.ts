@@ -22,7 +22,7 @@ interface RandomPostItem {
 }
 
 interface BangumiSearchSubject {
-    id: number;
+    id?: number;
     name: string;
     name_cn?: string;
     date?: string;
@@ -36,11 +36,25 @@ interface BangumiSearchSubject {
         medium?: string;
         large?: string;
     };
+    fallbackUrl?: string;
 }
 
 interface BangumiSearchResponse {
     data?: BangumiSearchSubject[];
 }
+
+const BANGUMI_FALLBACK_SUBJECTS: BangumiSearchSubject[] = [
+    { name: '千と千尋の神隠し', name_cn: '千与千寻', date: '2001', rating: { score: 8.6 }, rank: 25 },
+    { name: 'カウボーイビバップ', name_cn: '星际牛仔', date: '1998', rating: { score: 8.8 }, rank: 18 },
+    { name: '鋼の錬金術師 FULLMETAL ALCHEMIST', name_cn: '钢之炼金术师 FULLMETAL ALCHEMIST', date: '2009', rating: { score: 8.7 }, rank: 30 },
+    { name: 'CLANNAD ～AFTER STORY～', name_cn: 'CLANNAD ～AFTER STORY～', date: '2008', rating: { score: 8.6 }, rank: 28 },
+    { name: '攻殻機動隊 STAND ALONE COMPLEX', name_cn: '攻壳机动队 STAND ALONE COMPLEX', date: '2002', rating: { score: 8.5 }, rank: 55 },
+    { name: '四月は君の嘘', name_cn: '四月是你的谎言', date: '2014', rating: { score: 7.9 }, rank: 320 },
+    { name: '宇宙よりも遠い場所', name_cn: '比宇宙更远的地方', date: '2018', rating: { score: 8.2 }, rank: 140 },
+    { name: '響け！ユーフォニアム', name_cn: '吹响！悠风号', date: '2015', rating: { score: 8.0 }, rank: 240 },
+    { name: '少女終末旅行', name_cn: '少女终末旅行', date: '2017', rating: { score: 8.1 }, rank: 180 },
+    { name: '蟲師', name_cn: '虫师', date: '2005', rating: { score: 8.5 }, rank: 45 }
+];
 
 function setupCodeBlocks() {
     const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
@@ -182,6 +196,14 @@ function setupBangumiCollection() {
         const randomLabel = root.querySelector('[data-bangumi-random-label]') as HTMLElement;
         const randomTitle = root.querySelector('[data-bangumi-random-title]') as HTMLElement;
         const randomMeta = root.querySelector('[data-bangumi-random-meta]') as HTMLElement;
+        const modal = root.querySelector('[data-bangumi-modal]') as HTMLElement;
+        const modalCard = root.querySelector('[data-bangumi-modal-card]') as HTMLElement;
+        const modalClose = root.querySelector('[data-bangumi-modal-close]') as HTMLButtonElement;
+        const modalCover = root.querySelector('[data-bangumi-modal-cover]') as HTMLElement;
+        const modalTitle = root.querySelector('[data-bangumi-modal-title]') as HTMLElement;
+        const modalMeta = root.querySelector('[data-bangumi-modal-meta]') as HTMLElement;
+        const modalComment = root.querySelector('[data-bangumi-modal-comment]') as HTMLElement;
+        const modalLink = root.querySelector('[data-bangumi-modal-link]') as HTMLAnchorElement;
         if (!tabs.length || !panels.length) return;
 
         const activatePanel = (name: string) => {
@@ -194,16 +216,72 @@ function setupBangumiCollection() {
             });
         };
 
-        panels.forEach(panel => {
+        const renderPanel = (panel: HTMLElement) => {
+            const grid = panel.querySelector('[data-bangumi-grid]') as HTMLElement;
+            if (!grid) return;
+
+            const cards = Array.from(grid.querySelectorAll('[data-bangumi-card]')) as HTMLElement[];
+            const initial = Number(panel.dataset.bangumiInitial || 0);
+            const mode = panel.dataset.bangumiView || 'rating';
+            const limit = Number(panel.dataset.bangumiVisibleCount || (initial > 0 ? initial : cards.length));
+            const sortedCards = sortBangumiCards(cards, mode);
+
+            grid.querySelectorAll('.bangumi-year-divider').forEach(divider => divider.remove());
+
+            let currentYear = '';
+            sortedCards.forEach((card, index) => {
+                const visible = index < limit || initial === 0;
+                card.classList.toggle('is-hidden', !visible);
+
+                if (mode === 'year' && visible) {
+                    const year = card.dataset.bangumiYear || '未知年份';
+                    if (year !== currentYear) {
+                        const divider = document.createElement('div');
+                        divider.className = 'bangumi-year-divider';
+                        divider.textContent = year;
+                        grid.appendChild(divider);
+                        currentYear = year;
+                    }
+                }
+
+                grid.appendChild(card);
+            });
+
             const button = panel.querySelector('[data-bangumi-load]') as HTMLButtonElement;
+            if (button) button.hidden = initial === 0 || limit >= sortedCards.length;
+        };
+
+        panels.forEach(panel => {
+            panel.dataset.bangumiVisibleCount = panel.dataset.bangumiInitial && Number(panel.dataset.bangumiInitial) > 0
+                ? panel.dataset.bangumiInitial
+                : String(panel.querySelectorAll('[data-bangumi-card]').length);
+            if (!panel.dataset.bangumiView) panel.dataset.bangumiView = 'rating';
+
+            const button = panel.querySelector('[data-bangumi-load]') as HTMLButtonElement;
+            renderPanel(panel);
             if (!button) return;
 
             button.addEventListener('click', () => {
                 const step = Number(panel.dataset.bangumiStep || 8);
-                const hiddenCards = Array.from(panel.querySelectorAll('.bangumi-card.is-hidden')) as HTMLElement[];
+                const current = Number(panel.dataset.bangumiVisibleCount || 0);
 
-                hiddenCards.slice(0, step).forEach(card => card.classList.remove('is-hidden'));
-                if (!panel.querySelector('.bangumi-card.is-hidden')) button.hidden = true;
+                panel.dataset.bangumiVisibleCount = String(current + step);
+                renderPanel(panel);
+            });
+
+            const viewButtons = panel.querySelectorAll('[data-bangumi-view]') as NodeListOf<HTMLButtonElement>;
+            viewButtons.forEach(viewButton => {
+                viewButton.addEventListener('click', () => {
+                    const mode = viewButton.dataset.bangumiView || 'rating';
+                    panel.dataset.bangumiView = mode;
+                    panel.dataset.bangumiVisibleCount = panel.dataset.bangumiInitial && Number(panel.dataset.bangumiInitial) > 0
+                        ? panel.dataset.bangumiInitial
+                        : String(panel.querySelectorAll('[data-bangumi-card]').length);
+                    viewButtons.forEach(button => {
+                        button.setAttribute('aria-pressed', String(button.dataset.bangumiView === mode));
+                    });
+                    renderPanel(panel);
+                });
             });
         });
 
@@ -220,13 +298,71 @@ function setupBangumiCollection() {
             });
         }
 
+        if (modal && modalCard && modalClose && modalCover && modalTitle && modalMeta && modalComment && modalLink) {
+            root.querySelectorAll('[data-bangumi-card]').forEach(card => {
+                card.addEventListener('click', event => {
+                    const mouseEvent = event as MouseEvent;
+                    if (mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.shiftKey || mouseEvent.button !== 0) return;
+
+                    event.preventDefault();
+                    openBangumiModal(card as HTMLAnchorElement, modal, modalCover, modalTitle, modalMeta, modalComment, modalLink);
+                });
+            });
+
+            modalClose.addEventListener('click', () => closeBangumiModal(modal));
+            modal.addEventListener('click', event => {
+                if (event.target === modal) closeBangumiModal(modal);
+            });
+        }
+
         const activeTab = Array.from(tabs).find(tab => tab.getAttribute('aria-selected') === 'true') || tabs[0];
         if (activeTab.dataset.bangumiTab) activatePanel(activeTab.dataset.bangumiTab);
     });
 }
 
+function sortBangumiCards(cards: HTMLElement[], mode: string) {
+    return [...cards].sort((left, right) => {
+        if (mode === 'year') {
+            const yearDiff = Number(right.dataset.bangumiYear || 0) - Number(left.dataset.bangumiYear || 0);
+            if (yearDiff) return yearDiff;
+        }
+
+        const rateDiff = Number(right.dataset.bangumiRate || 0) - Number(left.dataset.bangumiRate || 0);
+        if (rateDiff) return rateDiff;
+
+        const scoreDiff = Number(right.dataset.bangumiSiteScore || 0) - Number(left.dataset.bangumiSiteScore || 0);
+        if (scoreDiff) return scoreDiff;
+
+        return (left.dataset.bangumiTitle || '').localeCompare(right.dataset.bangumiTitle || '', 'zh-Hans');
+    });
+}
+
+function openBangumiModal(card: HTMLAnchorElement, modal: HTMLElement, cover: HTMLElement, title: HTMLElement, meta: HTMLElement, comment: HTMLElement, link: HTMLAnchorElement) {
+    const subjectTitle = card.dataset.bangumiTitle || card.textContent?.trim() || 'Untitled';
+    const image = card.dataset.bangumiCover || '';
+    const metaItems = [
+        card.dataset.bangumiYear,
+        card.dataset.bangumiRate && card.dataset.bangumiRate !== '0' ? `我的评分 ${card.dataset.bangumiRate}` : '',
+        card.dataset.bangumiSiteScore && card.dataset.bangumiSiteScore !== '0' ? `Bangumi ${card.dataset.bangumiSiteScore}` : '',
+        card.dataset.bangumiRank && card.dataset.bangumiRank !== '0' ? `#${card.dataset.bangumiRank}` : '',
+        card.dataset.bangumiProgress
+    ].filter(Boolean);
+
+    cover.innerHTML = image ? `<img src="${image}" alt="${escapeHTML(subjectTitle)}" loading="lazy" referrerpolicy="no-referrer">` : '';
+    title.textContent = subjectTitle;
+    meta.textContent = metaItems.join(' · ');
+    comment.textContent = card.dataset.bangumiComment || '暂无短评。';
+    link.href = card.href;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBangumiModal(modal: HTMLElement) {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+}
+
 async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement) {
-    const originalText = button.textContent || '随机一部';
     button.disabled = true;
     button.textContent = '抽取中...';
 
@@ -252,32 +388,38 @@ async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorE
         if (!candidates.length) throw new Error('No Bangumi candidates');
 
         const subject = candidates[Math.floor(Math.random() * candidates.length)];
-        const subjectTitle = subject.name_cn || subject.name || 'Untitled';
-        const image = subject.images?.common || subject.images?.medium || subject.images?.large || subject.images?.grid;
-        const year = subject.date ? subject.date.slice(0, 4) : '';
-        const score = subject.rating?.score || 0;
-        const metaItems = [
-            year,
-            score ? `Bangumi ${score}` : '',
-            subject.rank ? `#${subject.rank}` : ''
-        ].filter(Boolean);
-
-        result.href = `https://bangumi.tv/subject/${subject.id}`;
-        label.textContent = 'Bangumi 随机推荐';
-        title.textContent = subjectTitle;
-        meta.textContent = metaItems.join(' · ');
-        cover.innerHTML = image ? `<img src="${image}" alt="${escapeHTML(subjectTitle)}" loading="lazy" referrerpolicy="no-referrer">` : '';
-        result.classList.add('is-visible');
+        renderRandomBangumiSubject(subject, result, cover, label, title, meta, false);
         button.textContent = '再抽一部';
     } catch (err) {
         console.log('Failed to pick Bangumi subject', err);
-        button.textContent = '稍后再试';
-        setTimeout(() => {
-            button.textContent = originalText;
-        }, 1600);
+        const subject = BANGUMI_FALLBACK_SUBJECTS[Math.floor(Math.random() * BANGUMI_FALLBACK_SUBJECTS.length)];
+        renderRandomBangumiSubject(subject, result, cover, label, title, meta, true);
+        button.textContent = '再抽一部';
     } finally {
         button.disabled = false;
     }
+}
+
+function renderRandomBangumiSubject(subject: BangumiSearchSubject, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement, fallback: boolean) {
+    const subjectTitle = subject.name_cn || subject.name || 'Untitled';
+    const image = subject.images?.common || subject.images?.medium || subject.images?.large || subject.images?.grid;
+    const year = subject.date ? subject.date.slice(0, 4) : '';
+    const score = subject.rating?.score || 0;
+    const metaItems = [
+        year,
+        score ? `Bangumi ${score}` : '',
+        subject.rank ? `#${subject.rank}` : '',
+        fallback ? '本地兜底' : ''
+    ].filter(Boolean);
+
+    result.href = subject.id
+        ? `https://bangumi.tv/subject/${subject.id}`
+        : `https://bangumi.tv/subject_search/${encodeURIComponent(subjectTitle)}?cat=2`;
+    label.textContent = fallback ? 'Bangumi 随机推荐 · 兜底池' : 'Bangumi 随机推荐';
+    title.textContent = subjectTitle;
+    meta.textContent = metaItems.join(' · ');
+    cover.innerHTML = image ? `<img src="${image}" alt="${escapeHTML(subjectTitle)}" loading="lazy" referrerpolicy="no-referrer">` : '';
+    result.classList.add('is-visible');
 }
 
 function escapeHTML(value: string) {
@@ -364,3 +506,10 @@ declare global {
 
 window.Stack = Stack;
 window.createElement = createElement;
+
+window.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('[data-bangumi-modal]').forEach(modal => {
+        closeBangumiModal(modal as HTMLElement);
+    });
+});

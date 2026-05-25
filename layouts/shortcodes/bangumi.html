@@ -255,6 +255,13 @@
             margin-bottom: 14px;
         }
 
+        .bangumi-section-heading {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            min-width: 0;
+        }
+
         .bangumi-section-title {
             margin: 0;
             margin-inline-start: 0;
@@ -270,6 +277,43 @@
         .bangumi-count {
             color: var(--card-text-color-tertiary);
             font-size: 1.25rem;
+        }
+
+        .bangumi-view-switch {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bangumi-view-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            border: 1px solid var(--card-separator-color);
+            border-radius: 999px;
+            padding: 0 12px;
+            background: var(--card-background);
+            color: var(--card-text-color-secondary);
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .bangumi-view-button:hover,
+        .bangumi-view-button[aria-pressed="true"] {
+            border-color: #ff5a5f;
+            color: #ff5a5f;
+        }
+
+        .bangumi-year-divider {
+            grid-column: 1 / -1;
+            margin: 8px 0 -4px;
+            color: var(--card-text-color-main);
+            font-size: 1.42rem;
+            font-weight: 800;
         }
 
         .bangumi-grid {
@@ -448,6 +492,112 @@
             transform: translateY(-1px);
         }
 
+        .bangumi-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(0, 0, 0, 0.58);
+            backdrop-filter: blur(8px);
+        }
+
+        .bangumi-modal[hidden] {
+            display: none;
+        }
+
+        .bangumi-modal-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
+            gap: 22px;
+            width: min(760px, 100%);
+            max-height: min(680px, calc(100vh - 44px));
+            overflow: auto;
+            border-radius: 18px;
+            padding: 22px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-l3);
+        }
+
+        .bangumi-modal-cover {
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border-radius: 14px;
+            background: var(--card-separator-color);
+        }
+
+        .bangumi-modal-cover img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bangumi-modal-body {
+            min-width: 0;
+        }
+
+        .bangumi-modal-title {
+            margin: 0;
+            color: var(--card-text-color-main);
+            font-size: 2.35rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .bangumi-modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-top: 12px;
+            color: var(--card-text-color-secondary);
+            font-size: 1.35rem;
+            line-height: 1.5;
+        }
+
+        .bangumi-modal-comment {
+            margin-top: 18px;
+            color: var(--card-text-color-main);
+            font-size: 1.42rem;
+            line-height: 1.75;
+        }
+
+        .bangumi-modal-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 38px;
+            margin-top: 22px;
+            border-radius: 999px;
+            padding: 0 16px;
+            background: #ff5a5f;
+            color: #fff;
+            font-size: 1.28rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .bangumi-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--card-text-color-main);
+            cursor: pointer;
+            font: inherit;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
         @media (max-width: 1280px) {
             .bangumi-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -480,6 +630,19 @@
 
             .bangumi-random-result {
                 align-items: flex-start;
+            }
+
+            .bangumi-section-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .bangumi-modal-card {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .bangumi-modal-cover {
+                width: min(210px, 70%);
             }
         }
 
@@ -542,6 +705,7 @@
                 {{ end }}
                 {{ $initial := .initial }}
                 {{ $step := .step }}
+                {{ $groupName := .name }}
                 <section
                     class="bangumi-section bangumi-section-{{ .name }}"
                     id="bangumi-panel-{{ .name }}"
@@ -550,10 +714,18 @@
                     data-bangumi-step="{{ $step }}"
                     {{ if ne .name $activeGroup }}hidden{{ end }}>
                     <div class="bangumi-section-header">
-                        <div class="bangumi-section-title" role="heading" aria-level="3">{{ .label }}</div>
-                        <span class="bangumi-count">{{ len $groupItems }} 部</span>
+                        <div class="bangumi-section-heading">
+                            <div class="bangumi-section-title" role="heading" aria-level="3">{{ .label }}</div>
+                            <span class="bangumi-count">{{ len $groupItems }} 部</span>
+                        </div>
+                        {{ if eq .name "watched" }}
+                            <div class="bangumi-view-switch" aria-label="看过排序方式">
+                                <button class="bangumi-view-button" type="button" data-bangumi-view="rating" aria-pressed="true">按评分</button>
+                                <button class="bangumi-view-button" type="button" data-bangumi-view="year" aria-pressed="false">按年份</button>
+                            </div>
+                        {{ end }}
                     </div>
-                    <div class="bangumi-grid">
+                    <div class="bangumi-grid" data-bangumi-grid>
                         {{ range $index, $item := $groupItems }}
                             {{ $subject := $item.subject }}
                             {{ $title := $subject.name_cn | default $subject.name | default "Untitled" }}
@@ -563,11 +735,25 @@
                             {{ $siteScore := $subject.score | default 0 }}
                             {{ $rank := $subject.rank | default 0 }}
                             {{ $hasProgress := and (gt $eps 0) (gt $epStatus 0) }}
+                            {{ $year := "" }}
+                            {{ with $subject.date }}{{ $year = substr . 0 4 }}{{ end }}
+                            {{ $progress := "" }}
+                            {{ if $hasProgress }}{{ $progress = printf "进度 %v / %v" $epStatus $eps }}{{ end }}
                             <a
                                 class="bangumi-card{{ if and (gt $initial 0) (ge $index $initial) }} is-hidden{{ end }}"
                                 href="https://bangumi.tv/subject/{{ $item.subject_id }}"
                                 target="_blank"
-                                rel="noopener noreferrer">
+                                rel="noopener noreferrer"
+                                data-bangumi-card
+                                data-bangumi-panel-name="{{ $groupName }}"
+                                data-bangumi-title="{{ $title }}"
+                                data-bangumi-cover="{{ $cover }}"
+                                data-bangumi-year="{{ $year }}"
+                                data-bangumi-rate="{{ $item.rate }}"
+                                data-bangumi-site-score="{{ $siteScore }}"
+                                data-bangumi-rank="{{ $rank }}"
+                                data-bangumi-progress="{{ $progress }}"
+                                data-bangumi-comment="{{ $item.comment }}">
                                 <div class="bangumi-cover">
                                     {{ with $cover }}
                                         <img src="{{ . }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">
@@ -592,7 +778,7 @@
                                 <div class="bangumi-info">
                                     <div class="bangumi-name" role="heading" aria-level="4">{{ $title }}</div>
                                     <div class="bangumi-meta">
-                                        {{ with $subject.date }}<span>{{ substr . 0 4 }}</span>{{ end }}
+                                        {{ with $year }}<span>{{ . }}</span>{{ end }}
                                         {{ if gt $siteScore 0 }}<span>Bangumi {{ $siteScore }}</span>{{ end }}
                                     </div>
                                 </div>
@@ -607,5 +793,17 @@
                 </section>
             {{ end }}
         {{ end }}
+        <div class="bangumi-modal" data-bangumi-modal hidden role="dialog" aria-modal="true" aria-labelledby="bangumi-modal-title">
+            <div class="bangumi-modal-card" data-bangumi-modal-card>
+                <button class="bangumi-modal-close" type="button" data-bangumi-modal-close aria-label="关闭">×</button>
+                <div class="bangumi-modal-cover" data-bangumi-modal-cover></div>
+                <div class="bangumi-modal-body">
+                    <div class="bangumi-modal-title" id="bangumi-modal-title" data-bangumi-modal-title></div>
+                    <div class="bangumi-modal-meta" data-bangumi-modal-meta></div>
+                    <div class="bangumi-modal-comment" data-bangumi-modal-comment></div>
+                    <a class="bangumi-modal-link" data-bangumi-modal-link href="#" target="_blank" rel="noopener noreferrer">打开 Bangumi</a>
+                </div>
+            </div>
+        </div>
     {{ end }}
 </div>
