@@ -364,6 +364,49 @@ function setupBangumiCollection() {
     });
 }
 
+function setupSeriesPanels() {
+    const detail = document.querySelector('[data-series-detail]') as HTMLElement;
+    const cards = document.querySelectorAll('[data-series-card]') as NodeListOf<HTMLElement>;
+    const panels = document.querySelectorAll('[data-series-panel]') as NodeListOf<HTMLElement>;
+    if (!detail || !cards.length || !panels.length) return;
+
+    cards.forEach(card => {
+        if (card.dataset.seriesPanelBound === 'true') return;
+        card.dataset.seriesPanelBound = 'true';
+
+        const button = card.querySelector('[data-series-open]') as HTMLButtonElement;
+        const targetID = card.dataset.seriesTarget;
+        if (!button || !targetID) return;
+
+        button.addEventListener('click', () => {
+            const active = button.getAttribute('aria-expanded') === 'true';
+
+            cards.forEach(otherCard => {
+                otherCard.classList.remove('is-active');
+                const otherButton = otherCard.querySelector('[data-series-open]') as HTMLButtonElement;
+                if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
+            });
+            panels.forEach(panel => {
+                panel.hidden = true;
+            });
+
+            if (active) {
+                detail.hidden = true;
+                return;
+            }
+
+            const panel = document.getElementById(targetID) as HTMLElement;
+            if (!panel) return;
+
+            card.classList.add('is-active');
+            button.setAttribute('aria-expanded', 'true');
+            detail.hidden = false;
+            panel.hidden = false;
+            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+}
+
 function sortBangumiCards(cards: HTMLElement[], mode: string) {
     return [...cards].sort((left, right) => {
         if (mode === 'year') {
@@ -597,6 +640,7 @@ let Stack = {
         setupReadingProgress();
         setupRandomWalk();
         setupBangumiCollection();
+        setupSeriesPanels();
 
         /**
          * Add linear gradient background to tile style article

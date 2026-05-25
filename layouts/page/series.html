@@ -4,11 +4,13 @@
     {{- $seriesList := site.Data.series | default slice -}}
     {{- $cards := slice -}}
 
-    {{- range $entry := $seriesList -}}
-        {{- $home := false -}}
-        {{- with $entry.home -}}
-            {{- $home = $.Site.GetPage . -}}
-        {{- end -}}
+        {{- range $entry := $seriesList -}}
+            {{- $home := false -}}
+            {{- $hasExplicitHome := false -}}
+            {{- with $entry.home -}}
+                {{- $home = $.Site.GetPage . -}}
+                {{- $hasExplicitHome = true -}}
+            {{- end -}}
 
         {{- $pages := slice -}}
         {{- with $entry.category -}}
@@ -43,7 +45,7 @@
                 {{- $latest = $home -}}
                 {{- $visibleCount = 1 -}}
             {{- end -}}
-            {{- $cards = $cards | append (dict "entry" $entry "pages" $pages "latestPages" $latestPages "latest" $latest "home" $home "count" (len $pages) "visibleCount" $visibleCount "locked" $locked) -}}
+            {{- $cards = $cards | append (dict "entry" $entry "pages" $pages "sortedPages" $sortedPages "latestPages" $latestPages "latest" $latest "home" $home "hasExplicitHome" $hasExplicitHome "count" (len $pages) "visibleCount" $visibleCount "locked" $locked) -}}
         {{- end -}}
     {{- end -}}
 
@@ -69,7 +71,8 @@
             <section class="series-index__grid" aria-label="文章系列列表">
                 {{ range $cards }}
                     {{ $entry := .entry }}
-                    <article class="series-card" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
+                    {{ $panelID := printf "series-panel-%s" (anchorize $entry.title) }}
+                    <article class="series-card" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};" data-series-card data-series-target="{{ $panelID }}">
                         <div class="series-card__top">
                             <span class="series-card__badge">{{ $entry.badge | default "SER" }}</span>
                             <div class="series-card__meta">
@@ -83,8 +86,10 @@
                         </div>
 
                         <h2 class="series-card__title">
-                            {{ with .home }}
-                                <a href="{{ .RelPermalink }}">{{ $entry.title }}</a>
+                            {{ if .hasExplicitHome }}
+                                {{ with .home }}
+                                    <a href="{{ .RelPermalink }}">{{ $entry.title }}</a>
+                                {{ end }}
                             {{ else }}
                                 {{ $entry.title }}
                             {{ end }}
@@ -105,8 +110,42 @@
                             </div>
                         {{ end }}
 
-                        {{ with .home }}
-                            <a class="series-card__link" href="{{ .RelPermalink }}">进入系列</a>
+                        <div class="series-card__actions">
+                            <button class="series-card__link" type="button" data-series-open aria-controls="{{ $panelID }}" aria-expanded="false">查看目录</button>
+                        </div>
+                    </article>
+                {{ end }}
+            </section>
+
+            <section class="series-detail" data-series-detail hidden aria-live="polite">
+                {{ range $cards }}
+                    {{ $entry := .entry }}
+                    {{ $panelID := printf "series-panel-%s" (anchorize $entry.title) }}
+                    <article class="series-detail__panel" id="{{ $panelID }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};" data-series-panel hidden>
+                        <div class="series-detail__header">
+                            <div>
+                                <p class="series-detail__kicker">{{ $entry.badge | default "SER" }} · {{ .count }} 篇</p>
+                                <h2>{{ $entry.title }}</h2>
+                                <p>{{ $entry.description }}</p>
+                            </div>
+                            {{ if .hasExplicitHome }}
+                                {{ with .home }}
+                                <a class="series-detail__home" href="{{ .RelPermalink }}">打开主页</a>
+                                {{ end }}
+                            {{ end }}
+                        </div>
+
+                        {{ if .locked }}
+                            <p class="series-card__locked">这个系列主页已加密，子页面不会在总览页公开列出。</p>
+                        {{ else }}
+                            <div class="series-detail__list" aria-label="{{ $entry.title }} 完整目录">
+                                {{ range .sortedPages }}
+                                    <a class="series-detail__item" href="{{ .RelPermalink }}">
+                                        <span>{{ .Title }}</span>
+                                        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                                    </a>
+                                {{ end }}
+                            </div>
                         {{ end }}
                     </article>
                 {{ end }}
