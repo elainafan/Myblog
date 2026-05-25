@@ -364,6 +364,38 @@ function setupBangumiCollection() {
     });
 }
 
+function setupSeriesCards() {
+    const cards = document.querySelectorAll('.series-card') as NodeListOf<HTMLElement>;
+
+    cards.forEach(card => {
+        if (card.dataset.seriesEnhanced === 'true') return;
+        card.dataset.seriesEnhanced = 'true';
+
+        const button = card.querySelector('[data-series-load]') as HTMLButtonElement;
+        const status = card.querySelector('[data-series-status]') as HTMLElement;
+        const posts = Array.from(card.querySelectorAll('[data-series-post]')) as HTMLElement[];
+        if (!button || !status || !posts.length) return;
+
+        const updateStatus = () => {
+            const visible = posts.filter(post => !post.hidden).length;
+            const total = posts.length;
+            status.textContent = `${visible} / ${total}`;
+            button.hidden = visible >= total;
+        };
+
+        button.addEventListener('click', () => {
+            const step = Number(button.dataset.seriesStep || 5);
+            const hiddenPosts = posts.filter(post => post.hidden).slice(0, step);
+            hiddenPosts.forEach(post => {
+                post.hidden = false;
+            });
+            updateStatus();
+        });
+
+        updateStatus();
+    });
+}
+
 function sortBangumiCards(cards: HTMLElement[], mode: string) {
     return [...cards].sort((left, right) => {
         if (mode === 'year') {
@@ -597,6 +629,7 @@ let Stack = {
         setupReadingProgress();
         setupRandomWalk();
         setupBangumiCollection();
+        setupSeriesCards();
 
         /**
          * Add linear gradient background to tile style article
