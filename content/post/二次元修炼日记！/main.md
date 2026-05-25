@@ -75,6 +75,7 @@ categories:
 | 2026.04.30 | [R1096]({{< ref "cf-1096.md" >}}) | div3   | [2227](https://codeforces.com/contest/2227) |     |      |      |     |     |     |     |     |     |     |     |     |  |
 | 2026.05.16 | [R1098]({{< ref "cf-1098.md" >}}) | div2   | [2228](https://codeforces.com/contest/2228) |     |      |      |     |     |     |     |     |     |     |     |     |  |
 | 2026.05.21 | [R1099]({{< ref "cf-1099.md" >}}) | div2   | [2231](https://codeforces.com/contest/2231) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2026.05.23 | [R1100]({{< ref "cf-1100.md" >}}) | div1/2 | [2229](https://codeforces.com/contest/2229) |     |      |      |     |     |     |     |     |     |     |     |     |  |
 
 ## 比赛复盘
 下面这些是已经整理过的比赛题解，按比赛拆开，之后继续补的时候也比较好找。
@@ -140,3 +141,5 @@ categories:
 [Codeforces Round #1098(Div.2)]({{< ref "cf-1098.md" >}})
 
 [Codeforces Round #1099(Div.2)]({{< ref "cf-1099.md" >}})
+
+[Codeforces Round #1100(Div.1+2)]({{< ref "cf-1100.md" >}})
