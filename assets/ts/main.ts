@@ -56,6 +56,10 @@ const BANGUMI_FALLBACK_SUBJECTS: BangumiSearchSubject[] = [
     { name: '蟲師', name_cn: '虫师', date: '2005', rating: { score: 8.5 }, rank: 45 }
 ];
 
+const BANGUMI_RANDOM_TIMEOUT = 1600;
+let bangumiRandomPool: BangumiSearchSubject[] = [];
+let bangumiRandomRequest: Promise<BangumiSearchSubject[]> | null = null;
+
 function setupCodeBlocks() {
     const highlights = document.querySelectorAll('.article-content div.highlight') as NodeListOf<HTMLElement>;
     const copyText = `Copy`,
@@ -293,6 +297,7 @@ function setupBangumiCollection() {
         });
 
         if (randomButton && randomResult && randomCover && randomLabel && randomTitle && randomMeta) {
+            queueBangumiRandomPrefetch();
             randomButton.addEventListener('click', () => {
                 pickBangumiSubject(randomButton, randomResult, randomCover, randomLabel, randomTitle, randomMeta);
             });
@@ -364,32 +369,19 @@ function closeBangumiModal(modal: HTMLElement) {
 
 async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement) {
     button.disabled = true;
-    button.textContent = '抽取中...';
+    button.textContent = bangumiRandomPool.length ? '抽取中...' : '连接 Bangumi...';
 
     try {
-        let candidates: BangumiSearchSubject[] = [];
-
-        for (let attempt = 0; attempt < 3 && !candidates.length; attempt++) {
-            const offset = Math.floor(Math.random() * 1800);
-            const response = await fetch(`https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error(`Bangumi request failed: ${response.status}`);
-
-            const payload = await response.json() as BangumiSearchResponse;
-            candidates = (payload.data || []).filter(subject => {
-                return subject.id && (subject.rating?.score || 0) >= 6;
-            });
+        if (!bangumiRandomPool.length) {
+            bangumiRandomPool = await withTimeout(bangumiRandomRequest || fetchBangumiRandomCandidates(), BANGUMI_RANDOM_TIMEOUT);
         }
+        if (!bangumiRandomPool.length) throw new Error('No Bangumi candidates');
 
-        if (!candidates.length) throw new Error('No Bangumi candidates');
-
-        const subject = candidates[Math.floor(Math.random() * candidates.length)];
+        const index = Math.floor(Math.random() * bangumiRandomPool.length);
+        const subject = bangumiRandomPool.splice(index, 1)[0];
         renderRandomBangumiSubject(subject, result, cover, label, title, meta, false);
         button.textContent = '再抽一部';
+        if (bangumiRandomPool.length < 5) queueBangumiRandomPrefetch();
     } catch (err) {
         console.log('Failed to pick Bangumi subject', err);
         const subject = BANGUMI_FALLBACK_SUBJECTS[Math.floor(Math.random() * BANGUMI_FALLBACK_SUBJECTS.length)];
@@ -398,6 +390,50 @@ async function pickBangumiSubject(button: HTMLButtonElement, result: HTMLAnchorE
     } finally {
         button.disabled = false;
     }
+}
+
+function queueBangumiRandomPrefetch() {
+    if (bangumiRandomRequest || bangumiRandomPool.length >= 8) return;
+
+    bangumiRandomRequest = fetchBangumiRandomCandidates()
+        .then(candidates => {
+            bangumiRandomPool = [...bangumiRandomPool, ...candidates].slice(-24);
+            return candidates;
+        })
+        .catch(err => {
+            console.log('Failed to prefetch Bangumi subjects', err);
+            return [];
+        })
+        .finally(() => {
+            bangumiRandomRequest = null;
+        }) as Promise<BangumiSearchSubject[]>;
+}
+
+async function fetchBangumiRandomCandidates() {
+    const offset = Math.floor(Math.random() * 1800);
+    const response = await fetch(`https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`, {
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+
+    if (!response.ok) throw new Error(`Bangumi request failed: ${response.status}`);
+
+    const payload = await response.json() as BangumiSearchResponse;
+    return (payload.data || []).filter(subject => {
+        return subject.id && (subject.rating?.score || 0) >= 6;
+    });
+}
+
+function withTimeout<T>(promise: Promise<T>, timeout: number) {
+    return new Promise<T>((resolve, reject) => {
+        const timer = window.setTimeout(() => reject(new Error('Bangumi request timeout')), timeout);
+
+        promise
+            .then(value => resolve(value))
+            .catch(err => reject(err))
+            .finally(() => window.clearTimeout(timer));
+    });
 }
 
 function renderRandomBangumiSubject(subject: BangumiSearchSubject, result: HTMLAnchorElement, cover: HTMLElement, label: HTMLElement, title: HTMLElement, meta: HTMLElement, fallback: boolean) {
