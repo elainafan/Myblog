@@ -69,12 +69,15 @@
             <section class="series-index__grid" aria-label="文章系列列表">
                 {{ range $cards }}
                     {{ $entry := .entry }}
-                    {{ $initial := $entry.preview | default 5 }}
-                    {{ $step := $entry.step | default $initial }}
                     {{ $longThreshold := $entry.loadThreshold | default 10 }}
                     {{ $isLong := and (not .locked) (gt .count $longThreshold) }}
+                    {{ $initial := .count }}
+                    {{ if $isLong }}
+                        {{ $initial = $entry.longPreview | default 8 }}
+                    {{ end }}
+                    {{ $step := $entry.step | default $initial }}
                     {{ $listID := printf "series-list-%s" (anchorize $entry.title) }}
-                    <article class="series-card" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
+                    <article class="series-card{{ if $isLong }} series-card--long{{ end }}" id="{{ anchorize $entry.title }}" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
                         <div class="series-card__top">
                             <span class="series-card__badge">{{ $entry.badge | default "SER" }}</span>
                             <div class="series-card__meta">
