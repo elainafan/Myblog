@@ -48,18 +48,18 @@ const BANGUMI_RANDOM_TIMEOUT = 1600;
 const BANGUMI_NON_JP_KEYWORDS = /spider|batman|superman|marvel|dc|pixar|disney|dreamworks|lego|star wars|rick and morty|sponge|simpsons|south park|adventure time|蜘蛛侠|蝙蝠侠|超人|复仇者|星球大战|辛普森/i;
 const BANGUMI_SIDE_STORY_KEYWORDS = /ova|oad|ona|movie|special|specials|特典|映像特典|剧场版|劇場版|映画|总集篇|總集篇|番外|外传|外傳|小剧场|小劇場|sp\b/i;
 const BANGUMI_FALLBACK_SUBJECTS: BangumiSearchSubject[] = [
-    { name: '鋼の錬金術師 FULLMETAL ALCHEMIST', name_cn: '钢之炼金术师 FULLMETAL ALCHEMIST', date: '2009', rating: { score: 8.7 }, rank: 30 },
-    { name: 'CLANNAD ～AFTER STORY～', name_cn: 'CLANNAD ～AFTER STORY～', date: '2008', rating: { score: 8.6 }, rank: 28 },
-    { name: '魔法少女まどか☆マギカ', name_cn: '魔法少女小圆', date: '2011', rating: { score: 8.6 }, rank: 34 },
-    { name: 'STEINS;GATE', name_cn: '命运石之门', date: '2011', rating: { score: 8.8 }, rank: 8 },
-    { name: 'けいおん！', name_cn: '轻音少女', date: '2009', rating: { score: 8.3 }, rank: 104 },
-    { name: '響け！ユーフォニアム', name_cn: '吹响！悠风号', date: '2015', rating: { score: 8.0 }, rank: 240 },
-    { name: '宇宙よりも遠い場所', name_cn: '比宇宙更远的地方', date: '2018', rating: { score: 8.2 }, rank: 140 },
-    { name: '少女終末旅行', name_cn: '少女终末旅行', date: '2017', rating: { score: 8.1 }, rank: 180 },
-    { name: 'ヴァイオレット・エヴァーガーデン', name_cn: '紫罗兰永恒花园', date: '2018', rating: { score: 7.9 }, rank: 360 },
-    { name: 'ぼっち・ざ・ろっく！', name_cn: '孤独摇滚！', date: '2022', rating: { score: 8.4 }, rank: 72 },
-    { name: 'ゆるキャン△', name_cn: '摇曳露营△', date: '2018', rating: { score: 8.2 }, rank: 117 },
-    { name: '葬送のフリーレン', name_cn: '葬送的芙莉莲', date: '2023', rating: { score: 8.5 }, rank: 60 }
+    { id: 10380, name: 'STEINS;GATE', name_cn: '命运石之门', date: '2011', rating: { score: 8.8 }, rank: 8, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/a9/79/10380_YwP4R.jpg' } },
+    { id: 9717, name: '魔法少女まどか☆マギカ', name_cn: '魔法少女小圆', date: '2011', rating: { score: 8.6 }, rank: 34, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/cb/57/9717_sAVag.jpg' } },
+    { id: 1424, name: 'けいおん！', name_cn: '轻音少女', date: '2009', rating: { score: 8.3 }, rank: 104, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/48/9d/1424_q8FMQ.jpg' } },
+    { id: 207195, name: 'ゆるキャン△', name_cn: '摇曳露营△', date: '2018', rating: { score: 8.2 }, rank: 117, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/18/bc/207195_2Cp3o.jpg' } },
+    { id: 328609, name: 'ぼっち・ざ・ろっく！', name_cn: '孤独摇滚！', date: '2022', rating: { score: 8.4 }, rank: 72, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/e2/e7/328609_2EHLJ.jpg' } },
+    { id: 27364, name: '氷菓', name_cn: '冰菓', date: '2012', rating: { score: 8.2 }, rank: 150, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/cd/38/27364_1ZFmr.jpg' } },
+    { id: 2585, name: 'とある科学の超電磁砲', name_cn: '某科学的超电磁炮', date: '2009', rating: { score: 7.5 }, rank: 838, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/36/e7/2585_pn2eP.jpg' } },
+    { id: 54433, name: 'やはり俺の青春ラブコメはまちがっている。', name_cn: '我的青春恋爱物语果然有问题', date: '2013', rating: { score: 7.5 }, rank: 828, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/1e/f1/54433_JZ99l.jpg' } },
+    { id: 41488, name: 'さくら荘のペットな彼女', name_cn: '樱花庄的宠物女孩', date: '2012', rating: { score: 7.4 }, rank: 1091, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/01/a2/41488_qw09G.jpg' } },
+    { id: 243981, name: 'やがて君になる', name_cn: '终将成为你', date: '2018', rating: { score: 7.8 }, rank: 392, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/bc/72/243981_J20I2.jpg' } },
+    { id: 378862, name: 'お兄ちゃんはおしまい！', name_cn: '别当欧尼酱了！', date: '2023', rating: { score: 7.6 }, rank: 716, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/7e/ca/378862_24TnR.jpg' } },
+    { id: 531159, name: '日々は過ぎれど飯うまし', name_cn: '时光流逝，饭菜依旧美味', date: '2025', rating: { score: 7.7 }, rank: 574, images: { common: 'https://lain.bgm.tv/r/400/pic/cover/l/d3/5d/531159_BayD9.jpg' } }
 ];
 
 let bangumiRandomPool: BangumiSearchSubject[] = [];
