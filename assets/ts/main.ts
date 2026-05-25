@@ -43,20 +43,25 @@ interface BangumiSearchResponse {
     data?: BangumiSearchSubject[];
 }
 
+const BANGUMI_RANDOM_MIN_YEAR = 2006;
+const BANGUMI_RANDOM_TIMEOUT = 1600;
+const BANGUMI_NON_JP_KEYWORDS = /spider|batman|superman|marvel|dc|pixar|disney|dreamworks|lego|star wars|rick and morty|sponge|simpsons|south park|adventure time|蜘蛛侠|蝙蝠侠|超人|复仇者|星球大战|辛普森/i;
+const BANGUMI_SIDE_STORY_KEYWORDS = /ova|oad|ona|movie|special|specials|特典|映像特典|剧场版|劇場版|映画|总集篇|總集篇|番外|外传|外傳|小剧场|小劇場|sp\b/i;
 const BANGUMI_FALLBACK_SUBJECTS: BangumiSearchSubject[] = [
-    { name: '千と千尋の神隠し', name_cn: '千与千寻', date: '2001', rating: { score: 8.6 }, rank: 25 },
-    { name: 'カウボーイビバップ', name_cn: '星际牛仔', date: '1998', rating: { score: 8.8 }, rank: 18 },
     { name: '鋼の錬金術師 FULLMETAL ALCHEMIST', name_cn: '钢之炼金术师 FULLMETAL ALCHEMIST', date: '2009', rating: { score: 8.7 }, rank: 30 },
     { name: 'CLANNAD ～AFTER STORY～', name_cn: 'CLANNAD ～AFTER STORY～', date: '2008', rating: { score: 8.6 }, rank: 28 },
-    { name: '攻殻機動隊 STAND ALONE COMPLEX', name_cn: '攻壳机动队 STAND ALONE COMPLEX', date: '2002', rating: { score: 8.5 }, rank: 55 },
-    { name: '四月は君の嘘', name_cn: '四月是你的谎言', date: '2014', rating: { score: 7.9 }, rank: 320 },
-    { name: '宇宙よりも遠い場所', name_cn: '比宇宙更远的地方', date: '2018', rating: { score: 8.2 }, rank: 140 },
+    { name: '魔法少女まどか☆マギカ', name_cn: '魔法少女小圆', date: '2011', rating: { score: 8.6 }, rank: 34 },
+    { name: 'STEINS;GATE', name_cn: '命运石之门', date: '2011', rating: { score: 8.8 }, rank: 8 },
+    { name: 'けいおん！', name_cn: '轻音少女', date: '2009', rating: { score: 8.3 }, rank: 104 },
     { name: '響け！ユーフォニアム', name_cn: '吹响！悠风号', date: '2015', rating: { score: 8.0 }, rank: 240 },
+    { name: '宇宙よりも遠い場所', name_cn: '比宇宙更远的地方', date: '2018', rating: { score: 8.2 }, rank: 140 },
     { name: '少女終末旅行', name_cn: '少女终末旅行', date: '2017', rating: { score: 8.1 }, rank: 180 },
-    { name: '蟲師', name_cn: '虫师', date: '2005', rating: { score: 8.5 }, rank: 45 }
+    { name: 'ヴァイオレット・エヴァーガーデン', name_cn: '紫罗兰永恒花园', date: '2018', rating: { score: 7.9 }, rank: 360 },
+    { name: 'ぼっち・ざ・ろっく！', name_cn: '孤独摇滚！', date: '2022', rating: { score: 8.4 }, rank: 72 },
+    { name: 'ゆるキャン△', name_cn: '摇曳露营△', date: '2018', rating: { score: 8.2 }, rank: 117 },
+    { name: '葬送のフリーレン', name_cn: '葬送的芙莉莲', date: '2023', rating: { score: 8.5 }, rank: 60 }
 ];
 
-const BANGUMI_RANDOM_TIMEOUT = 1600;
 let bangumiRandomPool: BangumiSearchSubject[] = [];
 let bangumiRandomRequest: Promise<BangumiSearchSubject[]> | null = null;
 
@@ -420,9 +425,7 @@ async function fetchBangumiRandomCandidates() {
     if (!response.ok) throw new Error(`Bangumi request failed: ${response.status}`);
 
     const payload = await response.json() as BangumiSearchResponse;
-    return (payload.data || []).filter(subject => {
-        return subject.id && (subject.rating?.score || 0) >= 6;
-    });
+    return (payload.data || []).filter(isBangumiRandomCandidate);
 }
 
 function withTimeout<T>(promise: Promise<T>, timeout: number) {
@@ -456,6 +459,24 @@ function renderRandomBangumiSubject(subject: BangumiSearchSubject, result: HTMLA
     meta.textContent = metaItems.join(' · ');
     cover.innerHTML = image ? `<img src="${image}" alt="${escapeHTML(subjectTitle)}" loading="lazy" referrerpolicy="no-referrer">` : '';
     result.classList.add('is-visible');
+}
+
+function isBangumiRandomCandidate(subject: BangumiSearchSubject) {
+    const year = getBangumiYear(subject);
+    const title = `${subject.name || ''} ${subject.name_cn || ''}`;
+    const hasJapaneseKana = /[\u3040-\u30ff]/.test(subject.name || '');
+
+    return Boolean(subject.id)
+        && year >= BANGUMI_RANDOM_MIN_YEAR
+        && (subject.rating?.score || 0) >= 6
+        && hasJapaneseKana
+        && !BANGUMI_NON_JP_KEYWORDS.test(title)
+        && !BANGUMI_SIDE_STORY_KEYWORDS.test(title);
+}
+
+function getBangumiYear(subject: BangumiSearchSubject) {
+    const match = /^(\d{4})/.exec(subject.date || '');
+    return match ? Number(match[1]) : 0;
 }
 
 function escapeHTML(value: string) {
