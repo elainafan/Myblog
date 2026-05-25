@@ -1,7 +1,6 @@
 ﻿---
 title: 看番与加睡的小猪日常
 date: 2025-01-28
-encrypt: true
 image: "/images/1.png"
 categories: 
     - 算法
