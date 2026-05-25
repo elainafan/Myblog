@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T15:57:03.236351+00:00",
+  "generated_at": "2026-05-25T18:29:48.546492+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -247,6 +247,17 @@
   "warnings": [],
   "posts": [
     {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "CLIP精读",
+      "url": "https://equinox.wiki/post/paper-reading/clip%E7%B2%BE%E8%AF%BB/",
+      "summary": "CLIP精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-25首发于 Welcome to my blog ，最后修改于2026-05-25",
+      "published": "2026-05-25T05:26:56+00:00",
+      "published_text": "Mon, 25 May 2026 13:26:56 +0800"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -454,17 +465,6 @@
       "summary": "Pretraining on Unlabeled Data 作者：Equinox（shixy2003@gmail.com） 本文2026-05-06首发于 Welcome to my blog ，最后修改于2026-05-06",
       "published": "2026-05-06T06:17:41+00:00",
       "published_text": "Wed, 06 May 2026 14:17:41 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Implementing a GPT Model From Scratch to Generate Text",
-      "url": "https://equinox.wiki/post/llms-from-scratch/implementing-a-gpt-model-from-scratch-to-generate-text/",
-      "summary": "Implementing a GPT Model From Scratch to Generate Text 作者：Equinox（shixy2003@gmail.com） 本文2026-05-04首发于 Welcome to my blog ，最后修改于2026-05-04",
-      "published": "2026-05-04T13:09:06+00:00",
-      "published_text": "Mon, 04 May 2026 21:09:06 +0800"
     },
     {
       "friend": "~zzz",
