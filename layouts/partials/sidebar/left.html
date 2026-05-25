@@ -77,7 +77,7 @@
         {{- $randomPosts := slice -}}
         {{- $mainSections := .Site.Params.mainSections | default (slice "post") -}}
         {{- range .Site.RegularPages -}}
-            {{- if and (in $mainSections .Section) (ne .Params.hidden true) -}}
+            {{- if and (in $mainSections .Section) (ne .Params.hidden true) (ne (.Params.encrypt | default false) true) -}}
                 {{- $randomPosts = $randomPosts | append (dict "title" .Title "url" .RelPermalink) -}}
             {{- end -}}
         {{- end -}}

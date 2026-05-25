@@ -5,7 +5,11 @@
 {{- $result := slice -}}
 
 {{- range $filtered -}}
-    {{- $data := dict "title" .Title "date" .Date "permalink" .Permalink "content" (.Plain) -}}
+    {{- $content := .Plain -}}
+    {{- if .Params.encrypt -}}
+        {{- $content = "本文已加密，请打开文章后输入密码阅读。" -}}
+    {{- end -}}
+    {{- $data := dict "title" .Title "date" .Date "permalink" .Permalink "content" $content -}}
 
     {{- $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" -}}
     {{- if $image.exists -}}

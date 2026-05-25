@@ -1,0 +1,120 @@
+{{ define "body-class" }}article-page series-index-page{{ end }}
+
+{{ define "main" }}
+    {{- $seriesList := site.Data.series | default slice -}}
+    {{- $cards := slice -}}
+
+    {{- range $entry := $seriesList -}}
+        {{- $home := false -}}
+        {{- with $entry.home -}}
+            {{- $home = $.Site.GetPage . -}}
+        {{- end -}}
+
+        {{- $pages := slice -}}
+        {{- with $entry.category -}}
+            {{- $pages = where $.Site.RegularPages "Params.categories" "intersect" (slice .) -}}
+        {{- end -}}
+        {{- with $entry.directory -}}
+            {{- if and $home $home.File -}}
+                {{- $pages = where $.Site.RegularPages "File.Dir" "eq" $home.File.Dir -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if not $entry.includeHidden -}}
+            {{- $pages = where $pages "Params.hidden" "!=" true -}}
+        {{- end -}}
+        {{- $pages = where $pages "Params.seriesExclude" "!=" true -}}
+
+        {{- if gt (len $pages) 0 -}}
+            {{- if not $home -}}
+                {{- range $pages -}}
+                    {{- if and (not $home) (ne .Params.hidden true) -}}
+                        {{- $home = . -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+
+            {{- $locked := and $home ($home.Params.encrypt | default false) -}}
+            {{- $sortedPages := sort $pages "Date" "desc" -}}
+            {{- $latestPages := first ($entry.preview | default 5) $sortedPages -}}
+            {{- $latest := index $sortedPages 0 -}}
+            {{- $visibleCount := len $pages -}}
+            {{- if $locked -}}
+                {{- $latestPages = slice $home -}}
+                {{- $latest = $home -}}
+                {{- $visibleCount = 1 -}}
+            {{- end -}}
+            {{- $cards = $cards | append (dict "entry" $entry "pages" $pages "latestPages" $latestPages "latest" $latest "home" $home "count" (len $pages) "visibleCount" $visibleCount "locked" $locked) -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- $totalPosts := 0 -}}
+    {{- range $cards -}}
+        {{- $totalPosts = add $totalPosts .visibleCount -}}
+    {{- end -}}
+
+    <div class="series-index">
+        <header class="series-index__hero">
+            <div>
+                <p class="series-index__kicker">Series</p>
+                <h1>文章系列</h1>
+                <p>把长期更新的课程笔记、Lab 记录、算法复盘和建站日志放在同一个入口里。</p>
+            </div>
+            <div class="series-index__stats" aria-label="系列统计">
+                <span>{{ len $cards }} 个系列</span>
+                <span>{{ $totalPosts }} 篇文章</span>
+            </div>
+        </header>
+
+        {{ if gt (len $cards) 0 }}
+            <section class="series-index__grid" aria-label="文章系列列表">
+                {{ range $cards }}
+                    {{ $entry := .entry }}
+                    <article class="series-card" id="{{ anchorize $entry.title }}">
+                        <div class="series-card__top">
+                            <span class="series-card__badge">{{ $entry.badge | default "SER" }}</span>
+                            <div class="series-card__meta">
+                                {{ if .locked }}
+                                    <span>加密系列</span>
+                                {{ else }}
+                                    <span>{{ .count }} 篇</span>
+                                {{ end }}
+                                {{ with .latest }}<time datetime="{{ .Date.Format "2006-01-02" }}">更新 {{ .Date.Format "2006-01-02" }}</time>{{ end }}
+                            </div>
+                        </div>
+
+                        <h2 class="series-card__title">
+                            {{ with .home }}
+                                <a href="{{ .RelPermalink }}">{{ $entry.title }}</a>
+                            {{ else }}
+                                {{ $entry.title }}
+                            {{ end }}
+                        </h2>
+
+                        <p class="series-card__desc">{{ $entry.description }}</p>
+
+                        {{ if .locked }}
+                            <p class="series-card__locked">这个系列主页已加密，子页面不会在总览页公开列出。</p>
+                        {{ else }}
+                            <div class="series-card__recent" aria-label="{{ $entry.title }} 最近文章">
+                                {{ range .latestPages }}
+                                    <a class="series-card__post" href="{{ .RelPermalink }}">
+                                        <span>{{ .Title }}</span>
+                                        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                                    </a>
+                                {{ end }}
+                            </div>
+                        {{ end }}
+
+                        {{ with .home }}
+                            <a class="series-card__link" href="{{ .RelPermalink }}">进入系列</a>
+                        {{ end }}
+                    </article>
+                {{ end }}
+            </section>
+        {{ else }}
+            <p class="series-index__empty">暂时还没有可展示的系列。</p>
+        {{ end }}
+    </div>
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}

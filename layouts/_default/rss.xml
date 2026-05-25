@@ -31,6 +31,9 @@
         {{- if .Site.Params.rssFullContent -}}
             {{- $content = safeHTML (.Content | html) -}}
         {{- end -}}
+        {{- if .Params.encrypt -}}
+            {{- $content = safeHTML ("本文已加密，请打开文章后输入密码阅读。" | html) -}}
+        {{- end -}}
         <item>
         <title>{{ .Title }}</title>
         <link>{{ .Permalink }}</link>
