@@ -5,6 +5,11 @@ image: "/images/1.png"
 categories: 
     - 算法
     - 动漫
+updates:
+    - date: 2026-05-26
+      content: 将题目难度归档接入系列总览，并按 Rating 顺序展示。
+    - date: 2026-05-25
+      content: 解除题目难度归档子页面加密，方便按分段回看题目。
 seriesExclude: true
 ---
 ## 小猪加睡日常！

@@ -5,6 +5,11 @@ image: "/images/anime-diary/5.png"
 categories: 
     - 算法
     - 动漫
+updates:
+    - date: 2026-05-26
+      content: 补充 R1098 复盘内容，并同步近期 Codeforces 比赛日期到系列目录。
+    - date: 2026-05-25
+      content: 新增 Codeforces Round #1100 复盘，开放算法系列子页面。
 seriesExclude: true
 ---
 ## 前言
