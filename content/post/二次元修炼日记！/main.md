@@ -7,6 +7,8 @@ categories:
     - 动漫
 updates:
     - date: 2026-05-26
+      content: 补充 R1004、Edu174、R1008 等早期比赛复盘入口。
+    - date: 2026-05-26
       content: 补充 R1098 复盘内容，并同步近期 Codeforces 比赛日期到系列目录。
     - date: 2026-05-25
       content: 新增 Codeforces Round #1100 复盘，开放算法系列子页面。
@@ -32,6 +34,13 @@ seriesExclude: true
 ## 看番日记
 | Date       | Round      | div    | id   | sol | rk   | perf | A   | B   | C   | D   | E   | F   | G   | H   | I   |
 | ---------- | ---------- | ------ | ---- | --- | ---- | ---- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2025.02.11 | [R1004]({{< ref "cf-1004.md" >}}) | div1   | [2066](https://codeforces.com/contest/2066) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.02.16 | [Edu174]({{< ref "edu-174.md" >}}) | edu    | [2069](https://codeforces.com/contest/2069) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.03.10 | [R1008]({{< ref "cf-1008.md" >}}) | div2   | [2078](https://codeforces.com/contest/2078) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.05.11 | [R1024]({{< ref "cf-1024.md" >}}) | div1   | [2101](https://codeforces.com/contest/2101) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.09.15 | [Edu182]({{< ref "edu-182.md" >}}) | edu    | [2144](https://codeforces.com/contest/2144) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.09.21 | [R1052]({{< ref "cf-1052.md" >}}) | div2   | [2146](https://codeforces.com/contest/2146) |     |      |      |     |     |     |     |     |     |     |     |     |  |
+| 2025.11.23 | [R1066]({{< ref "cf-1066.md" >}}) | div1+2 | [2157](https://codeforces.com/contest/2157) |     |      |      |     |     |     |     |     |     |     |     |     |  |
 | 2025.10.12 | [R1058](https://codeforces.com/contest/2160) | div2   | [2160](https://codeforces.com/contest/2160) | 3   | vp   | vp   | √   | √   | √   |     |     |     |     |     |     |  |
 | 2025.10.19 | [R1060](https://codeforces.com/contest/2154) | div2   | [2154](https://codeforces.com/contest/2154) | 3   | 3145 | 1536 | √   | √   | √   |     |     |     |     |     |     |  |
 | 2025.10.25 | [R1061](https://codeforces.com/contest/2156) | div2   | [2156](https://codeforces.com/contest/2156) | 2   | 9898 | 1033 | √   | √   | B   |     |     |     |     |     |     |  |
@@ -85,6 +94,20 @@ seriesExclude: true
 
 ## 比赛复盘
 下面这些是已经整理过的比赛题解，按比赛拆开，之后继续补的时候也比较好找。
+
+[Codeforces Round #1004(Div.1)]({{< ref "cf-1004.md" >}})
+
+[Educational Codeforces Round #174]({{< ref "edu-174.md" >}})
+
+[Codeforces Round #1008(Div.2)]({{< ref "cf-1008.md" >}})
+
+[Codeforces Round #1024(Div.1)]({{< ref "cf-1024.md" >}})
+
+[Educational Codeforces Round #182]({{< ref "edu-182.md" >}})
+
+[Codeforces Round #1052(Div.2)]({{< ref "cf-1052.md" >}})
+
+[Codeforces Round #1066(Div.1+2)]({{< ref "cf-1066.md" >}})
 
 [Hello 2026]({{< ref "hello-2026.md" >}})
 
