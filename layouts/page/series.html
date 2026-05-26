@@ -122,6 +122,9 @@
 
                         <div class="series-card__actions">
                             <button class="series-card__link" type="button" data-series-open aria-controls="{{ $panelID }}" aria-expanded="false">查看目录</button>
+                            {{ with $entry.dashboard }}
+                                <a class="series-card__link series-card__link--ghost" href="{{ . }}">比赛面板</a>
+                            {{ end }}
                         </div>
                     </article>
                 {{ end }}
@@ -142,6 +145,9 @@
                                 {{ with .home }}
                                 <a class="series-detail__home" href="{{ .RelPermalink }}">打开主页</a>
                                 {{ end }}
+                            {{ end }}
+                            {{ with $entry.dashboard }}
+                                <a class="series-detail__home" href="{{ . }}">比赛面板</a>
                             {{ end }}
                         </div>
 

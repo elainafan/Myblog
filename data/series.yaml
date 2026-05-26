@@ -41,6 +41,7 @@
   directory: post/二次元修炼日记！/
   home: post/二次元修炼日记！/main.md
   includeHidden: true
+  dashboard: /series/codeforces/
   description: 长期更新的 Codeforces 比赛复盘，把赛时表现、补题思路和题目套路串起来。
   preview: 5
 

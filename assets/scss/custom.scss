@@ -792,6 +792,9 @@ a {
 }
 
 .series-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 18px;
 }
 
@@ -817,6 +820,16 @@ a {
     color: #172033;
     opacity: .92;
     transform: translateY(-1px);
+  }
+}
+
+.series-card__link--ghost {
+  background: color-mix(in srgb, var(--series-accent) 14%, transparent);
+  color: color-mix(in srgb, var(--series-accent) 82%, var(--card-text-color-main));
+  box-shadow: none;
+
+  &:hover {
+    color: color-mix(in srgb, var(--series-accent) 88%, var(--card-text-color-main));
   }
 }
 

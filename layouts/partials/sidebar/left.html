@@ -74,21 +74,6 @@
             </a>
         </li>
         {{ end }}
-        {{- $randomPosts := slice -}}
-        {{- $mainSections := .Site.Params.mainSections | default (slice "post") -}}
-        {{- range .Site.RegularPages -}}
-            {{- if and (in $mainSections .Section) (ne .Params.hidden true) (ne (.Params.encrypt | default false) true) -}}
-                {{- $randomPosts = $randomPosts | append (dict "title" .Title "url" .RelPermalink) -}}
-            {{- end -}}
-        {{- end -}}
-        {{- if gt (len $randomPosts) 0 -}}
-        <li>
-            <a href='{{ "/archives/" | relLangURL }}' data-random-post>
-                {{ partial "helper/icon" "infinity" }}
-                <span>随机 | Random</span>
-            </a>
-        </li>
-        {{- end -}}
         <li class="menu-bottom-section">
             <ol class="menu">
                 {{- $currentLanguageCode := .Language.Lang -}}
@@ -115,8 +100,4 @@
             </ol>
         </li>
     </ol>
-
-    {{- with $randomPosts -}}
-        <script type="application/json" id="random-posts-data">{{ . | jsonify | safeJS }}</script>
-    {{- end -}}
 </aside>
