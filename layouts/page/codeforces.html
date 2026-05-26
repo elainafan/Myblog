@@ -1,0 +1,179 @@
+{{ define "body-class" }}article-page codeforces-page{{ end }}
+
+{{ define "main" }}
+    {{- $records := site.Data.codeforces.contests | default slice -}}
+    {{- $records = sort $records "date" "desc" -}}
+    {{- $doneCount := 0 -}}
+    {{- $pendingCount := 0 -}}
+    {{- $solvedTotal := 0 -}}
+    {{- $bestPerf := 0 -}}
+    {{- $latest := index $records 0 -}}
+
+    {{- range $records -}}
+        {{- with .solved -}}
+            {{- $doneCount = add $doneCount 1 -}}
+            {{- $solvedTotal = add $solvedTotal (int .) -}}
+        {{- else -}}
+            {{- $pendingCount = add $pendingCount 1 -}}
+        {{- end -}}
+        {{- with .perf -}}
+            {{- if findRE "^\\d+$" . -}}
+                {{- $perf := int . -}}
+                {{- if gt $perf $bestPerf -}}{{- $bestPerf = $perf -}}{{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- $ratingHome := .Site.GetPage "post/看番与加睡的小猪日常/main.md" -}}
+    {{- $ratingPages := slice -}}
+    {{- with $ratingHome -}}
+        {{- $ratingPages = where $.Site.RegularPages "File.Dir" "eq" .File.Dir -}}
+    {{- end -}}
+    {{- $ratingPages = where $ratingPages "Params.seriesExclude" "!=" true -}}
+    {{- $ratingPages = sort $ratingPages "Params.seriesOrder" "asc" -}}
+
+    <div class="cf-dashboard" data-cf-dashboard>
+        <header class="cf-dashboard__hero">
+            <div>
+                <p class="cf-dashboard__kicker">Codeforces</p>
+                <h1>比赛复盘面板</h1>
+                <p>把比赛记录、补题状态和题目难度归档放在一起，适合快速回看最近打过什么、还欠什么。</p>
+            </div>
+            <div class="cf-dashboard__stats" aria-label="Codeforces 统计">
+                <span>{{ len $records }} 场</span>
+                <span>{{ $doneCount }} 场已记录</span>
+                <span>{{ $solvedTotal }} 题</span>
+                {{ if gt $bestPerf 0 }}<span>最高 Perf {{ $bestPerf }}</span>{{ end }}
+            </div>
+        </header>
+
+        <section class="cf-dashboard__summary" aria-label="Codeforces 摘要">
+            <div>
+                <span>最近比赛</span>
+                <strong>{{ with $latest }}{{ .round }}{{ end }}</strong>
+                <small>{{ with $latest }}{{ .date }}{{ end }}</small>
+            </div>
+            <div>
+                <span>待补完</span>
+                <strong>{{ $pendingCount }}</strong>
+                <small>主表中未填 sol 的比赛</small>
+            </div>
+            <div>
+                <span>难度归档</span>
+                <strong>{{ len $ratingPages }}</strong>
+                <small>Rating 分段入口</small>
+            </div>
+        </section>
+
+        <section class="cf-rating-panel" aria-labelledby="cf-rating-title">
+            <div class="cf-section-heading">
+                <div>
+                    <p>Difficulty</p>
+                    <h2 id="cf-rating-title">题目难度归档</h2>
+                </div>
+                {{ with $ratingHome }}<a href="{{ .RelPermalink }}">打开主页</a>{{ end }}
+            </div>
+            <div class="cf-rating-grid">
+                {{ range $ratingPages }}
+                    <a class="cf-rating-card" href="{{ .RelPermalink }}">
+                        <span>{{ .Title }}</span>
+                        <time datetime="{{ .Date.Format "2006-01-02" }}">更新 {{ .Date.Format "2006-01-02" }}</time>
+                    </a>
+                {{ end }}
+            </div>
+        </section>
+
+        <section class="cf-contest-panel" aria-labelledby="cf-contest-title">
+            <div class="cf-section-heading">
+                <div>
+                    <p>Contests</p>
+                    <h2 id="cf-contest-title">比赛记录</h2>
+                </div>
+            </div>
+
+            <div class="cf-toolbar">
+                <input type="search" placeholder="搜索 Round 或 Contest ID" data-cf-search aria-label="搜索 Codeforces 记录">
+                <select data-cf-div aria-label="按 Div 筛选">
+                    <option value="all">全部 Div</option>
+                    <option value="div12">Div1/2</option>
+                    <option value="div2">Div2</option>
+                    <option value="div3">Div3</option>
+                    <option value="div4">Div4</option>
+                    <option value="edu">Edu</option>
+                </select>
+                <select data-cf-status aria-label="按补完状态筛选">
+                    <option value="all">全部状态</option>
+                    <option value="done">已记录</option>
+                    <option value="todo">待补完</option>
+                </select>
+                <select data-cf-perf aria-label="按 Performance 筛选">
+                    <option value="all">全部 Perf</option>
+                    <option value="lt1500">&lt; 1500</option>
+                    <option value="1500">1500-1699</option>
+                    <option value="1700">1700-1899</option>
+                    <option value="1900">1900+</option>
+                    <option value="vp">VP / 未记录</option>
+                </select>
+            </div>
+
+            <div class="cf-contest-list" data-cf-list>
+                {{ range $records }}
+                    {{- $writeupURL := "" -}}
+                    {{- with .ref -}}
+                        {{- with site.GetPage (printf "post/二次元修炼日记！/%s" .) -}}
+                            {{- $writeupURL = .RelPermalink -}}
+                        {{- end -}}
+                    {{- end -}}
+                    {{- $status := cond (isset . "solved") "done" "todo" -}}
+                    {{- $perfTier := "unknown" -}}
+                    {{- with .perf -}}
+                        {{- if eq . "vp" -}}
+                            {{- $perfTier = "vp" -}}
+                        {{- else -}}
+                            {{- $perf := int . -}}
+                            {{- if lt $perf 1500 -}}
+                                {{- $perfTier = "lt1500" -}}
+                            {{- else if lt $perf 1700 -}}
+                                {{- $perfTier = "1500" -}}
+                            {{- else if lt $perf 1900 -}}
+                                {{- $perfTier = "1700" -}}
+                            {{- else -}}
+                                {{- $perfTier = "1900" -}}
+                            {{- end -}}
+                        {{- end -}}
+                    {{- end -}}
+                    <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="{{ $status }}" data-perf="{{ $perfTier }}" data-search="{{ printf `%s %s %s` .round .contest .div | lower }}">
+                        <div class="cf-contest-card__main">
+                            <time datetime="{{ .date }}">{{ .date }}</time>
+                            <h3>
+                                {{ if $writeupURL }}
+                                    <a href="{{ $writeupURL }}">{{ .round }}</a>
+                                {{ else }}
+                                    <a href="https://codeforces.com/contest/{{ .contest }}" target="_blank" rel="noopener">{{ .round }}</a>
+                                {{ end }}
+                            </h3>
+                            <span>{{ .div }}</span>
+                        </div>
+                        <div class="cf-contest-card__metrics">
+                            <span>Sol <strong>{{ with .solved }}{{ . }}{{ else }}-{{ end }}</strong></span>
+                            <span>Rank <strong>{{ with .rank }}{{ . }}{{ else }}-{{ end }}</strong></span>
+                            <span>Perf <strong>{{ with .perf }}{{ . }}{{ else }}-{{ end }}</strong></span>
+                        </div>
+                        <div class="cf-contest-card__links">
+                            <a href="https://codeforces.com/contest/{{ .contest }}" target="_blank" rel="noopener">Contest</a>
+                            {{ if $writeupURL }}
+                                <a href="{{ $writeupURL }}">复盘</a>
+                            {{ else }}
+                                <span>未归档</span>
+                            {{ end }}
+                        </div>
+                    </article>
+                {{ end }}
+            </div>
+
+            <p class="cf-contest-empty is-hidden" data-cf-empty>没有匹配的比赛记录。</p>
+        </section>
+    </div>
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}
