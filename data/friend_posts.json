@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T07:05:41.590873+00:00",
+  "generated_at": "2026-05-26T10:22:14.487354+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -201,8 +201,8 @@
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "ok",
-      "post_count": 10
+      "status": "warning",
+      "post_count": 0
     },
     {
       "name": "lvyneko",
@@ -244,7 +244,12 @@
       "post_count": 10
     }
   ],
-  "warnings": [],
+  "warnings": [
+    {
+      "friend": "Yjy's blog",
+      "message": "feed not found and no dated posts found in HTML"
+    }
+  ],
   "posts": [
     {
       "friend": "Equinox",
@@ -522,17 +527,6 @@
       "published_text": "Mon, 27 Apr 2026 16:24:07 +0800"
     },
     {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "句法分析 II",
-      "url": "https://yjyxfcy.github.io/2026/04/22/fnlp10/",
-      "summary": "",
-      "published": "2026-04-22T00:00:00+00:00",
-      "published_text": "2026-04-22"
-    },
-    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -542,17 +536,6 @@
       "summary": "秦朝两种道路 驰道：相当于是国道，以咸阳为中心的全国性交通干道网。 直道：相当于是军用高速公路，连接帝国北部边疆与首都的军事专用通道。 北京与周围地区的交通道路 沿太行山前山麓的南北大道 北京→保定→石家庄→邢台→邯郸→安阳 发源于山西高原的河流穿过太行山，在太行山东麓形成众多冲积扇， 冲积扇连结成群构成著名的冲积扇群，成为城市与农业生产的重要地带，城 市...",
       "published": "2026-04-20T10:43:11+00:00",
       "published_text": "Mon, 20 Apr 2026 18:43:11 +0800"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "句法分析Ⅰ",
-      "url": "https://yjyxfcy.github.io/2026/04/16/fnlp9/",
-      "summary": "",
-      "published": "2026-04-16T00:00:00+00:00",
-      "published_text": "2026-04-16"
     },
     {
       "friend": "~zzz",
@@ -577,17 +560,6 @@
       "published_text": "Sun, 12 Apr 2026 15:21:19 +0800"
     },
     {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "神经序列建模及其扩展",
-      "url": "https://yjyxfcy.github.io/2026/04/08/fnlp8/",
-      "summary": "",
-      "published": "2026-04-08T00:00:00+00:00",
-      "published_text": "2026-04-08"
-    },
-    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -608,17 +580,6 @@
       "summary": "一個基於 Cloudflare Workers 構建的輕量級、無伺服器（Serverless）訂閱流量監控看板。",
       "published": "2026-04-02T20:15:00+00:00",
       "published_text": "Thu, 02 Apr 2026 20:15:00 GMT"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "序列标注 - 隐马尔可夫模型",
-      "url": "https://yjyxfcy.github.io/2026/04/02/fnlp7/",
-      "summary": "",
-      "published": "2026-04-02T00:00:00+00:00",
-      "published_text": "2026-04-02"
     },
     {
       "friend": "~zzz",
@@ -643,17 +604,6 @@
       "published_text": "Sun, 29 Mar 2026 10:27:17 +0800"
     },
     {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "分布语义学",
-      "url": "https://yjyxfcy.github.io/2026/03/25/fnlp6/",
-      "summary": "",
-      "published": "2026-03-25T00:00:00+00:00",
-      "published_text": "2026-03-25"
-    },
-    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -676,39 +626,6 @@
       "published_text": "Sun, 22 Mar 2026 16:00:17 +0800"
     },
     {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "自然语言模型",
-      "url": "https://yjyxfcy.github.io/2026/03/19/fnlp5/",
-      "summary": "",
-      "published": "2026-03-19T00:00:00+00:00",
-      "published_text": "2026-03-19"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "语言模型",
-      "url": "https://yjyxfcy.github.io/2026/03/18/fnlp4/",
-      "summary": "",
-      "published": "2026-03-18T00:00:00+00:00",
-      "published_text": "2026-03-18"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "分类 - 对数线性模型",
-      "url": "https://yjyxfcy.github.io/2026/03/18/fnlp3/",
-      "summary": "",
-      "published": "2026-03-18T00:00:00+00:00",
-      "published_text": "2026-03-18"
-    },
-    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -726,7 +643,7 @@
       "avatar": "https://collapse179.github.io/img/avatar.png",
       "title": "摸鱼",
       "url": "https://collapse179.github.io/steam/",
-      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 27.4 小时 总计: 417.8 小时 DJMAX RESPECT V 最近两周: 2.0 小时 总计: 293.6 小时",
+      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 25.3 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 2.0 小时 总计: 293.6 小时",
       "published": "2026-03-17T00:00:00+00:00",
       "published_text": "Tue, 17 Mar 2026 00:00:00 +0000"
     },
@@ -762,28 +679,6 @@
       "summary": "Lab05: 熟悉logisim setup 本次lab我们将使用一个叫做logisim的工具来设计和模拟我们的电路，这个工具十分好用，只需要java -jar logisim-evolution.jar即可使用。 鄙人在基于archlinux的niri界面上使用时遇到了一些问题，特此记录一下。 故障现象：启动后界面可以正常显示1s，之后会变成白屏，无法操...",
       "published": "2026-03-11T08:47:32+00:00",
       "published_text": "Wed, 11 Mar 2026 16:47:32 +0800"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "词义消歧",
-      "url": "https://yjyxfcy.github.io/2026/03/11/fnlp2/",
-      "summary": "",
-      "published": "2026-03-11T00:00:00+00:00",
-      "published_text": "2026-03-11"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "课程介绍",
-      "url": "https://yjyxfcy.github.io/2026/03/11/fnlp1/",
-      "summary": "",
-      "published": "2026-03-11T00:00:00+00:00",
-      "published_text": "2026-03-11"
     },
     {
       "friend": "CcoMm",
