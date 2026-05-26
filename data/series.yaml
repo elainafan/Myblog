@@ -50,5 +50,7 @@
   directory: post/看番与加睡的小猪日常/
   home: post/看番与加睡的小猪日常/main.md
   includeHidden: true
+  sortBy: seriesOrder
+  sortOrder: asc
   description: 按 Codeforces 题目难度分整理的练习记录，适合按 Rating 阶段查找旧题。
   preview: 5

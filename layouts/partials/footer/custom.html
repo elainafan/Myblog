@@ -88,7 +88,8 @@
     var pjax = new Pjax({
         selectors: [
             ".main-container", ".js-Pjax", "Timer"
-        ]
+        ],
+        cacheBust: false
     })
 
     pjax._handleResponse = pjax.handleResponse;
@@ -145,11 +146,27 @@
         topbar.show();
     })
 
+    function cleanPjaxTimestamp(rawUrl) {
+        const url = new URL(rawUrl, window.location.origin);
+        url.searchParams.delete('t');
+
+        if (url.hash.includes('?')) {
+            const [anchor, query] = url.hash.split('?');
+            const params = new URLSearchParams(query);
+            params.delete('t');
+            const remaining = params.toString();
+            url.hash = remaining ? `${anchor}?${remaining}` : anchor;
+        }
+
+        return url.toString();
+    }
+
     document.addEventListener('pjax:complete', () => {
         // 去掉 URL 中的时间戳查询参数
-        let url = new URL(window.location.href);
-        url.searchParams.delete('t');  // 删除 `t` 参数
-        history.replaceState(null, '', url.toString());  // 更新 URL 不刷新页面
+        const cleanUrl = cleanPjaxTimestamp(window.location.href);
+        if (cleanUrl !== window.location.href) {
+            history.replaceState(null, '', cleanUrl);  // 更新 URL 不刷新页面
+        }
         renderKaTeX();
         // Stack脚本初始化
         window.Stack.init();

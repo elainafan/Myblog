@@ -5,6 +5,7 @@ image: "/images/anime-diary/5.png"
 categories: 
     - 算法
     - 动漫
+seriesExclude: true
 ---
 ## 前言
 这里是一个二次元的堕落之路啦，虽然窝觉得也没人能看到这里~

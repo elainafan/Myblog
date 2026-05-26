@@ -36,9 +36,19 @@
             {{- end -}}
 
             {{- $locked := and $home ($home.Params.encrypt | default false) -}}
-            {{- $sortedPages := sort $pages "Date" "desc" -}}
+            {{- $dateSortedPages := sort $pages "Date" "desc" -}}
+            {{- $sortBy := $entry.sortBy | default "date" -}}
+            {{- $sortOrder := $entry.sortOrder | default "desc" -}}
+            {{- $sortedPages := $dateSortedPages -}}
+            {{- if eq $sortBy "seriesOrder" -}}
+                {{- $sortedPages = sort $pages "Params.seriesOrder" $sortOrder -}}
+            {{- else if eq $sortBy "title" -}}
+                {{- $sortedPages = sort $pages "Title" $sortOrder -}}
+            {{- else if eq $sortBy "date" -}}
+                {{- $sortedPages = sort $pages "Date" $sortOrder -}}
+            {{- end -}}
             {{- $latestPages := first ($entry.preview | default 5) $sortedPages -}}
-            {{- $latest := index $sortedPages 0 -}}
+            {{- $latest := index $dateSortedPages 0 -}}
             {{- $visibleCount := len $pages -}}
             {{- if $locked -}}
                 {{- $latestPages = slice $home -}}

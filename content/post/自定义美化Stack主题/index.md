@@ -5,6 +5,8 @@ categories:
     - 建站
 image: 10.jpg
 updates:
+    - date: 2026-05-26
+      content: 补充文章系列总览页的目录面板交互，并整理长系列的展示方式。
     - date: 2026-05-25
       content: 增加文章系列总览页，并调整系列卡片分色样式。
     - date: 2026-05-24
@@ -605,7 +607,7 @@ comments: false
   color: "#5aa8ff"
   category: 计算机系统导论
   description: CSAPP / ICS Labs 的施工记录，主要记录每个 Lab 的任务、调试过程和踩坑点。
-  preview: 5
+  preview: 8
 ```
 
 其中 `category` 表示按文章分类收集页面，`preview` 表示卡片上最多展示几篇最近文章。像 Codeforces 复盘这种目录式系列，则用 `directory` 和 `home` 指定同一目录下的系列主页：
@@ -618,18 +620,94 @@ comments: false
   home: post/二次元修炼日记！/main.md
   includeHidden: true
   description: 长期更新的 Codeforces 比赛复盘，把赛时表现、补题思路和题目套路串起来。
-  preview: 5
+  preview: 8
 ```
 
 这里需要额外注意加密系列。`includeHidden: true` 只是允许模板知道这个目录下面有一组隐藏子页面，但如果系列主页本身带有 `encrypt: true`，总览页不会公开列出子文章，只显示“加密系列”和进入主页的按钮。这样可以保留入口，又不会把隐藏页面的标题和时间线摊开。
 
-配色也放在同一个数据文件里。`layouts/page/series.html` 会把 `color` 写成卡片上的 CSS 变量：
+一开始笔者试过在卡片里给长系列加展开按钮，但实际看起来会比较突兀：有的系列很短，有的系列很长，卡片高度被撑开以后，整个网格会变得不均衡。最后采用的方案是：卡片只负责概览，点击 `查看目录` 后，在卡片区域下方展开一个单独的目录面板。
+
+模板里每张卡片会生成一个对应的面板 id：
 
 ```go-html-template
-<article class="series-card" style="--series-accent: {{ $entry.color | default "#6aa6ff" }};">
+{{ $panelID := printf "series-panel-%s" (anchorize $entry.title) }}
+
+<article class="series-card"
+    style="--series-accent: {{ $entry.color | default "#6aa6ff" }};"
+    data-series-card
+    data-series-target="{{ $panelID }}">
 ```
 
-然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和“进入系列”按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
+卡片上的按钮只负责打开目录，不再伪装成普通文章链接：
+
+```go-html-template
+<button class="series-card__link" type="button" data-series-open
+    aria-controls="{{ $panelID }}"
+    aria-expanded="false">
+    查看目录
+</button>
+```
+
+真正的完整目录放在下面的 `series-detail` 里。这样短系列和长系列在卡片阶段都保持一致，读者需要继续看时，再打开对应系列的完整列表：
+
+```go-html-template
+<section class="series-detail" data-series-detail hidden aria-live="polite">
+    <article class="series-detail__panel" id="{{ $panelID }}" data-series-panel hidden>
+        <div class="series-detail__list">
+            {{ range .sortedPages }}
+                <a class="series-detail__item" href="{{ .RelPermalink }}">
+                    <span>{{ .Title }}</span>
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                </a>
+            {{ end }}
+        </div>
+    </article>
+</section>
+```
+
+交互逻辑放在 `assets/ts/main.ts` 的 `setupSeriesPanels()`。它做的事情很简单：点击某个系列后，先收起其它面板，再把当前卡片标成 `is-active`，同时更新按钮的 `aria-expanded`。如果再次点击已经展开的系列，就把目录面板收回去：
+
+```ts
+function setupSeriesPanels() {
+    const detail = document.querySelector('[data-series-detail]') as HTMLElement;
+    const cards = document.querySelectorAll('[data-series-card]') as NodeListOf<HTMLElement>;
+    const panels = document.querySelectorAll('[data-series-panel]') as NodeListOf<HTMLElement>;
+    if (!detail || !cards.length || !panels.length) return;
+
+    cards.forEach(card => {
+        const button = card.querySelector('[data-series-open]') as HTMLButtonElement;
+        const targetID = card.dataset.seriesTarget;
+        if (!button || !targetID) return;
+
+        button.addEventListener('click', () => {
+            const active = button.getAttribute('aria-expanded') === 'true';
+
+            cards.forEach(otherCard => {
+                otherCard.classList.remove('is-active');
+                const otherButton = otherCard.querySelector('[data-series-open]') as HTMLButtonElement;
+                if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
+            });
+            panels.forEach(panel => { panel.hidden = true; });
+
+            if (active) {
+                detail.hidden = true;
+                return;
+            }
+
+            const panel = document.getElementById(targetID) as HTMLElement;
+            if (!panel) return;
+
+            card.classList.add('is-active');
+            detail.hidden = false;
+            panel.hidden = false;
+            button.setAttribute('aria-expanded', 'true');
+            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+}
+```
+
+配色也放在同一个数据文件里。`layouts/page/series.html` 会把 `color` 写成卡片上的 CSS 变量，然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
 
 ```scss
 .series-card__title {

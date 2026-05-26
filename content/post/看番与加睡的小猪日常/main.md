@@ -5,6 +5,7 @@ image: "/images/1.png"
 categories: 
     - 算法
     - 动漫
+seriesExclude: true
 ---
 ## 小猪加睡日常！
 这里记录青名的题目，也就是难度分 $1400 \sim 1500$ 的。
