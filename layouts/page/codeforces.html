@@ -130,7 +130,7 @@
                     {{- with .perf -}}
                         {{- if eq . "vp" -}}
                             {{- $perfTier = "vp" -}}
-                        {{- else -}}
+                        {{- else if findRE "^\\d+$" . -}}
                             {{- $perf := int . -}}
                             {{- if lt $perf 1500 -}}
                                 {{- $perfTier = "lt1500" -}}
@@ -141,6 +141,8 @@
                             {{- else -}}
                                 {{- $perfTier = "1900" -}}
                             {{- end -}}
+                        {{- else -}}
+                            {{- $perfTier = "vp" -}}
                         {{- end -}}
                     {{- end -}}
                     <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="{{ $status }}" data-perf="{{ $perfTier }}" data-search="{{ printf `%s %s %s` .round .contest .div | lower }}">
