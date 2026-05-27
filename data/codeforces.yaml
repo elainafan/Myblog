@@ -23,8 +23,8 @@ contests:
     group: "div2"
     contest: "2078"
     solved: 2
-    rank: "1023"
-    perf: "9362"
+    rank: "9362"
+    perf: "1023"
     ref: "cf-1008.md"
   - date: "2025-05-11"
     round: "R1024"
@@ -172,8 +172,8 @@ contests:
     ref: "cf-1068.md"
   - date: "2025-12-06"
     round: "R1069"
-    div: "div1/2"
-    group: "div12"
+    div: "div2"
+    group: "div2"
     contest: "2175"
     solved: 3
     rank: "934"
@@ -244,8 +244,8 @@ contests:
     ref: "cf-1072.md"
   - date: "2026-01-17"
     round: "R1073"
-    div: "div1/2"
-    group: "div12"
+    div: "div2"
+    group: "div2"
     contest: "2191"
     solved: 4
     rank: "4312"
@@ -262,8 +262,8 @@ contests:
     ref: "cf-1074.md"
   - date: "2026-01-23"
     round: "R1075"
-    div: "div1/2"
-    group: "div12"
+    div: "div2"
+    group: "div2"
     contest: "2189"
     solved: 3
     rank: "3891"
@@ -280,8 +280,8 @@ contests:
     ref: "cf-1076.md"
   - date: "2026-01-29"
     round: "R1077"
-    div: "div1/2"
-    group: "div12"
+    div: "div2"
+    group: "div2"
     contest: "2188"
     solved: 4
     rank: "1344"
@@ -298,8 +298,8 @@ contests:
     ref: "cf-1078.md"
   - date: "2026-02-11"
     round: "R1079"
-    div: "div1/2"
-    group: "div12"
+    div: "div2"
+    group: "div2"
     contest: "2197"
     solved: 4
     rank: "1643"
@@ -307,7 +307,7 @@ contests:
     ref: "cf-1079.md"
   - date: "2026-02-15"
     round: "R1080"
-    div: "div.3"
+    div: "div3"
     group: "div3"
     contest: "2195"
     solved: 6
@@ -316,7 +316,7 @@ contests:
     ref: "cf-1080.md"
   - date: "2026-02-21"
     round: "R1081"
-    div: "div.2"
+    div: "div2"
     group: "div2"
     contest: "2192"
     solved: 4
