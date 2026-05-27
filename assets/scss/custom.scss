@@ -1628,7 +1628,7 @@ a {
   text-align: center;
 }
 
-.home-activity {
+.site-activity {
   margin-bottom: 22px;
   padding: 18px;
   border: 1px solid rgba(120, 130, 150, .18);
@@ -1637,7 +1637,7 @@ a {
   box-shadow: var(--shadow-l1);
 }
 
-.home-activity__header {
+.site-activity__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1675,13 +1675,13 @@ a {
   }
 }
 
-.home-activity__list {
+.site-activity__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
 }
 
-.home-activity__item {
+.site-activity__item {
   --activity-accent: var(--accent-color);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -1708,37 +1708,37 @@ a {
   }
 }
 
-.home-activity__item--article,
+.site-activity__item--article,
 .timeline-item--article {
   --activity-accent: #7bbcff;
   --timeline-accent: #7bbcff;
 }
 
-.home-activity__item--update,
+.site-activity__item--update,
 .timeline-item--update {
   --activity-accent: #ff8aae;
   --timeline-accent: #ff8aae;
 }
 
-.home-activity__item--contest,
+.site-activity__item--contest,
 .timeline-item--contest {
   --activity-accent: #67ddd1;
   --timeline-accent: #67ddd1;
 }
 
-.home-activity__item--friend,
+.site-activity__item--friend,
 .timeline-item--friend {
   --activity-accent: #f2c86b;
   --timeline-accent: #f2c86b;
 }
 
-.home-activity__item--bangumi,
+.site-activity__item--bangumi,
 .timeline-item--bangumi {
   --activity-accent: #a98bff;
   --timeline-accent: #a98bff;
 }
 
-.home-activity__badge {
+.site-activity__badge {
   padding: 4px 8px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--activity-accent) 84%, white);
@@ -1748,7 +1748,7 @@ a {
   white-space: nowrap;
 }
 
-.home-activity__body {
+.site-activity__body {
   min-width: 0;
 
   strong,
@@ -2091,7 +2091,7 @@ a {
     justify-content: flex-start;
   }
 
-  .home-activity__list {
+  .site-activity__list {
     grid-template-columns: 1fr;
   }
 
@@ -2116,7 +2116,7 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .home-activity__header {
+  .site-activity__header {
     align-items: flex-start;
     flex-direction: column;
   }

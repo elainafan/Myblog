@@ -32,6 +32,8 @@
             </div>
         </header>
 
+        {{ partial "components/recent-activity.html" . }}
+
         {{ if gt (len $entries) 0 }}
             <section class="updates-timeline" aria-label="文章更新记录">
                 {{ range $entries }}
