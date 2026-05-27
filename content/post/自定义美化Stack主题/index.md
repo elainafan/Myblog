@@ -5,6 +5,8 @@ categories:
     - 建站
 image: 10.jpg
 updates:
+    - date: 2026-05-27
+      content: 增加全站时间线，并把站点最近活动移到 Updates 页面。
     - date: 2026-05-26
       content: 补充文章系列总览页的目录面板交互，并整理长系列的展示方式。
     - date: 2026-05-25
@@ -515,6 +517,62 @@ updates:
 ```
 
 这样最近修过的文章会在首页卡片里显示一个“更新 YYYY-MM-DD”。它不会替代发布日期，只是告诉读者：这篇文章后来又被维护过。
+
+## 全站时间线和最近活动
+单篇文章的 `updates` 解决的是“这篇文章后来改过什么”，但博客本身还有很多别的动态：文章发布、Codeforces 复盘、友链朋友圈、Bangumi 收藏变化。这些东西分散在不同页面里，单独看都没问题，但如果想快速回顾最近整个站点发生了什么，就还需要一个更集中的入口。
+
+因此笔者又加了一个全站时间线。数据汇总逻辑放在 `layouts/partials/data/timeline-events.html`，它会把不同来源统一整理成一组 `events`，最后按时间倒序返回：
+
+```go-html-template
+{{- $events := slice -}}
+{{- $mainSections := $site.Params.mainSections | default (slice "post") -}}
+{{- $publicPosts := where $site.RegularPages "Type" "in" $mainSections -}}
+{{- $publicPosts = where $publicPosts "Params.hidden" "!=" true -}}
+
+{{- range $page := $publicPosts -}}
+    {{- if not ($page.Params.encrypt | default false) -}}
+        {{- $events = $events | append (dict
+            "date" $page.Date
+            "type" "article"
+            "label" "文章"
+            "title" $page.Title
+            "url" $page.RelPermalink
+        ) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- return (sort $events "date" "desc") -}}
+```
+
+这里最重要的仍然是过滤：普通文章只取 `mainSections` 中的公开页面，并且跳过 `hidden: true` 和 `encrypt: true`。这样隐藏子页、加密文章不会因为时间线而被额外摊开。至于 Codeforces、友链和 Bangumi，本来就是公开数据文件里的内容，时间线只负责把它们和文章事件放到同一条流里。
+
+完整页面放在 `content/page/timeline/index.md` 和 `layouts/page/timeline.html`。不过左侧菜单已经比较拥挤，所以这个页面只作为隐藏入口存在：
+
+```yaml
+title: "时间线 | Timeline"
+layout: "timeline"
+url: "/timeline/"
+hidden: true
+comments: false
+```
+
+页面本身会展示文章发布、文章更新、比赛记录、友链动态和 Bangumi 收藏，并用不同颜色区分类型。这样需要完整回看时，可以直接打开 `/timeline/`；平时不需要它占据左侧导航。
+
+后来还补了一个更轻量的“站点最近活动”组件，放在 `layouts/partials/components/recent-activity.html`。一开始笔者试过把它放在首页顶部，但实际效果有点太抢眼：读者打开首页时，更应该先看到文章卡片，而不是一整块动态面板。因此最终把它移到了 `更新 | Updates` 页面里：
+
+```go-html-template
+<header class="updates-index__hero">
+    ...
+</header>
+
+{{ partial "components/recent-activity.html" . }}
+
+<section class="updates-timeline" aria-label="文章更新记录">
+    ...
+</section>
+```
+
+这样 `Updates` 页面就分成两层：上面是最近全站活动，方便快速扫一眼；下面仍然保留原来的文章更新记录，专门记录哪些文章被维护过。完整时间线则通过“查看时间线”按钮进入，不再额外增加左侧菜单项。
 
 ## 系列文章导航
 像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。
