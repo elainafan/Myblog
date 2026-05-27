@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T00:26:01.424121+00:00",
+  "generated_at": "2026-05-27T10:23:02.499455+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -201,8 +201,8 @@
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 10
     },
     {
       "name": "lvyneko",
@@ -244,13 +244,41 @@
       "post_count": 10
     }
   ],
-  "warnings": [
+  "warnings": [],
+  "posts": [
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "SOS DP",
+      "url": "https://equinox.wiki/post/cp-algorithm/sosdp/",
+      "summary": "SOS DP 作者：Equinox（shixy2003@gmail.com） 本文2026-05-26首发于 Welcome to my blog ，最后修改于2026-05-26",
+      "published": "2026-05-26T13:10:34+00:00",
+      "published_text": "Tue, 26 May 2026 21:10:34 +0800"
+    },
     {
       "friend": "Yjy's blog",
-      "message": "feed not found and no dated posts found in HTML"
-    }
-  ],
-  "posts": [
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "NP完全",
+      "url": "https://yjyxfcy.github.io/2026/05/26/sf2/",
+      "summary": "",
+      "published": "2026-05-26T00:00:00+00:00",
+      "published_text": "2026-05-26"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "中史地_11 — 历史上长江中游河道与主要湖泊的变迁",
+      "url": "https://fuquan99666.github.io/p/%E4%B8%AD%E5%8F%B2%E5%9C%B0_11-%E5%8E%86%E5%8F%B2%E4%B8%8A%E9%95%BF%E6%B1%9F%E4%B8%AD%E6%B8%B8%E6%B2%B3%E9%81%93%E4%B8%8E%E4%B8%BB%E8%A6%81%E6%B9%96%E6%B3%8A%E7%9A%84%E5%8F%98%E8%BF%81/",
+      "summary": "云梦泽的演变过程 上图是史前文化遗址分布图，和上一讲中黄河下游的漫游导致的空白一样，汉江平原也是文化遗址空白区域，为什么呢？因为这里曾经是云梦泽，水域辽阔，无法生存人类。 云梦不是云梦泽，云梦是春秋战国时期楚王狩猎区，是多种地貌的综合体。范围东至大别山麓、幕阜山麓，西至宜昌、宜都一线，北至大洪山区，南缘大江。 而云梦泽是狩猎区的湖沼部分。位于今江汉平原之内...",
+      "published": "2026-05-25T10:42:32+00:00",
+      "published_text": "Mon, 25 May 2026 18:42:32 +0800"
+    },
     {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
@@ -261,6 +289,17 @@
       "summary": "CLIP精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-25首发于 Welcome to my blog ，最后修改于2026-05-25",
       "published": "2026-05-25T05:26:56+00:00",
       "published_text": "Mon, 25 May 2026 13:26:56 +0800"
+    },
+    {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "问题复杂度",
+      "url": "https://yjyxfcy.github.io/2026/05/25/sf1/",
+      "summary": "",
+      "published": "2026-05-25T00:00:00+00:00",
+      "published_text": "2026-05-25"
     },
     {
       "friend": "Anfsity",
@@ -461,17 +500,6 @@
       "published_text": "Fri, 08 May 2026 19:26:35 +0800"
     },
     {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Pretraining on Unlabeled Data",
-      "url": "https://equinox.wiki/post/llms-from-scratch/pretraining-on-unlabeled-data/",
-      "summary": "Pretraining on Unlabeled Data 作者：Equinox（shixy2003@gmail.com） 本文2026-05-06首发于 Welcome to my blog ，最后修改于2026-05-06",
-      "published": "2026-05-06T06:17:41+00:00",
-      "published_text": "Wed, 06 May 2026 14:17:41 +0800"
-    },
-    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -527,6 +555,17 @@
       "published_text": "Mon, 27 Apr 2026 16:24:07 +0800"
     },
     {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "句法分析 II",
+      "url": "https://yjyxfcy.github.io/2026/04/22/fnlp10/",
+      "summary": "",
+      "published": "2026-04-22T00:00:00+00:00",
+      "published_text": "2026-04-22"
+    },
+    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -536,6 +575,17 @@
       "summary": "秦朝两种道路 驰道：相当于是国道，以咸阳为中心的全国性交通干道网。 直道：相当于是军用高速公路，连接帝国北部边疆与首都的军事专用通道。 北京与周围地区的交通道路 沿太行山前山麓的南北大道 北京→保定→石家庄→邢台→邯郸→安阳 发源于山西高原的河流穿过太行山，在太行山东麓形成众多冲积扇， 冲积扇连结成群构成著名的冲积扇群，成为城市与农业生产的重要地带，城 市...",
       "published": "2026-04-20T10:43:11+00:00",
       "published_text": "Mon, 20 Apr 2026 18:43:11 +0800"
+    },
+    {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "句法分析Ⅰ",
+      "url": "https://yjyxfcy.github.io/2026/04/16/fnlp9/",
+      "summary": "",
+      "published": "2026-04-16T00:00:00+00:00",
+      "published_text": "2026-04-16"
     },
     {
       "friend": "~zzz",
@@ -560,6 +610,17 @@
       "published_text": "Sun, 12 Apr 2026 15:21:19 +0800"
     },
     {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "神经序列建模及其扩展",
+      "url": "https://yjyxfcy.github.io/2026/04/08/fnlp8/",
+      "summary": "",
+      "published": "2026-04-08T00:00:00+00:00",
+      "published_text": "2026-04-08"
+    },
+    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -580,6 +641,17 @@
       "summary": "一個基於 Cloudflare Workers 構建的輕量級、無伺服器（Serverless）訂閱流量監控看板。",
       "published": "2026-04-02T20:15:00+00:00",
       "published_text": "Thu, 02 Apr 2026 20:15:00 GMT"
+    },
+    {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "序列标注 - 隐马尔可夫模型",
+      "url": "https://yjyxfcy.github.io/2026/04/02/fnlp7/",
+      "summary": "",
+      "published": "2026-04-02T00:00:00+00:00",
+      "published_text": "2026-04-02"
     },
     {
       "friend": "~zzz",
@@ -604,6 +676,17 @@
       "published_text": "Sun, 29 Mar 2026 10:27:17 +0800"
     },
     {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "分布语义学",
+      "url": "https://yjyxfcy.github.io/2026/03/25/fnlp6/",
+      "summary": "",
+      "published": "2026-03-25T00:00:00+00:00",
+      "published_text": "2026-03-25"
+    },
+    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -626,6 +709,39 @@
       "published_text": "Sun, 22 Mar 2026 16:00:17 +0800"
     },
     {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "自然语言模型",
+      "url": "https://yjyxfcy.github.io/2026/03/19/fnlp5/",
+      "summary": "",
+      "published": "2026-03-19T00:00:00+00:00",
+      "published_text": "2026-03-19"
+    },
+    {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "语言模型",
+      "url": "https://yjyxfcy.github.io/2026/03/18/fnlp4/",
+      "summary": "",
+      "published": "2026-03-18T00:00:00+00:00",
+      "published_text": "2026-03-18"
+    },
+    {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "分类 - 对数线性模型",
+      "url": "https://yjyxfcy.github.io/2026/03/18/fnlp3/",
+      "summary": "",
+      "published": "2026-03-18T00:00:00+00:00",
+      "published_text": "2026-03-18"
+    },
+    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -643,7 +759,7 @@
       "avatar": "https://collapse179.github.io/img/avatar.png",
       "title": "摸鱼",
       "url": "https://collapse179.github.io/steam/",
-      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 25.3 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 2.0 小时 总计: 293.6 小时",
+      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 25.3 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 2.6 小时 总计: 294.1 小时",
       "published": "2026-03-17T00:00:00+00:00",
       "published_text": "Tue, 17 Mar 2026 00:00:00 +0000"
     },
@@ -789,17 +905,6 @@
       "summary": "MUX 多路选择器 A，B两个n位的输入，S为选择信号，输出是A或者B中的一个 我们可以首先构建一个1位的MUX，然后通过级联来构建n位的MUX 1 2 3 4 5 6 7 8 9 10 11 12 使用上次学到的思想，先写出真值表（2^3=8） S A B | Out 0 0 0 | 0 0 0 1 | 0 0 1 0 | 1 0 1 1 | 1 1 0...",
       "published": "2026-02-18T07:55:17+00:00",
       "published_text": "Wed, 18 Feb 2026 15:55:17 +0800"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_5 — Intro to Synchronous Digital Systems",
-      "url": "https://fuquan99666.github.io/p/cs61c_5-intro-to-synchronous-digital-systems/",
-      "summary": "Logic Design And , Or Transistors MOS Transistor n-type MOSFET (NMOS) p-type MOSFET (PMOS) 有三个端口：gate, source, drain，当gate电压高于source电压时，NMOS导通；当gate电压低于source电压时，PMOS导通。记住：DGS。 1...",
-      "published": "2026-02-07T07:28:16+00:00",
-      "published_text": "Sat, 07 Feb 2026 15:28:16 +0800"
     },
     {
       "friend": "Collapse179",
