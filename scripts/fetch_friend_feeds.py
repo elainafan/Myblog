@@ -202,7 +202,8 @@ def clean_summary(value: str, limit: int = 180) -> str:
 
 
 def clean_text(value: str) -> str:
-    text = HTML_TAG_RE.sub(" ", value or "")
+    text = unescape(value or "")
+    text = HTML_TAG_RE.sub(" ", text)
     return unescape(re.sub(r"\s+", " ", text)).strip()
 
 
@@ -358,7 +359,7 @@ def parse_feed(feed_xml: bytes, friend: dict[str, Any]) -> list[dict[str, Any]]:
             entry_link(entry) or first_child_text(entry, {"guid", "id"}),
             friend.get("site", ""),
         )
-        title = first_child_text(entry, {"title"}) or "Untitled"
+        title = clean_text(first_child_text(entry, {"title"})) or "Untitled"
         posts.append(
             {
                 "friend": friend.get("name", ""),

@@ -76,12 +76,13 @@
 {{- with $site.Data.friend_posts.posts -}}
     {{- range $post := . -}}
         {{- with $post.published -}}
+            {{- $title := ($post.title | default "Untitled") | htmlUnescape | plainify | replaceRE "\\s+" " " -}}
             {{- $events = $events | append (dict
                 "date" (time .)
                 "type" "friend"
                 "label" "友链"
-                "title" ($post.title | plainify)
-                "summary" (printf "%s 更新了《%s》" ($post.friend | default "朋友") ($post.title | plainify))
+                "title" $title
+                "summary" (printf "%s 更新了《%s》" ($post.friend | default "朋友") $title)
                 "source" ($post.friend | default "Friend")
                 "url" $post.url
                 "external" true
