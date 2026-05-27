@@ -1,0 +1,30 @@
+{{- $events := partial "data/timeline-events.html" . -}}
+{{- $timelinePage := .Site.GetPage "page/timeline" -}}
+{{- if gt (len $events) 0 -}}
+<section class="home-activity" aria-labelledby="home-activity-title">
+    <div class="home-activity__header">
+        <div>
+            <p>Activity</p>
+            <h2 id="home-activity-title">最近活动</h2>
+        </div>
+        {{- with $timelinePage -}}
+            <a href="{{ .RelPermalink }}">查看时间线</a>
+        {{- else -}}
+            <a href="/timeline/">查看时间线</a>
+        {{- end -}}
+    </div>
+
+    <div class="home-activity__list">
+        {{- range first 8 $events -}}
+            <a class="home-activity__item home-activity__item--{{ .type }}" href="{{ .url }}"{{ if .external }} target="_blank" rel="noopener"{{ end }}>
+                <span class="home-activity__badge">{{ .label }}</span>
+                <span class="home-activity__body">
+                    <strong>{{ .title | plainify }}</strong>
+                    <small>{{ .summary | plainify }}</small>
+                </span>
+                <time datetime="{{ .date.Format "2006-01-02" }}">{{ .date.Format "01-02" }}</time>
+            </a>
+        {{- end -}}
+    </div>
+</section>
+{{- end -}}
