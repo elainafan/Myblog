@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T00:24:18.591812+00:00",
+  "generated_at": "2026-05-28T04:26:23.846036+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -246,6 +246,17 @@
   ],
   "warnings": [],
   "posts": [
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Swin Transformer精读",
+      "url": "https://equinox.wiki/post/paper-reading/swin-transformer%E7%B2%BE%E8%AF%BB/",
+      "summary": "Swin Transformer精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-27首发于 Welcome to my blog ，最后修改于2026-05-27",
+      "published": "2026-05-27T08:33:14+00:00",
+      "published_text": "Wed, 27 May 2026 16:33:14 +0800"
+    },
     {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
@@ -498,17 +509,6 @@
       "summary": "Fine Tuning to Follow Instructions 作者：Equinox（shixy2003@gmail.com） 本文2026-05-09首发于 Welcome to my blog ，最后修改于2026-05-09",
       "published": "2026-05-09T07:31:28+00:00",
       "published_text": "Sat, 09 May 2026 15:31:28 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Fine Tuning for Classification",
-      "url": "https://equinox.wiki/post/llms-from-scratch/fine-tuning-for-classification/",
-      "summary": "Fine Tuning for Classification 作者：Equinox（shixy2003@gmail.com） 本文2026-05-08首发于 Welcome to my blog ，最后修改于2026-05-08",
-      "published": "2026-05-08T11:26:35+00:00",
-      "published_text": "Fri, 08 May 2026 19:26:35 +0800"
     },
     {
       "friend": "~zzz",
