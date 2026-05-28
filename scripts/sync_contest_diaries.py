@@ -5,12 +5,15 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import html as html_lib
+import http.cookiejar
 import json
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -38,6 +41,10 @@ XCPC_META = {
         "group": "province",
         "url": "https://codeforces.com/gym/104369",
         "ref": "gdcpc-2023.md",
+        "team": "Linger_Big_Pig",
+        "members": ["PaperMemory", "Kuro_neko"],
+        "rank": "30",
+        "penalty": "674",
     }
 }
 
@@ -64,6 +71,9 @@ class Contest:
     tasks: list[Task]
     rank: str = "vp"
     perf: str = "vp"
+    penalty: str = ""
+    team: str = ""
+    members: list[str] = field(default_factory=list)
     rating: str = ""
     solved: int = 0
     order: int = 0
@@ -130,18 +140,26 @@ def write_yaml(path: Path, contests: list[Contest], generated_by: str) -> None:
                 f"    url: {yaml_value(contest.url)}",
                 f"    solved: {yaml_value(contest.solved)}",
                 f"    rank: {yaml_value(contest.rank)}",
-                f"    perf: {yaml_value(contest.perf)}",
             ]
         )
+        if contest.perf:
+            lines.append(f"    perf: {yaml_value(contest.perf)}")
+        if contest.penalty:
+            lines.append(f"    penalty: {yaml_value(contest.penalty)}")
+        if contest.team:
+            lines.append(f"    team: {yaml_value(contest.team)}")
+        if contest.members:
+            lines.append("    members:")
+            for member in contest.members:
+                lines.append(f"      - {yaml_value(member)}")
         if contest.rating:
             lines.append(f"    rating: {yaml_value(contest.rating)}")
-        lines.extend(
-            [
-                f"    ref: {yaml_value(contest.ref)}",
-                f"    status: {yaml_value(status_text(contest.tasks))}",
-                "    tasks:",
-            ]
-        )
+        lines.append(f"    ref: {yaml_value(contest.ref)}")
+        if contest.penalty:
+            lines.append(f"    problems: {yaml_value(problem_text(contest.tasks))}")
+        else:
+            lines.append(f"    status: {yaml_value(status_text(contest.tasks))}")
+        lines.append("    tasks:")
         for task in contest.tasks:
             lines.extend(
                 [
@@ -156,6 +174,10 @@ def write_yaml(path: Path, contests: list[Contest], generated_by: str) -> None:
 
 def status_text(tasks: list[Task]) -> str:
     return " ".join(f"{task.label}{task.status or '-'}" for task in tasks)
+
+
+def problem_text(tasks: list[Task]) -> str:
+    return " / ".join(task.label for task in tasks)
 
 
 def problem_sort_key(path: Path) -> tuple[str, str]:
@@ -336,6 +358,85 @@ def sync_atcoder_official(contests: list[Contest], handle: str) -> None:
                 task.status = "B"
 
 
+def request_cf_gym_standings(contest_id: str, timeout: int = 20) -> str:
+    url = f"https://mirror.codeforces.com/gym/{contest_id}/standings"
+    cookie_jar = http.cookiejar.CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+    headers = {"User-Agent": "Mozilla/5.0 (hugo contest sync; +https://www.elainafan.one/)"}
+
+    page = opener.open(urllib.request.Request(url, headers=headers), timeout=timeout).read().decode(
+        "utf-8",
+        "ignore",
+    )
+    csrf_match = re.search(r"name='csrf_token' value='([^']+)'", page)
+    if not csrf_match:
+        return page
+
+    payload = urllib.parse.urlencode(
+        {
+            "csrf_token": csrf_match.group(1),
+            "action": "toggleShowUnofficial",
+            "newShowUnofficialValue": "true",
+            "showUnofficial": "on",
+        }
+    ).encode()
+    return opener.open(
+        urllib.request.Request(
+            url,
+            data=payload,
+            headers={**headers, "Content-Type": "application/x-www-form-urlencoded"},
+            method="POST",
+        ),
+        timeout=timeout,
+    ).read().decode("utf-8", "ignore")
+
+
+def cell_text(cell: str) -> str:
+    text = html_lib.unescape(re.sub(r"<[^>]+>", " ", cell))
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def apply_xcpc_row(contest: Contest, row: str) -> bool:
+    raw_cells = [match.group(0) for match in re.finditer(r"<t[dh][^>]*>[\s\S]*?</t[dh]>", row)]
+    cells = [cell_text(cell) for cell in raw_cells]
+    if len(cells) < 4:
+        return False
+
+    contest.rank = cells[0]
+    contest.solved = int(cells[2]) if cells[2].isdigit() else contest.solved
+    contest.penalty = cells[3]
+
+    problem_cells = raw_cells[4:]
+    for task in contest.tasks:
+        problem_index = ord(task.label[0]) - ord("A")
+        if 0 <= problem_index < len(problem_cells) and "cell-accepted" in problem_cells[problem_index]:
+            task.status = "√"
+    return True
+
+
+def sync_xcpc_official(contests: list[Contest]) -> None:
+    for contest in contests:
+        if not contest.members:
+            continue
+        found = False
+        for _ in range(8):
+            try:
+                page = request_cf_gym_standings(contest.contest)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] failed to fetch Codeforces Gym standings: {exc}", file=sys.stderr)
+                break
+            for match in re.finditer(r"<tr\b[\s\S]*?</tr>", page):
+                row = match.group(0)
+                if all(member in row for member in contest.members):
+                    apply_xcpc_row(contest, row)
+                    found = True
+                    break
+            if found:
+                break
+        if not found:
+            print(f"[warn] standings row not found for {contest.round}: {', '.join(contest.members)}", file=sys.stderr)
+
+
 def discover_xcpc(contests_root: Path) -> list[Contest]:
     base = contests_root / "XCPC"
     contests: list[Contest] = []
@@ -375,6 +476,11 @@ def discover_xcpc(contests_root: Path) -> list[Contest]:
                 url=meta["url"] if meta else f"https://codeforces.com/gym/{contest_id}",
                 ref=meta["ref"] if meta else f"{directory.name.lower()}.md",
                 tasks=tasks,
+                rank=meta.get("rank", "vp") if meta else "vp",
+                perf=meta.get("perf", "") if meta else "",
+                penalty=meta.get("penalty", "") if meta else "",
+                team=meta.get("team", "") if meta else "",
+                members=list(meta.get("members", [])) if meta else [],
                 solved=len(tasks),
             )
         )
@@ -398,6 +504,7 @@ def frontmatter(title: str, date: str, extra: list[str] | None = None) -> str:
 
 def write_main_article(path: Path, title: str, date: str, intro: str, contests: list[Contest], update: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    is_xcpc = any(contest.penalty or contest.team for contest in contests)
     lines = [
         frontmatter(
             title,
@@ -413,25 +520,53 @@ def write_main_article(path: Path, title: str, date: str, intro: str, contests: 
         intro,
         "",
         "## 比赛记录",
-        "| Date | Contest | Type | id | sol | rk | perf | status |",
-        "| ---- | ------- | ---- | -- | --- | -- | ---- | ------ |",
     ]
+    if is_xcpc:
+        lines.extend(
+            [
+                "| Date | Contest | Type | id | sol | rank | penalty | problems |",
+                "| ---- | ------- | ---- | -- | --- | ---- | ------- | -------- |",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "| Date | Contest | Type | id | sol | rk | perf | status |",
+                "| ---- | ------- | ---- | -- | --- | -- | ---- | ------ |",
+            ]
+        )
     for contest in sorted(contests, key=lambda item: item.date):
         ref = f'{{{{< ref "{contest.ref}" >}}}}'
-        lines.append(
-            "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {perf} | {status} |".format(
-                date=contest.date.replace("-", "."),
-                round=contest.round,
-                ref=ref,
-                div=contest.div,
-                contest=contest.contest,
-                url=contest.url,
-                solved=contest.solved,
-                rank=contest.rank,
-                perf=contest.perf,
-                status=status_text(contest.tasks),
+        if is_xcpc:
+            lines.append(
+                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {penalty} | {problems} |".format(
+                    date=contest.date.replace("-", "."),
+                    round=contest.round,
+                    ref=ref,
+                    div=contest.div,
+                    contest=contest.contest,
+                    url=contest.url,
+                    solved=contest.solved,
+                    rank=contest.rank,
+                    penalty=contest.penalty or "-",
+                    problems=problem_text(contest.tasks),
+                )
             )
-        )
+        else:
+            lines.append(
+                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {perf} | {status} |".format(
+                    date=contest.date.replace("-", "."),
+                    round=contest.round,
+                    ref=ref,
+                    div=contest.div,
+                    contest=contest.contest,
+                    url=contest.url,
+                    solved=contest.solved,
+                    rank=contest.rank,
+                    perf=contest.perf,
+                    status=status_text(contest.tasks),
+                )
+            )
     lines.extend(["", "## 复盘入口"])
     for contest in sorted(contests, key=lambda item: item.date):
         lines.append("")
@@ -529,6 +664,7 @@ def sync(contests_root: Path, handle: str) -> None:
     atcoder = discover_atcoder(contests_root)
     sync_atcoder_official(atcoder, handle)
     xcpc = discover_xcpc(contests_root)
+    sync_xcpc_official(xcpc)
 
     write_yaml(BLOG_ROOT / "data" / "atcoder.yaml", sorted(atcoder, key=lambda item: item.date), "scripts/sync_contest_diaries.py")
     write_yaml(BLOG_ROOT / "data" / "xcpc.yaml", sorted(xcpc, key=lambda item: item.date), "scripts/sync_contest_diaries.py")

@@ -113,7 +113,7 @@
             "type" "contest"
             "label" "比赛"
             "title" $record.round
-            "summary" (printf "%s · Sol %v · %s" ($record.div | default "XCPC") $record.solved ($record.status | default "VP"))
+            "summary" (printf "%s · Sol %v · Rank %v · Penalty %v" ($record.div | default "XCPC") $record.solved ($record.rank | default "-") ($record.penalty | default "-"))
             "source" ($record.group | default $record.div)
             "url" $writeupURL
             "external" (not (hasPrefix $writeupURL "/"))

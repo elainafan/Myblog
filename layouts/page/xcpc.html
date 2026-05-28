@@ -20,7 +20,7 @@
             <div class="cf-dashboard__stats" aria-label="XCPC 统计">
                 <span>{{ len $records }} 场</span>
                 <span>{{ $solvedTotal }} 题</span>
-                <span>VP / 补题记录</span>
+                <span>{{ with $latest }}Rank {{ .rank }} / Penalty {{ .penalty }}{{ else }}Rank / Penalty{{ end }}</span>
             </div>
         </header>
 
@@ -31,14 +31,14 @@
                 <small>{{ with $latest }}{{ .date }}{{ end }}</small>
             </div>
             <div>
-                <span>题解骨架</span>
-                <strong>空位保留</strong>
-                <small>题目大意 / 数据范围 / 思路</small>
+                <span>队伍</span>
+                <strong>{{ with $latest }}{{ .team | default "Team" }}{{ end }}</strong>
+                <small>{{ with $latest }}{{ with .members }}{{ delimit . " / " }}{{ else }}VP 记录{{ end }}{{ end }}</small>
             </div>
             <div>
-                <span>代码范围</span>
-                <strong>solve</strong>
-                <small>去掉 main 和宏</small>
+                <span>成绩</span>
+                <strong>{{ with $latest }}{{ .solved }} solved{{ end }}</strong>
+                <small>{{ with $latest }}Rank {{ .rank }} · Penalty {{ .penalty }}{{ end }}</small>
             </div>
         </section>
 
@@ -56,26 +56,23 @@
                     <option value="all">全部类型</option>
                     <option value="province">省赛</option>
                 </select>
-                <select data-cf-status aria-label="按状态筛选">
-                    <option value="all">全部状态</option>
-                    <option value="done">已记录</option>
-                    <option value="todo">待补完</option>
-                </select>
-                <select data-cf-perf aria-label="按 Performance 筛选">
-                    <option value="all">全部 Perf</option>
-                    <option value="vp">VP / 未记录</option>
-                </select>
             </div>
 
             <div class="cf-contest-list" data-cf-list>
                 {{ range $records }}
+                    {{- $problems := .problems | default (printf "%d 题" (len .tasks)) -}}
+                    {{- $team := .team | default "" -}}
+                    {{- $members := "" -}}
+                    {{- with .members -}}
+                        {{- $members = delimit . " " -}}
+                    {{- end -}}
                     {{- $writeupURL := "" -}}
                     {{- with .ref -}}
                         {{- with site.GetPage (printf "post/XCPC修炼日记！/%s" .) -}}
                             {{- $writeupURL = .RelPermalink -}}
                         {{- end -}}
                     {{- end -}}
-                    <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="done" data-perf="vp" data-search="{{ printf `%s %s %s %s` .round .contest .div .status | lower }}">
+                    <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="done" data-search="{{ printf `%s %s %s %s %s %s` .round .contest .div $problems $team $members | lower }}">
                         <div class="cf-contest-card__main">
                             <time datetime="{{ .date }}">{{ .date }}</time>
                             <h3>
@@ -85,12 +82,12 @@
                                     <a href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a>
                                 {{ end }}
                             </h3>
-                            <span>{{ .div }} · {{ .status }}</span>
+                            <span>{{ .div }} · {{ $problems }}</span>
                         </div>
                         <div class="cf-contest-card__metrics">
                             <span>Sol <strong>{{ .solved }}</strong></span>
                             <span>Rank <strong>{{ .rank }}</strong></span>
-                            <span>Perf <strong>{{ .perf }}</strong></span>
+                            <span>Penalty <strong>{{ with .penalty }}{{ . }}{{ else }}-{{ end }}</strong></span>
                         </div>
                         <div class="cf-contest-card__links">
                             <a href="{{ .url }}" target="_blank" rel="noopener">Contest</a>
