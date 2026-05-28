@@ -396,12 +396,12 @@ def frontmatter(title: str, date: str, extra: list[str] | None = None) -> str:
     return "\n".join(lines)
 
 
-def write_main_article(path: Path, title: str, intro: str, contests: list[Contest], update: str) -> None:
+def write_main_article(path: Path, title: str, date: str, intro: str, contests: list[Contest], update: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
         frontmatter(
             title,
-            "2026-05-28",
+            date,
             [
                 "updates:",
                 "    - date: 2026-05-28",
@@ -536,6 +536,7 @@ def sync(contests_root: Path, handle: str) -> None:
     write_main_article(
         BLOG_ROOT / "content" / "post" / ATCODER_SERIES_DIR / "main.md",
         "AtCoder 修炼日记！",
+        "2025-01-21",
         "这一篇用来放 AtCoder 的长期复盘。ABC 会跳过最前面的 A、B、C，只把真正需要回看的题目留下；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
         atcoder,
         "新增 AtCoder 复盘表格，并同步官方排名、Performance 与赛时/补题状态。",
@@ -543,6 +544,7 @@ def sync(contests_root: Path, handle: str) -> None:
     write_main_article(
         BLOG_ROOT / "content" / "post" / XCPC_SERIES_DIR / "main.md",
         "XCPC VP 修炼日记！",
+        "2025-01-21",
         "这一篇用来放 XCPC 相关的 VP 和补题记录。先把已经整理在本地仓库里的代码接进博客，之后补题时只需要继续填题目大意、数据范围和思路。",
         xcpc,
         "新增 XCPC VP 复盘入口，并按本地 Contests 仓库生成题解骨架。",

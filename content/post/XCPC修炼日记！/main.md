@@ -1,6 +1,6 @@
 ---
 title: XCPC VP 修炼日记！
-date: 2026-05-28
+date: 2025-01-21
 image: "/images/anime-diary/5.png"
 categories:
     - 算法
