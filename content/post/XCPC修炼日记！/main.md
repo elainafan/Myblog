@@ -15,7 +15,7 @@ seriesExclude: true
 ## 比赛记录
 | Date | Round | div | id | team | sol | rank | penalty | A | B | C | D | E | F | G | H | I | J | K | L | M | N |
 | ---- | ----- | --- | -- | ---- | --- | ---- | ------- | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| 2023.05.14 | [23GDCPC]({{< ref "gdcpc-2023.md" >}}) | 省赛 | [104369](https://codeforces.com/gym/104369) | 省赛 VP 队 | 9 | 30 | 674 | √ | √ | √ | √ | √ | √ |  |  | √ |  | √ |  | √ |  |
+| 2023.05.14 | [23GDCPC]({{< ref "gdcpc-2023.md" >}}) | 省赛 | [104369](https://codeforces.com/gym/104369) | Linger_Big_Pig | 9 | 30 | 674 | √ | √ | √ | √ | √ | √ |  |  | √ |  | √ |  | √ |  |
 
 ## 复盘入口
 

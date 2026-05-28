@@ -41,8 +41,8 @@ XCPC_META = {
         "group": "province",
         "url": "https://codeforces.com/gym/104369",
         "ref": "gdcpc-2023.md",
+        "members": ["PaperMemory", "Kuro_neko"],
         "team": "Linger_Big_Pig",
-        "team_display": "省赛 VP 队",
         "rank": "30",
         "penalty": "674",
     }
@@ -73,7 +73,7 @@ class Contest:
     perf: str = "vp"
     penalty: str = ""
     team: str = ""
-    team_display: str = ""
+    members: list[str] | None = None
     rating: str = ""
     solved: int = 0
     order: int = 0
@@ -147,7 +147,7 @@ def write_yaml(path: Path, contests: list[Contest], generated_by: str) -> None:
         if contest.penalty:
             lines.append(f"    penalty: {yaml_value(contest.penalty)}")
         if contest.team:
-            lines.append(f"    team: {yaml_value(contest.team_display or contest.team)}")
+            lines.append(f"    team: {yaml_value(contest.team)}")
         if contest.rating:
             lines.append(f"    rating: {yaml_value(contest.rating)}")
         lines.append(f"    ref: {yaml_value(contest.ref)}")
@@ -407,6 +407,8 @@ def apply_xcpc_row(contest: Contest, row: str) -> bool:
         return False
 
     contest.rank = cells[0]
+    contestant = cells[1].split("#", 1)[0].strip()
+    contest.team = contestant.split(":", 1)[0].strip() or contest.team
     contest.solved = int(cells[2]) if cells[2].isdigit() else contest.solved
     contest.penalty = cells[3]
 
@@ -420,7 +422,8 @@ def apply_xcpc_row(contest: Contest, row: str) -> bool:
 
 def sync_xcpc_official(contests: list[Contest]) -> None:
     for contest in contests:
-        if not contest.team:
+        handles = contest.members or []
+        if not handles and not contest.team:
             continue
         found = False
         for _ in range(8):
@@ -431,14 +434,15 @@ def sync_xcpc_official(contests: list[Contest]) -> None:
                 break
             for match in re.finditer(r"<tr\b[\s\S]*?</tr>", page):
                 row = match.group(0)
-                if contest.team in row:
+                if all(handle in row for handle in handles) or (not handles and contest.team in row):
                     apply_xcpc_row(contest, row)
                     found = True
                     break
             if found:
                 break
         if not found:
-            print(f"[warn] standings row not found for {contest.round}: {contest.team}", file=sys.stderr)
+            target = ", ".join(handles) if handles else contest.team
+            print(f"[warn] standings row not found for {contest.round}: {target}", file=sys.stderr)
 
 
 def discover_xcpc(contests_root: Path) -> list[Contest]:
@@ -484,7 +488,7 @@ def discover_xcpc(contests_root: Path) -> list[Contest]:
                 perf=meta.get("perf", "") if meta else "",
                 penalty=meta.get("penalty", "") if meta else "",
                 team=meta.get("team", "") if meta else "",
-                team_display=meta.get("team_display", "") if meta else "",
+                members=list(meta.get("members", [])) if meta else None,
                 solved=len(tasks),
             )
         )
@@ -564,7 +568,7 @@ def write_main_article(path: Path, title: str, date: str, intro: str, contests: 
                     div=contest.div,
                     contest=contest.contest,
                     url=contest.url,
-                    team=contest.team_display or contest.team or "-",
+                    team=contest.team or "-",
                     solved=contest.solved,
                     rank=contest.rank,
                     penalty=contest.penalty or "-",
