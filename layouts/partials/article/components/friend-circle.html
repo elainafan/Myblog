@@ -40,7 +40,7 @@
             {{ range $posts }}
                 {{ $published := "" }}
                 {{ with .published }}{{ $published = time.Format "2006-01-02" (time .) }}{{ end }}
-                {{ $title := (.title | default "Untitled") | htmlUnescape | plainify | replaceRE "\\s+" " " }}
+                {{ $title := (.title | default "Untitled") | htmlUnescape | replaceRE "<[^>]+>" " " | plainify | replaceRE "\\s+" " " }}
                 <article class="friend-circle-inline__item" data-fc-item data-friend="{{ .friend }}" data-text="{{ printf `%s %s` .friend $title }}">
                     <a class="friend-circle-inline__avatar-link" href="{{ .site }}" title="{{ .friend }}" target="_blank" rel="noopener">
                         {{ if .avatar }}

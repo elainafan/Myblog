@@ -55,3 +55,22 @@
   sortOrder: asc
   description: 按 Codeforces 题目难度分整理的练习记录，适合按 Rating 阶段查找旧题。
   preview: 5
+
+- title: AtCoder 复盘
+  badge: ATC
+  color: "#59a8ff"
+  directory: post/AtCoder修炼日记！/
+  home: post/AtCoder修炼日记！/main.md
+  includeHidden: true
+  dashboard: /series/atcoder/
+  description: 长期更新的 AtCoder 比赛复盘，自动同步官方排名、Performance 与赛时/补题状态。
+  preview: 5
+- title: XCPC VP 记录
+  badge: XCPC
+  color: "#f2c86b"
+  directory: post/XCPC修炼日记！/
+  home: post/XCPC修炼日记！/main.md
+  includeHidden: true
+  dashboard: /series/xcpc/
+  description: 省赛、区域赛和训练赛的 VP 复盘入口，用同一套题解骨架记录补题过程。
+  preview: 5

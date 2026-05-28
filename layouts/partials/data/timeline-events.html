@@ -73,10 +73,58 @@
     {{- end -}}
 {{- end -}}
 
+{{- range $record := $site.Data.atcoder.contests | default slice -}}
+    {{- with $record.date -}}
+        {{- $writeupURL := "" -}}
+        {{- with $record.ref -}}
+            {{- with $site.GetPage (printf "post/AtCoder修炼日记！/%s" .) -}}
+                {{- $writeupURL = .RelPermalink -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if not $writeupURL -}}
+            {{- $writeupURL = $record.url -}}
+        {{- end -}}
+        {{- $events = $events | append (dict
+            "date" (time .)
+            "type" "contest"
+            "label" "比赛"
+            "title" $record.round
+            "summary" (printf "%s · Sol %v · Perf %v" ($record.div | default "AtCoder") $record.solved $record.perf)
+            "source" ($record.group | default $record.div)
+            "url" $writeupURL
+            "external" (not (hasPrefix $writeupURL "/"))
+        ) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- range $record := $site.Data.xcpc.contests | default slice -}}
+    {{- with $record.date -}}
+        {{- $writeupURL := "" -}}
+        {{- with $record.ref -}}
+            {{- with $site.GetPage (printf "post/XCPC修炼日记！/%s" .) -}}
+                {{- $writeupURL = .RelPermalink -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if not $writeupURL -}}
+            {{- $writeupURL = $record.url -}}
+        {{- end -}}
+        {{- $events = $events | append (dict
+            "date" (time .)
+            "type" "contest"
+            "label" "比赛"
+            "title" $record.round
+            "summary" (printf "%s · Sol %v · %s" ($record.div | default "XCPC") $record.solved ($record.status | default "VP"))
+            "source" ($record.group | default $record.div)
+            "url" $writeupURL
+            "external" (not (hasPrefix $writeupURL "/"))
+        ) -}}
+    {{- end -}}
+{{- end -}}
+
 {{- with $site.Data.friend_posts.posts -}}
     {{- range $post := . -}}
         {{- with $post.published -}}
-            {{- $title := ($post.title | default "Untitled") | htmlUnescape | plainify | replaceRE "\\s+" " " -}}
+            {{- $title := ($post.title | default "Untitled") | htmlUnescape | replaceRE "<[^>]+>" " " | plainify | replaceRE "\\s+" " " -}}
             {{- $events = $events | append (dict
                 "date" (time .)
                 "type" "friend"

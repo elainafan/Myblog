@@ -202,7 +202,8 @@ def clean_summary(value: str, limit: int = 180) -> str:
 
 
 def clean_text(value: str) -> str:
-    text = unescape(value or "")
+    text = HTML_TAG_RE.sub(" ", value or "")
+    text = unescape(text)
     text = HTML_TAG_RE.sub(" ", text)
     return unescape(re.sub(r"\s+", " ", text)).strip()
 
