@@ -23,10 +23,10 @@ from typing import Any
 
 BLOG_ROOT = Path(__file__).resolve().parents[1]
 CODEFORCES_DATA = BLOG_ROOT / "data" / "codeforces.yaml"
-CODEFORCES_MAIN = BLOG_ROOT / "content" / "post" / "二次元修炼日记！" / "main.md"
+CODEFORCES_MAIN = BLOG_ROOT / "content" / "post" / "\u4e8c\u6b21\u5143\u4fee\u70bc\u65e5\u8bb0\uff01" / "main.md"
 DEFAULT_HANDLES = ("PaperMemory", "Kuro_neko")
 TASK_COLUMNS = list("ABCDEFGHI")
-CHECK = "√"
+CHECK = "\u221a"
 MANUAL_MARKERS = {"B", "H", "N"}
 
 
@@ -339,7 +339,7 @@ def render_table(records: list[dict[str, str]], statuses: dict[str, dict[str, st
 
 def replace_codeforces_table(path: Path, table: str) -> None:
     text = path.read_text(encoding="utf-8")
-    match = re.search(r"(## 看番日记\n)(.*?)(\n## 比赛复盘)", text, flags=re.S)
+    match = re.search(r"(## \u770b\u756a\u65e5\u8bb0\n)(.*?)(\n## \u6bd4\u8d5b\u590d\u76d8)", text, flags=re.S)
     if not match:
         raise RuntimeError(f"Codeforces table block not found in {path}")
     new_text = text[: match.start(2)] + table + "\n" + text[match.start(3) :]
@@ -348,7 +348,7 @@ def replace_codeforces_table(path: Path, table: str) -> None:
 
 def ensure_update_note(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
-    note = "      content: 同步 R1060 之后 Rated rounds 的官方 rank、Performance 与赛时过题状态。"
+    note = "      content: \u540c\u6b65 R1060 \u4e4b\u540e Rated rounds \u7684\u5b98\u65b9 rank\u3001Performance \u4e0e\u8d5b\u65f6\u8fc7\u9898\u72b6\u6001\u3002"
     if note in text:
         return
     marker = "updates:\n"
