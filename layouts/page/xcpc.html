@@ -33,7 +33,7 @@
             <div>
                 <span>队伍</span>
                 <strong>{{ with $latest }}{{ .team | default "Team" }}{{ end }}</strong>
-                <small>{{ with $latest }}{{ with .members }}{{ delimit . " / " }}{{ else }}VP 记录{{ end }}{{ end }}</small>
+                <small>公开展示名，可按比赛单独配置</small>
             </div>
             <div>
                 <span>成绩</span>
@@ -62,17 +62,13 @@
                 {{ range $records }}
                     {{- $problems := .problems | default (printf "%d 题" (len .tasks)) -}}
                     {{- $team := .team | default "" -}}
-                    {{- $members := "" -}}
-                    {{- with .members -}}
-                        {{- $members = delimit . " " -}}
-                    {{- end -}}
                     {{- $writeupURL := "" -}}
                     {{- with .ref -}}
                         {{- with site.GetPage (printf "post/XCPC修炼日记！/%s" .) -}}
                             {{- $writeupURL = .RelPermalink -}}
                         {{- end -}}
                     {{- end -}}
-                    <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="done" data-search="{{ printf `%s %s %s %s %s %s` .round .contest .div $problems $team $members | lower }}">
+                    <article class="cf-contest-card" data-cf-card data-div="{{ .group }}" data-status="done" data-search="{{ printf `%s %s %s %s %s` .round .contest .div $problems $team | lower }}">
                         <div class="cf-contest-card__main">
                             <time datetime="{{ .date }}">{{ .date }}</time>
                             <h3>
@@ -85,6 +81,7 @@
                             <span>{{ .div }} · {{ $problems }}</span>
                         </div>
                         <div class="cf-contest-card__metrics">
+                            <span>Team <strong>{{ $team }}</strong></span>
                             <span>Sol <strong>{{ .solved }}</strong></span>
                             <span>Rank <strong>{{ .rank }}</strong></span>
                             <span>Penalty <strong>{{ with .penalty }}{{ . }}{{ else }}-{{ end }}</strong></span>

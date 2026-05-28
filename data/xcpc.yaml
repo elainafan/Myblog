@@ -10,10 +10,7 @@ contests:
     solved: 9
     rank: "30"
     penalty: "674"
-    team: "Linger_Big_Pig"
-    members:
-      - "PaperMemory"
-      - "Kuro_neko"
+    team: "省赛 VP 队"
     ref: "gdcpc-2023.md"
     problems: "A / B / C / D / E / F / I / K / M"
     tasks:

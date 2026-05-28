@@ -13,7 +13,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -42,7 +42,7 @@ XCPC_META = {
         "url": "https://codeforces.com/gym/104369",
         "ref": "gdcpc-2023.md",
         "team": "Linger_Big_Pig",
-        "members": ["PaperMemory", "Kuro_neko"],
+        "team_display": "省赛 VP 队",
         "rank": "30",
         "penalty": "674",
     }
@@ -73,7 +73,7 @@ class Contest:
     perf: str = "vp"
     penalty: str = ""
     team: str = ""
-    members: list[str] = field(default_factory=list)
+    team_display: str = ""
     rating: str = ""
     solved: int = 0
     order: int = 0
@@ -147,11 +147,7 @@ def write_yaml(path: Path, contests: list[Contest], generated_by: str) -> None:
         if contest.penalty:
             lines.append(f"    penalty: {yaml_value(contest.penalty)}")
         if contest.team:
-            lines.append(f"    team: {yaml_value(contest.team)}")
-        if contest.members:
-            lines.append("    members:")
-            for member in contest.members:
-                lines.append(f"      - {yaml_value(member)}")
+            lines.append(f"    team: {yaml_value(contest.team_display or contest.team)}")
         if contest.rating:
             lines.append(f"    rating: {yaml_value(contest.rating)}")
         lines.append(f"    ref: {yaml_value(contest.ref)}")
@@ -180,10 +176,18 @@ def problem_text(tasks: list[Task]) -> str:
     return " / ".join(task.label for task in tasks)
 
 
+def label_sort_key(label: str) -> tuple[str, int]:
+    match = re.fullmatch(r"([A-Z]+)(\d*)", label)
+    if not match:
+        return (label, 0)
+    head, tail = match.groups()
+    return (head, int(tail or 0))
+
+
 def problem_sort_key(path: Path) -> tuple[str, str]:
     stem = path.stem
     match = re.search(r"([A-Za-z]\d*)$", stem)
-    return (match.group(1).upper() if match else stem.upper(), stem)
+    return (*label_sort_key(match.group(1).upper() if match else stem.upper()), stem)
 
 
 def remove_function(text: str, match: re.Match[str]) -> str:
@@ -416,7 +420,7 @@ def apply_xcpc_row(contest: Contest, row: str) -> bool:
 
 def sync_xcpc_official(contests: list[Contest]) -> None:
     for contest in contests:
-        if not contest.members:
+        if not contest.team:
             continue
         found = False
         for _ in range(8):
@@ -427,14 +431,14 @@ def sync_xcpc_official(contests: list[Contest]) -> None:
                 break
             for match in re.finditer(r"<tr\b[\s\S]*?</tr>", page):
                 row = match.group(0)
-                if all(member in row for member in contest.members):
+                if contest.team in row:
                     apply_xcpc_row(contest, row)
                     found = True
                     break
             if found:
                 break
         if not found:
-            print(f"[warn] standings row not found for {contest.round}: {', '.join(contest.members)}", file=sys.stderr)
+            print(f"[warn] standings row not found for {contest.round}: {contest.team}", file=sys.stderr)
 
 
 def discover_xcpc(contests_root: Path) -> list[Contest]:
@@ -480,7 +484,7 @@ def discover_xcpc(contests_root: Path) -> list[Contest]:
                 perf=meta.get("perf", "") if meta else "",
                 penalty=meta.get("penalty", "") if meta else "",
                 team=meta.get("team", "") if meta else "",
-                members=list(meta.get("members", [])) if meta else [],
+                team_display=meta.get("team_display", "") if meta else "",
                 solved=len(tasks),
             )
         )
@@ -505,6 +509,10 @@ def frontmatter(title: str, date: str, extra: list[str] | None = None) -> str:
 def write_main_article(path: Path, title: str, date: str, intro: str, contests: list[Contest], update: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     is_xcpc = any(contest.penalty or contest.team for contest in contests)
+    task_columns = list("ABCDEFGHIJKLMN") if is_xcpc else sorted(
+        {task.label for contest in contests for task in contest.tasks},
+        key=label_sort_key,
+    )
     lines = [
         frontmatter(
             title,
@@ -524,37 +532,48 @@ def write_main_article(path: Path, title: str, date: str, intro: str, contests: 
     if is_xcpc:
         lines.extend(
             [
-                "| Date | Contest | Type | id | sol | rank | penalty | problems |",
-                "| ---- | ------- | ---- | -- | --- | ---- | ------- | -------- |",
+                "| Date | Round | div | id | team | sol | rank | penalty | "
+                + " | ".join(task_columns)
+                + " |",
+                "| ---- | ----- | --- | -- | ---- | --- | ---- | ------- | "
+                + " | ".join("-" for _ in task_columns)
+                + " |",
             ]
         )
     else:
         lines.extend(
             [
-                "| Date | Contest | Type | id | sol | rk | perf | status |",
-                "| ---- | ------- | ---- | -- | --- | -- | ---- | ------ |",
+                "| Date | Round | div | id | sol | rk | perf | "
+                + " | ".join(task_columns)
+                + " |",
+                "| ---- | ----- | --- | -- | --- | -- | ---- | "
+                + " | ".join("-" for _ in task_columns)
+                + " |",
             ]
         )
     for contest in sorted(contests, key=lambda item: item.date):
         ref = f'{{{{< ref "{contest.ref}" >}}}}'
+        task_by_label = {task.label: task.status for task in contest.tasks}
+        task_cells = [task_by_label.get(label, "") for label in task_columns]
         if is_xcpc:
             lines.append(
-                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {penalty} | {problems} |".format(
+                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {team} | {solved} | {rank} | {penalty} | {tasks} |".format(
                     date=contest.date.replace("-", "."),
                     round=contest.round,
                     ref=ref,
                     div=contest.div,
                     contest=contest.contest,
                     url=contest.url,
+                    team=contest.team_display or contest.team or "-",
                     solved=contest.solved,
                     rank=contest.rank,
                     penalty=contest.penalty or "-",
-                    problems=problem_text(contest.tasks),
+                    tasks=" | ".join(task_cells),
                 )
             )
         else:
             lines.append(
-                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {perf} | {status} |".format(
+                "| {date} | [{round}]({ref}) | {div} | [{contest}]({url}) | {solved} | {rank} | {perf} | {tasks} |".format(
                     date=contest.date.replace("-", "."),
                     round=contest.round,
                     ref=ref,
@@ -564,7 +583,7 @@ def write_main_article(path: Path, title: str, date: str, intro: str, contests: 
                     solved=contest.solved,
                     rank=contest.rank,
                     perf=contest.perf,
-                    status=status_text(contest.tasks),
+                    tasks=" | ".join(task_cells),
                 )
             )
     lines.extend(["", "## 复盘入口"])

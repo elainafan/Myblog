@@ -13,9 +13,9 @@ seriesExclude: true
 这一篇用来放 XCPC 相关的 VP 和补题记录。先把已经整理在本地仓库里的代码接进博客，之后补题时只需要继续填题目大意、数据范围和思路。
 
 ## 比赛记录
-| Date | Contest | Type | id | sol | rank | penalty | problems |
-| ---- | ------- | ---- | -- | --- | ---- | ------- | -------- |
-| 2023.05.14 | [23GDCPC]({{< ref "gdcpc-2023.md" >}}) | 省赛 | [104369](https://codeforces.com/gym/104369) | 9 | 30 | 674 | A / B / C / D / E / F / I / K / M |
+| Date | Round | div | id | team | sol | rank | penalty | A | B | C | D | E | F | G | H | I | J | K | L | M | N |
+| ---- | ----- | --- | -- | ---- | --- | ---- | ------- | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| 2023.05.14 | [23GDCPC]({{< ref "gdcpc-2023.md" >}}) | 省赛 | [104369](https://codeforces.com/gym/104369) | 省赛 VP 队 | 9 | 30 | 674 | √ | √ | √ | √ | √ | √ |  |  | √ |  | √ |  | √ |  |
 
 ## 复盘入口
 
