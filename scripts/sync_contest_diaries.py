@@ -52,7 +52,7 @@ XCPC_META = {
 @dataclass
 class Task:
     label: str
-    path: Path
+    path: Path | None
     problem_id: str
     url: str
     status: str = ""
@@ -252,6 +252,16 @@ def discover_atcoder(contests_root: Path) -> list[Contest]:
         contest_id = f"{kind.lower()}{number}"
         all_files = sorted(directory.glob("*.cpp"), key=problem_sort_key)
         tasks: list[Task] = []
+        if kind == "ABC":
+            for label in ("A", "B", "C"):
+                tasks.append(
+                    Task(
+                        label=label,
+                        path=None,
+                        problem_id=f"{contest_id}_{label.lower()}",
+                        url=atcoder_problem_url(contest_id, label),
+                    )
+                )
         for path in all_files:
             label_match = re.search(r"([A-Za-z]\d*)$", path.stem)
             if not label_match:
@@ -614,6 +624,8 @@ def write_child_pages(base_dir: Path, contests: list[Contest]) -> None:
             "",
         ]
         for task in contest.tasks:
+            if task.path is None:
+                continue
             lines.extend(
                 [
                     f"## {contest.round} {task.label}",
@@ -696,7 +708,7 @@ def sync(contests_root: Path, handle: str) -> None:
         BLOG_ROOT / "content" / "post" / ATCODER_SERIES_DIR / "main.md",
         "AtCoder 修炼日记！",
         "2025-01-21",
-        "这一篇用来放 AtCoder 的长期复盘。ABC 会跳过最前面的 A、B、C，只把真正需要回看的题目留下；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
+        "这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
         atcoder,
         "新增 AtCoder 复盘表格，并同步官方排名、Performance 与赛时/补题状态。",
     )
