@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T13:05:05.756456+00:00",
+  "generated_at": "2026-05-28T16:26:37.684629+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -246,6 +246,17 @@
   ],
   "warnings": [],
   "posts": [
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "KL散度",
+      "url": "https://equinox.wiki/post/math/kl%E6%95%A3%E5%BA%A6/",
+      "summary": "KL散度 作者：Equinox（shixy2003@gmail.com） 本文2026-05-28首发于 Welcome to my blog ，最后修改于2026-05-28",
+      "published": "2026-05-28T13:38:06+00:00",
+      "published_text": "Thu, 28 May 2026 21:38:06 +0800"
+    },
     {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
@@ -498,17 +509,6 @@
       "summary": "丝绸之路的命名 1877年，德国地理学家李希霍芬(F. von Richthofen)在 《中国》一书中，首次把汉代中国和中亚南部、西部以及印度 之间的丝绸贸易为主的交通路线，称作“丝绸之路”。其后， 德国历史学家赫尔曼(A. Herrmann)在 1910 年出版的《中国和 叙利亚之间的古代丝绸之路》一书中，根据新发现的文物考古 资料，进一步把丝绸之路延...",
       "published": "2026-05-09T10:39:54+00:00",
       "published_text": "Sat, 09 May 2026 18:39:54 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Fine Tuning to Follow Instructions",
-      "url": "https://equinox.wiki/post/llms-from-scratch/fine-tuning-to-follow-instructions/",
-      "summary": "Fine Tuning to Follow Instructions 作者：Equinox（shixy2003@gmail.com） 本文2026-05-09首发于 Welcome to my blog ，最后修改于2026-05-09",
-      "published": "2026-05-09T07:31:28+00:00",
-      "published_text": "Sat, 09 May 2026 15:31:28 +0800"
     },
     {
       "friend": "~zzz",
