@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T16:16:22.833837+00:00",
+  "generated_at": "2026-05-29T18:48:28.627308+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -267,6 +267,17 @@
       "summary": "KL散度 作者：Equinox（shixy2003@gmail.com） 本文2026-05-28首发于 Welcome to my blog ，最后修改于2026-05-28",
       "published": "2026-05-28T13:38:06+00:00",
       "published_text": "Thu, 28 May 2026 21:38:06 +0800"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "CS61c_14 — Virtual Memory II",
+      "url": "https://fuquan99666.github.io/p/cs61c_14-virtual-memory-ii/",
+      "summary": "Page Tables Size of Page Tables E.g., 32-Bit virtual address, 4-KiB pages: （from VPN to PPN的一个映射） Single page table size = $2^{20} \\times 4$ Bytes = 4-MiB. 如果你的电脑是4GB内存的，这仅仅占用了0.1...",
+      "published": "2026-05-28T06:07:38+00:00",
+      "published_text": "Thu, 28 May 2026 14:07:38 +0800"
     },
     {
       "friend": "Equinox",
@@ -894,17 +905,6 @@
       "summary": "稍微填一下坑，最近重新写了一遍，感悟又有所不同。 啊嘞啊嘞嘞，怎么直接从准备到完结了 按照教程的顺序，应该是先写前端解析出 AST 然后再遍历出 koopa ir 最后进行代码生成。流程很短，事实上少了优化的过程，确实非常简单。 在函数之前的内容就不赘述了，教程写的很完善，实际也不难。由于不需要考虑浮点数和整数之间的转换，中期的短路求值其实很好写，写一个...",
       "published": "2026-02-24T05:12:21+00:00",
       "published_text": "Tue, 24 Feb 2026 13:12:21 +0800"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_6 — Combinational Logic Blocks",
-      "url": "https://fuquan99666.github.io/p/cs61c_6-combinational-logic-blocks/",
-      "summary": "MUX 多路选择器 A，B两个n位的输入，S为选择信号，输出是A或者B中的一个 我们可以首先构建一个1位的MUX，然后通过级联来构建n位的MUX 1 2 3 4 5 6 7 8 9 10 11 12 使用上次学到的思想，先写出真值表（2^3=8） S A B | Out 0 0 0 | 0 0 0 1 | 0 0 1 0 | 1 0 1 1 | 1 1 0...",
-      "published": "2026-02-18T07:55:17+00:00",
-      "published_text": "Wed, 18 Feb 2026 15:55:17 +0800"
     },
     {
       "friend": "Collapse179",
