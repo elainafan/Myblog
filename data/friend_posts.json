@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T06:55:58.058060+00:00",
+  "generated_at": "2026-05-30T09:35:18.473766+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -251,6 +251,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Qwen VL精读",
+      "url": "https://equinox.wiki/post/paper-reading/qwen-vl%E7%B2%BE%E8%AF%BB/",
+      "summary": "Qwen VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-29首发于 Welcome to my blog ，最后修改于2026-05-29",
+      "published": "2026-05-29T08:46:17+00:00",
+      "published_text": "Fri, 29 May 2026 16:46:17 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "GPT1~GPT3技术综述",
       "url": "https://equinox.wiki/post/llm/gpt1-gpt3%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0/",
       "summary": "GPT1~GPT3技术综述 作者：Equinox（shixy2003@gmail.com） 本文2026-05-28首发于 Welcome to my blog ，最后修改于2026-05-28",
@@ -476,17 +487,6 @@
       "summary": "MAE精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-14首发于 Welcome to my blog ，最后修改于2026-05-14",
       "published": "2026-05-14T03:34:47+00:00",
       "published_text": "Thu, 14 May 2026 11:34:47 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "ViT精读",
-      "url": "https://equinox.wiki/post/paper-reading/vit%E7%B2%BE%E8%AF%BB/",
-      "summary": "ViT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-13首发于 Welcome to my blog ，最后修改于2026-05-13",
-      "published": "2026-05-13T04:52:48+00:00",
-      "published_text": "Wed, 13 May 2026 12:52:48 +0800"
     },
     {
       "friend": "~zzz",
