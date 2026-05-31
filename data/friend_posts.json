@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T12:23:47.394365+00:00",
+  "generated_at": "2026-05-31T15:27:02.974267+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -251,6 +251,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "ViLT精读",
+      "url": "https://equinox.wiki/post/paper-reading/vilt%E7%B2%BE%E8%AF%BB/",
+      "summary": "ViLT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-31首发于 Welcome to my blog ，最后修改于2026-05-31",
+      "published": "2026-05-31T08:35:27+00:00",
+      "published_text": "Sun, 31 May 2026 16:35:27 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Qwen VL精读",
       "url": "https://equinox.wiki/post/paper-reading/qwen-vl%E7%B2%BE%E8%AF%BB/",
       "summary": "Qwen VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-29首发于 Welcome to my blog ，最后修改于2026-05-29",
@@ -476,17 +487,6 @@
       "summary": "引 还记得我们曾经在lab1中用过一个$∇\\log𝑝(𝑋_𝑡)$来进行ODE吗，本文将详细介绍与之有关的知识。 在上一讲中我们已经推导出了vector field的公式，并且给出了flow matching的训练算法，现在我们将学习如何处理diffusion model 并且如何使用score matching来训练它。 Conditional and M...",
       "published": "2026-05-17T06:49:20+00:00",
       "published_text": "Sun, 17 May 2026 14:49:20 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "MAE精读",
-      "url": "https://equinox.wiki/post/paper-reading/mae%E7%B2%BE%E8%AF%BB/",
-      "summary": "MAE精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-14首发于 Welcome to my blog ，最后修改于2026-05-14",
-      "published": "2026-05-14T03:34:47+00:00",
-      "published_text": "Thu, 14 May 2026 11:34:47 +0800"
     },
     {
       "friend": "~zzz",
