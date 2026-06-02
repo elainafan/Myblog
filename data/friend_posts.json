@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T07:31:32.277400+00:00",
+  "generated_at": "2026-06-02T10:30:33.719886+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -251,6 +251,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "BLIP2泛读",
+      "url": "https://equinox.wiki/post/paper-reading/blip2%E6%B3%9B%E8%AF%BB/",
+      "summary": "BLIP2泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-02首发于 Welcome to my blog ，最后修改于2026-06-02",
+      "published": "2026-06-02T06:10:54+00:00",
+      "published_text": "Tue, 02 Jun 2026 14:10:54 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "BLIP泛读",
       "url": "https://equinox.wiki/post/paper-reading/blip%E6%B3%9B%E8%AF%BB/",
       "summary": "BLIP泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-01首发于 Welcome to my blog ，最后修改于2026-06-01",
@@ -399,17 +410,6 @@
       "summary": "云梦泽的演变过程 上图是史前文化遗址分布图，和上一讲中黄河下游的漫游导致的空白一样，汉江平原也是文化遗址空白区域，为什么呢？因为这里曾经是云梦泽，水域辽阔，无法生存人类。 云梦不是云梦泽，云梦是春秋战国时期楚王狩猎区，是多种地貌的综合体。范围东至大别山麓、幕阜山麓，西至宜昌、宜都一线，北至大洪山区，南缘大江。 而云梦泽是狩猎区的湖沼部分。位于今江汉平原之内...",
       "published": "2026-05-25T10:42:32+00:00",
       "published_text": "Mon, 25 May 2026 18:42:32 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "CLIP精读",
-      "url": "https://equinox.wiki/post/paper-reading/clip%E7%B2%BE%E8%AF%BB/",
-      "summary": "CLIP精读 作者：Equinox（shixy2003@gmail.com） 本文2026-05-25首发于 Welcome to my blog ，最后修改于2026-05-25",
-      "published": "2026-05-25T05:26:56+00:00",
-      "published_text": "Mon, 25 May 2026 13:26:56 +0800"
     },
     {
       "friend": "Yjy's blog",
