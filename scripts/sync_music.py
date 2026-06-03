@@ -35,6 +35,12 @@ BILIBILI_MUSIC = STATIC_MUSIC / "bilibili"
 AUDIO_NAMES = ("music.mp3", "music.m4a", "music.ogg", "music.flac", "music.wav")
 AUDIO_EXTS = (".mp3", ".m4a", ".ogg", ".flac", ".wav")
 COVER_NAMES = ("cover.jpg", "cover.jpeg", "cover.png", "cover.webp", "music.jpg", "music.png")
+BILIBILI_REFERER = "https://www.bilibili.com/"
+BILIBILI_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/125.0.0.0 Safari/537.36"
+)
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -243,6 +249,22 @@ def fetch_bilibili_pages(bvid: str, cookie: str | None) -> list[dict[str, Any]]:
     return pages or [{"page": 1, "part": bvid}]
 
 
+def yt_dlp_command(executable: str, page_url: str, output: Path) -> list[str]:
+    return [
+        executable,
+        "-f",
+        "bestaudio/best",
+        "--no-playlist",
+        "--referer",
+        BILIBILI_REFERER,
+        "--user-agent",
+        BILIBILI_USER_AGENT,
+        "-o",
+        str(output),
+        page_url,
+    ]
+
+
 def bilibili_track_directory(bvid: str, page_count: int, page: int) -> Path:
     bvid_dir = BILIBILI_MUSIC / safe_name(bvid)
     if page_count <= 1:
@@ -305,13 +327,7 @@ def sync_bilibili(args: argparse.Namespace) -> None:
             expected_dirs.add(directory.resolve())
 
             if args.dry_run:
-                command = [
-                    args.yt_dlp,
-                    "-f",
-                    "bestaudio/best",
-                    "--no-playlist",
-                ]
-                command.extend(["-o", str(directory / "music.%(ext)s"), page_url])
+                command = yt_dlp_command(args.yt_dlp, page_url, directory / "music.%(ext)s")
                 print(f"Download audio: {bvid} p{page} {part}")
                 print(" ".join(command))
                 continue
@@ -341,13 +357,7 @@ def sync_bilibili(args: argparse.Namespace) -> None:
                 print(f"Skip existing audio: {bvid} p{page} {info['name']}")
                 continue
 
-            command = [
-                args.yt_dlp,
-                "-f",
-                "bestaudio/best",
-                "--no-playlist",
-            ]
-            command.extend(["-o", str(directory / "music.%(ext)s"), page_url])
+            command = yt_dlp_command(args.yt_dlp, page_url, directory / "music.%(ext)s")
             print(f"Download audio: {bvid} p{page} {info['name']}")
             subprocess.run(command, check=True)
 
