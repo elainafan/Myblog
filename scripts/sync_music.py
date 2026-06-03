@@ -42,6 +42,12 @@ BILIBILI_USER_AGENT = (
     "Chrome/125.0.0.0 Safari/537.36"
 )
 
+# Bilibili titles are video titles, not reliable song metadata. After each sync,
+# add overrides in data/music/local.json so the player shows song title + singer:
+# keep titles with kanji/Chinese characters or all-English titles as-is; translate
+# all-kana titles to Chinese; use in-anime character names when they are the
+# meaningful vocalist identity.
+
 
 def load_json(path: Path, default: Any) -> Any:
     if not path.exists():
