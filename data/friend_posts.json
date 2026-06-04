@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T07:31:22.540814+00:00",
+  "generated_at": "2026-06-04T10:16:55.340038+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -269,6 +269,17 @@
       "published_text": "2026-06-03"
     },
     {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "课程大横评_0",
+      "url": "https://fuquan99666.github.io/p/%E8%AF%BE%E7%A8%8B%E5%A4%A7%E6%A8%AA%E8%AF%84_0/",
+      "summary": "引 作为课程大横评系列的第一篇，我将对上过的很多课程进行一次全面的评价和总结，涵盖课程内容、教学质量、作业难度、推荐度等多个维度。通过这个系列文章，希望能对大家提供一些选课建议，加油！ 本篇将会不断更新完善，敬请期待！ 中国历史地理 teacher：北京大学，韩茂莉 内容概要：这门课以hml老师的《中国历史地理十五讲》书籍为基础，从疆域变迁与边疆问题入手，...",
+      "published": "2026-06-02T07:56:45+00:00",
+      "published_text": "Tue, 02 Jun 2026 15:56:45 +0800"
+    },
+    {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -300,6 +311,17 @@
       "summary": "VLMO泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-01",
       "published": "2026-06-01T11:05:23+00:00",
       "published_text": "Mon, 01 Jun 2026 19:05:23 +0800"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "中史地_12 — 农业的空间历程",
+      "url": "https://fuquan99666.github.io/p/%E4%B8%AD%E5%8F%B2%E5%9C%B0_12-%E5%86%9C%E4%B8%9A%E7%9A%84%E7%A9%BA%E9%97%B4%E5%8E%86%E7%A8%8B/",
+      "summary": "农业起源与文明的发展 农业是文明的起源，世界农业最早驯化地有三处，分别是伊拉克的两河流域，中国的长江、黄河中下游地带，墨西哥南部与南美安第斯山区。 大约九千年前后，中国南北方各自形成独立的农业区，北方属于以谷子、黍子为主的旱作农业区，南方则形成以水稻为主的水田农业区。 磁山文化遗址，距今大约9000年，位于河北磁县，是最早的一批文化遗址，遗址中发现了几百个...",
+      "published": "2026-06-01T10:42:45+00:00",
+      "published_text": "Mon, 01 Jun 2026 18:42:45 +0800"
     },
     {
       "friend": "Equinox",
@@ -781,7 +803,7 @@
       "avatar": "https://collapse179.github.io/img/avatar.png",
       "title": "摸鱼",
       "url": "https://collapse179.github.io/steam/",
-      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 19.9 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 5.9 小时 总计: 297.4 小时",
+      "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 19.9 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 8.0 小时 总计: 299.6 小时",
       "published": "2026-03-17T00:00:00+00:00",
       "published_text": "Tue, 17 Mar 2026 00:00:00 +0000"
     },
@@ -808,17 +830,6 @@
       "published_text": "Thu, 12 Mar 2026 21:15:00 GMT"
     },
     {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_8 — Control logic and lab05",
-      "url": "https://fuquan99666.github.io/p/cs61c_8-control-logic-and-lab05/",
-      "summary": "Lab05: 熟悉logisim setup 本次lab我们将使用一个叫做logisim的工具来设计和模拟我们的电路，这个工具十分好用，只需要java -jar logisim-evolution.jar即可使用。 鄙人在基于archlinux的niri界面上使用时遇到了一些问题，特此记录一下。 故障现象：启动后界面可以正常显示1s，之后会变成白屏，无法操...",
-      "published": "2026-03-11T08:47:32+00:00",
-      "published_text": "Wed, 11 Mar 2026 16:47:32 +0800"
-    },
-    {
       "friend": "CcoMm",
       "site": "https://blog.ccomm.top/",
       "feed": "https://blog.ccomm.top/rss.xml",
@@ -839,17 +850,6 @@
       "summary": "最近幾個月忙於尋找實習，加上反覆感冒發燒，博客與 Astro 項目暫時停擺。生活雖然疲憊，但吃塊肯德基薯餅還是能開心一下。",
       "published": "2026-03-10T00:00:00+00:00",
       "published_text": "Tue, 10 Mar 2026 00:00:00 GMT"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "中史地_1 — 中国历史地理疆域变迁",
-      "url": "https://fuquan99666.github.io/p/%E4%B8%AD%E5%8F%B2%E5%9C%B0_1-%E4%B8%AD%E5%9B%BD%E5%8E%86%E5%8F%B2%E5%9C%B0%E7%90%86%E7%96%86%E5%9F%9F%E5%8F%98%E8%BF%81/",
-      "summary": "疆域 目前中国的疆域使用的是清朝中后期（18世纪）的疆域。 疆域的形成：一是自然因素，比如大江大河、高山沙漠等自然屏障； 二是不同的民族在平原地区的竞争。 为什么中国的历史源远流长而没有中断？因为它与人类其他伟大文明的隔绝程度（地理）举世无双。 一些史料 1 2 唯武王既克大邑商，则廷 告于天，曰：余其宅兹中国，自兹乂民。 这是西周时期，中国指的是周天子的...",
-      "published": "2026-03-09T11:23:56+00:00",
-      "published_text": "Mon, 09 Mar 2026 19:23:56 +0800"
     },
     {
       "friend": "Collapse179",
