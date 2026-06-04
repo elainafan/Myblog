@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T21:58:01.748338+00:00",
+  "generated_at": "2026-06-04T00:36:18.645862+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -64,15 +64,15 @@
     {
       "name": "Zhaoyi Tian",
       "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
       "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
       "description": "故事的下一页",
       "circle": true,
       "circle_reason": "",
       "timeout": 25,
       "retries": 3,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 5
     },
     {
       "name": "Hinai",
@@ -103,41 +103,41 @@
     {
       "name": "Anfsity",
       "site": "https://www.anfstiy.me/",
-      "feed": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
       "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
       "description": "There is a reason",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 21
     },
     {
       "name": "Lane's Blog",
       "site": "https://www.laneljc.cn/",
-      "feed": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
       "avatar": "https://www.laneljc.cn/assets/favicon.png",
       "description": "探索未知，解码未来",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 12
     },
     {
       "name": "CcoMm",
       "site": "https://blog.ccomm.top/",
-      "feed": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
       "avatar": "https://avatars.githubusercontent.com/u/147143261",
       "description": "你要听T4吗？",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 11
     },
     {
       "name": "Masttf",
@@ -244,24 +244,7 @@
       "post_count": 10
     }
   ],
-  "warnings": [
-    {
-      "friend": "Zhaoyi Tian",
-      "message": "feed not found and no dated posts found in HTML"
-    },
-    {
-      "friend": "Anfsity",
-      "message": "feed not found and no dated posts found in HTML"
-    },
-    {
-      "friend": "Lane's Blog",
-      "message": "feed not found and no dated posts found in HTML"
-    },
-    {
-      "friend": "CcoMm",
-      "message": "feed not found and no dated posts found in HTML"
-    }
-  ],
+  "warnings": [],
   "posts": [
     {
       "friend": "Equinox",
@@ -462,6 +445,17 @@
       "published_text": "2026-05-25"
     },
     {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "编译优化其一",
+      "url": "https://anfstiy.me/p/%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96%E5%85%B6%E4%B8%80/",
+      "summary": "HIGH IR Return Insertion 正如字面意思，这个 pass 很简单，就是给所有没有写上 return 指令的函数补上 return 指令。也不需要考虑很多，看见缺了就填，反正后面会进行的 pass 会消除这个 pass 的副作用。 简单常量传播 在 sysy （c 语言的一个子集） 中，store 语句只会在这几种情况下出现： int...",
+      "published": "2026-05-24T03:56:38+00:00",
+      "published_text": "Sun, 24 May 2026 11:56:38 +0800"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -605,6 +599,17 @@
       "published_text": "Mon, 27 Apr 2026 18:46:07 +0800"
     },
     {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "You Dont Know Cpp and Neither I Do",
+      "url": "https://anfstiy.me/p/you-dont-know-cpp-and-neither-i-do/",
+      "summary": "来点语言律师题，之前刷 reddit 看到的，作者取了个非常中二的名字（，空闲时间做了把他搬过来了。 原文仓库: https://github.com/0xd34df00d/you-dont-know-cpp Assigning to references Does this work? If it doesn’t, why and what’s the...",
+      "published": "2026-04-27T08:24:07+00:00",
+      "published_text": "Mon, 27 Apr 2026 16:24:07 +0800"
+    },
+    {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
       "feed": "https://yjyxfcy.github.io/",
@@ -682,6 +687,17 @@
       "published_text": "Sun, 05 Apr 2026 00:00:00 +0000"
     },
     {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "訂閱監控看板 (Subscription Monitor • Pure)",
+      "url": "https://blog.ccomm.top/blog/subpulse/subpulse",
+      "summary": "一個基於 Cloudflare Workers 構建的輕量級、無伺服器（Serverless）訂閱流量監控看板。",
+      "published": "2026-04-02T20:15:00+00:00",
+      "published_text": "Thu, 02 Apr 2026 20:15:00 GMT"
+    },
+    {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
       "feed": "https://yjyxfcy.github.io/",
@@ -737,6 +753,17 @@
       "published_text": "Mon, 23 Mar 2026 18:42:09 +0800"
     },
     {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "解决 VS Code 中文段落无法自动换行的问题",
+      "url": "https://www.laneljc.cn/posts/vscode-chinese-word-wrap/",
+      "summary": "排查 VS Code 中文段落无法自动换行的问题，定位到编辑器换行策略配置，并给出恢复中文文本正常折行的设置方法。",
+      "published": "2026-03-22T08:00:17+00:00",
+      "published_text": "Sun, 22 Mar 2026 16:00:17 +0800"
+    },
+    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -770,6 +797,17 @@
       "published_text": "Mon, 16 Mar 2026 18:56:47 +0800"
     },
     {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "在博客中优雅地添加 Bilibili 追番页面 (Astro & Hugo 无 CORS 秒开方案)",
+      "url": "https://blog.ccomm.top/blog/zuifan/bilibili",
+      "summary": "如何利用后端构建能力彻底解决前端跨域痛点，实现静态化零延迟的完美追番展示。包含基于 Astro 和 Hugo 两种不同技术栈的完整实现方案。",
+      "published": "2026-03-12T21:15:00+00:00",
+      "published_text": "Thu, 12 Mar 2026 21:15:00 GMT"
+    },
+    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -779,6 +817,28 @@
       "summary": "Lab05: 熟悉logisim setup 本次lab我们将使用一个叫做logisim的工具来设计和模拟我们的电路，这个工具十分好用，只需要java -jar logisim-evolution.jar即可使用。 鄙人在基于archlinux的niri界面上使用时遇到了一些问题，特此记录一下。 故障现象：启动后界面可以正常显示1s，之后会变成白屏，无法操...",
       "published": "2026-03-11T08:47:32+00:00",
       "published_text": "Wed, 11 Mar 2026 16:47:32 +0800"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "如何使用 Cloudflare API 為 Astro 網站新增高級數據監測大屏",
+      "url": "https://blog.ccomm.top/blog/cloudflare-jc/%E5%AE%9E%E7%8E%B0cloudflare%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B%E9%9D%A2%E6%9D%BF",
+      "summary": "手把手教你在 Astro 項目中，利用 Cloudflare GraphQL API 和 ECharts 構建一個純本地渲染、不洩露密鑰的極速網站流量與安全監控面板。",
+      "published": "2026-03-10T14:00:00+00:00",
+      "published_text": "Tue, 10 Mar 2026 14:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "碎碎念：找實習、生病與一塊薯餅的治癒",
+      "url": "https://blog.ccomm.top/blog/%E9%86%89%E9%B8%A1%E6%97%A5%E8%AE%B0",
+      "summary": "最近幾個月忙於尋找實習，加上反覆感冒發燒，博客與 Astro 項目暫時停擺。生活雖然疲憊，但吃塊肯德基薯餅還是能開心一下。",
+      "published": "2026-03-10T00:00:00+00:00",
+      "published_text": "Tue, 10 Mar 2026 00:00:00 GMT"
     },
     {
       "friend": "~zzz",
@@ -803,6 +863,50 @@
       "published_text": "Sat, 07 Mar 2026 00:00:00 +0000"
     },
     {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "TraceDiary 开发复盘：我如何并行协作 4 个 Agent",
+      "url": "https://www.laneljc.cn/posts/trace-diary-parallel-agents/",
+      "summary": "复盘 TraceDiary 的核心功能取舍，以及我如何用 tmux 组织 4 个 Agent 并行开发以提升 Vibe Coding 效率。",
+      "published": "2026-02-27T14:28:55+00:00",
+      "published_text": "Fri, 27 Feb 2026 22:28:55 +0800"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "我用 Vibe Coding 开发了一个照片标注工具 ImgStamp",
+      "url": "https://www.laneljc.cn/posts/imgstamp-vibe-coding/",
+      "summary": "复盘我如何用 Vibe Coding 开发离线照片标注工具 ImgStamp，包括需求取舍、排版算法和避免 AI 跑偏的方法。",
+      "published": "2026-02-26T15:30:00+00:00",
+      "published_text": "Thu, 26 Feb 2026 23:30:00 +0800"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "格式刷失灵？解决 Word 段落样式异常的问题",
+      "url": "https://www.laneljc.cn/posts/word-paragraph-style-not-working/",
+      "summary": "分析 Word 中格式刷无法正确复制段落样式的问题根因，并给出通过替换手动换行修复段落结构的办法。",
+      "published": "2026-02-26T12:20:00+00:00",
+      "published_text": "Thu, 26 Feb 2026 20:20:00 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "编译原理完结篇",
+      "url": "https://anfstiy.me/p/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%8C%E7%BB%93%E7%AF%87/",
+      "summary": "稍微填一下坑，最近重新写了一遍，感悟又有所不同。 啊嘞啊嘞嘞，怎么直接从准备到完结了 按照教程的顺序，应该是先写前端解析出 AST 然后再遍历出 koopa ir 最后进行代码生成。流程很短，事实上少了优化的过程，确实非常简单。 在函数之前的内容就不赘述了，教程写的很完善，实际也不难。由于不需要考虑浮点数和整数之间的转换，中期的短路求值其实很好写，写一个...",
+      "published": "2026-02-24T05:12:21+00:00",
+      "published_text": "Tue, 24 Feb 2026 13:12:21 +0800"
+    },
+    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -812,6 +916,28 @@
       "summary": "免责声明：此文章为记录自主学习图形学机制而留，并没有提交到BSS论坛，请勿直接复制粘贴，后果自负。 HomeWork1：MVP矩阵 作业的最终效果如下：就是让我们画一个三角形，作业包已经完成了大部分的内容，所以我们最后只用填入模型的变换矩阵M和投影矩阵P 什么是MVP矩阵？ 在计算机图形学中，我们用向量表示一个点，用向量表示一个虚拟世界，而最后这些模型有些...",
       "published": "2026-02-07T00:00:00+00:00",
       "published_text": "Sat, 07 Feb 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "Zhaoyi Tian",
+      "site": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
+      "title": "PKU-Grade-Watcher",
+      "url": "https://zhaoyi-tian.cn/blog/pku-grade-watcher",
+      "summary": "自用查分脚本，在此保留其README，仅作纪念",
+      "published": "2026-01-30T00:00:00+00:00",
+      "published_text": "Fri, 30 Jan 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "C++ 的魔法契约： Undefined Behavior",
+      "url": "https://anfstiy.me/p/c-%E7%9A%84%E9%AD%94%E6%B3%95%E5%A5%91%E7%BA%A6-undefined-behavior/",
+      "summary": "在 C 和 C++ 中，有一个叫做 ub (undefined behavior) 的概念，你也许听说过他，视他为洪水猛兽。但打败敌人的第一步往往需要先了解他，那么首先， ub 是什么呢？ Introduction 标准 1 上面给出的定义是这样的： 未定义行为，即标准对该程序运行结果不施加任何要求，其运行可以为任何结果，也无需保持一致或给出诊断。换句话说...",
+      "published": "2026-01-13T12:27:02+00:00",
+      "published_text": "Tue, 13 Jan 2026 20:27:02 +0800"
     },
     {
       "friend": "Arthal's ink",
@@ -845,6 +971,39 @@
       "summary": "免责声明：此文章为记录自主学习malloc机制而留，并没有提交到任何评测机，使用的数据是来自Arthals提供的PKU的包，尚不清楚在别的测评数据的评测情况，请勿直接复制粘贴，后果自负。 这个lab,要我们做什么？ 简单来说就是不用libc的malloc相关包函数实现一个简单的动态内存分配器,但是我们可以使用以下三个函数： void* mem_heap_l...",
       "published": "2025-12-29T00:00:00+00:00",
       "published_text": "Mon, 29 Dec 2025 00:00:00 +0000"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "PROTOCOL-RELAY 介紹",
+      "url": "https://blog.ccomm.top/blog/protocol-relay",
+      "summary": "一個基於 Astro + React 構建的磁帶未來主義（Cassette Futurism）風格 Git 加速工具，透過 CDN 邊緣節點轉發流量實現高速訪問。",
+      "published": "2025-12-27T00:00:00+00:00",
+      "published_text": "Sat, 27 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "我写了一个 Codex 任务完成提醒脚本",
+      "url": "https://www.laneljc.cn/posts/i-wrote-a-codex-task-reminder/",
+      "summary": "记录我在 WSL 里为 Codex CLI 配置任务完成提醒的完整排障过程，包括 Windows Toast 通知、PowerShell 静默执行和参数长度问题。",
+      "published": "2025-12-26T02:47:33+00:00",
+      "published_text": "Fri, 26 Dec 2025 10:47:33 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "随笔其二",
+      "url": "https://anfstiy.me/p/%E9%9A%8F%E7%AC%94%E5%85%B6%E4%BA%8C/",
+      "summary": "最近看到一些博客和视频，深有共鸣，实在憋不住了，一吐为快。 在我短暂的十八年人生中，有几个节点我认为对我来说非常重要。 我是农村出身，不算什么好出身，父母都是打工人。但长成如今的模样，回首往事，确是令人感慨。 初中时，遇到了一些好老师。并非什么名门学校，但那些先生们，却令我印象极深。 我记得那时候上课，无论学什么，都是非常有激情的（好像除了语文，语文老师上...",
+      "published": "2025-12-25T13:28:01+00:00",
+      "published_text": "Thu, 25 Dec 2025 21:28:01 +0800"
     },
     {
       "friend": "Collapse179",
@@ -891,6 +1050,105 @@
       "published_text": "Fri, 19 Dec 2025 16:42:00 +0800"
     },
     {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "编译原理准备篇",
+      "url": "https://anfstiy.me/p/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%87%86%E5%A4%87%E7%AF%87/",
+      "summary": "Docker maxXing 提供为实验提供了 docker 镜像，所以我们只需要将 docker 下载下来拉取镜像即可。 使用 pacman 下载 docker ： 1 sudo pacman -S docker 关于如何使用基本的 docker 文档里面有足够的 讲解 ，在此不再赘述。 主要来讲解一下引入 docker 导致宿主机的环境问题。 首先 d...",
+      "published": "2025-12-17T05:57:23+00:00",
+      "published_text": "Wed, 17 Dec 2025 13:57:23 +0800"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.Ins.Blog 項目",
+      "url": "https://blog.ccomm.top/blog/nebulainsblog-%E9%A1%B9%E7%9B%AE",
+      "summary": "一個更適合生活類的圖文博客項目，目前處於開發中。",
+      "published": "2025-12-11T00:00:00+00:00",
+      "published_text": "Thu, 11 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "優化了網站的一些功能",
+      "url": "https://blog.ccomm.top/blog/%E4%BC%98%E5%8C%96%E4%BA%86%E7%BD%91%E7%AB%99%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8A%9F%E8%83%BD",
+      "summary": "2025年12月8日網站優化記錄：修復了移動端導航欄重疊問題，並為無數據庫後台開發了基於 LocalStorage 和 GitHub API 的暫存區批量提交功能。",
+      "published": "2025-12-08T00:00:00+00:00",
+      "published_text": "Mon, 08 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "熬了一晚上給網站新增了幾個小功能",
+      "url": "https://blog.ccomm.top/blog/endfieldsys%E6%96%B0%E5%A2%9E%E5%8A%9F%E8%83%BD",
+      "summary": "2025年12月7日熬夜為網站新增了GitHub倉庫、B站追番列表、音樂播放器、時間線以及RSS訂閱列表等功能，並優化了友鏈頁面。",
+      "published": "2025-12-07T00:00:00+00:00",
+      "published_text": "Sun, 07 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.ICP 介紹",
+      "url": "https://blog.ccomm.top/blog/nebula-icp-%E4%BB%8B%E7%BB%8D",
+      "summary": "一個基於 Cloudflare D1 的去中心化、賽博朋克風格的數字實體檔案庫系統。無服務器架構，邊緣秒級響應。",
+      "published": "2025-12-05T00:00:00+00:00",
+      "published_text": "Fri, 05 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.ICP 項目",
+      "url": "https://blog.ccomm.top/blog/nebulaicp",
+      "summary": "Nebula.ICP 項目界面展示，包含首頁、選號頁、展示頁等，目前項目正在開發中。",
+      "published": "2025-12-04T00:00:00+00:00",
+      "published_text": "Thu, 04 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Compile Principle",
+      "url": "https://anfstiy.me/p/compile-principle/",
+      "summary": "思来想去，还是在 CS143 和 pku 的编译原理之间选择了 pku 的，顺便再看看 LLVM 的 Kaleidoscope 。 CS143 是经典课程，但是 pku 的 lab 又足够诱人，它给予了你高度的自由从头来设计一个编译器。 虽然说是从头，但其实大体的框架限制的比较死，如果真的要从头写一个，那恐怕花费的时间就不是这一个课程能够容纳的了。 前端基...",
+      "published": "2025-12-02T10:23:54+00:00",
+      "published_text": "Tue, 02 Dec 2025 18:23:54 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Play Arknights In ArchLinux",
+      "url": "https://anfstiy.me/p/play-arknights-in-archlinux/",
+      "summary": "Install binder We need install binder, because Arknights depended on it , who transform app’s message to linux system. Linux-zen is one alternative kernel available in official Ar...",
+      "published": "2025-12-02T09:54:36+00:00",
+      "published_text": "Tue, 02 Dec 2025 17:54:36 +0800"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.SYS 介紹",
+      "url": "https://blog.ccomm.top/blog/nebulasys",
+      "summary": "一個致敬《明日方舟：終末地》工業機能美學的現代化博客系統。",
+      "published": "2025-12-02T00:00:00+00:00",
+      "published_text": "Tue, 02 Dec 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Arthal's ink",
       "site": "https://arthals.ink/",
       "feed": "https://arthals.ink/rss.xml",
@@ -900,6 +1158,17 @@
       "summary": "唉，商业化，原本好好的 App 就这么被塞满了广告",
       "published": "2025-11-28T22:33:33+00:00",
       "published_text": "Fri, 28 Nov 2025 22:33:33 GMT"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "C++ Coroutines (1)",
+      "url": "https://anfstiy.me/p/c-coroutines-1/",
+      "summary": "这是 Lewis Baker 关于 C++ 协程系列文章的 第一篇 。 This is the first of a series of posts on the C++ Coroutines TS , a new language feature that is currently on track for inclusion into the C++2...",
+      "published": "2025-11-28T00:21:14+00:00",
+      "published_text": "Fri, 28 Nov 2025 08:21:14 +0800"
     },
     {
       "friend": "Hinai",
@@ -913,6 +1182,17 @@
       "published_text": "Tue, 25 Nov 2025 02:01:00 +0800"
     },
     {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "favicon 不更新：浏览器缓存的锅",
+      "url": "https://www.laneljc.cn/posts/favicon-cache/",
+      "summary": "分析 Hugo 站点 favicon 更新后浏览器仍显示旧图的原因，并给出无痕模式、禁用缓存和修改资源 URL 的排查与解决办法。",
+      "published": "2025-11-23T07:16:40+00:00",
+      "published_text": "Sun, 23 Nov 2025 15:16:40 +0800"
+    },
+    {
       "friend": "Arthal's ink",
       "site": "https://arthals.ink/",
       "feed": "https://arthals.ink/rss.xml",
@@ -922,6 +1202,50 @@
       "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 5",
       "published": "2025-11-22T20:49:15+00:00",
       "published_text": "Sat, 22 Nov 2025 20:49:15 GMT"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "解决 VS Code 加载 WebView 错误的问题",
+      "url": "https://www.laneljc.cn/posts/vscode-webview-bug/",
+      "summary": "解决 VS Code WebView 加载失败和 Service Worker 注册报错的问题，记录清理本地缓存而不是关闭 Chromium 沙箱的有效修复方案。",
+      "published": "2025-11-14T08:44:39+00:00",
+      "published_text": "Fri, 14 Nov 2025 16:44:39 +0800"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "《CUDA编程：基础与实践》笔记",
+      "url": "https://www.laneljc.cn/posts/cuda-coding/",
+      "summary": "结合《CUDA编程：基础与实践》整理 CUDA 入门笔记，涵盖线程组织、内存模型、错误检测和性能优化等基础内容。",
+      "published": "2025-11-10T03:09:19+00:00",
+      "published_text": "Mon, 10 Nov 2025 11:09:19 +0800"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "C++ Lambda表达式介绍",
+      "url": "https://www.laneljc.cn/posts/cpp-lambda/",
+      "summary": "介绍 C++ Lambda 表达式的基本语法、编译器处理方式和常见用法，并通过示例说明值捕获与引用捕获。",
+      "published": "2025-11-08T13:55:12+00:00",
+      "published_text": "Sat, 08 Nov 2025 21:55:12 +0800"
+    },
+    {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "计算机网络笔记",
+      "url": "https://www.laneljc.cn/posts/computer-network-notes/",
+      "summary": "整理计算机网络课程中的核心概念、性能指标、分层模型与协议基础，作为学习复习笔记。",
+      "published": "2025-11-01T02:18:37+00:00",
+      "published_text": "Sat, 01 Nov 2025 10:18:37 +0800"
     },
     {
       "friend": "Arthal's ink",
@@ -1012,6 +1336,17 @@
       "published_text": "Thu, 02 Oct 2025 16:17:53 GMT"
     },
     {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Neovim",
+      "url": "https://anfstiy.me/p/neovim/",
+      "summary": "一些有用的资料 Lua-guide Neovim Docs Nvim lua guide Build your first Neovim configuration in lua Stack overflow Programming in Lua Lua 5.4 Reference Manual Lua Beginners Guide 以及, 你可以在命令...",
+      "published": "2025-09-22T17:31:05+00:00",
+      "published_text": "Tue, 23 Sep 2025 01:31:05 +0800"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1034,6 +1369,17 @@
       "published_text": "Sun, 07 Sep 2025 20:16:00 +0800"
     },
     {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "我做网站这十年",
+      "url": "https://www.laneljc.cn/posts/ten-years-website-building/",
+      "summary": "回顾我从小学时期折腾建站平台到使用 Hugo 重构个人博客的十年建站经历与思考。",
+      "published": "2025-09-05T08:55:41+00:00",
+      "published_text": "Fri, 05 Sep 2025 16:55:41 +0800"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1043,6 +1389,17 @@
       "summary": "簡單分享一下遇到的問題和解決心路。很久沒有好好整理伺服器了， 雖然平時有基礎的運維，簡單的檢查，審查日誌和維護等，但並不會花太多時間在上面。前些日子有空清理了一下目前未使用的DNS記錄。 按理來...",
       "published": "2025-09-02T11:43:00+00:00",
       "published_text": "Tue, 02 Sep 2025 19:43:00 +0800"
+    },
+    {
+      "friend": "Zhaoyi Tian",
+      "site": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
+      "title": "第四期神经计算建模及编程培训笔记",
+      "url": "https://zhaoyi-tian.cn/blog/brainpy",
+      "summary": "简单的测评与笔记，以作纪念",
+      "published": "2025-08-28T00:00:00+00:00",
+      "published_text": "Thu, 28 Aug 2025 00:00:00 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -1067,6 +1424,94 @@
       "published_text": "Sun, 17 Aug 2025 03:40:00 +0800"
     },
     {
+      "friend": "Zhaoyi Tian",
+      "site": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
+      "title": "本主页搭建流程",
+      "url": "https://zhaoyi-tian.cn/blog/personal-website-setup",
+      "summary": "零基础小白搭建个人主页的流程，总结了通过ai对网站进行个性化的经验，愿能够有所帮助",
+      "published": "2025-08-10T00:00:00+00:00",
+      "published_text": "Sun, 10 Aug 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Macro in C/CPP",
+      "url": "https://anfstiy.me/p/macro-in-c/cpp/",
+      "summary": "Around the right track baby we ain’t going back ― Fly To Meteor (Milthm Edit) Encounter 起因是因为这么一段代码 1 2 #define trace(...) \\ RecursionTracer tracer_##__LINE__(__func__, #__VA_ARGS...",
+      "published": "2025-08-06T04:36:02+00:00",
+      "published_text": "Wed, 06 Aug 2025 12:36:02 +0800"
+    },
+    {
+      "friend": "Zhaoyi Tian",
+      "site": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
+      "title": "北大课程资料",
+      "url": "https://zhaoyi-tian.cn/blog/pku-course-materials",
+      "summary": "我将在此记录一些我修过且觉得值得记录的课程。主要内容会包括一些xk的专业课以及'ai+心理认知'项目的课程",
+      "published": "2025-08-03T00:00:00+00:00",
+      "published_text": "Sun, 03 Aug 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Grinding Codeforces",
+      "url": "https://anfstiy.me/p/grinding-codeforces/",
+      "summary": "Index 1400 Summary 1300-1400 Summary 1400A Summary 1400B Summary 1400C-D",
+      "published": "2025-07-03T13:43:26+00:00",
+      "published_text": "Thu, 03 Jul 2025 21:43:26 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "CS:APP",
+      "url": "https://anfstiy.me/p/csapp/",
+      "summary": "目前施工正在进行中，目前仅做完 Arch Lab 目录 Data Lab Bomb Lab Attack Lab Arch Lab Cache Lab Shell Lab Malloc Lab Proxy Lab 实用链接 CSAPP Lab 备份 CSAPP 电子汉化版 不周山的博客 CSAPP 重点解读 CSAPP Notes 感想",
+      "published": "2025-06-27T11:29:03+00:00",
+      "published_text": "Fri, 27 Jun 2025 19:29:03 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Three Day Sprint",
+      "url": "https://anfstiy.me/p/three-day-sprint/",
+      "summary": "以下所有内容引用自 上海交大生存手册 突击备考 新书或者根本没买过书；没听过讲，或者没上过课，没独立写做过作业甚至没交过作业，但是离考试只有三天时间，这样的情况，对我们中的大部分人，对大部分课程的考试，并不意味着绝望。只要你有心，三天造十万支箭都没有问题，更何况考试？ 我并不是一个“优秀”的学生，因为在大学四年内，我没有一个光鲜的GPA。虽然我可以很骄傲地...",
+      "published": "2025-06-24T16:29:21+00:00",
+      "published_text": "Wed, 25 Jun 2025 00:29:21 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "迁移总结",
+      "url": "https://anfstiy.me/p/%E8%BF%81%E7%A7%BB%E6%80%BB%E7%BB%93/",
+      "summary": "起因是我重装 win10 的时候把我整块磁盘都清空了，事后才发现我没有给我的博客备份😭。遂想，反正已经要 remake 了，索性换一个框架，于是便从 hexo 换成了 hugo。 虽然说所有的数据我在 vercel 上都有，但是都不是 markdown 的储存形式，我也懒得再从网上找工具实现 html 转 markdown 了。就仅仅迁移了几篇还算有意义的...",
+      "published": "2025-06-24T14:42:13+00:00",
+      "published_text": "Tue, 24 Jun 2025 22:42:13 +0800"
+    },
+    {
+      "friend": "Zhaoyi Tian",
+      "site": "https://zhaoyi-tian.cn",
+      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
+      "title": "社会心理学关键概念表补充",
+      "url": "https://zhaoyi-tian.cn/blog/social-psychology-key-concepts",
+      "summary": "简单做的一个毛利华社会心理学关键概念整理，一部分来自《社会心理学》（戴维 •迈尔斯 第十一版），部分概念标明了页数，另一部分来自ai。",
+      "published": "2025-06-19T00:00:00+00:00",
+      "published_text": "Thu, 19 Jun 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1076,6 +1521,61 @@
       "summary": "這幾天在重新編寫整理NekoLc的文檔，故分享一下我之前設計的接口和思路，希望大家也能從中受益。首先，在MainWindow中定義了兩個接口：updatePage()切換頁面並resize一次s...",
       "published": "2025-05-29T22:06:00+00:00",
       "published_text": "Fri, 30 May 2025 06:06:00 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "浅谈筛法",
+      "url": "https://anfstiy.me/p/%E6%B5%85%E8%B0%88%E7%AD%9B%E6%B3%95/",
+      "summary": "素数筛法 引入 我们先来看一个最基本的一个判断素数的方法， 基于 $6k \\pm 1$ 优化。 $Prove$ 对于所有正整数，都可以表示为 $6k + i$。 由于以下情况 : $6k \\equiv 0 \\pmod{2}$ $6k+2 \\equiv 0 \\pmod{2}$ $6k+3\\equiv 0 \\pmod{3}$ $6k+4\\equiv 0 \\pm...",
+      "published": "2025-05-25T06:07:56+00:00",
+      "published_text": "Sun, 25 May 2025 14:07:56 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Multiplicative Inverse",
+      "url": "https://anfstiy.me/p/multiplicative-inverse/",
+      "summary": "简介 在算法计算中, 常常由于数据原因对答案进行大数取模. 对于加法和减法, 处理起来相对容易, 但是对于除法来说, 就较为复杂. 为了解决这个问题, 我们来探讨一下乘法逆元. 定义 我们把 $a^{-1}$ 叫作 $a \\bmod p$ 的乘法逆元, 如果满足 $a\\cdot a^{-1} \\equiv 1 \\pmod p$. 在高中数学中, 如果 $b...",
+      "published": "2025-05-25T05:59:19+00:00",
+      "published_text": "Sun, 25 May 2025 13:59:19 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "C++ 杂项",
+      "url": "https://anfstiy.me/p/c-%E6%9D%82%E9%A1%B9/",
+      "summary": "$Part\\ I.$ Static Variables in a Function 可以认为，声明在函数中被直接初始化的静态变量，就相当于把变量声明在全局，但是静态变量的作用域仅仅在函数内部其作用。 Static Member Variables in a Class 在类里面声明的静态变量分配空间时只被分配一次，所以类中所有实例化的对象中的静态变量相同，...",
+      "published": "2025-05-24T14:40:03+00:00",
+      "published_text": "Sat, 24 May 2025 22:40:03 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "随笔其一",
+      "url": "https://anfstiy.me/p/%E9%9A%8F%E7%AC%94%E5%85%B6%E4%B8%80/",
+      "summary": "有感而发，也算是一学年的总结吧。 先引用一段《上海交通大学生存手册》的话吧。 各位同学们，在本书的开始，我不得不遗憾地告诉大家一个消息。国内绝大部分大学的本科教学，不是濒临崩溃，而是早已崩溃。在此，我无意争论是否复旦、中科大、或者清华、北大是否比我们崩溃的更少一些——这种争论是没有意义的。我只是看到了无数充满求知欲、激情、与年轻梦想的同学们，将要把自己的四...",
+      "published": "2025-05-24T14:31:23+00:00",
+      "published_text": "Sat, 24 May 2025 22:31:23 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "GCD and LCM",
+      "url": "https://anfstiy.me/p/gcd-and-lcm/",
+      "summary": "[!quote] A fine quotation is a diamond on the finger of a man of wit, and a pebble in the hand of a fool. — Joseph Roux 我们要证明的等式是： $$ \\gcd(\\operatorname{lcm}(a,b), \\operatorname{l...",
+      "published": "2025-04-21T14:35:59+00:00",
+      "published_text": "Mon, 21 Apr 2025 22:35:59 +0800"
     },
     {
       "friend": "Arthal's ink",
@@ -1199,6 +1699,17 @@
       "published_text": "Sat, 01 Mar 2025 17:01:00 GMT"
     },
     {
+      "friend": "Lane's Blog",
+      "site": "https://www.laneljc.cn/",
+      "feed": "https://www.laneljc.cn/rss.xml",
+      "avatar": "https://www.laneljc.cn/assets/favicon.png",
+      "title": "在WSL中编译LLVM源码并使用覆盖率统计",
+      "url": "https://www.laneljc.cn/posts/llvm-coverage-wsl/",
+      "summary": "记录在 WSL 环境下编译 LLVM 源码并进行覆盖率统计的完整流程，包括依赖准备、编译参数、环境变量配置和结果查看。",
+      "published": "2025-03-01T01:51:58+00:00",
+      "published_text": "Sat, 01 Mar 2025 09:51:58 +0800"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1252,6 +1763,17 @@
       "summary": "Modern C++ - Move移動語義是C++爲了提高資源管理效率而在C++11新增的特性。它透過右值引用(T&&)、move和移動構造等方法實現。⌈移動⌋並不真的轉移資源，...",
       "published": "2024-11-23T09:10:00+00:00",
       "published_text": "Sat, 23 Nov 2024 17:10:00 +0800"
+    },
+    {
+      "friend": "Anfsity",
+      "site": "https://www.anfstiy.me/",
+      "feed": "https://www.anfstiy.me/index.xml",
+      "avatar": "https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png",
+      "title": "Linear Algebra",
+      "url": "https://anfstiy.me/p/linear-algebra/",
+      "summary": "老爷子的线性代数课层层递进，深入浅出，引人入胜，只能说不愧是享誉盛名的教授，盛名之下无虚士。 老爷子用的教材是他自己写的书： 《Introduction To Linear Algebra Fifth Edition》 教材和答案在 MIT Open Source 的官网上都有。 老爷子的一个网站： website 2023年5月15日，Gilbert S...",
+      "published": "2024-10-17T14:12:58+00:00",
+      "published_text": "Thu, 17 Oct 2024 22:12:58 +0800"
     }
   ]
 }
