@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T10:24:36.728936+00:00",
+  "generated_at": "2026-06-10T13:01:32.035142+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -251,6 +251,28 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Qwen3 VL精读",
+      "url": "https://equinox.wiki/post/paper-reading/qwen3-vl%E7%B2%BE%E8%AF%BB/",
+      "summary": "Qwen3 VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-10首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-10",
+      "published": "2026-06-10T05:48:44+00:00",
+      "published_text": "Wed, 10 Jun 2026 13:48:44 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Qwen2.5 VL泛读",
+      "url": "https://equinox.wiki/post/paper-reading/qwen2.5-vl%E6%B3%9B%E8%AF%BB/",
+      "summary": "Qwen2.5 VL泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-09首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-09",
+      "published": "2026-06-09T08:07:55+00:00",
+      "published_text": "Tue, 09 Jun 2026 16:07:55 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Qwen2 VL精读",
       "url": "https://equinox.wiki/post/paper-reading/qwen2-vl%E7%B2%BE%E8%AF%BB/",
       "summary": "Qwen2 VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-08首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-08",
@@ -267,6 +289,17 @@
       "summary": "Introduction 支配树在编译器中最主要的作用是用于计算支配边界，用于插入 $\\phi$ 函数，将 ir 提升到 SSA 形式。以及提供循环优化，DCE 等 pass 需要的结构信息。 Control Flow Graph 有如下代码： 1 2 3 4 5 6 7 8 9 10 11 12 13 int main () { int a = 1 ;...",
       "published": "2026-06-07T19:34:49+00:00",
       "published_text": "Mon, 08 Jun 2026 03:34:49 +0800"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "CS61c_16 — Flynn Taxonomy, SIMD Instructions",
+      "url": "https://fuquan99666.github.io/p/cs61c_16-flynn-taxonomy-simd-instructions/",
+      "summary": "引 从本篇开始，我们将进入一个新的板块——parallelism （并行计算）。学完之前的课程，我们可以说已经完全理解一台计算机了，现在我们要让这台计算机更加强大。 parallel有很多类型，比如一个cpu核，可以进行多线程并行；对于一个流水线，我们可以多指令并行。然而，随着流水线的不断加深，cpu的功耗也会增加，已经达到了不可接受的程度，所以人们开始思...",
+      "published": "2026-06-07T12:57:26+00:00",
+      "published_text": "Sun, 07 Jun 2026 20:57:26 +0800"
     },
     {
       "friend": "~zzz",
@@ -379,17 +412,6 @@
       "published_text": "Mon, 01 Jun 2026 22:44:01 +0800"
     },
     {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "VLMO泛读",
-      "url": "https://equinox.wiki/post/paper-reading/vlmo%E6%B3%9B%E8%AF%BB/",
-      "summary": "VLMO泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-01",
-      "published": "2026-06-01T11:05:23+00:00",
-      "published_text": "Mon, 01 Jun 2026 19:05:23 +0800"
-    },
-    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -399,17 +421,6 @@
       "summary": "农业起源与文明的发展 农业是文明的起源，世界农业最早驯化地有三处，分别是伊拉克的两河流域，中国的长江、黄河中下游地带，墨西哥南部与南美安第斯山区。 大约九千年前后，中国南北方各自形成独立的农业区，北方属于以谷子、黍子为主的旱作农业区，南方则形成以水稻为主的水田农业区。 磁山文化遗址，距今大约9000年，位于河北磁县，是最早的一批文化遗址，遗址中发现了几百个...",
       "published": "2026-06-01T10:42:45+00:00",
       "published_text": "Mon, 01 Jun 2026 18:42:45 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "ALBEF泛读",
-      "url": "https://equinox.wiki/post/paper-reading/albef%E6%B3%9B%E8%AF%BB/",
-      "summary": "ALBEF泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-01",
-      "published": "2026-06-01T08:54:18+00:00",
-      "published_text": "Mon, 01 Jun 2026 16:54:18 +0800"
     },
     {
       "friend": "~zzz",
@@ -784,17 +795,6 @@
       "summary": "",
       "published": "2026-03-25T00:00:00+00:00",
       "published_text": "2026-03-25"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "中史地_3 — 中国历史政区与地方行政制度",
-      "url": "https://fuquan99666.github.io/p/%E4%B8%AD%E5%8F%B2%E5%9C%B0_3-%E4%B8%AD%E5%9B%BD%E5%8E%86%E5%8F%B2%E6%94%BF%E5%8C%BA%E4%B8%8E%E5%9C%B0%E6%96%B9%E8%A1%8C%E6%94%BF%E5%88%B6%E5%BA%A6/",
-      "summary": "引子 中国自古就是行政制度发展完善的国家，《周礼》载：“惟王建国，辨方正位，体国经野，设官分职，以为民极。”其中“体国经野”与“设官分职”就是划分行政区与建立地方政府。（国指的是国都，野指的是郊外） 分封制 夏代构成国家的部落、部落联盟、方国拥有的土地不是通过分封获得，反而国家是由部落、部落联盟、方国的土地组合而成。这个和我们认识中的分封制恰好是相反的。...",
-      "published": "2026-03-23T10:42:09+00:00",
-      "published_text": "Mon, 23 Mar 2026 18:42:09 +0800"
     },
     {
       "friend": "Lane's Blog",
