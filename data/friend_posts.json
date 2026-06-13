@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13T15:31:17.371274+00:00",
+  "generated_at": "2026-06-13T18:25:23.205411+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -246,6 +246,17 @@
   ],
   "warnings": [],
   "posts": [
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "CS61c_17 — Thread-Level Parallelism I",
+      "url": "https://fuquan99666.github.io/p/cs61c_17-thread-level-parallelism-i/",
+      "summary": "引 跳出编程方法，如何加快程序运行呢？首先，可以尝试提高时钟频率。然而，受限于功耗与散热瓶颈，单纯依靠提升频率的道路已越走越窄，主流处理器的全核满载频率大多仍徘徊在5GHz以下。其次，是挖掘指令级并行（ILP），例如采用SIMD指令集和超标量发射技术。最后，是提升线程级并行（TLP），这主要通过增加物理核心数量或采用同时多线程（如超线程技术）来实现。上一篇...",
+      "published": "2026-06-13T09:04:17+00:00",
+      "published_text": "Sat, 13 Jun 2026 17:04:17 +0800"
+    },
     {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
@@ -773,17 +784,6 @@
       "summary": "唐朝 唐前期，州、县两级制。贞观元年分天下为十道，开元二十一年改为十五道。“道”为监察区。 开元二十一年，设节度使，节度使最初只管军事，与民事无涉，《通鉴》： “景云元年十二月，置河西节度使、支度、营田等使，领 凉、甘、肃、伊、瓜、沙、西七州，治凉州。” 可见最初的节度使只管军事。 以安禄山为例，他一人兼任三个节度使（平卢、范阳、河东），这是军权。同时，支...",
       "published": "2026-03-30T10:44:36+00:00",
       "published_text": "Mon, 30 Mar 2026 18:44:36 +0800"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_9 — Pipelining",
-      "url": "https://fuquan99666.github.io/p/cs61c_9-pipelining/",
-      "summary": "Instruction Timing 在上节课中的表格中，我们看到只有lw指令需要经历完整的五个阶段，大概需要800ps的时间，那么我们的cpu在 1s就可以执行1.25亿条指令了，这个速度是非常快的了，问题是我们能否进一步改进它的性能呢？ 比如单任务完成时间、单位时间更多任务、续航？ 1 2 3 4 5 6 类比运输行业： 如果现在有100个人要运送到1...",
-      "published": "2026-03-29T02:27:17+00:00",
-      "published_text": "Sun, 29 Mar 2026 10:27:17 +0800"
     },
     {
       "friend": "Yjy's blog",
