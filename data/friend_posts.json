@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T13:33:03.079882+00:00",
+  "generated_at": "2026-06-16T16:32:03.271407+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -256,6 +256,17 @@
       "summary": "CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
       "published": "2026-06-16T05:40:54+00:00",
       "published_text": "Tue, 16 Jun 2026 13:40:54 +0800"
+    },
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "CS61c_18 — Thread-Level Parallelism II",
+      "url": "https://fuquan99666.github.io/p/cs61c_18-thread-level-parallelism-ii/",
+      "summary": "引 在上一篇中，我们介绍了thread level parallelism的基本概念和多核CPU架构以及超线程，现在我们将落实到具体的编程实践中，看看如何使用并行化来加速程序的运行。 当前，众多编程语言支持并行化编程，比如 Go、C、Java、CUDA 等，它们针对不同领域进行了特别优化。本文将以 C 语言为例，介绍一些常用的并行化编程工具和库，比如 Op...",
+      "published": "2026-06-15T12:45:07+00:00",
+      "published_text": "Mon, 15 Jun 2026 20:45:07 +0800"
     },
     {
       "friend": "~zzz",
@@ -773,17 +784,6 @@
       "summary": "",
       "published": "2026-04-02T00:00:00+00:00",
       "published_text": "2026-04-02"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "中史地_4 — 中国历史政区与地方行政制度",
-      "url": "https://fuquan99666.github.io/p/%E4%B8%AD%E5%8F%B2%E5%9C%B0_4-%E4%B8%AD%E5%9B%BD%E5%8E%86%E5%8F%B2%E6%94%BF%E5%8C%BA%E4%B8%8E%E5%9C%B0%E6%96%B9%E8%A1%8C%E6%94%BF%E5%88%B6%E5%BA%A6/",
-      "summary": "唐朝 唐前期，州、县两级制。贞观元年分天下为十道，开元二十一年改为十五道。“道”为监察区。 开元二十一年，设节度使，节度使最初只管军事，与民事无涉，《通鉴》： “景云元年十二月，置河西节度使、支度、营田等使，领 凉、甘、肃、伊、瓜、沙、西七州，治凉州。” 可见最初的节度使只管军事。 以安禄山为例，他一人兼任三个节度使（平卢、范阳、河东），这是军权。同时，支...",
-      "published": "2026-03-30T10:44:36+00:00",
-      "published_text": "Mon, 30 Mar 2026 18:44:36 +0800"
     },
     {
       "friend": "Yjy's blog",
