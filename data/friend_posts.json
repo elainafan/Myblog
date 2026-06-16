@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T07:50:13.314050+00:00",
+  "generated_at": "2026-06-16T10:35:13.780763+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -247,6 +247,17 @@
   "warnings": [],
   "posts": [
     {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "CoT精读",
+      "url": "https://equinox.wiki/post/paper-reading/cot%E7%B2%BE%E8%AF%BB/",
+      "summary": "CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
+      "published": "2026-06-16T05:40:54+00:00",
+      "published_text": "Tue, 16 Jun 2026 13:40:54 +0800"
+    },
+    {
       "friend": "~zzz",
       "site": "https://fuquan99666.github.io",
       "feed": "https://fuquan99666.github.io/index.xml",
@@ -256,6 +267,17 @@
       "summary": "引 跳出编程方法，如何加快程序运行呢？首先，可以尝试提高时钟频率。然而，受限于功耗与散热瓶颈，单纯依靠提升频率的道路已越走越窄，主流处理器的全核满载频率大多仍徘徊在5GHz以下。其次，是挖掘指令级并行（ILP），例如采用SIMD指令集和超标量发射技术。最后，是提升线程级并行（TLP），这主要通过增加物理核心数量或采用同时多线程（如超线程技术）来实现。上一篇...",
       "published": "2026-06-13T09:04:17+00:00",
       "published_text": "Sat, 13 Jun 2026 17:04:17 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Assignment2",
+      "url": "https://equinox.wiki/post/cs336/assignment2/",
+      "summary": "Assignment2 作者：Equinox（shixy2003@gmail.com） 本文2026-06-12首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-12",
+      "published": "2026-06-12T06:48:27+00:00",
+      "published_text": "Fri, 12 Jun 2026 14:48:27 +0800"
     },
     {
       "friend": "Equinox",
@@ -379,17 +401,6 @@
       "published_text": "Wed, 03 Jun 2026 17:49:41 +0800"
     },
     {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "MiniGPT 4精读",
-      "url": "https://equinox.wiki/post/paper-reading/minigpt-4%E7%B2%BE%E8%AF%BB/",
-      "summary": "MiniGPT 4精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-03",
-      "published": "2026-06-03T02:56:35+00:00",
-      "published_text": "Wed, 03 Jun 2026 10:56:35 +0800"
-    },
-    {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
       "feed": "https://yjyxfcy.github.io/",
@@ -410,17 +421,6 @@
       "summary": "引 作为课程大横评系列的第一篇，我将对上过的很多课程进行一次全面的评价和总结，涵盖课程内容、教学质量、作业难度、推荐度等多个维度。通过这个系列文章，希望能对大家提供一些选课建议，加油！ 本篇将会不断更新完善，敬请期待！ 中国历史地理 teacher：北京大学，韩茂莉 内容概要：这门课以hml老师的《中国历史地理十五讲》书籍为基础，从疆域变迁与边疆问题入手，...",
       "published": "2026-06-02T07:56:45+00:00",
       "published_text": "Tue, 02 Jun 2026 15:56:45 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "BLIP2泛读",
-      "url": "https://equinox.wiki/post/paper-reading/blip2%E6%B3%9B%E8%AF%BB/",
-      "summary": "BLIP2泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-02首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-02",
-      "published": "2026-06-02T06:10:54+00:00",
-      "published_text": "Tue, 02 Jun 2026 14:10:54 +0800"
     },
     {
       "friend": "~zzz",
