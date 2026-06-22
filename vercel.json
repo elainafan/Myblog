@@ -1,0 +1,4 @@
+{
+  "buildCommand": "hugo --gc --minify --cleanDestinationDir",
+  "outputDirectory": "public"
+}
