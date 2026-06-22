@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-22T00:30:14.459661+00:00",
+  "generated_at": "2026-06-22T04:30:13.896477+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -246,6 +246,17 @@
   ],
   "warnings": [],
   "posts": [
+    {
+      "friend": "~zzz",
+      "site": "https://fuquan99666.github.io",
+      "feed": "https://fuquan99666.github.io/index.xml",
+      "avatar": "https://fuquan99666.github.io/avatar.png",
+      "title": "CS61c_19 — Thread-Level Parallelism III",
+      "url": "https://fuquan99666.github.io/p/cs61c_19-thread-level-parallelism-iii/",
+      "summary": "Hardware Synchronization Solution: Atomic read/write 即 Read & write in single instruction. No other access permitted between read and write.一般都涉及到共享内存。 Common implementation: Atom...",
+      "published": "2026-06-18T12:05:36+00:00",
+      "published_text": "Thu, 18 Jun 2026 20:05:36 +0800"
+    },
     {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
@@ -729,17 +740,6 @@
       "summary": "清朝 (书接上文) 中央—省—府（直隶州 、厅）—县（散州、厅） 随着巡抚辖区固定并与布政使司辖区吻合,雍正年间全国设十八巡抚，“十八省”之称也初步形成于此时。尽管乾隆中期全国改设15个巡抚，但自乾隆末期以后,“十八省”逐渐成为代表全国政区的流行称称谓。（其实还有第19布政使，管理藩台）。 清代总督、巡抚成定制，为最高级地方行政长官。“总督专重兵制，巡抚专...",
       "published": "2026-04-13T10:48:01+00:00",
       "published_text": "Mon, 13 Apr 2026 18:48:01 +0800"
-    },
-    {
-      "friend": "~zzz",
-      "site": "https://fuquan99666.github.io",
-      "feed": "https://fuquan99666.github.io/index.xml",
-      "avatar": "https://fuquan99666.github.io/avatar.png",
-      "title": "CS61c_10 — Cache",
-      "url": "https://fuquan99666.github.io/p/cs61c_10-cache/",
-      "summary": "lab06 lab06的内容是用logisim来比较pipelined和single cycle的区别，主要区别就是adder和mul是否分开，只要理解了setup_time,hold_time, clk-to-q delay等概念 就可以了。 Binary prefix 在计算机中，我们常常遇到一些单位，比如KB、MB、GB等，这些单位在不同的上下文中可...",
-      "published": "2026-04-12T07:21:19+00:00",
-      "published_text": "Sun, 12 Apr 2026 15:21:19 +0800"
     },
     {
       "friend": "Yjy's blog",
