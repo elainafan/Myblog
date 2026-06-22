@@ -1,0 +1,177 @@
+//-------------------------------------------------
+//文章封面高度更改
+.article-list article .article-image img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+
+  @include respond(md) {
+    height: 200px;
+  }
+
+  @include respond(xl) {
+    height: 305px;
+  }
+}
+
+//---------------------------------------------------
+// 全局页面布局间距调整
+.main-container {
+  min-height: 100vh;
+  align-items: flex-start;
+  padding: 0 15px;
+  gap: var(--section-separation);
+  padding-top: var(--main-top-padding);
+
+  @include respond(md) {
+    padding: 0 37px;
+  }
+}
+
+//--------------------------------------------------
+//页面三栏宽度调整
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  .left-sidebar {
+    order: -3;
+    max-width: var(--left-sidebar-max-width);
+  }
+
+  .right-sidebar {
+    order: -1;
+    max-width: var(--right-sidebar-max-width);
+
+    /// Display right sidebar when min-width: lg
+    @include respond(lg) {
+      display: flex;
+    }
+  }
+
+  &.extended {
+    @include respond(md) {
+      max-width: 1024px;
+      --left-sidebar-max-width: 25%;
+      --right-sidebar-max-width: 22% !important;
+    }
+
+    @include respond(lg) {
+      max-width: 1280px;
+      --left-sidebar-max-width: 20%;
+      --right-sidebar-max-width: 30%;
+    }
+
+    @include respond(xl) {
+      max-width: 1453px; //1536px;
+      --left-sidebar-max-width: 15%;
+      --right-sidebar-max-width: 25%;
+    }
+  }
+
+  &.compact {
+    @include respond(md) {
+      --left-sidebar-max-width: 25%;
+      max-width: 768px;
+    }
+
+    @include respond(lg) {
+      max-width: 1024px;
+      --left-sidebar-max-width: 20%;
+    }
+
+    @include respond(xl) {
+      max-width: 1280px;
+    }
+  }
+}
+
+//-------------------------------------------------------
+//全局页面小图片样式微调
+.article-list--compact article .article-image img {
+  width: var(--image-size);
+  height: var(--image-size);
+  object-fit: cover;
+  border-radius: 17%;
+}
+
+// 菜单栏样式
+// 下拉菜单改圆角样式
+.menu {
+  padding-left: 0;
+  list-style: none;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  flex-grow: 1;
+  font-size: 1.6rem;
+  background-color: var(--card-background);
+
+  box-shadow: var(--shadow-l2); //改个阴影
+  display: none;
+  margin: 0; //改为0
+  border-radius: 10px; //加个圆角
+  padding: 30px 30px;
+
+  @include respond(xl) {
+    padding: 15px 0;
+  }
+
+  &,
+  .menu-bottom-section {
+    gap: 30px;
+
+    @include respond(xl) {
+      gap: 25px;
+    }
+  }
+
+  &.show {
+    display: flex;
+  }
+
+  @include respond(md) {
+    align-items: flex-end;
+    display: flex;
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  li {
+    position: relative;
+    vertical-align: middle;
+    padding: 0;
+
+    @include respond(md) {
+      width: 100%;
+    }
+
+    svg {
+      stroke-width: 1.33;
+
+      width: 20px;
+      height: 20px;
+    }
+
+    a {
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      color: var(--body-text-color);
+      gap: var(--menu-icon-separation);
+    }
+
+    span {
+      flex: 1;
+    }
+
+    &.current {
+      a {
+        color: var(--accent-color);
+        font-weight: bold;
+      }
+    }
+  }
+}

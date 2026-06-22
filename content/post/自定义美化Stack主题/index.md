@@ -6,6 +6,8 @@ categories:
 image: 10.jpg
 updates:
     - date: 2026-06-22
+      content: 删除独立系列总览页，保留归档与文章内系列导航，并将自定义样式拆分为多个 SCSS partial。
+    - date: 2026-06-22
       content: 删除独立 Updates 页面，保留文章内部 updates 记录和隐藏时间线入口。
     - date: 2026-05-27
       content: 增加全站时间线，作为隐藏入口保留完整站点动态。
@@ -633,142 +635,32 @@ seriesOrder: 1
 
 这样拆分后的长期文章就比较顺手了：主页面仍然负责汇总，子页面保持隐藏，读者进入某篇复盘或某个难度段后，也可以直接在系列内部前后跳转。
 
-## 文章系列总览页
-系列导航解决的是“进入某个系列之后怎么前后切换”，但如果读者只是想知道站内到底有哪些长期更新的内容，仍然缺一个更集中的入口。因此博客里又加了一个 `/series/` 页面，用来把课程笔记、Lab 记录、建站日志和长期复盘整理成系列卡片。
+## 系列入口收束和样式拆分
+后来也尝试过做一个独立的 `/series/` 总览页，把课程笔记、Lab 记录、建站日志和长期复盘整理成系列卡片。这个页面本身能用，但和 `归档 | Archives`、文章分类、右侧年份归档放在一起后，左侧入口会显得越来越满。实际使用下来，笔者还是更倾向于保留朴素的归档页，让长期系列回到文章内部和具体面板里。
 
-页面入口放在 `content/page/series/index.md`，使用单独的 `series` layout：
+因此现在删掉了独立的 `content/page/series/index.md`、`layouts/page/series.html` 和 `data/series.yaml`。保留下来的有两类东西：
 
-```yaml
----
-title: "系列 | Series"
-layout: "series"
-url: "/series/"
-comments: false
----
-```
+- 文章内部的系列导航，也就是进入某个长期目录后，底部仍然可以前后跳转；
+- 具体的比赛面板，比如 `/series/codeforces/`、`/series/atcoder/` 和 `/series/xcpc/`，它们仍然作为专题工具页存在。
 
-真正的系列配置放在 `data/series.yaml`。比如一个普通分类系列可以这样写：
+这个调整不会影响加密文章：文章内系列导航仍然按页面本身的 `hidden`、`encrypt` 和目录关系工作；搜索索引和 RSS 里对加密文章的保护也继续保留。换句话说，被删掉的只是“所有系列的总览入口”，不是各个系列本身。
 
-```yaml
-- title: 计算机系统导论
-  badge: ICS
-  color: "#5aa8ff"
-  category: 计算机系统导论
-  description: CSAPP / ICS Labs 的施工记录，主要记录每个 Lab 的任务、调试过程和踩坑点。
-  preview: 8
-```
-
-其中 `category` 表示按文章分类收集页面，`preview` 表示卡片上最多展示几篇最近文章。像 Codeforces 复盘这种目录式系列，则用 `directory` 和 `home` 指定同一目录下的系列主页：
-
-```yaml
-- title: Codeforces 复盘
-  badge: CF
-  color: "#ff6b88"
-  directory: post/二次元修炼日记！/
-  home: post/二次元修炼日记！/main.md
-  includeHidden: true
-  description: 长期更新的 Codeforces 比赛复盘，把赛时表现、补题思路和题目套路串起来。
-  preview: 8
-```
-
-这里需要额外注意加密系列。`includeHidden: true` 只是允许模板知道这个目录下面有一组隐藏子页面，但如果系列主页本身带有 `encrypt: true`，总览页不会公开列出子文章，只显示“加密系列”和进入主页的按钮。这样可以保留入口，又不会把隐藏页面的标题和时间线摊开。
-
-一开始笔者试过在卡片里给长系列加展开按钮，但实际看起来会比较突兀：有的系列很短，有的系列很长，卡片高度被撑开以后，整个网格会变得不均衡。最后采用的方案是：卡片只负责概览，点击 `查看目录` 后，在卡片区域下方展开一个单独的目录面板。
-
-模板里每张卡片会生成一个对应的面板 id：
-
-```go-html-template
-{{ $panelID := printf "series-panel-%s" (anchorize $entry.title) }}
-
-<article class="series-card"
-    style="--series-accent: {{ $entry.color | default "#6aa6ff" }};"
-    data-series-card
-    data-series-target="{{ $panelID }}">
-```
-
-卡片上的按钮只负责打开目录，不再伪装成普通文章链接：
-
-```go-html-template
-<button class="series-card__link" type="button" data-series-open
-    aria-controls="{{ $panelID }}"
-    aria-expanded="false">
-    查看目录
-</button>
-```
-
-真正的完整目录放在下面的 `series-detail` 里。这样短系列和长系列在卡片阶段都保持一致，读者需要继续看时，再打开对应系列的完整列表：
-
-```go-html-template
-<section class="series-detail" data-series-detail hidden aria-live="polite">
-    <article class="series-detail__panel" id="{{ $panelID }}" data-series-panel hidden>
-        <div class="series-detail__list">
-            {{ range .sortedPages }}
-                <a class="series-detail__item" href="{{ .RelPermalink }}">
-                    <span>{{ .Title }}</span>
-                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
-                </a>
-            {{ end }}
-        </div>
-    </article>
-</section>
-```
-
-交互逻辑放在 `assets/ts/main.ts` 的 `setupSeriesPanels()`。它做的事情很简单：点击某个系列后，先收起其它面板，再把当前卡片标成 `is-active`，同时更新按钮的 `aria-expanded`。如果再次点击已经展开的系列，就把目录面板收回去：
-
-```ts
-function setupSeriesPanels() {
-    const detail = document.querySelector('[data-series-detail]') as HTMLElement;
-    const cards = document.querySelectorAll('[data-series-card]') as NodeListOf<HTMLElement>;
-    const panels = document.querySelectorAll('[data-series-panel]') as NodeListOf<HTMLElement>;
-    if (!detail || !cards.length || !panels.length) return;
-
-    cards.forEach(card => {
-        const button = card.querySelector('[data-series-open]') as HTMLButtonElement;
-        const targetID = card.dataset.seriesTarget;
-        if (!button || !targetID) return;
-
-        button.addEventListener('click', () => {
-            const active = button.getAttribute('aria-expanded') === 'true';
-
-            cards.forEach(otherCard => {
-                otherCard.classList.remove('is-active');
-                const otherButton = otherCard.querySelector('[data-series-open]') as HTMLButtonElement;
-                if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
-            });
-            panels.forEach(panel => { panel.hidden = true; });
-
-            if (active) {
-                detail.hidden = true;
-                return;
-            }
-
-            const panel = document.getElementById(targetID) as HTMLElement;
-            if (!panel) return;
-
-            card.classList.add('is-active');
-            detail.hidden = false;
-            panel.hidden = false;
-            button.setAttribute('aria-expanded', 'true');
-            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
-}
-```
-
-配色也放在同一个数据文件里。`layouts/page/series.html` 会把 `color` 写成卡片上的 CSS 变量，然后在 `assets/scss/custom.scss` 里让标题、徽章、文章条目和按钮分别吃这个变量。这样每个系列会有自己的识别色，不至于所有按钮都变成同一个白色胶囊：
+顺手也把 `assets/scss/custom.scss` 拆了一下。之前所有自定义样式都堆在一个接近两千行的文件里，改的时候很容易在滚动中迷路。现在 `custom.scss` 只保留入口：
 
 ```scss
-.series-card__title {
-  color: color-mix(in srgb, var(--series-accent) 86%, var(--card-text-color-main));
-}
+@import "aplayer-light.scss";
+@import "aplayer-dark.scss";
 
-.series-card__link {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--series-accent) 68%, #fff), var(--series-accent));
-  color: #172033;
-}
+@import "custom/base";
+@import "custom/layout";
+@import "custom/archives-home";
+@import "custom/code";
+@import "custom/article-extras";
+@import "custom/friend-circle";
+@import "custom/timeline-contests";
 ```
 
-最后顺手补了两个和加密有关的保护：`layouts/page/search.json` 在遇到 `encrypt: true` 时只写入“本文已加密”的提示，`layouts/_default/rss.xml` 也不再把加密正文输出到 RSS。也就是说，系列总览页只负责整理入口，搜索索引和订阅源不会绕过文章页本身的加密逻辑。
+真正的样式分别放到 `assets/scss/custom/_base.scss`、`_layout.scss`、`_code.scss`、`_friend-circle.scss` 这些 partial 里。这个拆分不改变页面外观，只是把“全局基础样式”“文章增强”“友链朋友圈”“时间线和比赛面板”分开，后面想改某一块时不用再翻完整个 `custom.scss`。
 
 ## 引用块和长链接换行
 引用块也改了样式，这段加在 `assets/scss/custom.scss` 中：
