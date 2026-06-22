@@ -1,9 +1,9 @@
 baseurl: https://www.elainafan.one/
-languageCode: en-us
+languageCode: zh-cn
 theme: hugo-theme-stack
 pagination:
   pagerSize: 10  # 新写法，适配新版 Hugo
-title: Example Site
+title: Elainafan
 copyright: elainafan
 
 # Theme i18n support
@@ -20,7 +20,7 @@ languages:
         title: Elainafan
         weight: 2
         params:
-            description: 演示说明
+            description: 痛饮所有踌躇之后？记录编程、算法、音乐、动画与建站折腾。
 services:
     # Change it to your Disqus shortname before using
     disqus:
@@ -34,6 +34,7 @@ permalinks:
     page: /:slug/
 
 params:
+    description: 痛饮所有踌躇之后？记录编程、算法、音乐、动画与建站折腾。
     mainSections:
         - post
     featuredImageField: image
@@ -166,13 +167,13 @@ params:
             site:
 
             # Available values: summary, summary_large_image
-            card: summary_large_image
+            card: summary
 
     defaultImage:
         opengraph:
-            enabled: false
-            local: false
-            src:
+            enabled: true
+            local: true
+            src: img/elainafan.jpg
 
     colorScheme:
         # Display toggle
