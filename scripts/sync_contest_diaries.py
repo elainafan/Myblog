@@ -706,7 +706,7 @@ def sync(contests_root: Path, handle: str) -> None:
 
     write_main_article(
         BLOG_ROOT / "content" / "post" / ATCODER_SERIES_DIR / "main.md",
-        "放学后喝茶日记",
+        "放学后喝茶日记！",
         "2025-01-21",
         "这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
         atcoder,
@@ -714,7 +714,7 @@ def sync(contests_root: Path, handle: str) -> None:
     )
     write_main_article(
         BLOG_ROOT / "content" / "post" / XCPC_SERIES_DIR / "main.md",
-        "社团合宿作战手册",
+        "社团合宿作战手册！",
         "2025-01-21",
         "这一篇用来放 XCPC 相关的 VP 和补题记录。先把已经整理在本地仓库里的代码接进博客，之后补题时只需要继续填题目大意、数据范围和思路。",
         xcpc,

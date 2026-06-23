@@ -1,5 +1,5 @@
 ---
-title: 放学后喝茶日记
+title: 放学后喝茶日记！
 date: 2025-01-21
 encrypt: true
 image: "/images/anime-diary/5.png"

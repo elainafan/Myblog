@@ -1,5 +1,5 @@
 ---
-title: 社团合宿作战手册
+title: 社团合宿作战手册！
 date: 2025-01-21
 encrypt: true
 image: "/images/anime-diary/5.png"
