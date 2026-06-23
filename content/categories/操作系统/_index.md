@@ -1,6 +1,6 @@
 ---
 title: "操作系统"
-description: "抽象、并发、内存和存储之间的系统课"
+description: "被内核酱榨干了喵"
 image: "1.jpg"
 style:
     background: "#F4A8C1"
