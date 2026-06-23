@@ -166,6 +166,7 @@
             const pswp = document.querySelector('.pswp');
             const ps = new window.PhotoSwipe(pswp, window.PhotoSwipeUI_Default, baseItems, {
                 index: index,
+                history: false,
                 getThumbBoundsFn: (thumbIndex) => {
                     const activeFigure = thumbIndex === index ? figure : originalFigures[thumbIndex];
                     const thumbnail = activeFigure.querySelector('img');

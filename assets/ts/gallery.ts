@@ -174,6 +174,7 @@ class StackGallery {
         const ps = new window.PhotoSwipe(pswp, window.PhotoSwipeUI_Default, this.items, {
             index: index,
             galleryUID: this.galleryUID,
+            history: false,
             getThumbBoundsFn: (index) => {
                 const thumbnail = this.items[index].el.getElementsByTagName('img')[0],
                     pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
