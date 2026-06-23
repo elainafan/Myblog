@@ -1,9 +1,17 @@
 <section class="article-content">
     {{ if .Params.encrypt }}
-    <div id="encrypt-box" class="encrypt-box">
-        🔒 本文已加密，请输入密码<br>
-        <input type="password" id="pwd" placeholder="请输入密码">
-        <button onclick="decrypt()">解密</button>
+    <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
+        <div class="encrypt-box__icon" aria-hidden="true">秘密</div>
+        <div class="encrypt-box__body">
+            <p class="encrypt-box__eyebrow">Protected Note</p>
+            <h2>这篇笔记先藏起来啦</h2>
+            <p class="encrypt-box__hint">输入暗号后，内容会在这里悄悄展开。</p>
+            <div class="encrypt-box__form">
+                <input type="password" id="pwd" placeholder="输入暗号" autocomplete="current-password">
+                <button type="button" onclick="unlockEncryptedPost()">打开秘密笔记</button>
+            </div>
+            <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
+        </div>
     </div>
 
     <div id="post-content" style="display:none;">

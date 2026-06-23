@@ -10,6 +10,199 @@
   }
 }
 
+// 加密文章入口
+.encrypt-box {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  max-width: 680px;
+  margin: 34px auto;
+  padding: 26px;
+  border: 1px solid rgba(255, 132, 168, .30);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 184, 210, .35), transparent 28%),
+    linear-gradient(135deg, rgba(255, 246, 250, .96), rgba(244, 249, 255, .92));
+  box-shadow: 0 18px 44px rgba(88, 54, 82, .14), var(--shadow-l2);
+  color: var(--card-text-color-main);
+}
+
+.encrypt-box__icon {
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ff8ab4, #86d9ff);
+  box-shadow: 0 12px 26px rgba(255, 132, 168, .26);
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.encrypt-box__body {
+  min-width: 0;
+
+  h2 {
+    margin: 4px 0 8px;
+    padding: 0;
+    border: 0;
+    color: var(--card-text-color-main);
+    font-size: 2.2rem;
+    line-height: 1.25;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.encrypt-box__eyebrow {
+  margin: 0;
+  color: #ff78a8;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.encrypt-box__hint,
+.encrypt-box__message {
+  margin: 0;
+  color: var(--card-text-color-secondary);
+  font-size: 1.38rem;
+  line-height: 1.7;
+}
+
+.encrypt-box__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin: 16px 0 8px;
+
+  input,
+  button {
+    min-height: 44px;
+    border-radius: 14px;
+    font-size: 1.42rem;
+  }
+
+  input {
+    width: 100%;
+    border: 1px solid rgba(255, 132, 168, .28);
+    background: rgba(255, 255, 255, .76);
+    padding: 0 14px;
+    color: var(--card-text-color-main);
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+
+    &:focus {
+      border-color: rgba(255, 120, 168, .72);
+      box-shadow: 0 0 0 4px rgba(255, 120, 168, .13);
+    }
+  }
+
+  button {
+    border: 0;
+    background: linear-gradient(135deg, #ff8ab4, #7fd8ee);
+    box-shadow: 0 12px 24px rgba(255, 132, 168, .22);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 800;
+    padding: 0 18px;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(255, 132, 168, .28);
+      filter: saturate(1.08);
+    }
+  }
+}
+
+.encrypt-box[data-lock-state="checking"] {
+  .encrypt-box__form button {
+    cursor: wait;
+    filter: saturate(.75);
+  }
+}
+
+.encrypt-box--error {
+  animation: encrypt-shake .34s ease both;
+
+  .encrypt-box__message {
+    color: #ff668f;
+    font-weight: 700;
+  }
+}
+
+.post-content--unlocked {
+  animation: post-unlock-fade .32s ease both;
+}
+
+[data-scheme="dark"] {
+  .encrypt-box {
+    border-color: rgba(255, 132, 168, .24);
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255, 132, 168, .22), transparent 30%),
+      linear-gradient(135deg, rgba(70, 58, 68, .94), rgba(52, 64, 78, .92));
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .24), var(--shadow-l2);
+  }
+
+  .encrypt-box__form input {
+    border-color: rgba(255, 180, 208, .22);
+    background: rgba(255, 255, 255, .08);
+  }
+}
+
+@keyframes encrypt-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-8px);
+  }
+
+  50% {
+    transform: translateX(7px);
+  }
+
+  75% {
+    transform: translateX(-4px);
+  }
+}
+
+@keyframes post-unlock-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 620px) {
+  .encrypt-box {
+    grid-template-columns: 1fr;
+    padding: 22px;
+    text-align: center;
+  }
+
+  .encrypt-box__icon {
+    margin: 0 auto;
+  }
+
+  .encrypt-box__form {
+    grid-template-columns: 1fr;
+  }
+}
+
 // 文章更新记录
 .article-updates {
   margin: 28px var(--card-padding) 8px;

@@ -1,6 +1,7 @@
 ---
 title: AtCoder 修炼日记！
 date: 2025-01-21
+encrypt: true
 image: "/images/anime-diary/5.png"
 categories:
     - 算法

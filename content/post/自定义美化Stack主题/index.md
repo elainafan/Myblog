@@ -5,6 +5,8 @@ categories:
     - 建站
 image: 10.jpg
 updates:
+    - date: 2026-06-23
+      content: 将文章加密的密码校验改为 PBKDF2 派生摘要，并调整加密入口与错误提示样式。
     - date: 2026-06-22
       content: 删除独立系列总览页，保留归档与文章内系列导航，并将自定义样式拆分为多个 SCSS partial。
     - date: 2026-06-22
@@ -975,44 +977,81 @@ function updateRunningDays() {
 因为首页和列表页也会复用文章卡片结构，所以脚本里还写了一个 `showHideView`，当当前页面不是文章页时，就把浏览量隐藏。
 
 ## 文章加密功能
-文章加密改在 `layouts/partials/article/components/content.html`。如果 frontmatter 中设置 `encrypt: true`，就先显示密码输入框，并把正文放在隐藏的 `#post-content` 中。这段加在 `layouts/partials/article/components/content.html` 中：
+文章加密改在 `layouts/partials/article/components/content.html`。如果 frontmatter 中设置 `encrypt: true`，就先显示一个加密入口卡片，并把正文放在隐藏的 `#post-content` 中。这段加在 `layouts/partials/article/components/content.html` 中：
 
-```html
+```go-html-template
 {{ if .Params.encrypt }}
-<div id="encrypt-box" class="encrypt-box">
-    🔒 本文已加密，请输入密码<br>
-    <input type="password" id="pwd" placeholder="请输入密码">
-    <button onclick="decrypt()">解密</button>
+<div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
+    <div class="encrypt-box__icon" aria-hidden="true">秘密</div>
+    <div class="encrypt-box__body">
+        <p class="encrypt-box__eyebrow">Protected Note</p>
+        <h2>这篇笔记先藏起来啦</h2>
+        <p class="encrypt-box__hint">输入暗号后，内容会在这里悄悄展开。</p>
+        <div class="encrypt-box__form">
+            <input type="password" id="pwd" placeholder="输入暗号">
+            <button type="button" onclick="unlockEncryptedPost()">打开秘密笔记</button>
+        </div>
+        <p id="encrypt-message" class="encrypt-box__message" role="status"></p>
+    </div>
 </div>
 
 <div id="post-content" style="display:none;">
-    {{ .Content | safeHTML }}
+    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML }}
 </div>
 {{ else }}
 {{ .Content | safeHTML }}
 {{ end }}
 ```
 
-对应的 `decrypt` 函数在 `layouts/partials/footer/custom.html`。它会读取输入框里的密码，匹配成功后隐藏输入框并显示正文；另外还监听了回车键，这样输入密码后不需要再手动点按钮。这段加在 `layouts/partials/footer/custom.html` 中：
+对应的 `unlockEncryptedPost` 函数在 `layouts/partials/footer/custom.html`。早期版本是直接用明文密码比较，这样源码里能看到密码，不太优雅。现在改成通过 Web Crypto 的 PBKDF2 派生摘要，再和预先写好的摘要比较；匹配成功后隐藏输入框并显示正文，失败时只在卡片内提示，不再弹出浏览器原生弹窗。另外脚本常驻 footer，这样 PJAX 跳到加密文章时也能正常工作。
 
 ```js
-function decrypt() {
+async function derivePostPassword(password) {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveBits"]
+    );
+    const buffer = await crypto.subtle.deriveBits(
+        {
+            name: "PBKDF2",
+            salt: encoder.encode("站点自定义 salt"),
+            iterations: 180000,
+            hash: "SHA-256"
+        },
+        key,
+        256
+    );
+    return Array.from(new Uint8Array(buffer))
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+window.unlockEncryptedPost = async function () {
     const pwd = document.getElementById("pwd").value;
     const box = document.getElementById("encrypt-box");
     const content = document.getElementById("post-content");
+    const digest = await derivePostPassword(pwd);
 
-    if (pwd === "密码") {
+    if (digest === "预先计算好的 PBKDF2 摘要") {
         box.style.display = "none";
         content.style.display = "block";
     } else {
-        alert("密码错误");
+        box.classList.add("encrypt-box--error");
     }
-}
+};
 
 document.addEventListener("keydown", e => {
-    if (e.key === "Enter" && document.getElementById("pwd")) decrypt();
+    if (e.key === "Enter" && document.getElementById("pwd")) {
+        window.unlockEncryptedPost();
+    }
 });
 ```
+
+解锁卡片和错误抖动动画放在 `assets/scss/custom/_article-extras.scss`。需要注意的是，这仍然更接近静态站里的阅读门禁，而不是构建产物级别的正文密文。这里已经通过 RSS 和搜索模板避免加密文章正文被索引，同时不再把明文密码直接写进脚本；如果之后希望连生成后的 HTML 中也不出现正文，就需要在 Hugo 构建前增加一层内容加密脚本，把正文预先转成密文再交给前端解开。
 
 ## 表格横向滚动
 表格滚动也是在 `layouts/partials/article/components/content.html` 中处理的，这段加在同一个文件里：

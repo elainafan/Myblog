@@ -1,11 +1,14 @@
-﻿---
+---
 title: 看番与加睡的小猪日常
 date: 2025-01-28
+encrypt: true
 image: "/images/1.png"
 categories: 
     - 算法
     - 动漫
 updates:
+    - date: 2026-06-23
+      content: 重新对题目难度归档主页面启用加密阅读。
     - date: 2026-05-26
       content: 将题目难度归档接入系列总览，并按 Rating 顺序展示。
     - date: 2026-05-25
