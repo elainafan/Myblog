@@ -17,41 +17,41 @@ seriesExclude: true
 
 ### 系统抽象
 
-- [Lecture 01: 操作系统的四个基本概念]({{< ref "lec-01.md" >}})
-- [Lecture 02: Threads and Processes]({{< ref "lec-02.md" >}})
-- [Lecture 03: Files and I/O]({{< ref "lec-03.md" >}})
-- [Lecture 04: IPC, Pipes and Sockets]({{< ref "lec-04.md" >}})
+- [Lecture 01: What is an Operating System? / Four Fundamental OS Concepts]({{< ref "lec-01.md" >}})
+- [Lecture 02: Abstractions 1: Threads and Processes]({{< ref "lec-02.md" >}})
+- [Lecture 03: Abstractions 2: Files and I/O]({{< ref "lec-03.md" >}})
+- [Lecture 04: Abstractions 3: IPC, Pipes and Sockets]({{< ref "lec-04.md" >}})
 
 ### 并发同步
 
 - [Lecture 05: Synchronization 1: Concurrency]({{< ref "lec-05.md" >}})
-- [Lecture 06: Synchronization 2 - Semaphores and Bounded Buffer]({{< ref "lec-06.md" >}})
-- [Lecture 07: Synchronization 3 - Lock Implementation, Atomic Instructions, Monitors]({{< ref "lec-07.md" >}})
-- [Lecture 08: Synchronization 4 - Readers/Writers and Language-Level Support]({{< ref "lec-08.md" >}})
+- [Lecture 06: Synchronization 2: Semaphores and Bounded Buffer]({{< ref "lec-06.md" >}})
+- [Lecture 07: Synchronization 3: Lock Implementation, Atomic Instructions, and Monitors]({{< ref "lec-07.md" >}})
+- [Lecture 08: Synchronization 4: Readers/Writers]({{< ref "lec-08.md" >}})
 
 ### 调度
 
-- [Lecture 09: Scheduling 1 - Concepts and Classic Policies]({{< ref "lec-09.md" >}})
-- [Lecture 10: Scheduling 2 - Fairness, Real Time, and Linux Schedulers]({{< ref "lec-10.md" >}})
-- [Lecture 11: Scheduling & Deadlock]({{< ref "lec-11.md" >}})
-- [Lecture 12: Scheduling in Modern Computer Systems]({{< ref "lec-12.md" >}})
+- [Lecture 09: Scheduling 1: Concepts and Classic Policies]({{< ref "lec-09.md" >}})
+- [Lecture 10: Scheduling 2: Case Studies, Fairness, Real Time, and Forward Progress]({{< ref "lec-10.md" >}})
+- [Lecture 11: Scheduling 3: Scheduling & Deadlock]({{< ref "lec-11.md" >}})
+- [Lecture 12: Scheduling 4: Scheduling in Modern Computer Systems]({{< ref "lec-12.md" >}})
 
 ### 虚拟内存
 
-- [Lecture 13: Address Translation and Virtual Memory]({{< ref "lec-13.md" >}})
-- [Lecture 14: Multi-Level Page Tables, TLBs, and Caches]({{< ref "lec-14.md" >}})
-- [Lecture 15: TLB/Cache Interaction and Demand Paging]({{< ref "lec-15.md" >}})
-- [Lecture 16: Memory 4 - Page Replacement, Clock, and Thrashing]({{< ref "lec-16.md" >}})
-- [Lecture 17: Memory 5 - Memory Management in Modern Computer Systems]({{< ref "lec-17.md" >}})
+- [Lecture 13: Memory 1: Address Translation and Virtual Memory]({{< ref "lec-13.md" >}})
+- [Lecture 14: Memory 2: Virtual Memory, Caching and TLBs]({{< ref "lec-14.md" >}})
+- [Lecture 15: Memory 3: Demand Paging]({{< ref "lec-15.md" >}})
+- [Lecture 16: Memory 4: Page Replacement, Clock, and Thrashing]({{< ref "lec-16.md" >}})
+- [Lecture 17: Memory 5: Memory Management in Modern Computer Systems]({{< ref "lec-17.md" >}})
 
 ### I/O 与文件系统
 
-- [Lecture 18: I/O - General I/O, Disk, and SSD]({{< ref "lec-18.md" >}})
-- [Lecture 19: File System 1 - I/O Performance and File System Design]({{< ref "lec-19.md" >}})
-- [Lecture 20: File System Case Studies and Buffering]({{< ref "lec-20.md" >}})
-- [Lecture 21: Buffering, Reliability, and Transactions]({{< ref "lec-21.md" >}})
-- [Lecture 22: Transactions and Distributed Decision Making]({{< ref "lec-22.md" >}})
-- [Lecture 23: Storage and File Systems in Modern Computer Systems]({{< ref "lec-23.md" >}})
+- [Lecture 18: I/O: General I/O, Disk and SSD]({{< ref "lec-18.md" >}})
+- [Lecture 19: File System 1: I/O Performance and File System Design]({{< ref "lec-19.md" >}})
+- [Lecture 20: File System 2: File System Case Studies and Buffering]({{< ref "lec-20.md" >}})
+- [Lecture 21: File System 3: Buffering, Reliability, and Transactions]({{< ref "lec-21.md" >}})
+- [Lecture 22: File System 4: Transactions and Distributed Decision Making]({{< ref "lec-22.md" >}})
+- [Lecture 23: File System 5: Storage and File Systems in Modern Computer Systems]({{< ref "lec-23.md" >}})
 
 ## 阅读方式
 
