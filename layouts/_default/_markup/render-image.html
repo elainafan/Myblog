@@ -1,5 +1,6 @@
 {{- $image := .Page.Resources.GetMatch (printf "%s" (.Destination | safeURL)) -}}
 {{- $Permalink := .Destination | relURL | safeURL -}}
+{{- $destination := .Destination -}}
 {{- $alt := .PlainText | safeHTML -}}
 {{- $Width := 0 -}}
 {{- $Height := 0 -}}
@@ -8,6 +9,17 @@
 {{- $isExternal := or (strings.HasPrefix .Destination "http://") (strings.HasPrefix .Destination "https://") -}}
 {{- $isProtocolRelative := strings.HasPrefix .Destination "//" -}}
 {{- $isStaticImage := and (strings.HasPrefix .Destination "/") (not $isExternal) (not $isProtocolRelative) $notSVG -}}
+{{- $isContentImage := false -}}
+
+{{- if and (not $image) (not $isExternal) (not $isProtocolRelative) (not (strings.HasPrefix .Destination "/")) -}}
+	{{- with .Page.File -}}
+		{{- $contentPath := path.Join "content" .Dir $destination -}}
+		{{- if fileExists $contentPath -}}
+			{{- $Permalink = (printf "/%s" (path.Join .Dir $destination)) | relURL | safeURL -}}
+			{{- $isContentImage = true -}}
+		{{- end -}}
+	{{- end -}}
+{{- end -}}
 
 {{/* SVG and external images won't work with gallery layout, because their width and height attributes are unknown */}}
 {{- $galleryImage := false -}}
@@ -26,7 +38,7 @@
 			{{- $Srcset = printf `%s 480w, %s 1024w` $small.RelPermalink $big.RelPermalink -}}
 		{{- end -}}
 	{{- end -}}
-{{- else if $isStaticImage -}}
+{{- else if or $isStaticImage $isContentImage -}}
 	{{- $galleryImage = true -}}
 {{- end -}}
 
