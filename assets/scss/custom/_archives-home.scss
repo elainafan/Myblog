@@ -75,6 +75,22 @@
       aspect-ratio: 16 / 9;
       margin-right: 0;
     }
+
+    article.has-image {
+      .article-details {
+        background:
+          linear-gradient(180deg,
+            rgba(0, 0, 0, .04) 28%,
+            rgba(0, 0, 0, .42) 68%,
+            rgba(0, 0, 0, .72) 100%);
+      }
+
+      .article-title {
+        color: #fff;
+        font-weight: 700;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .72);
+      }
+    }
   }
 
   @include respond(md) {
