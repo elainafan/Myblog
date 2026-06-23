@@ -982,14 +982,13 @@ function updateRunningDays() {
 ```go-html-template
 {{ if .Params.encrypt }}
 <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
-    <div class="encrypt-box__icon" aria-hidden="true">秘密</div>
     <div class="encrypt-box__body">
-        <p class="encrypt-box__eyebrow">Protected Note</p>
-        <h2>这篇笔记先藏起来啦</h2>
-        <p class="encrypt-box__hint">输入暗号后，内容会在这里悄悄展开。</p>
+        <p class="encrypt-box__eyebrow">SECRET NOTE</p>
+        <h2>才、才不是谁都能看的笔记呢！</h2>
+        <p class="encrypt-box__hint">输入暗号的话……也不是不能让你看一下。</p>
         <div class="encrypt-box__form">
-            <input type="password" id="pwd" placeholder="输入暗号">
-            <button type="button" onclick="unlockEncryptedPost()">打开秘密笔记</button>
+            <input type="password" id="pwd" aria-label="输入暗号">
+            <button type="button" onclick="unlockEncryptedPost()" aria-label="确认暗号">♡</button>
         </div>
         <p id="encrypt-message" class="encrypt-box__message" role="status"></p>
     </div>
@@ -1003,7 +1002,7 @@ function updateRunningDays() {
 {{ end }}
 ```
 
-对应的 `unlockEncryptedPost` 函数在 `layouts/partials/footer/custom.html`。早期版本是直接用明文密码比较，这样源码里能看到密码，不太优雅。现在改成通过 Web Crypto 的 PBKDF2 派生摘要，再和预先写好的摘要比较；匹配成功后隐藏输入框并显示正文，失败时只在卡片内提示，不再弹出浏览器原生弹窗。另外脚本常驻 footer，这样 PJAX 跳到加密文章时也能正常工作。
+对应的 `unlockEncryptedPost` 函数在 `layouts/partials/footer/custom.html`。早期版本是直接用明文密码比较，这样源码里能看到密码，不太优雅。现在改成通过 Web Crypto 的 PBKDF2 派生摘要，再和预先写好的摘要比较；匹配成功后隐藏输入框并显示正文，失败时只在卡片内提示“哼，暗号不对哦……再认真试一次啦！”，不再弹出浏览器原生弹窗。另外脚本常驻 footer，这样 PJAX 跳到加密文章时也能正常工作。
 
 ```js
 async function derivePostPassword(password) {
@@ -1051,7 +1050,7 @@ document.addEventListener("keydown", e => {
 });
 ```
 
-解锁卡片和错误抖动动画放在 `assets/scss/custom/_article-extras.scss`。需要注意的是，这仍然更接近静态站里的阅读门禁，而不是构建产物级别的正文密文。这里已经通过 RSS 和搜索模板避免加密文章正文被索引，同时不再把明文密码直接写进脚本；如果之后希望连生成后的 HTML 中也不出现正文，就需要在 Hugo 构建前增加一层内容加密脚本，把正文预先转成密文再交给前端解开。
+解锁卡片、英梨梨贴纸背景和错误抖动动画放在 `assets/scss/custom/_article-extras.scss`，贴纸图片放在 `static/images/eriri-lock.png`。需要注意的是，这仍然更接近静态站里的阅读门禁，而不是构建产物级别的正文密文。这里已经通过 RSS 和搜索模板避免加密文章正文被索引，同时不再把明文密码直接写进脚本；如果之后希望连生成后的 HTML 中也不出现正文，就需要在 Hugo 构建前增加一层内容加密脚本，把正文预先转成密文再交给前端解开。
 
 ## 表格横向滚动
 表格滚动也是在 `layouts/partials/article/components/content.html` 中处理的，这段加在同一个文件里：

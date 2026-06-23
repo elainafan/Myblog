@@ -1,14 +1,13 @@
 <section class="article-content">
     {{ if .Params.encrypt }}
     <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
-        <div class="encrypt-box__icon" aria-hidden="true">秘密</div>
         <div class="encrypt-box__body">
-            <p class="encrypt-box__eyebrow">Protected Note</p>
-            <h2>这篇笔记先藏起来啦</h2>
-            <p class="encrypt-box__hint">输入暗号后，内容会在这里悄悄展开。</p>
+            <p class="encrypt-box__eyebrow">SECRET NOTE</p>
+            <h2>才、才不是谁都能看的笔记呢！</h2>
+            <p class="encrypt-box__hint">输入暗号的话……也不是不能让你看一下。</p>
             <div class="encrypt-box__form">
-                <input type="password" id="pwd" placeholder="输入暗号" autocomplete="current-password">
-                <button type="button" onclick="unlockEncryptedPost()">打开秘密笔记</button>
+                <input type="password" id="pwd" autocomplete="current-password" aria-label="输入暗号">
+                <button type="button" onclick="unlockEncryptedPost()" aria-label="确认暗号">♡</button>
             </div>
             <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
         </div>

@@ -323,7 +323,7 @@
                         box.dataset.lockState = "checking";
                         box.classList.remove("encrypt-box--error");
                         if (message) message.textContent = "正在确认暗号...";
-                        if (button) button.textContent = "确认中";
+                        if (button) button.setAttribute("aria-busy", "true");
 
                         let digest = "";
                         try {
@@ -331,7 +331,7 @@
                         } catch (error) {
                             box.dataset.lockState = "idle";
                             if (message) message.textContent = "校验时出了点小问题，刷新后再试试看。";
-                            if (button) button.textContent = "打开秘密笔记";
+                            if (button) button.removeAttribute("aria-busy");
                             return;
                         }
 
@@ -345,8 +345,8 @@
                             box.classList.remove("encrypt-box--error");
                             void box.offsetWidth;
                             box.classList.add("encrypt-box--error");
-                            if (message) message.textContent = "暗号对不上，再轻轻试一次吧。";
-                            if (button) button.textContent = "打开秘密笔记";
+                            if (message) message.textContent = "哼，暗号不对哦……再认真试一次啦！";
+                            if (button) button.removeAttribute("aria-busy");
                             input.select();
                         }
                     };
