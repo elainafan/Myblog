@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T12:39:30.656872+00:00",
+  "generated_at": "2026-06-24T15:45:01.940430+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -262,6 +262,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Auto CoT精读",
+      "url": "https://equinox.wiki/post/paper-reading/auto-cot%E7%B2%BE%E8%AF%BB/",
+      "summary": "Auto CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
+      "published": "2026-06-23T08:56:38+00:00",
+      "published_text": "Tue, 23 Jun 2026 16:56:38 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Zero Shot CoT精读",
       "url": "https://equinox.wiki/post/paper-reading/zero_shot_cot%E7%B2%BE%E8%AF%BB/",
       "summary": "Zero Shot CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
@@ -421,17 +432,6 @@
       "summary": "引 在开启IO篇章前，我们回想一下在CS61c中我们已经干了什么，我们从最基础的C语言开始，并在project 1中实现了一个简单的\"life game\"，然后我们学习了汇编语言，并在project 2中实现了一个简单的minist汇编识别网络，接着我们学习了ISA和CPU架构，在project 3中设计了一个简单的CPU，进一步学习了如何添加cache，...",
       "published": "2026-06-06T08:34:17+00:00",
       "published_text": "Sat, 06 Jun 2026 16:34:17 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "LLaVA1.5精读",
-      "url": "https://equinox.wiki/post/paper-reading/llava1.5%E7%B2%BE%E8%AF%BB/",
-      "summary": "LLaVA1.5精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-05首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-05",
-      "published": "2026-06-05T14:23:56+00:00",
-      "published_text": "Fri, 05 Jun 2026 22:23:56 +0800"
     },
     {
       "friend": "Yjy's blog",
