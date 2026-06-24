@@ -35,6 +35,43 @@
         order: 'random',
         audio: playlist,
     }) : null;
+    const algorithmEntryTrackNames = ["Magia", "Everyday World"];
+    const algorithmEntryTrackIndexes = playlist
+        .map((song, index) => algorithmEntryTrackNames.includes(song.name) ? index : -1)
+        .filter(index => index >= 0);
+    let lastEntryMusicKey = null;
+
+    function playAPlayerSafely() {
+        if (!ap) return;
+        const playResult = ap.play();
+        if (playResult && typeof playResult.catch === "function") {
+            playResult.catch(() => {});
+        }
+    }
+
+    function playArticleEntryMusic() {
+        if (!ap || algorithmEntryTrackIndexes.length === 0) {
+            return;
+        }
+
+        const article = document.querySelector(".main-article[data-entry-music='algorithm-random']");
+        if (!article) {
+            lastEntryMusicKey = null;
+            return;
+        }
+
+        const pageKey = article.dataset.pageKey || window.location.pathname;
+        if (lastEntryMusicKey === pageKey) {
+            return;
+        }
+        lastEntryMusicKey = pageKey;
+
+        const randomIndex = Math.floor(Math.random() * algorithmEntryTrackIndexes.length);
+        const trackIndex = algorithmEntryTrackIndexes[randomIndex];
+        ap.list.switch(trackIndex);
+        playAPlayerSafely();
+    }
+
     /**
      * 页面销毁前监听
      */
@@ -61,6 +98,7 @@
         // 从localStorage取出播放信息
         const playInfo = JSON.parse(localStorage.getItem("playInfo"));
         if (!playInfo) {
+            playArticleEntryMusic();
             return;
         }
         // 切换歌曲
@@ -71,8 +109,9 @@
             ap.seek(playInfo.currentTime);
             // 是否播放
             if (!playInfo.paused) {
-                ap.play()
+                playAPlayerSafely();
             }
+            playArticleEntryMusic();
         }, 500);
     };
 </script>
@@ -171,6 +210,7 @@
         // Stack脚本初始化
         window.Stack.init();
         topbar.hide();
+        playArticleEntryMusic();
     })
 </script>
 

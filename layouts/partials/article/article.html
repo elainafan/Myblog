@@ -1,4 +1,22 @@
-<article class="{{ if .Params.image }}has-image {{ end }}main-article">
+{{- $categories := .Params.categories | default (slice) -}}
+{{- $sourcePath := "" -}}
+{{- with .File -}}
+    {{- $sourcePath = .Path -}}
+{{- end -}}
+{{- $isAlgorithmCategory := in $categories "算法" -}}
+{{- $isAlgorithmSeries := or
+    (in $sourcePath "二次元修炼日记")
+    (in $sourcePath "看番与加睡的小猪日常")
+    (in $sourcePath "AtCoder修炼日记")
+    (in $sourcePath "XCPC修炼日记")
+    (in $sourcePath "从零开始的随机算法")
+-}}
+{{- $isOperatingSystemSeries := in $sourcePath "从零开始的操作系统" -}}
+{{- $useAlgorithmEntryMusic := and (or $isAlgorithmCategory $isAlgorithmSeries) (not $isOperatingSystemSeries) -}}
+
+<article class="{{ if .Params.image }}has-image {{ end }}main-article"
+    data-page-key="{{ .RelPermalink }}"
+    {{ if $useAlgorithmEntryMusic }}data-entry-music="algorithm-random"{{ end }}>
     {{ partial "article/components/header" . }}
 
     {{ partial "article/components/content" . }}

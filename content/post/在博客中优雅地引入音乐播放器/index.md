@@ -4,6 +4,9 @@ date: 2026-05-20
 categories: 
     - 建站
 image: 10.jpg
+updates:
+    - date: 2026-06-24
+      content: 为算法分类文章接入进入页面时的随机曲目联动。
 ---
 ## 前言
 给博客加音乐播放器这件事，乍一看似乎非常简单：引入一个播放器库，填几首歌，然后固定在页面底部就好了。
@@ -188,6 +191,22 @@ window.onload = () => {
 这里的 `setTimeout` 很重要。切换歌曲不是瞬间完成的，如果刚 `ap.list.switch` 就立刻 `ap.seek`，有时播放器还没准备好，进度就会设置失败。因此这里等 `500ms` 再恢复进度。
 
 不过，这只能缓解刷新后的恢复问题，不能解决“每次点链接都会中断播放”的问题。要真正做到站内跳转时不断歌，就需要 PJAX。
+
+## 按文章类型切换曲目
+播放器常驻之后，就可以顺手做一点和文章内容相关的联动。比如笔者希望进入算法分类文章时，播放器从 `Magia` 和 `Everyday World` 里随机挑一首播放；但《从零开始的操作系统》虽然也归在算法分类下，更像课程笔记，不适合被这条规则影响。
+
+这里没有逐篇文章写配置，而是在 `layouts/partials/article/article.html` 渲染文章时判断源文件路径和分类：如果文章属于算法分类，或者位于 Codeforces、AtCoder、XCPC、题目难度归档、随机算法这些长期更新目录下，并且不在 `从零开始的操作系统` 目录，就给 `<article>` 加上 `data-entry-music="algorithm-random"`。
+
+前端则仍然写在 `layouts/partials/footer/custom.html`。播放器初始化后会在歌单里找这两首歌：
+
+```js
+const algorithmEntryTrackNames = ["Magia", "Everyday World"];
+const algorithmEntryTrackIndexes = playlist
+    .map((song, index) => algorithmEntryTrackNames.includes(song.name) ? index : -1)
+    .filter(index => index >= 0);
+```
+
+页面初次加载和 PJAX 跳转完成后，脚本都会检查当前文章有没有这个标记。有的话就随机切到其中一首，并尝试播放。需要注意的是，浏览器可能会拦截完全无用户交互的自动播放；但只要播放器已经被用户点开过，后续站内切页时这套逻辑就能自然接上。
 
 ## 为什么需要 PJAX
 普通网页跳转时，浏览器会重新请求 HTML，重新解析 head 和 body，重新执行脚本。对于播放器来说，这意味着旧的 APlayer 实例会消失，新的页面再创建一个新实例。
