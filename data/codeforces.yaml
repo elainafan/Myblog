@@ -968,8 +968,8 @@ contests:
     group: "div2"
     contest: "2232"
     solved: 6
-    rank: "unrated"
-    perf: "unrated"
+    rank: "9"
+    perf: "2782"
     ref: "cf-1101.md"
   - date: "2026-06-07"
     round: "R1102"
@@ -1004,6 +1004,6 @@ contests:
     group: "div12"
     contest: "2237"
     solved: 6
-    rank: "unrated"
-    perf: "unrated"
+    rank: "100"
+    perf: "2676"
     ref: "cf-1104.md"

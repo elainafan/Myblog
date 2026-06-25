@@ -150,11 +150,11 @@ seriesExclude: true
 | 2026.05.18 | [Edu190]({{< ref "edu-190.md" >}}) | edu | [2230](https://codeforces.com/contest/2230) | 5 | vp | vp | B | B | B | B | B |  |  |  |  |
 | 2026.05.21 | [R1099]({{< ref "cf-1099.md" >}}) | div2 | [2231](https://codeforces.com/contest/2231) | 5 | 88 | 2353 | √ | √ | √ | √ | √ | B | B |  |  |
 | 2026.05.23 | [R1100]({{< ref "cf-1100.md" >}}) | div1+2 | [2229](https://codeforces.com/contest/2229) | 7 | 213 | 2485 | √ | √ | √ | √ | √ | √ | √ |  |  |
-| 2026.05.30 | [R1101]({{< ref "cf-1101.md" >}}) | div2 | [2232](https://codeforces.com/contest/2232) | 6 | unrated | unrated | √ | √ | √ | √ | √ | √ |  |  |  |
+| 2026.05.30 | [R1101]({{< ref "cf-1101.md" >}}) | div2 | [2232](https://codeforces.com/contest/2232) | 6 | 9 | 2782 | √ | √ | √ | √ | √ | √ |  |  |  |
 | 2026.06.07 | [R1102]({{< ref "cf-1102.md" >}}) | div2 | [2234](https://codeforces.com/contest/2234) | 7 | vp | vp | B | B | B | B | B | B | B |  |  |
 | 2026.06.09 | [Edu191]({{< ref "edu-191.md" >}}) | edu | [2233](https://codeforces.com/contest/2233) | 3 | unrated | unrated | √ | √ | √ | B | B | B |  |  |  |
 | 2026.06.12 | [R1103]({{< ref "cf-1103.md" >}}) | div3 | [2236](https://codeforces.com/contest/2236) | 7 | vp | vp | B | B | B | B | B | B | B |  |  |
-| 2026.06.18 | [R1104]({{< ref "cf-1104.md" >}}) | div1+2 | [2237](https://codeforces.com/contest/2237) | 6 | unrated | unrated | √ | √ | √ | √ | √ | √ |  |  |  |
+| 2026.06.18 | [R1104]({{< ref "cf-1104.md" >}}) | div1+2 | [2237](https://codeforces.com/contest/2237) | 6 | 100 | 2676 | √ | √ | √ | √ | √ | √ |  |  |  |
 
 ## 比赛复盘
 
