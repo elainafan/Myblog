@@ -3,6 +3,9 @@ title: 从零开始的Proxy Lab
 date: 2026-01-11
 categories: 
     - 计算机系统导论
+slug: 从零开始的proxy-lab
+hidden: true
+seriesOrder: 8
 ---
 # 从零开始的Proxy Lab
 
@@ -26,7 +29,7 @@ Proxy Lab是北京大学《计算机系统导论》课程的第八个，也是�
 
 ## 在动手之前
 ### 代码风格要求
-即使这个Lab似乎没有代码风格的要求，但是作为工程类项目，代码风格还是非常重要的，具体可以查看[elainafan-从零开始的Cache Lab](https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84cache-lab/)中``代码风格要求``这一节，供参考。
+即使这个Lab似乎没有代码风格的要求，但是作为工程类项目，代码风格还是非常重要的，具体可以查看[elainafan-从零开始的Cache Lab]({{< ref "cache-lab.md" >}})中``代码风格要求``这一节，供参考。
 
 ### Writeup的Tips
 首先，可以使用实验材料目录中的``csapp.c``和``csapp.h``文件，它们提供了各类错误处理包装函数和辅助函数，同时提供了RIO（健壮I/O包），应该使用``健壮I/O函数``而非原生I/O函数（如read、write等等），亦可以自行实现健壮I/O函数。
@@ -121,7 +124,7 @@ ssh <username>@<hostname> \
 ### 缓存回顾
 如果还没开始期末复习的同学，做到这里可能已经忘记了这是啥，见下图。
 
-![](5.png)
+![](assets/proxy-lab/5.png)
 
 也就是，使用地址的``索引位``找到对应的组，然后根据``标记位``找到对应组内``标记位相同并且有效位有效``的行，再根据偏移位得到对应的信息。
 
@@ -134,7 +137,7 @@ ssh <username>@<hostname> \
 
 下图是常见服务端和客户端通信的流程，也是完成这个Lab的基础：
 
-![](6.png)
+![](assets/proxy-lab/6.png)
 
 也就是，对于客户端而言：
 - 先调用``getaddrinfo``获取``服务端``的网络连接信息。
@@ -726,7 +729,7 @@ static int parse_header(rio_t *client, string res, const string host)
 
 由上文所述，此处的``URL``起到一个标记位作用，同时采用LFU冲突替换策略，而实际的结构完全可以参考``Cache Lab``，这里笔者参考自己的``Cache Lab``设计了结构：
 
-具体可以详见[elainafan-从零开始的Cache Lab](https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84cache-lab/)，此处稍作解释，即采用``-1``作为标记位的初值，用``0``作为有效位和时间戳的初值，每次访问则将``当前行的时间戳``改为``0``，而其他被使用行的时间戳分别加``1``，替换时则将时间戳最大的行取出替换。
+具体可以详见[elainafan-从零开始的Cache Lab]({{< ref "cache-lab.md" >}})，此处稍作解释，即采用``-1``作为标记位的初值，用``0``作为有效位和时间戳的初值，每次访问则将``当前行的时间戳``改为``0``，而其他被使用行的时间戳分别加``1``，替换时则将时间戳最大的行取出替换。
 
 根据以上思路，写出代码如下：
 
@@ -1536,7 +1539,7 @@ int add(string url, char buf[], int size)
 
 运行``make clean && make && ./driver.sh``指令，得到以下结果：
 
-![](4.png)
+![](assets/proxy-lab/4.png)
 
 于是，完成了ICS的全部Lab，Congratulations！此处应有《Angel Beats！》的《一番の宝物》作为bgm~
 

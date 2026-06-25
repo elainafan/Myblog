@@ -3,8 +3,10 @@ title: 从零开始的Cache Lab
 date: 2025-11-11
 categories: 
     - 计算机系统导论
+slug: 从零开始的cache-lab
+hidden: true
+seriesOrder: 5
 ---
-
 # 从零开始的Cache Lab
 
 > [!CAUTION]
@@ -148,7 +150,7 @@ sudo apt-get install valgrind
 ### 实现缓存结构
 回忆课本中关于缓存的相关定义，如下：
 
-![](1.png)
+![](assets/cache-lab/1.png)
 
 对于整个缓存，其应该被声明为一个三维对象，其中组织起一些二维对象，即缓存组，同时它还应该包含``组数、相联度``以及``块大小``这些数据。
 
@@ -357,7 +359,7 @@ void init_cache() {
 
 同时，对于输入的每个地址，需要取出其``索引位``和``标记位``，回想第六章的相关知识，如下：
 
-![](3.png)
+![](assets/cache-lab/3.png)
 
 回忆第二章和``Data Lab``中``掩码``的相关知识，以及读入的地址是``64位无符号整数``(因为只需要其位表示，无符号整数方便逻辑右移)，可以这样取出``索引位``和``标记位``：
 
@@ -723,7 +725,7 @@ int main(int argc, char** argv) {
 
 运行``make``和``./test-csim``指令，得到以下结果，表示完成了``Part A``：
 
-![](2.png)
+![](assets/cache-lab/2.png)
 
 ## Part B
 笔者要提醒各位的是，做``Part B``的时候建议多用纸笔画画，便于思考。
@@ -743,7 +745,7 @@ int main(int argc, char** argv) {
 
 进入``trans.c``文件，先运行``make``和``./test-trans -M 32 -N 32``指令，测试默认转置函数的性能：
 
-![](4.png)
+![](assets/cache-lab/4.png)
 
 非常差的性能，笔者在此分析其性能差的原因。
 
@@ -765,7 +767,7 @@ int main(int argc, char** argv) {
 
 考虑 $i=j$ 的情况，此时写 $B$ 操作会造成当前读入的 $A$ 被驱逐，因此 $A$ 在遍历下一个元素时仍需重新读入，造成 $32$ 次不命中，恰好为 $1152+32=1184$ 次。
 
-![](5.png)
+![](assets/cache-lab/5.png)
 
 ### 32 $\times$ 32
 对 $32 \times 32$ 的矩阵，满分线为 $m \leq 300$ 。
@@ -780,7 +782,7 @@ int main(int argc, char** argv) {
 
 按理来说，理论最优值应该是 $16 \times (8+8)=256$ ，其中``16``是块数，``8``是每个块内读 $A$ 的不命中次数，另一个是每个块内读 $B$ 的不命中次数，也就是优化掉全部的对角线冲突，这里对角线冲突，指的还是对角线上的块的对角线冲突。
 
-![](6.png)
+![](assets/cache-lab/6.png)
 
 经过笔者的思考，可以尝试将 $A$ 的整个块先复制到对应 $B$ 的块，并且不转置，随后由于这个 $8 \times 8$ 的块已经被全部读进缓存了，因此对 $B$ 转置不需要消耗额外的不命中次数。
 
@@ -833,7 +835,7 @@ registerTransFunction(trans_32_32, trans_desc_32_32);// 注册函数，写在reg
 
 运行``make``和``./test-trans -M 32 -N 32``指令，得到以下结果：
 
-![](7.png)
+![](assets/cache-lab/7.png)
 
 这个值是 $32 \times 32$ 的理想值，因为存在函数调用需要多出 $4$ 个不命中次数。
 
@@ -858,11 +860,11 @@ registerTransFunction(trans_32_32, trans_desc_32_32);// 注册函数，写在reg
 
 最后，将 $A$ 的右下转置复制到 $B$ 的右下完成，整个流程大致如下：
 
-![](8.png)
+![](assets/cache-lab/8.png)
 
-![](9.png)
+![](assets/cache-lab/9.png)
 
-![](10.png)
+![](assets/cache-lab/10.png)
 
 根据以上思路，编写代码：
 
@@ -939,7 +941,7 @@ registerTransFunction(trans_64_64, trans_desc_64_64);// 注册函数，写在reg
 
 运行``make``和``./test-trans -M 64 -N 64``指令，得到以下结果，表示完成了 $64 \times 64$ ``的矩阵优化``：
 
-![](11.png)
+![](assets/cache-lab/11.png)
 
 ### 60 $\times$ 68
 对 $60 \times 68$ 的矩阵，满分线是 $m<1600$ 。
@@ -1051,13 +1053,13 @@ registerTransFunction(trans_64_64, trans_desc_60_68);// 注册函数，写在reg
 
 运行``make``和``./test-trans -M 60 -N 68``指令，得到以下结果：
 
-![](12.png)
+![](assets/cache-lab/12.png)
 
 相比改变遍历顺序之前，真的被优化了！成功完成了 $60 \times 68$ ``的矩阵优化``！
 
 运行``make``和``python3 ./driver.py``指令，得到以下结果：
 
-![](13.png)
+![](assets/cache-lab/13.png)
 
 于是，完成了ICS的第五个Lab，Congratulations！
 

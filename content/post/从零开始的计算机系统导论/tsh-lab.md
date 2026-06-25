@@ -3,8 +3,10 @@ title: 从零开始的Tsh Lab
 date: 2025-11-18
 categories: 
     - 计算机系统导论
+slug: 从零开始的tsh-lab
+hidden: true
+seriesOrder: 6
 ---
-
 # 从零开始的Tsh Lab
 
 > [!CAUTION]
@@ -33,7 +35,7 @@ categories:
 - 每行代码长度不能超过``80``个字符。
 - 不要为每个行单独添加注释。
 
-有关代码风格及格式化的解决方法，笔者已在[elainafan-从零开始的Cache Lab](https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84cache-lab/)中``代码风格要求``这一节提及，供参考。
+有关代码风格及格式化的解决方法，笔者已在[elainafan-从零开始的Cache Lab]({{< ref "cache-lab.md" >}})中``代码风格要求``这一节提及，供参考。
 
 ### 如何测评
 在提交到``AutoLab``之前，可以使用``writeup``中提供的几种本地测评方式进行测评。
@@ -414,9 +416,9 @@ exit(0);
 
 此外，还有以下常见信号需要使用：
 
-![](1.png)
+![](assets/tsh-lab/1.png)
 
-![](2.png)
+![](assets/tsh-lab/2.png)
 
 ### 笔者的提醒
 笔者仍要提醒的是，这个Lab与``Data Lab``、``Cache Lab``一样，每次修改文件，在进行测评前，都需要在终端内输入``make``命令进行编译。
@@ -2613,7 +2615,7 @@ handler_t *Signal(int signum, handler_t *handler)
 
 运行``make``和``./sdiver``命令，得到以下结果：
 
-![](3.png)
+![](assets/tsh-lab/3.png)
 
 提交至``AutoLab``，最终验证获得满分。
 

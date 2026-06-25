@@ -3,8 +3,10 @@ title: 从零开始的Bomb Lab
 date: 2025-10-19
 categories: 
     - 计算机系统导论
+slug: 从零开始的bomb-lab
+hidden: true
+seriesOrder: 2
 ---
-
 # 从零开始的Bomb Lab
 
 > [!CAUTION]
@@ -345,7 +347,7 @@ x/s $rsi
 
 得到了以下输出：
 
-![](1.png)
+![](assets/bomb-lab/1.png)
 
 得到答案为``A secret makes a woman a woman``。
 
@@ -362,7 +364,7 @@ c
 
 得到以下输出，表示已经完成了``phase 1``：
 
-![](2.png)
+![](assets/bomb-lab/2.png)
 
 ### Phase 2
 注释掉``b phase_1``，便于调试。
@@ -472,7 +474,7 @@ c
 
 得到以下输出，表示已经完成了``phase 2``：
 
-![](3.png)
+![](assets/bomb-lab/3.png)
 
 ### Phase 3
 注释掉``b phase_2``，便于调试。
@@ -565,7 +567,7 @@ c
 x/s $rsi
 ```
 
-![](4.png)
+![](assets/bomb-lab/4.png)
 
 程序显示，正好是两个整数，并且与``%rsp+8``存金丝雀值相符合！
 
@@ -591,7 +593,7 @@ ni
 
 发现它跳转到了``phase_3+178``，即代码中的``18cf``处：
 
-![](5.png)
+![](assets/bomb-lab/5.png)
 
 再回到代码，看出它大概的C语言逻辑：
 
@@ -615,7 +617,7 @@ c
 
 得到以下输出，表示已经完成了``phase 3``：
 
-![](6.png)
+![](assets/bomb-lab/6.png)
 
 ### Phase 4
 注释掉``b phase_3``，便于调试。
@@ -740,7 +742,7 @@ c
 
 得到以下输出，表示已经完成了``phase 4``：
 
-![](7.png)
+![](assets/bomb-lab/7.png)
 
 ### Phase 5
 注释掉``b phase_5``，便于调试。
@@ -817,7 +819,7 @@ x/8d $rsi
 
 得到以下结果：
 
-![](8.png)
+![](assets/bomb-lab/8.png)
 
 也就得到了，这个数组的各个元素的值。
 
@@ -836,7 +838,7 @@ c
 
 得到以下输出，表示已经完成了``phase 5``:
 
-![](9.png)
+![](assets/bomb-lab/9.png)
 
 ### Phase 6
 注释掉``b phase_6``，便于调试。
@@ -1064,7 +1066,7 @@ x/24x $rdx // 如上文分析，打印96个字节的值。
 
 得到以下输出：
 
-![](10.png)
+![](assets/bomb-lab/10.png)
 
 一个令人疑惑的点是，为什么只有五个节点？
 
@@ -1082,7 +1084,7 @@ struct node{
 
 运行``x/4x 0x000055555555``，得到以下输出：
 
-![](11.png)
+![](assets/bomb-lab/11.png)
 
 于是就能确认这个数据结构是链表，同时可以补全上述代码：
 
@@ -1156,7 +1158,7 @@ I love elaina.
 
 得到以下输出，表示已经完成了``phase 6``:
 
-![](12.png)
+![](assets/bomb-lab/12.png)
 
 此处因为给``phase_defused``打了断点，因此无法显示最后的成功语句，DDL内是可以的。
 
@@ -1264,11 +1266,11 @@ end
 
 此时，会弹出新命令行，直接输入``end``退出编程界面，这个断点的编程就被新的一个占位程序覆盖了，如下：
 
-![](13.png)
+![](assets/bomb-lab/13.png)
 
 此时再输入``i b``命令，会发现这个断点的编程已经消失了。
 
-![](14.png)
+![](assets/bomb-lab/14.png)
 
 接下来，就可以开始查看``phase_defused``的源码了。
 
@@ -1328,13 +1330,13 @@ b *(phase_defused+0x20) # 跳过判断语句
 
 于是发现，确实没有执行应该执行的跳转。
 
-![](15.png)
+![](assets/bomb-lab/15.png)
 
 接着看源码，发现``2243``行判断一个内存指向的值，即``num_input_strings``是否为6，如果为6则跳转到``226e``，即魔法函数``abracadabra``的入口处，否则返回。
 
 根据这个变量名，猜测其为输入的字符串数量，因此在这里打一个断点，并使用``info address``指令查看其值：
 
-![](16.png)
+![](assets/bomb-lab/16.png)
 
 发现确实是6，事实上，在``phase x``执行后的这个函数查看，``num_input_strings``的值都是``x``。
 
@@ -1412,7 +1414,7 @@ info address input_strings
 x/s ??+0x168 # 此处??为显示的地址
 ```
 
-![](19.png)
+![](assets/bomb-lab/19.png)
 
 可以观察到，要求输入两个数字和一个字符串，刚好与``16a4``处判断读入参数个数是否为3，若否则将返回值置为0并返回相呼应，因为前面分析过``abracadabra``的``返回值必须不为0``才能进入``alohomora``函数。
 
@@ -1437,7 +1439,7 @@ info address _IO_stdin_used
 x/s ??+0x168 # 此处??为显示的地址
 ```
 
-![](20.png)
+![](assets/bomb-lab/20.png)
 
 于是，得到了正确的字符串为``...VeniVidiViciTwoThousandYearsAgo?``，将它加入到``Phase 4``的答案后，进入``alohomora``函数。
 
@@ -1514,7 +1516,7 @@ info address input_strings
 x/s ??+0x78 # 此处??为显示的地址
 ```
 
-![](21.png)
+![](assets/bomb-lab/21.png)
 
 发现，这是``Phase 2``的答案，仿佛又在暗示着，这个魔法函数的答案与之有关。
 
@@ -1583,7 +1585,7 @@ info address _IO_stdin_used
 x/s ??+0x190 # 此处??为显示的地址
 ```
 
-![](22.png)
+![](assets/bomb-lab/22.png)
 
 注意得到的字符串，由于上述``%rax``的行为是回退的，因此传入栈中和比对的字符串为``反转后的字符串``，需要将其反转回来，得到答案为``DoUKnowThatGaiusJuliusCaesarOnceSaid...``。
 
@@ -1596,7 +1598,7 @@ c
 
 得到以下输出，表示进入了``secret phase``，但是真正的难题现在才开始！
 
-![](23.png)
+![](assets/bomb-lab/23.png)
 
 笔者注：其实两句魔法函数的答案连起来就是``DoUKnowThatGaiusJuliusCaesarOnceSaid......VeniVidiViciTwoThousandYearsAgo?``，意为"你知道两千年前凯撒曾经说过，'我来了，我看见了，我征服了'吗？"
 
@@ -1847,7 +1849,7 @@ x/14x ?? # 此处??为显示的地址
 
 得到以下输出：
 
-![](24.png)
+![](assets/bomb-lab/24.png)
 
 于是，根据上述``%ebp``的更新公式，可以得到``fsm``各状态对应的转移表：
 
@@ -1944,7 +1946,7 @@ int main() {
  
 将上文得到的转移表作为输入，运行这段代码，得到答案如下：
 
-![](17.png)
+![](assets/bomb-lab/17.png)
 
 将答案写到``psol.txt``的第七行，重新打开``gdb``调试器，运行代码，注意不要忘了``越过判定与信息传送函数``一节中提到的``断点编程``部分。
 
@@ -1952,7 +1954,7 @@ int main() {
 
 得到以下结果，表示完成了``Secret Phase``：
 
-![](18.png)
+![](assets/bomb-lab/18.png)
 
 于是，真正意义上攻克了ICS的第二个Lab，Congratulations！
 

@@ -3,6 +3,9 @@ title: 从零开始的Malloc Lab
 date: 2025-12-12
 categories: 
     - 计算机系统导论
+slug: 从零开始的malloc-lab
+hidden: true
+seriesOrder: 7
 ---
 # 从零开始的Malloc Lab
 
@@ -44,7 +47,7 @@ $$P(U,T)=80(0.6 \ \mathrm{min} (1,\frac{U-0.7}{0.2}) + 0.4 \ \mathrm{min}(1,\fra
 - 应使用行内注释解释代码流程或复杂代码段。
 - 每行代码长度不能超过``80``个字符。
 
-有关代码风格及格式化的解决方法，笔者已在[elainafan-从零开始的Cache Lab](https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84cache-lab/)中``代码风格要求``这一节提及，供参考。
+有关代码风格及格式化的解决方法，笔者已在[elainafan-从零开始的Cache Lab]({{< ref "cache-lab.md" >}})中``代码风格要求``这一节提及，供参考。
 
 ### 编程规则
 - 不得针对任何``trace``文件进行优化，助教团队会对此进行检查，并扣除``16``分。事实上这点完全不用担心，因为根据笔者的经验，这个``Lab``不对恶意测试点作特判的话，是无法得到满分的。笔者的代码作特判前后都是``79``分，根据身边统计学，大部分同学没有特判前的代码大多在``76``分左右，而助教团队也是对此睁一只眼闭一只眼。
@@ -135,7 +138,7 @@ $$P(U,T)=80(0.6 \ \mathrm{min} (1,\frac{U-0.7}{0.2}) + 0.4 \ \mathrm{min}(1,\fra
 
 除非是科研大神或者ICPC相关竞赛选手，否则不要过于信任你和LLM的Debug能力，一定要先写好``checkheap函数``再进行调试。很多时候一个小语句，你和LLM都以为是相同意思，但是就可能报错，一个典型案例就是``GET_PREV_ALLOC(bp)``和``GET_ALLOC(pre)``，后者当``pre不存在``时可能导致段错误。
 
-![神秘ICS群对话](4.png)
+![神秘ICS群对话](assets/malloc-lab/4.png)
 
 可以将指针运算封装在宏或者内联函数中，可以显著降低复杂度。
 
@@ -163,7 +166,7 @@ $$P(U,T)=80(0.6 \ \mathrm{min} (1,\frac{U-0.7}{0.2}) + 0.4 \ \mathrm{min}(1,\fra
 ### 设计块结构
 找出课本上的``显式空闲链表块``结构示意图：
 
-![](1.png)
+![](assets/malloc-lab/1.png)
 
 可以看到，一个块由``元数据(头部/尾部)``、``有效载荷``两部分组成。
 
@@ -191,9 +194,9 @@ $$P(U,T)=80(0.6 \ \mathrm{min} (1,\frac{U-0.7}{0.2}) + 0.4 \ \mathrm{min}(1,\fra
 
 于是可以得到块的结构如下：
 
-![空闲块结构](2.png)
+![空闲块结构](assets/malloc-lab/2.png)
 
-![分配块结构](3.png)
+![分配块结构](assets/malloc-lab/3.png)
 
 ### 如何组织块
 如上文所说，将采用``分离空闲链表``的形式组织形式。
@@ -251,7 +254,7 @@ static inline void* head_freelist(size_t size) {
 
 于是可以得到堆的结构如下：
 
-![堆结构](5.png)
+![堆结构](assets/malloc-lab/5.png)
 
 ### 自定义宏
 参照课本``9.9.12``节，需要定义一些宏以简便操作，同时提高吞吐量。
@@ -1492,7 +1495,7 @@ void mm_checkheap(int lineno)
 
 运行``make``和``./mdriver``指令，得到以下结果：
 
-![](6.png)
+![](assets/malloc-lab/6.png)
 
 提交至``AutoLab``，最终验证为``79``分。
 

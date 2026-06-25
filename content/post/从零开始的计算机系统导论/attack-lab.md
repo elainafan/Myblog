@@ -3,8 +3,10 @@ title: 从零开始的Attack Lab
 date: 2025-10-20
 categories: 
     - 计算机系统导论
+slug: 从零开始的attack-lab
+hidden: true
+seriesOrder: 3
 ---
-
 # 从零开始的Attack Lab
 
 > [!CAUTION]
@@ -25,7 +27,7 @@ Attack Lab是《计算机系统导论》课程的第3个Lab，对应教材第三
 
 ## 在动手之前
 ### GDB常用指令&美化
-- 见笔者的上篇博文[elainafan-从零开始的Bomb Lab](https://github.com/elainafan/Introduction-to-Computer-Systems-2025Fall-PKU/blob/main/02%20Bomb%20Lab/README.md)
+- 见笔者的上篇博文[elainafan-从零开始的Bomb Lab]({{< ref "bomb-lab.md" >}})
 ### 何为ROP攻击？
 ROP攻击，全称 **Return-oriented Programming Attack**，即不注入任何攻击代码，完全按照执行现有代码来进行攻击。用人话说，就是"断章取义"。
 
@@ -43,13 +45,13 @@ ROP攻击，全称 **Return-oriented Programming Attack**，即不注入任何�
 
 下列是常见的gadget二进制代码：
 
-![movq的二进制代码](1.png)
+![movq的二进制代码](assets/attack-lab/1.png)
 
-![popq的二进制代码](2.png)
+![popq的二进制代码](assets/attack-lab/2.png)
 
-![movl的二进制代码](3.png)
+![movl的二进制代码](assets/attack-lab/3.png)
 
-![常用计算操作的二进制代码](4.png)
+![常用计算操作的二进制代码](assets/attack-lab/4.png)
 
 笔者需要提醒的是，与前三个表格不同，第四个表格与``90(nop)``一样，通常用于在攻击gadget之间充当无意义语句。
 
@@ -128,7 +130,7 @@ objdump -d ctarget > ctarget.s
 
 由课本3.10.3节的以下内容，可以简单判断出栈的结构：
 
-![](5.png)
+![](assets/attack-lab/5.png)
 
 画出栈的结构为
 
@@ -166,7 +168,7 @@ objdump -d ctarget > ctarget.s
 
 得到以下输出，表示已经完成了``phase 1``：
 
-![](6.png)
+![](assets/attack-lab/6.png)
 
 ### Phase 2
 根据``writeup``，需要让``ctarget``文件执行``touch2``的代码，而不是返回``test``。同时，需要将``touch2``传进的参数(存放在``%rdi``中)为``cookie``。
@@ -206,7 +208,7 @@ layout asm
 layout regs
 ```
 
-![](7.png)
+![](assets/attack-lab/7.png)
 
 即缓冲区的起始地址为``0x55664bd8``。
 
@@ -259,7 +261,7 @@ d8 4b 66 55
 
 得到以下输出，表示已经完成了``phase 2``：
 
-![](8.png)
+![](assets/attack-lab/8.png)
 
 ### Phase 3
 根据``writup``，需要让``ctarget``文件执行``touch3``的代码，而不是返回``test``。同时，需要让``touch3``传进的参数是``cookie``的字符串表示。
@@ -342,11 +344,11 @@ layout regs
 
 在``touch3``处，运行``x/20x 0x55664bd8``，观察到存在缓冲区的值还未被覆写。
 
-![](9.png)
+![](assets/attack-lab/9.png)
 
 一直运行``si``命令，发现缓冲区的值被覆写了，符合第一个猜测！
 
-![](10.png)
+![](assets/attack-lab/10.png)
 
 再观察这两张图，发现``0x55664c18``处的八个字节似乎没有被覆写，如果真的符合第二个猜测，也许可以尝试把所需命令存在这里，然后将``%rdi``这个指针赋为``0x55664c18``。
 
@@ -381,7 +383,7 @@ d8 4b 66 55 00 00 00 00
 
 得到以下输出，表示已经完成了``phase 3``：
 
-![](11.png)
+![](assets/attack-lab/11.png)
 
 ### Phase 4
 首先，运行下列指令，对``rtarget``进行反汇编，得到其汇编码文件:
@@ -413,7 +415,7 @@ objdump -d farm.o > farm.s
 
 在``VsCode``内按下``ctrl+H``，将``.+:\t(([0-9a-f]{2} )+).+``全部替换为``$1``，``(([0-9a-f]{2} )+)\n``全部替换为``$1``，就可得到下图效果：
 
-![](12.png)
+![](assets/attack-lab/12.png)
 
 先明确，``popq``指令可以将目的字符串弹到某个字符串中，因此首先查找``popq``相关代码。
 
@@ -469,7 +471,7 @@ f8 1c 40 00 00 00 00 00
 
 得到以下输出，表示已经完成了``phase 4``：
 
-![](13.png)
+![](assets/attack-lab/13.png)
 
 ### Phase 5
 根据``writeup``，需要对``rtarget``进行``ROP``攻击，以调用``touch3``函数，并且传入一个指向``cookie``的指针。
@@ -570,7 +572,7 @@ cf 1f 40 00 00 00 00 00
 
 得到以下输出，表示已经完成了``phase 5``：
 
-![](14.png)
+![](assets/attack-lab/14.png)
 
 ### Phase 6
 首先，运行下列指令，对``starget``进行反汇编，得到其汇编码文件:
@@ -712,7 +714,7 @@ d6 1f 40 00 00 00 00 00
 
 得到以下输出，表示已经完成了``phase 6``：
 
-![](15.png)
+![](assets/attack-lab/15.png)
 
 于是，完成了ICS的第三个Lab，Congratulations!
 

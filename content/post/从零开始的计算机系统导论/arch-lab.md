@@ -3,8 +3,10 @@ title: 从零开始的Arch Lab
 date: 2025-11-09
 categories: 
     - 计算机系统导论
+slug: 从零开始的arch-lab
+hidden: true
+seriesOrder: 4
 ---
-
 # 从零开始的Arch Lab
 
 > [!CAUTION]
@@ -186,7 +188,7 @@ stack:
 
 运行``cargo build``和``./target/debug/grader part-a``指令，得到以下结果，表示完成了``sum.ys``。
 
-![](1.png)
+![](assets/arch-lab/1.png)
 
 ### rsum.ys
 代码的其他部分实现同样可以参照给出的其它文件写出。
@@ -241,7 +243,7 @@ stack:
 
 运行``cargo build``和``./target/debug/grader part-a``指令，得到以下结果，表示完成了``rsum.ys``。
 
-![](2.png)
+![](assets/arch-lab/2.png)
 
 ### bubble.ys
 
@@ -325,7 +327,7 @@ stack:
 
 运行``cargo build``和``./target/debug/grader part-a``指令，得到以下结果，表示完成了``part A``。
 
-![](3.png)
+![](assets/arch-lab/3.png)
 
 ## Part B
 根据``writeup``，该部分需要在``/sim/src/architectures/extra``目录下编写文件。
@@ -334,7 +336,7 @@ stack:
 
 ``IOPQ``指令：将某个立即数与寄存器中值进行``OP``运算，结果存储于该寄存器中，编码如下图。
 
-![](4.png)
+![](assets/arch-lab/4.png)
 
 大致可以参考``OPQ``和``IOPQ``的逻辑，解释该指令如下：
 
@@ -426,7 +428,7 @@ bool set_cc = icode in { OPQ, IOPQ };
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``增加IOPQ``环节：
 
-![](5.png)
+![](assets/arch-lab/5.png)
 
 ### P3a
 根据``writeup``，文件提供了一个由``SEQ+``改进的二级流水线架构``pipe_s2.rs``，需要逐步完善``pipe_s3.rs``的四个三级流水线。
@@ -492,7 +494,7 @@ bool d_stall = data_harzard;
 
 运行``cargo build``和``./target/debug/grader part-b``指令，出现以下结果，表示完成了``P3a``：
 
-![](6.png)
+![](assets/arch-lab/6.png)
 
 ### P3b
 根据顶部注释，得知``P3a``的气泡和暂停频率过高，导致效率低下，应该补充转发逻辑解决问题。
@@ -533,7 +535,7 @@ bool d_bubble = D.icode in { JX, RET };
 
 运行``cargo build``和``./target/debug/grader part-b``指令，出现以下结果，表示完成了``P3b``:
 
-![](7.png)
+![](assets/arch-lab/7.png)
 
 ### P3c
 根据顶部注释，得知``P3b``的性能提升并不显著，因为在遇到``JX``指令时总是插入暂停或者气泡。实际上，可以通过分支预测来实现优化。
@@ -600,7 +602,7 @@ bool d_bubble = ret_harzard && !branch_mispred;
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``P3c``：
 
-![](8.png)
+![](assets/arch-lab/8.png)
 
 ### P3d
 根据顶部注释，相比``P3c``，为了避免结构冒险，将寄存器的读取和写入合并成同一个设备``reg_file``，操作按照``先写后读``的原则进行。
@@ -617,7 +619,7 @@ P.S：笔者做的时候抄了一遍就过了，非常惊讶，可能是书上�
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``P3d``：
 
-![](9.png)
+![](assets/arch-lab/9.png)
 
 ### P4a
 根据顶部注释，在``P4``系列中，将执行阶段与其它阶段分开，以减少计算依赖层级。在``P3d``中，优化了硬件逻辑，避免了拆分阶段中可能的结构冒险(原来如此)！
@@ -717,7 +719,7 @@ bool e_bubble = branch_mispred || load_use_harzard;
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``P4a``：
 
-![](10.png)
+![](assets/arch-lab/10.png)
 
 ### P4b
 根据顶部注释，计算``f_pc``时使用的``e_cnd``依赖路径过长。因此可以将``e_cnd``存储于访存阶段的``M.cnd``存储器中。
@@ -809,7 +811,7 @@ bool e_bubble = branch_mispred || load_use_harzard;
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``P4b``：
 
-![](11.png)
+![](assets/arch-lab/11.png)
 
 ### P4c
 根据顶部注释，类似于``pipe.std``(注意，这个文件是Part C中的至关重要的一步之一，极大减少工作量)，将``D.valP``输入到解码阶段的``D.valA``中，以消除执行阶段和访存阶段中的``valP``。
@@ -853,7 +855,7 @@ u64 mem_data = U64_PLACEHOLDER;
 
 运行``cargo build``和``./target/debug/grader part-b``指令，得到以下结果，表示完成了``P4b/Part b``：
 
-![](12.png)
+![](assets/arch-lab/12.png)
 
 ## Part C
 根据``writeup``，``Part C``完全基于性能得分，若``ncopy.ys``或``ncopy.rs``未通过正确性测试，将不得分。
@@ -898,7 +900,7 @@ word_t ncopy(word_t *src, word_t *dst, word_t len) {
 
 运行``cargo build``和``./target/debug/grader part-c``指令，得到以下输出，这表明了默认``ncopy.rs``和``ncopy.ys``的性能：
 
-![](13.png)
+![](assets/arch-lab/13.png)
 
 实在是差得离谱，根据上面的分数计算公式，如果将``AC``优化到``3``，那么只需要``CPE``小于等于``9``。而如果``AC``优化到``4``，那么``CPE``需要小于等于``7``，后者是一个很困难的任务！不推荐同学们尝试，真正做到的人数极少，且需要耗费大量时间精力，在期中周之前实在不值。
 
@@ -918,7 +920,7 @@ word_t ncopy(word_t *src, word_t *dst, word_t len) {
 
 将``pipe_std``复制到``ncopy.rs``中，运行``cargo build``和``./target/debug/grader part-c``，得到以下结果：
 
-![](14.png)
+![](assets/arch-lab/14.png)
 
 真的把``Arch Cost``优化到4了，哦耶！
 
@@ -993,13 +995,13 @@ bool set_cc = E.icode in { OPQ, IOPQ } &&
 ### 修改条件码逻辑
 首先，运行``cargo build``和``cargo run --bin ysim -- -A ncopy -I``指令，得到以下结果：
 
-![](15.png)
+![](assets/arch-lab/15.png)
 
 这就是现在``ncopy.rs``的关键路径，观察这条``lv.4``的路径，发现它一共有以上部分组成。
 
 打开程序附带生成的``ncopy_dependency_graph.html``文件，发现以下路径为关键路径：
 
-![](16.png)
+![](assets/arch-lab/16.png)
 
 也就是，``cond-cnd、e_cnd、e_dstE、d_bubble``构成了一条导致``Arch Cost``为4的关键路径。
 
@@ -1056,7 +1058,7 @@ ConditionCode cc = reg_cc.cc;
 
 运行``cargo build``和``./target/debug/grader part-c``指令，得到以下结果：
 
-![](17.png)
+![](assets/arch-lab/17.png)
 
 真的成功将``Arch Cost``优化到了``3``！已经度过最难的一关了！
 
@@ -1441,7 +1443,7 @@ Done:
 
 运行``cargo build``和``./target/debug/grader patr-c``指令，得到以下结果，表示完成了``Part C``：
 
-![](18.png)
+![](assets/arch-lab/18.png)
 
 当然，进一步优化，还有``戳气泡``(见下方参考资料)以及``打表``等方法（打表不建议使用），但是已经拿到满分了，就不想卷了。
 
