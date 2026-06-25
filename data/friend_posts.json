@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T04:23:45.058861+00:00",
+  "generated_at": "2026-06-25T07:05:27.410022+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -306,17 +306,6 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "多GPU并行训练",
-      "url": "https://equinox.wiki/post/cs336/%E5%A4%9Agpu%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83/",
-      "summary": "多GPU并行训练 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
-      "published": "2026-06-16T09:08:34+00:00",
-      "published_text": "Tue, 16 Jun 2026 17:08:34 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "CoT精读",
       "url": "https://equinox.wiki/post/paper-reading/cot%E7%B2%BE%E8%AF%BB/",
       "summary": "CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
@@ -344,17 +333,6 @@
       "summary": "引 跳出编程方法，如何加快程序运行呢？首先，可以尝试提高时钟频率。然而，受限于功耗与散热瓶颈，单纯依靠提升频率的道路已越走越窄，主流处理器的全核满载频率大多仍徘徊在5GHz以下。其次，是挖掘指令级并行（ILP），例如采用SIMD指令集和超标量发射技术。最后，是提升线程级并行（TLP），这主要通过增加物理核心数量或采用同时多线程（如超线程技术）来实现。上一篇...",
       "published": "2026-06-13T09:04:17+00:00",
       "published_text": "Sat, 13 Jun 2026 17:04:17 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Assignment2",
-      "url": "https://equinox.wiki/post/cs336/assignment2/",
-      "summary": "Assignment2 作者：Equinox（shixy2003@gmail.com） 本文2026-06-12首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-12",
-      "published": "2026-06-12T06:48:27+00:00",
-      "published_text": "Fri, 12 Jun 2026 14:48:27 +0800"
     },
     {
       "friend": "Equinox",
@@ -432,6 +410,28 @@
       "summary": "引 在开启IO篇章前，我们回想一下在CS61c中我们已经干了什么，我们从最基础的C语言开始，并在project 1中实现了一个简单的\"life game\"，然后我们学习了汇编语言，并在project 2中实现了一个简单的minist汇编识别网络，接着我们学习了ISA和CPU架构，在project 3中设计了一个简单的CPU，进一步学习了如何添加cache，...",
       "published": "2026-06-06T08:34:17+00:00",
       "published_text": "Sat, 06 Jun 2026 16:34:17 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "LLaVA1.5精读",
+      "url": "https://equinox.wiki/post/paper-reading/llava1.5%E7%B2%BE%E8%AF%BB/",
+      "summary": "LLaVA1.5精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-05首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-05",
+      "published": "2026-06-05T14:23:56+00:00",
+      "published_text": "Fri, 05 Jun 2026 22:23:56 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "GPUs and TPUs",
+      "url": "https://equinox.wiki/post/cs336/gpus-and-tpus/",
+      "summary": "GPUs and TPUs 作者：Equinox（shixy2003@gmail.com） 本文2026-06-05首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-05",
+      "published": "2026-06-05T14:08:02+00:00",
+      "published_text": "Fri, 05 Jun 2026 22:08:02 +0800"
     },
     {
       "friend": "Yjy's blog",
