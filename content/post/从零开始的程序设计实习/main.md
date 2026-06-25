@@ -49,4 +49,4 @@ seriesExclude: true
 ### 期中补充
 
 - [期中 C++ 补充题(1)]({{< ref "midterm-cpp-01.md" >}})
-- [从零开始期中 C++ 补充题(2)]({{< ref "midterm-cpp-02.md" >}})
+- [期中 C++ 补充题(2)]({{< ref "midterm-cpp-02.md" >}})
