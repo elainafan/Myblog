@@ -49,6 +49,15 @@
         }
     }
 
+    function isCurrentAlgorithmEntryTrack() {
+        if (!ap || !ap.list || typeof ap.list.index !== "number") {
+            return false;
+        }
+
+        const currentTrack = playlist[ap.list.index];
+        return currentTrack && algorithmEntryTrackNames.includes(currentTrack.name);
+    }
+
     function playArticleEntryMusic() {
         if (!ap || algorithmEntryTrackIndexes.length === 0) {
             return;
@@ -57,6 +66,10 @@
         const article = document.querySelector(".main-article[data-entry-music='algorithm-random']");
         if (!article) {
             lastEntryMusicKey = null;
+            return;
+        }
+
+        if (isCurrentAlgorithmEntryTrack()) {
             return;
         }
 
