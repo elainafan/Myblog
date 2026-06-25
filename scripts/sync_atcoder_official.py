@@ -296,11 +296,18 @@ def merge_history(cp_contests: dict[str, Contest], history: list[dict[str, Any]]
 def apply_statuses(contests: dict[str, Contest], old_statuses: dict[str, dict[str, str]]) -> None:
     for contest in contests.values():
         old = old_statuses.get(contest.contest, {})
+        solved_labels = {
+            task.label
+            for task in sorted(contest.tasks, key=lambda task: label_sort_key(task.label))[: max(contest.solved, 0)]
+        }
         for task in contest.tasks:
             if contest.missed:
-                task.status = "B" if task.path is not None else ""
-            elif old.get(task.label):
-                task.status = CHECK if old[task.label].startswith(("√", "�")) else old[task.label]
+                task.status = ""
+            elif task.label in solved_labels:
+                task.status = CHECK
+            elif old.get(task.label) and old[task.label] not in {"B", "-"}:
+                value = old[task.label]
+                task.status = CHECK if value.startswith(CHECK) else value
             elif contest.div == "ABC" and task.label in {"A", "B", "C"}:
                 task.status = CHECK
             elif task.path is not None:
@@ -391,13 +398,13 @@ def write_main(path: Path, contests: list[Contest]) -> None:
         "    - 算法",
         "updates:",
         "    - date: 2026-06-25",
-        "      content: 同步 Shiro_neko 的 AtCoder 官方记录，补充本地 CP 场次和 missed 状态。",
+        "      content: 同步 Shiro_neko 的 AtCoder 官方记录，按官方过题数区分赛时通过与赛后补题。",
         "    - date: 2026-05-28",
         "      content: 新增 AtCoder 复盘表格，并同步官方排名、Performance 与赛时/补题状态。",
         "seriesExclude: true",
         "---",
         "## 前言",
-        "这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题，`missed` 表示报名后基本没打的场次。",
+        "这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
         "",
         '{{< secret-entry href="/series/atcoder/" label="打开 AtCoder 页面" caption="解锁之后再进总览页，ABC、ARC 和复盘入口会集中在那里。" >}}',
         "",
@@ -512,13 +519,17 @@ def sync(cp_root: Path, handle: str) -> None:
     contests_by_id = merge_history(cp_contests, history, old_solved)
     apply_statuses(contests_by_id, old_statuses)
     contests = sorted(contests_by_id.values(), key=lambda contest: (contest.date, contest.contest))
+    visible_contests = [contest for contest in contests if not contest.missed]
 
-    write_yaml(DATA_PATH, contests)
-    write_main(SERIES_DIR / "main.md", contests)
-    created = write_child_pages(SERIES_DIR, contests)
+    write_yaml(DATA_PATH, visible_contests)
+    write_main(SERIES_DIR / "main.md", visible_contests)
+    created = write_child_pages(SERIES_DIR, visible_contests)
 
     missed = [contest for contest in contests if contest.missed]
-    print(f"records={len(contests)} cp={len(cp_contests)} history={len(history)} created_pages={len(created)} missed={len(missed)}")
+    print(
+        f"records={len(visible_contests)} cp={len(cp_contests)} "
+        f"history={len(history)} created_pages={len(created)} skipped_missed={len(missed)}"
+    )
     for contest in missed:
         print(f"missed {contest.round} {contest.contest} rank={contest.rank} perf={contest.perf}")
     for ref in created:

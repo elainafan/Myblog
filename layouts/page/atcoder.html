@@ -2,6 +2,7 @@
 
 {{ define "main" }}
     {{- $records := site.Data.atcoder.contests | default slice -}}
+    {{- $records = where $records "rank" "!=" "missed" -}}
     {{- $records = sort $records "date" "desc" -}}
     {{- $doneCount := 0 -}}
     {{- $solvedTotal := 0 -}}
