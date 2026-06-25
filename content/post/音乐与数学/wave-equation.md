@@ -3,6 +3,9 @@ title: 一维振动方程
 date: 2025-10-13
 categories: 
     - 音乐与数学
+slug: 一维振动方程
+hidden: true
+seriesOrder: 4
 ---
 ## 一维振动方程
 ### 乐器的分类
@@ -18,7 +21,7 @@ categories:
 ### 数学建模
 - 一条**水平弦**被**固定**在水平轴$(0,0)$和$(L,0)$之间，设$u(x,t)$为位置$x$在时刻$t$时的**位移**。取弦上的一小段$\overline{PQ}$,其中$P=(x_0,u(x_0,t)),Q=(x_0+\Delta x,u(x_0+\Delta x,t))$.
 
-![水平弦建模](3f47d99ec875113a71bdb016f79ff81c.png)
+![水平弦建模](assets/wave-equation/3f47d99ec875113a71bdb016f79ff81c.png)
 - 运用牛顿第二定律，$PQ$受到的力$F=T_Q-T_P \approx T(\tan \beta - \tan \alpha)$，质量$m=\rho \Delta x$.
 - 由牛顿第二定律得到，$T(\frac{\partial u}{\partial x} \mid_{x=x_0+\Delta x}-\frac{\partial u}{\partial x} \mid_{x=x_0})=\rho \Delta x \cdot a$.
 - 化简得到$\frac{(\frac{\partial u}{\partial x} \mid_{x=x_0+\Delta x}-\frac{\partial u}{\partial x} \mid_{x=x_0})}{\Delta x}=\frac{\rho}{T} \cdot a$.
@@ -54,7 +57,7 @@ categories:
 - 由于小三度的比例为$6:5=1.2$，得出4倍基频的为$C_4$，5倍基频的为$E_4$，6倍基频的为$G_4$，又由于$7:6 \approx 1.16$，7倍基频为$\flat B_4$，八倍基频的为$C_5$。
 - 大二度的比例为$9:8=1.125$，所以9倍基频为$D_5$，10倍基频为$E_5$，由于$11:9 \approx 1.2$，11倍基频为$F_5$，$12:10=1.2$，12倍基频为$G_5$，由于$13:12 \approx 1.08$，13倍基频为$A_6$。
 
-![自然小号](83d446d63f01193636ea3d93ca705d4e.png)
+![自然小号](assets/wave-equation/83d446d63f01193636ea3d93ca705d4e.png)
 ### 泛音与古琴
 - 泛音演奏：古琴曲《流水》，《沧海一声笑》。
 - 古琴音色按照弹法可以分为三类：
@@ -64,7 +67,7 @@ categories:
 - 古琴的结构如下图所示，若按一下七徽则**奇数倍**基频**被破坏**，**偶数倍基频不变**。
 - 得出结论，按一下，**相乘能成为整数**的基频倍数**不被破坏**。
 
-![古琴](b0d1ca768d9648df823fc790310aa394.png)
+![古琴](assets/wave-equation/b0d1ca768d9648df823fc790310aa394.png)
 ### 泛音与呼麦
 - **呼麦/喉音唱法/泛音唱法/多声唱法**：演唱者运用口腔**不同部位的气息**控制，突出某些泛音，产生**同时唱出两个声部**的效果。
 - 2009年，呼麦被列入联合国教科文组织非物质文化遗产代表名录。
@@ -91,7 +94,7 @@ u(x,0)=\phi(x), & \forall x \in [0,L] , \quad (初始形状) \\\\
 - 几何解释：在$\frac{L}{2}$释放弦后，弦的振动应当始终保持**关于其对称**，$n$为**奇数**时是**对称**的，而**偶数**时的波形是**反对称**的。
 - 吉他上的品与泛音息息相关，十二品处于中间位置。
 
-![延拓后的折线函数](fc0b25c5129bce6bde6c822a69b770d1.png)
+![延拓后的折线函数](assets/wave-equation/fc0b25c5129bce6bde6c822a69b770d1.png)
 ## 空穴来风
 ### 管乐器
 - 管乐器通常分为两组：

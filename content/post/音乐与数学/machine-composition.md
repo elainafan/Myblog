@@ -3,6 +3,9 @@ title: 机器作曲
 date: 2025-11-10
 categories: 
     - 音乐与数学
+slug: 机器作曲
+hidden: true
+seriesOrder: 6
 ---
 ## 随机作曲
 - 1757年，克恩伯格提出了音乐骰子游戏。
@@ -50,14 +53,14 @@ categories:
 - 设当前种群共有 $N$ 个个体 $i_1,i_2,\ldots,i_N,1 \leq k \leq N$ ，则个体 $i_l$ 被选取称为亲本的概率为 $\frac{f(i_l)}{\sum\limits_{i=1}^{k} f(i_k)}$
 - 给定种群中个体数目 $N$ ，``适应度阈值`` $\alpha$ 和``迭代次数`` $M$ ，随机生成初始种群，使用以下算法迭代。
 
-![](3.png)
+![](assets/machine-composition/3.png)
 
 ## 音乐信息检索
 - 音乐信息检索/MIR
 - 音乐流派分类，可以使用人工智能技术自动识别，即``机器学习``。
 - 机器学习的概念，此处不予赘述。
 
-![](4.png)
+![](assets/machine-composition/4.png)
 
 - 编码就是``压缩和降维``的过程。
 - 监督学习
@@ -81,9 +84,9 @@ categories:
 - 然后再用这个形式训练噪声预测器，就形成``Diffusion``模型。
 - 也可以使用生成对抗网络，即``GAN``，它的原理大致如下：
 
-![](5.png)
+![](assets/machine-composition/5.png)
 
-![](6.png)
+![](assets/machine-composition/6.png)
 
 - ``Transformer``模型：传统``RNN``难以捕捉长距离依赖关系，且难并行化。
 - 其核心为``自注意力机制``，为输入序列中每个位置分配一个权重，然后将这些加权的位置向量作为输出。
