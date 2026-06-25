@@ -86,7 +86,7 @@
                 {{ range $records }}
                     {{- $writeupURL := "" -}}
                     {{- with .ref -}}
-                        {{- with site.GetPage (printf "post/AtCoder修炼日记！/%s" .) -}}
+                        {{- with site.GetPage (printf "post/放学后喝茶日记！/%s" .) -}}
                             {{- $writeupURL = .RelPermalink -}}
                         {{- end -}}
                     {{- end -}}

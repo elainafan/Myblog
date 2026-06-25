@@ -7,7 +7,7 @@
 {{- $isAlgorithmSeries := or
     (in $sourcePath "二次元修炼日记")
     (in $sourcePath "看番与加睡的小猪日常")
-    (in $sourcePath "AtCoder修炼日记")
+    (or (in $sourcePath "AtCoder修炼日记") (in $sourcePath "放学后喝茶日记"))
     (in $sourcePath "XCPC修炼日记")
     (in $sourcePath "从零开始的随机算法")
 -}}
