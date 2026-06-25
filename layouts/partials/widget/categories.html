@@ -9,12 +9,14 @@
     <div class="tagCloud-tags">
         {{- $categories := slice -}}
         {{- range $context.Site.Taxonomies.categories.ByCount -}}
-            {{- if ne .Page.Params.hideFromCategoryList true -}}
-                {{- $categories = $categories | append . -}}
+            {{- $visiblePages := where .Pages "Params.hidden" "!=" true -}}
+            {{- $visiblePages = where $visiblePages "Params.hideFromCategoryList" "!=" true -}}
+            {{- if and (ne .Page.Params.hideFromCategoryList true) (gt (len $visiblePages) 0) -}}
+                {{- $categories = $categories | append (dict "Page" .Page "Count" (len $visiblePages)) -}}
             {{- end -}}
         {{- end -}}
 
-        {{ range first $limit $categories }}
+        {{ range first $limit (sort $categories "Count" "desc") }}
             <a href="{{ .Page.RelPermalink }}" class="font_size_{{ .Count }}">
                 {{ .Page.Title }}
             </a>
