@@ -13,6 +13,8 @@ seriesExclude: true
 ## 前言
 这一篇用来放 XCPC 相关的 VP 和补题记录。先把已经整理在本地仓库里的代码接进博客，之后补题时只需要继续填题目大意、数据范围和思路。
 
+{{< secret-entry href="/series/xcpc/" label="打开 XCPC 页面" caption="解锁之后再进总览页，队伍、罚时、过题情况和复盘入口会集中展示。" >}}
+
 ## 比赛记录
 | Date | Round | div | id | team | sol | rank | penalty | A | B | C | D | E | F | G | H | I | J | K | L | M | N |
 | ---- | ----- | --- | -- | ---- | --- | ---- | ------- | - | - | - | - | - | - | - | - | - | - | - | - | - | - |

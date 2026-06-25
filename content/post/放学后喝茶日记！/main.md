@@ -13,6 +13,8 @@ seriesExclude: true
 ## 前言
 这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。
 
+{{< secret-entry href="/series/atcoder/" label="打开 AtCoder 页面" caption="解锁之后再进总览页，ABC、ARC 和复盘入口会集中在那里。" >}}
+
 ## 比赛记录
 | Date | Round | div | id | sol | rk | perf | A | B | C | D | E | F | G |
 | ---- | ----- | --- | -- | --- | -- | ---- | - | - | - | - | - | - | - |

@@ -36,6 +36,8 @@ seriesExclude: true
 
 - By Elainafan，2025.11.29，写于发烧之时
 
+{{< secret-entry href="/series/codeforces/" label="打开 Codeforces 页面" caption="解锁之后再进总览页，比赛表、复盘入口和近期记录都放在那里。" >}}
+
 ## 看番日记
 | Date | Round | div | id | sol | rk | perf | A | B | C | D | E | F | G | H | I |
 | ---- | ----- | --- | -- | --- | -- | ---- | - | - | - | - | - | - | - | - | - |
