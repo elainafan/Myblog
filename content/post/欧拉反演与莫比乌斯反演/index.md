@@ -51,13 +51,9 @@ $$
 
 ## [CF1900D Small GCD](https://codeforces.com/problemset/problem/1900/D)
 
-题目大意：
+题目大意：给定一个长度为 $n$ 的数组 $a$，对于所有三元组 $(i,j,k)$，求三元组中较小两个数的 $\gcd$ 之和。
 
-给定一个长度为 $n$ 的数组 $a$，对于所有三元组 $(i,j,k)$，求三元组中较小两个数的 $\gcd$ 之和。
-
-数据范围：
-
-$3\leq n$，$\sum n\leq 8\cdot 10^4$，$1\leq a_i\leq 10^5$。
+数据范围：$3\leq n$，$\sum n\leq 8\cdot 10^4$，$1\leq a_i\leq 10^5$。
 
 思路：
 
@@ -218,13 +214,9 @@ $$
 
 ## [CF1884D Counting Rhyme](https://codeforces.com/problemset/problem/1884/D)
 
-题目大意：
+题目大意：给定一个数组 $a_1,\ldots,a_n$，统计有多少对 $(i,j)$ 满足不存在某个数组中的数 $a_k$，使得 $a_k\mid \gcd(a_i,a_j)$。
 
-给定一个数组 $a_1,\ldots,a_n$，统计有多少对 $(i,j)$ 满足不存在某个数组中的数 $a_k$，使得 $a_k\mid \gcd(a_i,a_j)$。
-
-数据范围：
-
-$1\leq a_i\leq n$，$\sum n\leq 10^6$。
+数据范围：$1\leq a_i\leq n$，$\sum n\leq 10^6$。
 
 思路：
 
