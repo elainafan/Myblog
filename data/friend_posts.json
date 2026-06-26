@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T07:12:06.534960+00:00",
+  "generated_at": "2026-06-26T10:04:11.694847+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -12,15 +12,15 @@
     {
       "name": "Arthal's ink",
       "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
       "avatar": "https://cdn.arthals.ink/Arthals.png",
       "description": "所见高山远暮，阔云流风；所幸岁月盈余，了无拘束",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 24
     },
     {
       "name": "Jing Xu's Site",
@@ -244,12 +244,7 @@
       "post_count": 10
     }
   ],
-  "warnings": [
-    {
-      "friend": "Arthal's ink",
-      "message": "feed not found and no dated posts found in HTML"
-    }
-  ],
+  "warnings": [],
   "posts": [
     {
       "friend": "Equinox",
@@ -956,6 +951,28 @@
       "published_text": "Tue, 13 Jan 2026 20:27:02 +0800"
     },
     {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part8",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part8",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 8",
+      "published": "2026-01-11T23:00:01+00:00",
+      "published_text": "Sun, 11 Jan 2026 23:00:01 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part6",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part6",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 6",
+      "published": "2026-01-11T23:00:00+00:00",
+      "published_text": "Sun, 11 Jan 2026 23:00:00 GMT"
+    },
+    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -1143,6 +1160,17 @@
       "published_text": "Tue, 02 Dec 2025 00:00:00 GMT"
     },
     {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "如何降级 iOS / iPadOS App",
+      "url": "https://arthals.ink/blog/downgrade-ios-app",
+      "summary": "唉，商业化，原本好好的 App 就这么被塞满了广告",
+      "published": "2025-11-28T22:33:33+00:00",
+      "published_text": "Fri, 28 Nov 2025 22:33:33 GMT"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -1174,6 +1202,17 @@
       "summary": "分析 Hugo 站点 favicon 更新后浏览器仍显示旧图的原因，并给出无痕模式、禁用缓存和修改资源 URL 的排查与解决办法。",
       "published": "2025-11-23T07:16:40+00:00",
       "published_text": "Sun, 23 Nov 2025 15:16:40 +0800"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part5",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part5",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 5",
+      "published": "2025-11-22T20:49:15+00:00",
+      "published_text": "Sat, 22 Nov 2025 20:49:15 GMT"
     },
     {
       "friend": "Lane's Blog",
@@ -1220,6 +1259,28 @@
       "published_text": "Sat, 01 Nov 2025 10:18:37 +0800"
     },
     {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part4",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part4",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 4",
+      "published": "2025-10-27T13:40:52+00:00",
+      "published_text": "Mon, 27 Oct 2025 13:40:52 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "如何高效利用录播",
+      "url": "https://arthals.ink/blog/ai-utilized-replay",
+      "summary": "什么年代了，还在传统学习？",
+      "published": "2025-10-15T06:56:01+00:00",
+      "published_text": "Wed, 15 Oct 2025 06:56:01 GMT"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1229,6 +1290,61 @@
       "summary": "你， 是否還在爲libcurl太難用，太底層，各種麻煩的函式與變數看不懂而困擾 ——那麼就Try Neko Network (NekoNet) ，一個易用，高效的C++ Libcurl封裝。準備...",
       "published": "2025-10-14T06:27:00+00:00",
       "published_text": "Tue, 14 Oct 2025 14:27:00 +0800"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part7",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part7",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 7",
+      "published": "2025-10-13T01:15:36+00:00",
+      "published_text": "Mon, 13 Oct 2025 01:15:36 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part2",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part2",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 2",
+      "published": "2025-10-11T03:56:13+00:00",
+      "published_text": "Sat, 11 Oct 2025 03:56:13 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part3",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part3",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 3",
+      "published": "2025-10-05T02:41:24+00:00",
+      "published_text": "Sun, 05 Oct 2025 02:41:24 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part1",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part1",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 1",
+      "published": "2025-10-02T16:20:53+00:00",
+      "published_text": "Thu, 02 Oct 2025 16:20:53 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part0",
+      "url": "https://arthals.ink/blog/xv6-os-lab-part0",
+      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 0",
+      "published": "2025-10-02T16:17:53+00:00",
+      "published_text": "Thu, 02 Oct 2025 16:17:53 GMT"
     },
     {
       "friend": "Anfsity",
@@ -1295,6 +1411,17 @@
       "summary": "简单的测评与笔记，以作纪念",
       "published": "2025-08-28T00:00:00+00:00",
       "published_text": "Thu, 28 Aug 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "如何彻底解决 Cursor Remote-SSH Server 下载问题",
+      "url": "https://arthals.ink/blog/cursor-remote-ssh-solution",
+      "summary": "当然是写个脚本啦！",
+      "published": "2025-08-17T01:02:27+00:00",
+      "published_text": "Sun, 17 Aug 2025 01:02:27 GMT"
     },
     {
       "friend": "Hinai",
@@ -1462,6 +1589,127 @@
       "published_text": "Mon, 21 Apr 2025 22:35:59 +0800"
     },
     {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "策略 II",
+      "url": "https://arthals.ink/blog/policy-ii",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 09",
+      "published": "2025-04-17T19:34:04+00:00",
+      "published_text": "Thu, 17 Apr 2025 19:34:04 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "策略 I",
+      "url": "https://arthals.ink/blog/policy-i",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 08",
+      "published": "2025-04-15T22:38:04+00:00",
+      "published_text": "Tue, 15 Apr 2025 22:38:04 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "视觉与抓取 III",
+      "url": "https://arthals.ink/blog/vision-and-grasping-iii",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 07",
+      "published": "2025-04-03T16:00:04+00:00",
+      "published_text": "Thu, 03 Apr 2025 16:00:04 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "VLA Frontier",
+      "url": "https://arthals.ink/blog/vla-frontier",
+      "summary": "VLA 前沿模型论文研读",
+      "published": "2025-03-26T23:39:31+00:00",
+      "published_text": "Wed, 26 Mar 2025 23:39:31 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "视觉与抓取 II",
+      "url": "https://arthals.ink/blog/vision-and-grasping-ii",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 06",
+      "published": "2025-03-25T23:26:04+00:00",
+      "published_text": "Tue, 25 Mar 2025 23:26:04 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "RL in VLA",
+      "url": "https://arthals.ink/blog/rl-in-vla",
+      "summary": "强化学习在 VLA 中的应用",
+      "published": "2025-03-22T00:34:00+00:00",
+      "published_text": "Sat, 22 Mar 2025 00:34:00 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "视觉与抓取 I",
+      "url": "https://arthals.ink/blog/vision-and-grasping-i",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 05",
+      "published": "2025-03-17T01:12:04+00:00",
+      "published_text": "Mon, 17 Mar 2025 01:12:04 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "机器人学 III",
+      "url": "https://arthals.ink/blog/robotics-iii",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 04",
+      "published": "2025-03-12T02:26:52+00:00",
+      "published_text": "Wed, 12 Mar 2025 02:26:52 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "机器人学 II",
+      "url": "https://arthals.ink/blog/robotics-ii",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 03",
+      "published": "2025-03-05T09:53:00+00:00",
+      "published_text": "Wed, 05 Mar 2025 09:53:00 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "机器人学 I",
+      "url": "https://arthals.ink/blog/robotics-i",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 02",
+      "published": "2025-03-01T17:02:00+00:00",
+      "published_text": "Sat, 01 Mar 2025 17:02:00 GMT"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "初见具身智能",
+      "url": "https://arthals.ink/blog/eai-overview",
+      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 01",
+      "published": "2025-03-01T17:01:00+00:00",
+      "published_text": "Sat, 01 Mar 2025 17:01:00 GMT"
+    },
+    {
       "friend": "Lane's Blog",
       "site": "https://www.laneljc.cn/",
       "feed": "https://www.laneljc.cn/rss.xml",
@@ -1493,6 +1741,17 @@
       "summary": "壞掉的多巴胺：我們為何不再快樂？速覽結論： 沒事可以去自找苦吃 ！ 因爲這可以降低你的快樂水平，從而使原本僅⌈小愉快⌋的事變得⌈很高興⌋，這樣 你這段時間就會感到很愉悅（不是 但大致類似。現代社...",
       "published": "2025-01-23T18:38:00+00:00",
       "published_text": "Fri, 24 Jan 2025 02:38:00 +0800"
+    },
+    {
+      "friend": "Arthal's ink",
+      "site": "https://arthals.ink/",
+      "feed": "https://arthals.ink/rss.xml",
+      "avatar": "https://cdn.arthals.ink/Arthals.png",
+      "title": "Koopa IR 人话版",
+      "url": "https://arthals.ink/blog/koopa",
+      "summary": "我说为什么写 lab 这么慢，原来我们是乌龟。",
+      "published": "2025-01-14T00:09:26+00:00",
+      "published_text": "Tue, 14 Jan 2025 00:09:26 GMT"
     },
     {
       "friend": "Hinai",
