@@ -41,6 +41,12 @@ BILIBILI_USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/125.0.0.0 Safari/537.36"
 )
+BILIBILI_FIRST_PAGE_ONLY = {
+    # 継母の連れ子が元カノだった OP / ED. These uploads are multi-part
+    # videos, but only P1 is the actual track needed by the playlist.
+    "BV1MW4y1S7nL",
+    "BV13a411H7mU",
+}
 
 # Bilibili titles are video titles, not reliable song metadata. After each sync,
 # add overrides in data/music/local.json so the player shows song title + singer:
@@ -321,6 +327,8 @@ def sync_bilibili(args: argparse.Namespace) -> None:
         title = media.get("title") or bvid
         artist = (media.get("upper") or {}).get("name") or "Bilibili"
         pages = fetch_bilibili_pages(bvid, cookie)
+        if bvid in BILIBILI_FIRST_PAGE_ONLY:
+            pages = [page for page in pages if int(page.get("page") or 1) == 1] or pages[:1]
         page_count = len(pages)
 
         for page_info in pages:
