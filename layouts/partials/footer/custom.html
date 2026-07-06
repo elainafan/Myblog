@@ -23,111 +23,12 @@
 {{ end }}
 {{ end }}
 
-<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-
-<div id="aplayer"></div>
-
 <script>
-    const playlist = {{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }};
-    const ap = playlist.length > 0 ? new APlayer({
-        container: document.getElementById('aplayer'),
-        fixed: true,
-        order: 'random',
-        audio: playlist,
-    }) : null;
-    const algorithmEntryTrackNames = ["Magia", "Everyday World"];
-    const algorithmEntryTrackIndexes = playlist
-        .map((song, index) => algorithmEntryTrackNames.includes(song.name) ? index : -1)
-        .filter(index => index >= 0);
-    let lastEntryMusicKey = null;
-
-    function playAPlayerSafely() {
-        if (!ap) return;
-        const playResult = ap.play();
-        if (playResult && typeof playResult.catch === "function") {
-            playResult.catch(() => {});
-        }
-    }
-
-    function isCurrentAlgorithmEntryTrack() {
-        if (!ap || !ap.list || typeof ap.list.index !== "number") {
-            return false;
-        }
-
-        const currentTrack = playlist[ap.list.index];
-        return currentTrack && algorithmEntryTrackNames.includes(currentTrack.name);
-    }
-
-    function playArticleEntryMusic() {
-        if (!ap || algorithmEntryTrackIndexes.length === 0) {
-            return;
-        }
-
-        const article = document.querySelector(".main-article[data-entry-music='algorithm-random']");
-        if (!article) {
-            lastEntryMusicKey = null;
-            return;
-        }
-
-        if (isCurrentAlgorithmEntryTrack()) {
-            return;
-        }
-
-        const pageKey = article.dataset.pageKey || window.location.pathname;
-        if (lastEntryMusicKey === pageKey) {
-            return;
-        }
-        lastEntryMusicKey = pageKey;
-
-        const randomIndex = Math.floor(Math.random() * algorithmEntryTrackIndexes.length);
-        const trackIndex = algorithmEntryTrackIndexes[randomIndex];
-        ap.list.switch(trackIndex);
-        playAPlayerSafely();
-    }
-
-    /**
-     * 页面销毁前监听
-     */
-    window.onbeforeunload = () => {
-        if (!ap) {
-            return;
-        }
-        // 将播放信息用对象封装，并存入到localStorage中
-        const playInfo = {
-            index: ap.list.index,
-            currentTime: ap.audio.currentTime,
-            paused: ap.paused
-        };
-        localStorage.setItem("playInfo", JSON.stringify(playInfo));
-    };
-
-    /**
-     * 页面加载后监听
-     */
-    window.onload = () => {
-        if (!ap) {
-            return;
-        }
-        // 从localStorage取出播放信息
-        const playInfo = JSON.parse(localStorage.getItem("playInfo"));
-        if (!playInfo) {
-            playArticleEntryMusic();
-            return;
-        }
-        // 切换歌曲
-        ap.list.switch(playInfo.index);
-        // 等待500ms再执行下一步(切换歌曲需要点时间，不能立马调歌曲进度条)
-        setTimeout(() => {
-            // 调整时长
-            ap.seek(playInfo.currentTime);
-            // 是否播放
-            if (!playInfo.paused) {
-                playAPlayerSafely();
-            }
-            playArticleEntryMusic();
-        }, 500);
-    };
+    window.__ELAINA_MUSIC_PLAYLIST__ = {{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }};
 </script>
+{{ with resources.Get "js/music-player.js" }}
+<script src="{{ .RelPermalink }}" defer></script>
+{{ end }}
 
 {{ with resources.Get "js/topbar.min.js" }}
 <!-- 引入本地JS脚本 -->
