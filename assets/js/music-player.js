@@ -2,13 +2,22 @@
     const STORAGE_KEY = "elainaMusicPlayerState";
     const PLAYER_ID = "elaina-music-player";
     const ALGORITHM_ENTRY_TRACK_NAMES = ["Magia", "Everyday World"];
+    const PLAYBACK_MODES = ["list", "random", "repeat-one"];
+    const PLAYBACK_MODE_LABELS = {
+        list: "List loop",
+        random: "Shuffle",
+        "repeat-one": "Repeat one"
+    };
 
     const icons = {
         prev: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6z"/><path d="m18 6-8 6 8 6z"/></svg>',
         play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>',
         pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7z"/><path d="M13 5h4v14h-4z"/></svg>',
         next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6h2v12h-2z"/><path d="m6 6 8 6-8 6z"/></svg>',
-        list: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h11v2H8z"/><path d="M8 11h11v2H8z"/><path d="M8 15h11v2H8z"/><path d="M4 7h2v2H4z"/><path d="M4 11h2v2H4z"/><path d="M4 15h2v2H4z"/></svg>'
+        list: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h11v2H8z"/><path d="M8 11h11v2H8z"/><path d="M8 15h11v2H8z"/><path d="M4 7h2v2H4z"/><path d="M4 11h2v2H4z"/><path d="M4 15h2v2H4z"/></svg>',
+        modeList: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h10v2H5z"/><path d="M5 11h10v2H5z"/><path d="M5 15h10v2H5z"/><path d="m17 8 3 3-3 3z"/></svg>',
+        modeRandom: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 4h4v4h-2V7.4l-3.7 3.7-1.4-1.4L17.6 6H17z"/><path d="M3 7h3.2c1.6 0 2.7.6 3.7 1.9l4.2 5.2c.7.9 1.3 1.2 2.4 1.2H17v-1.6l4 3.3-4 3.3V18h-.5c-1.8 0-3-.6-4.2-2.1L8.1 10.7C7.4 9.8 6.9 9.5 6 9.5H3z"/><path d="M3 16.5h3c.9 0 1.4-.3 2.1-1.2l1-1.2 1.5 1.9-.7.9C8.8 19.1 7.7 19 6 19H3z"/></svg>',
+        modeRepeatOne: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h8.5c2.5 0 4.5 2 4.5 4.5S18 16 15.5 16H14v-2h1.5c1.4 0 2.5-1.1 2.5-2.5S16.9 9 15.5 9H7.8l2.1 2.1-1.4 1.4L4 8l4.5-4.5 1.4 1.4z"/><path d="M17 17H8.5C6 17 4 15 4 12.5S6 8 8.5 8H10v2H8.5C7.1 10 6 11.1 6 12.5S7.1 15 8.5 15h7.7l-2.1-2.1 1.4-1.4L20 16l-4.5 4.5-1.4-1.4z"/><path d="M11 10h2v6h-2z"/></svg>'
     };
 
     function normalizeSong(song) {
@@ -72,6 +81,7 @@
         let lastEntryMusicKey = null;
         let progressFrame = 0;
         let isExpanded = savedState.expanded === true;
+        let playbackMode = PLAYBACK_MODES.includes(savedState.mode) ? savedState.mode : "list";
 
         const audio = new Audio();
         audio.preload = "metadata";
@@ -147,8 +157,9 @@
         const playButton = createIconButton("play", "Play", icons.play);
         playButton.classList.add("music-player__icon-button--primary");
         const nextButton = createIconButton("next", "Next", icons.next);
+        const modeButton = createIconButton("mode", PLAYBACK_MODE_LABELS[playbackMode], icons.modeList);
         const listButton = createIconButton("list", "Playlist", icons.list);
-        controls.append(prevButton, playButton, nextButton, listButton);
+        controls.append(prevButton, playButton, nextButton, modeButton, listButton);
 
         dock.append(coverButton, info, controls);
         root.append(panel, dock);
@@ -160,7 +171,8 @@
                 currentTime: Number.isFinite(audio.currentTime) ? audio.currentTime : 0,
                 paused: audio.paused,
                 volume: audio.volume,
-                expanded: isExpanded
+                expanded: isExpanded,
+                mode: playbackMode
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
@@ -202,6 +214,27 @@
             playButton.title = isPlaying ? "Pause" : "Play";
             playButton.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
             playButton.innerHTML = isPlaying ? icons.pause : icons.play;
+        }
+
+        function updateModeButton() {
+            const iconKey = {
+                list: "modeList",
+                random: "modeRandom",
+                "repeat-one": "modeRepeatOne"
+            }[playbackMode];
+            const label = PLAYBACK_MODE_LABELS[playbackMode];
+
+            modeButton.dataset.mode = playbackMode;
+            modeButton.title = label;
+            modeButton.setAttribute("aria-label", label);
+            modeButton.innerHTML = icons[iconKey];
+        }
+
+        function cyclePlaybackMode() {
+            const currentModeIndex = PLAYBACK_MODES.indexOf(playbackMode);
+            playbackMode = PLAYBACK_MODES[(currentModeIndex + 1) % PLAYBACK_MODES.length];
+            updateModeButton();
+            saveState();
         }
 
         function renderSong() {
@@ -296,8 +329,18 @@
             return nextIndex;
         }
 
-        function nextTrack() {
-            switchTrack(randomIndex(currentIndex), { autoplay: true });
+        function nextTrack(options) {
+            if (playlist.length === 0) return;
+
+            if (playbackMode === "repeat-one" && !(options && options.manual)) {
+                switchTrack(currentIndex, { autoplay: true });
+                return;
+            }
+
+            const nextIndex = playbackMode === "random"
+                ? randomIndex(currentIndex)
+                : (currentIndex + 1) % playlist.length;
+            switchTrack(nextIndex, { autoplay: true });
         }
 
         function previousTrack() {
@@ -382,7 +425,10 @@
                     }
                     break;
                 case "next":
-                    nextTrack();
+                    nextTrack({ manual: true });
+                    break;
+                case "mode":
+                    cyclePlaybackMode();
                     break;
                 case "list":
                     setExpanded(!isExpanded);
@@ -406,6 +452,7 @@
         renderList();
         switchTrack(currentIndex, { seek: pendingSeek, autoplay: savedState.paused === false });
         updatePlayButton();
+        updateModeButton();
 
         return {
             setPlaylist,
