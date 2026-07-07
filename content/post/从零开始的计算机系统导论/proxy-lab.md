@@ -2,7 +2,7 @@
 title: 从零开始的Proxy Lab
 date: 2026-01-11
 categories: 
-    - 计算机系统导论
+    - 操作系统
 slug: 从零开始的proxy-lab
 hidden: true
 seriesOrder: 8

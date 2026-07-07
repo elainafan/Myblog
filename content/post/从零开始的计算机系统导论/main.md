@@ -2,7 +2,7 @@
 title: 从零开始的计算机系统导论
 date: 2026-01-11
 categories:
-    - 计算机系统导论
+    - 操作系统
 seriesExclude: true
 ---
 

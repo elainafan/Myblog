@@ -2,7 +2,7 @@
 title: 从零开始的C++11高级特性
 date: 2025-04-30
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的c11高级特性
 hidden: true
 seriesOrder: 19

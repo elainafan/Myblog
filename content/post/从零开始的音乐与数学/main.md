@@ -2,7 +2,7 @@
 title: 从零开始的音乐与数学
 date: 2025-09-08
 categories:
-    - 音乐与数学
+    - 数学
 seriesExclude: true
 ---
 

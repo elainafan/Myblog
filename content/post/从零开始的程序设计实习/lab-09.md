@@ -2,7 +2,7 @@
 title: 从零开始的上机(9)
 date: 2025-05-25
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的上机9
 hidden: true
 seriesOrder: 23

@@ -2,7 +2,7 @@
 title: 一维振动方程
 date: 2025-10-13
 categories:
-    - 音乐与数学
+    - 数学
 slug: 一维振动方程
 hidden: true
 seriesOrder: 4

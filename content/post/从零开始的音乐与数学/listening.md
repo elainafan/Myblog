@@ -2,7 +2,7 @@
 title: 如何与音乐交朋友？
 date: 2025-09-15
 categories:
-    - 音乐与数学
+    - 数学
 slug: 如何与音乐交朋友
 hidden: true
 seriesOrder: 2

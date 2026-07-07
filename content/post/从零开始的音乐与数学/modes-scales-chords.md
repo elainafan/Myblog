@@ -2,7 +2,7 @@
 title: 调式、音阶与和弦
 date: 2025-11-17
 categories:
-    - 音乐与数学
+    - 数学
 slug: 调式音阶与和弦
 hidden: true
 seriesOrder: 7

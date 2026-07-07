@@ -2,7 +2,7 @@
 title: 从零开始的Arch Lab
 date: 2025-11-09
 categories: 
-    - 计算机系统导论
+    - 操作系统
 slug: 从零开始的arch-lab
 hidden: true
 seriesOrder: 4

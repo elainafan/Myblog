@@ -2,7 +2,7 @@
 title: 从零开始的Python(3)
 date: 2025-03-24
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的python3
 hidden: true
 seriesOrder: 10

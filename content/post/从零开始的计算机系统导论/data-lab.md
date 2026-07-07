@@ -2,7 +2,7 @@
 title: 从零开始的Data Lab
 date: 2025-10-01
 categories:
-    - 计算机系统导论
+    - 操作系统
 slug: 从零开始的data-lab
 hidden: true
 seriesOrder: 1

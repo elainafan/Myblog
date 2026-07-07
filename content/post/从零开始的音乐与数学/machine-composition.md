@@ -2,7 +2,7 @@
 title: 机器作曲
 date: 2025-11-10
 categories:
-    - 音乐与数学
+    - 数学
 slug: 机器作曲
 hidden: true
 seriesOrder: 6

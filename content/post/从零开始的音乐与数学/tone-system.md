@@ -2,7 +2,7 @@
 title: 乐音体系的生成
 date: 2025-10-29
 categories:
-    - 音乐与数学
+    - 数学
 slug: 乐音体系的生成
 hidden: true
 seriesOrder: 5

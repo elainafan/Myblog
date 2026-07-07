@@ -2,7 +2,7 @@
 title: 从零开始的Tsh Lab
 date: 2025-11-18
 categories: 
-    - 计算机系统导论
+    - 操作系统
 slug: 从零开始的tsh-lab
 hidden: true
 seriesOrder: 6

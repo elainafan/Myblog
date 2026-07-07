@@ -2,7 +2,7 @@
 title: 从零开始的期中C++补充题(1)
 date: 2025-05-09
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的期中c补充题1
 hidden: true
 seriesOrder: 20

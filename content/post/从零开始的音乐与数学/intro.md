@@ -2,7 +2,7 @@
 title: 导论
 date: 2025-09-08
 categories:
-    - 音乐与数学
+    - 数学
 slug: 导论
 hidden: true
 seriesOrder: 1

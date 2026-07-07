@@ -2,7 +2,7 @@
 title: 从零开始的输入输出和模板
 date: 2025-04-16
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的输入输出和模板
 hidden: true
 seriesOrder: 14

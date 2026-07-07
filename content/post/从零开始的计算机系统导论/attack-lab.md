@@ -2,7 +2,7 @@
 title: 从零开始的Attack Lab
 date: 2025-10-20
 categories: 
-    - 计算机系统导论
+    - 操作系统
 slug: 从零开始的attack-lab
 hidden: true
 seriesOrder: 3

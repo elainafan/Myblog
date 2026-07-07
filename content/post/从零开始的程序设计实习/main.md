@@ -2,7 +2,7 @@
 title: 从零开始的程序设计实习
 date: 2025-06-08
 categories:
-    - 程序设计实习
+    - 算法
 seriesExclude: true
 ---
 

@@ -2,7 +2,7 @@
 title: 音类集合与新黎曼理论
 date: 2025-12-01
 categories:
-    - 音乐与数学
+    - 数学
 slug: 音类集合与新黎曼理论
 hidden: true
 seriesOrder: 9

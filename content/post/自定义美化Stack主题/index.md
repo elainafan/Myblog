@@ -3,7 +3,6 @@ title: 自定义美化Stack主题
 date: 2026-05-20
 categories: 
     - 建站
-image: 10.jpg
 updates:
     - date: 2026-06-23
       content: 将文章加密的密码校验改为 PBKDF2 派生摘要，并调整加密入口与错误提示样式。

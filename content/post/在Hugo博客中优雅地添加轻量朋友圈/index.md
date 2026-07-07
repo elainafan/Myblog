@@ -3,7 +3,6 @@ title: 在Hugo博客中优雅地添加轻量朋友圈
 date: 2026-05-24
 categories:
     - 建站
-image: 10.jpg
 updates:
     - date: 2026-05-24
       content: 补充 Friend Circle 效果图，并整理 Stack 主题友链页接入说明。

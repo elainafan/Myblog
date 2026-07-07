@@ -12,7 +12,12 @@
     (in $sourcePath "从零开始的随机算法")
 -}}
 {{- $isOperatingSystemSeries := in $sourcePath "从零开始的操作系统" -}}
-{{- $useAlgorithmEntryMusic := and (or $isAlgorithmCategory $isAlgorithmSeries) (not $isOperatingSystemSeries) -}}
+{{- $isProgrammingPracticeSeries := in $sourcePath "从零开始的程序设计实习" -}}
+{{- $useAlgorithmEntryMusic := and
+    (or $isAlgorithmCategory $isAlgorithmSeries)
+    (not $isOperatingSystemSeries)
+    (not $isProgrammingPracticeSeries)
+-}}
 
 <article class="{{ if .Params.image }}has-image {{ end }}main-article"
     data-page-key="{{ .RelPermalink }}"

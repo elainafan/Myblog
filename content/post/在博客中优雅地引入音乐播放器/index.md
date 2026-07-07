@@ -3,7 +3,6 @@ title: 在博客中优雅地引入音乐播放器
 date: 2026-05-20
 categories: 
     - 建站
-image: 10.jpg
 updates:
     - date: 2026-06-24
       content: 为算法分类文章接入进入页面时的随机曲目联动。

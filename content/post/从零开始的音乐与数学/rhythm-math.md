@@ -2,7 +2,7 @@
 title: 数学的节奏与节奏的数学
 date: 2025-12-18
 categories:
-    - 音乐与数学
+    - 数学
 slug: 数学的节奏与节奏的数学
 hidden: true
 seriesOrder: 10

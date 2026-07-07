@@ -2,7 +2,7 @@
 title: 从零开始的STL(1)
 date: 2025-04-18
 categories:
-    - 程序设计实习
+    - 算法
 slug: 从零开始的stl1
 hidden: true
 seriesOrder: 15

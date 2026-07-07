@@ -2,7 +2,7 @@
 title: 基础乐理
 date: 2025-09-22
 categories:
-    - 音乐与数学
+    - 数学
 slug: 基础乐理
 hidden: true
 seriesOrder: 3

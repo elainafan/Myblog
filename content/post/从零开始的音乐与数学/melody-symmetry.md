@@ -2,7 +2,7 @@
 title: 旋律与对称
 date: 2025-11-24
 categories:
-    - 音乐与数学
+    - 数学
 slug: 旋律与对称
 hidden: true
 seriesOrder: 8
