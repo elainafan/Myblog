@@ -1,0 +1,30 @@
+---
+title: 从零开始的信概统
+date: 2026-01-02
+categories:
+    - 数学
+seriesExclude: true
+---
+
+## 前言
+
+这是《信息学中的概率统计》的课程笔记整理，主要记录概率论、随机变量、尾界、参数估计和回归分析相关内容。
+
+## 阅读入口
+
+### 概率论基础
+
+- [课程介绍与概率论基础]({{< ref "probability-basics.md" >}})
+- [离散随机变量]({{< ref "discrete-random-variables.md" >}})
+- [连续随机变量]({{< ref "continuous-random-variables.md" >}})
+
+### 多维随机变量
+
+- [多维离散随机变量]({{< ref "multivariate-discrete-random-variables.md" >}})
+- [多维连续随机变量]({{< ref "multivariate-continuous-random-variables.md" >}})
+
+### 极限定理与统计推断
+
+- [尾不等式、大数定律和中心极限定理]({{< ref "tail-bounds-lln-clt.md" >}})
+- [参数估计]({{< ref "parameter-estimation.md" >}})
+- [回归分析]({{< ref "regression-analysis.md" >}})
