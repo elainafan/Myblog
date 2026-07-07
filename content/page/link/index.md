@@ -36,6 +36,10 @@ links:
     description: There is a reason
     website: https://www.anfstiy.me/
     image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
+  - title: Aerisun
+    description: 在喧嚣的缝隙里，做一个关于自由和好奇心的梦
+    website: https://aerisun.top/
+    image: https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg
   - title: Lane's Blog
     description: 探索未知，解码未来
     website: https://www.laneljc.cn/
