@@ -52,6 +52,11 @@ friends:
     feed: https://www.anfstiy.me/index.xml
     avatar: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
     description: There is a reason
+  - name: Aerisun
+    site: https://aerisun.top/
+    feed: https://aerisun.top/feeds/posts.xml
+    avatar: https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg
+    description: 在喧嚣的缝隙里，做一个关于自由和好奇心的梦
   - name: Lane's Blog
     site: https://www.laneljc.cn/
     feed: https://www.laneljc.cn/rss.xml
