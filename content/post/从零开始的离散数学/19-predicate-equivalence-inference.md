@@ -18,7 +18,7 @@ seriesOrder: 19
 
 我们给出一阶逻辑中的基本等值式：
 
-- (1) 由命题逻辑等值式模式的代换示例给出。
+- (1) 由命题逻辑等值式模式的代换示例给出
 - (2) 消去量词等值式 设个体域是有限集 $D=\lbrace{}a_1,a_2,\ldots,a_n\rbrace,$ 有
 
 $$
@@ -75,8 +75,8 @@ $$
 
 推理定律的以下来源：
 
-- (1) 命题逻辑推理定理的代换示例。
-- (2) 由基本等值式生成的推理定律。
+- (1) 命题逻辑推理定理的代换示例
+- (2) 由基本等值式生成的推理定律
 - (3) 一些常用的重要推理定律
 
 $$
@@ -86,7 +86,7 @@ $$
 \exists x(A(x) \rightarrow B(x)) \Rightarrow \exists xA(x) \rightarrow \exists xB(x) \\\\
 $$
 
-- (4) 四条常用的带条件规则。
+- (4) 四条常用的带条件规则
 
 ![alt text](assets/19-predicate-equivalence-inference/01.png)
 

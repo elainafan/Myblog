@@ -17,8 +17,8 @@ seriesOrder: 13
 设 $G$ 是非空集合， $\circ$ 是 $G$ 上的二元运算，若它满足下列条件，则称它为一个群。
 
 - (1) $\circ$ 满足结合律。
-- (2) 存在单位元。
-- (3) 每个元素都存在逆元。
+- (2) 存在单位元
+- (3) 每个元素都存在逆元
 
 $\langle Z,+ \rangle,\langle Q,+ \rangle,\langle R,+ \rangle,\langle C,+ \rangle$ 都是群，分别称为整数加群、有理数加群、实数加群、负数加群。
 
@@ -29,7 +29,7 @@ $\langle Z,+ \rangle,\langle Q,+ \rangle,\langle R,+ \rangle,\langle C,+ \rangle
 关于群的定义：
 
 - (1) 若 $G$ 是有穷集，则称 $G$ 是有限群，否则称作无限群，其基数称为 $G$ 的阶。
-- (2) 只含单位元的群称作平凡群。
+- (2) 只含单位元的群称作平凡群
 - (3) 若 $G$ 中的二元运算是可交换的，称作交换群或阿贝尔($\mathrm{Abelian}$ 群)。
 - (4) 设 $G$ 是群， $a \in G,n \in Z$。 $a$ 的 $n$ 次幂定义为
 

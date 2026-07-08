@@ -33,7 +33,7 @@ seriesOrder: 4
 - (1) 若 $p$ 是素数且 $d \mid p,$ 若 $d \gt 1 \rightarrow d=p$。
 - (2) 若 $p$ 是素数且 $p \mid ab \rightarrow p \mid a \ \vee p \mid b$。
 - (3) 设 $a$ 是大于 $1$ 的整数，则 $a$ 是合数当且仅当存在整数 $b,c$，使得 $a=bc,1 \lt b \lt a, 1 \lt c \lt a$。
-- (4) 合数必有素因子。
+- (4) 合数必有素因子
 
 唯一分解定理的推论：设 $a=p_1^{r_1}p_2^{r_2}\ldots p_k^{r_k},$ 其中 $p_i$ 是互不相同的素数 $,r_i$ 是正整数，则正整数 $d$ 为 $a$ 的因子的充分必要条件为：$d=p_1^{s_1}p_2^{s_2}\ldots p_k^{s_k},$ 其中 $0 \le s_i \le r_i,i=1,2,\ldots,k$。
 
@@ -41,7 +41,7 @@ seriesOrder: 4
 
 定理：设 $\pi(n)$ 表示小于或等于 $n$ 的素数个数，有 $\lim\limits_{n \to + \infty} \frac{\pi(n)}{n/ \ln n} =1$。
 
-素数测试的概念。
+素数测试的概念
 
 定理：合数 $n$ 必有小于等于 $\sqrt{n}$ 的真因子，合数 $n$ 必有小于等于 $\sqrt{n}$ 的素因子。
 
@@ -64,7 +64,7 @@ seriesOrder: 4
 
 用唯一分解定理和辗转相除法求最大公因数。
 
-裴蜀定理。
+裴蜀定理
 
 用裴蜀定理和辗转相除法反求 $xa+yb$ 的 $x,y$ 时，每步都消去最小的数。
 
