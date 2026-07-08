@@ -137,7 +137,7 @@ $A(n)$：平均情况下时间复杂度。
 
 分治算法、二分算法
 
-![alt text](assets/03-functions/01.png)
+![](assets/03-functions/01.png)
 
 ## 函数的复合和反函数
 

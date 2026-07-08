@@ -132,7 +132,7 @@ $$
 
 容斥原理及其推论。
 
-![img](assets/01-sets/01.png)
+![](assets/01-sets/01.png)
 
 ## 例题与练习
 

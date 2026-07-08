@@ -67,7 +67,7 @@ $$
 
 成立，则称 $L$ 为分配格。
 
-![alt text](assets/14-lattices-boolean-algebra/01.png)
+![](assets/14-lattices-boolean-algebra/01.png)
 
 如图 $L_3$ 所示的哈斯图称为钻石格，若图 $L_4$ 所示的哈斯图称为五角格。
 
@@ -186,7 +186,7 @@ $$
 
 答案：如图所示。
 
-![alt text](assets/14-lattices-boolean-algebra/02.png)
+![](assets/14-lattices-boolean-algebra/02.png)
 
 5. 设 $L$ 为格，若 $a_1 \wedge a_2 \wedge a_3 \ldots a_n=a_1 \vee a_2 \vee a_3 \ldots a_n,$ 则 $a_1=a_2 \ldots a_n$。
 

@@ -125,7 +125,7 @@ $$
 定理：对任何无向图 $G$ ，有 $\kappa(G) \le \lambda(G) \le \delta(G)$。
 一个小例子：
 
-![alt text](assets/05-graph-basics/01.png)
+![](assets/05-graph-basics/01.png)
 
 - (6) 给定有向图 $D=\langle V,E \rangle,v_i,v_j,$ 若存在 $v_i$ 到 $v_j$ 的通路，称 $v_i$ 可达 $v_j$ ，记作 $v_i \rightarrow v_j$。 对任意 $v_i \in V$ ，都有 $v_i \rightarrow v_i$。 若 $v_i \rightarrow v_j \wedge v_j \rightarrow v_i,$ 称它们相互可达，记作 $v_i \leftrightarrow v_j$。
 可达和相互可达都是二元关系，相互可达是等价关系。
@@ -139,7 +139,7 @@ $$
 
 下面是扩大路径法的一个例子：
 
-![alt text](assets/05-graph-basics/02.png)
+![](assets/05-graph-basics/02.png)
 
 题目中还经常先假设是连通图，否则就转到某个连通分支中讨论。
 - (9) 设无向图 $G=\langle V,E \rangle,$ 若能将 $V$ 划分为 $V_1,V_2,V_1 \cap V_2 = \emptyset,V_1 \not = \emptyset,V_2 \not = \emptyset,$ 使得 $G$ 中的每条边的两个端点都是一个属于 $V_1,$ 一个属于 $V_2,$ 则称 $G$ 为二部图(二分图、偶图)，称 $V_1$ 和 $V_2$ 为互补顶点子集，常将其记作 $\langle V_1,V_2,E \rangle$。 若 $G$ 是简单二部图，且 $V_1$ 的每个顶点均与 $V_2$ 中的每个顶点相邻，称其为完全二部图，记为 $K_{r,s},r=|V_1|,s=|V_2|$。
@@ -268,7 +268,7 @@ $$
 
 于是转化为画 $5$ 阶 $3$ 条边的所有非同构的无向简单图。
 
-![alt text](assets/05-graph-basics/06.png)
+![](assets/05-graph-basics/06.png)
 
 14. 设 $G_1$ 和 $G_2$ 均为无向简单图， $\overline{G_1}$ 和 $\overline{G_2}$ 分别是 $G_1$ 和 $G_2$ 的补图。证明：$G_1 \cong G_2 \Leftrightarrow \overline{G_1} \cong \overline{G_2}$。
 
@@ -339,7 +339,7 @@ $$
 
 这其实是生成树的基本结论：任意连通图都含有一棵生成树，而 $n$ 阶树恰有 $n-1$ 条边。下面保留一份归纳法写法。
 
-![alt text](assets/05-graph-basics/07.png)
+![](assets/05-graph-basics/07.png)
 
 23. 设 $G$ 是 $6$ 阶无向简单图，证明：$G$ 或它的补图 $\overline{G}$ 中存在 $3$ 个顶点彼此相邻。
 
@@ -351,9 +351,9 @@ $$
 
 可以把每一种油量状态看成一个顶点，一次倒油看成一条边。这样问题就转化为状态图上的最短路问题。下面保留一份状态转移图与路径记录。
 
-![alt text](assets/05-graph-basics/08.png)
+![](assets/05-graph-basics/08.png)
 
-![alt text](assets/05-graph-basics/09.png)
+![](assets/05-graph-basics/09.png)
 
 25. $3$ 阶 $3$ 条边的有向简单图有()个？
 答案：3。

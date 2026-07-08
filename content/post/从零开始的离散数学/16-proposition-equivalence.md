@@ -183,7 +183,7 @@ $$
 
 计算机中的消解算法：
 
-![alt text](assets/16-proposition-equivalence/01.png)
+![](assets/16-proposition-equivalence/01.png)
 
 下面整理一些容易漏条件的题目。
 

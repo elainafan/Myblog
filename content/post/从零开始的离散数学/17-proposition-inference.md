@@ -24,7 +24,7 @@ seriesOrder: 17
 
 今后把形式结构写成：
 
-![alt text](assets/17-proposition-inference/01.png)
+![](assets/17-proposition-inference/01.png)
 
 判断是否为重言式：真值表法、等值演算法、主析取范式法。
 

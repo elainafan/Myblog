@@ -88,7 +88,7 @@ $$
 
 - (4) 四条常用的带条件规则
 
-![alt text](assets/19-predicate-equivalence-inference/01.png)
+![](assets/19-predicate-equivalence-inference/01.png)
 
 若不符合规则要求的条件，将会产生错误的推理。
 
@@ -135,7 +135,7 @@ $$
 
 结论：$\exists xG(x)$。
 
-![alt text](assets/19-predicate-equivalence-inference/02.png)
+![](assets/19-predicate-equivalence-inference/02.png)
 
 8. 形如 $\forall x(F(x) \rightarrow G(x))$ 的公式不能用附加前提证明法证明。
 
@@ -147,4 +147,4 @@ $$
 
 结论：$\forall x(F(x) \rightarrow G(x))$。
 
-![alt text](assets/19-predicate-equivalence-inference/03.png)
+![](assets/19-predicate-equivalence-inference/03.png)

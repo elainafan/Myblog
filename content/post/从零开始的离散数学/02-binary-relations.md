@@ -95,7 +95,7 @@ $$
   - $(G \cap H) \circ F = (G \circ F) \cap (H \circ F)$
   - 这个对于有限多个二元关系也成立
 
-![alt text](assets/02-binary-relations/01.png)
+![](assets/02-binary-relations/01.png)
 
 - (5)
   - $F \upharpoonright (A \cup B) = F \upharpoonright A \cup F \upharpoonright B$
@@ -145,11 +145,11 @@ $R$ 次幂的性质。
 
 性质在不同表示法下的性质
 
-![alt text](assets/02-binary-relations/02.png)
+![](assets/02-binary-relations/02.png)
 
 集合运算的相关性质
 
-![alt text](assets/02-binary-relations/03.png)
+![](assets/02-binary-relations/03.png)
 
 ## 关系的闭包
 
@@ -168,9 +168,9 @@ $R$ 次幂的性质。
 
 关系矩阵与关系图求闭包。
 
-![alt text](assets/02-binary-relations/04.png)
+![](assets/02-binary-relations/04.png)
 
-![alt text](assets/02-binary-relations/05.png)
+![](assets/02-binary-relations/05.png)
 
 关系矩阵里使用的是逻辑加。
 
@@ -230,7 +230,7 @@ $$
 
 - 划分的定义
 
-![alt text](assets/02-binary-relations/06.png)
+![](assets/02-binary-relations/06.png)
 
 划分与等价关系
 
@@ -264,13 +264,13 @@ $$
 
 设 $\langle A,\preceq \rangle$ 为偏序集， $B \subseteq A,y \in B$。
 
-![alt text](assets/02-binary-relations/07.png)
+![](assets/02-binary-relations/07.png)
 
 - (2)
 
 设 $\langle A,\preceq \rangle$ 为偏序集， $B \subseteq A,y \in A$。
 
-![alt text](assets/02-binary-relations/08.png)
+![](assets/02-binary-relations/08.png)
 
 关于这些概念的阐述。
 
@@ -282,9 +282,9 @@ $$
 
 - 调度问题的定义
 
-![alt text](assets/02-binary-relations/09.png)
+![](assets/02-binary-relations/09.png)
 
-![alt text](assets/02-binary-relations/10.png)
+![](assets/02-binary-relations/10.png)
 
 调度问题的解决
 
@@ -401,7 +401,7 @@ $$
 
 这个关系也可以从商集与划分的定义中直接看出：
 
-![alt text](assets/02-binary-relations/13.png)
+![](assets/02-binary-relations/13.png)
 
 由 Cauchy 不等式
 

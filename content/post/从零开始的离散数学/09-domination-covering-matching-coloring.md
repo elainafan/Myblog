@@ -138,7 +138,7 @@ seriesOrder: 9
 
 4. 求如图所示的无向图的点色数 $\chi$ 和边色数 $\chi'$。
 
-![alt text](assets/09-domination-covering-matching-coloring/01.png)
+![](assets/09-domination-covering-matching-coloring/01.png)
 
 本题给我们一个启示：如果看到有圈或者完全图，要先考虑圈或者完全图。
 

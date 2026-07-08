@@ -67,15 +67,15 @@ $$
 
 代码如下：
 
-![alt text](assets/11-recurrence-generating-functions/01.png)
+![](assets/11-recurrence-generating-functions/01.png)
 
 其 $W(n)=n\mathrm{log}n-n+1$。
 
 快速排序：请看以下代码，通过划分来实现。
 
-![alt text](assets/11-recurrence-generating-functions/02.png)
+![](assets/11-recurrence-generating-functions/02.png)
 
-![alt text](assets/11-recurrence-generating-functions/03.png)
+![](assets/11-recurrence-generating-functions/03.png)
 
 其 $T(n)=O(n\mathrm{log}n)$。
 
@@ -284,7 +284,7 @@ $$
 
 于是，我们得到一张总结表。
 
-![alt text](assets/11-recurrence-generating-functions/04.png)
+![](assets/11-recurrence-generating-functions/04.png)
 
 例11.6.2设 $A,B$ 为集合，其中 $|A|=n,|B|=m,$ 问：
 
@@ -383,7 +383,7 @@ $$
 
 这道题的方法很丰富，这里放出一种。
 
-![alt text](assets/11-recurrence-generating-functions/05.png)
+![](assets/11-recurrence-generating-functions/05.png)
 
 5. 设 $f_n$ 为斐波那契数，计算 $f_0-f_1+f_2-\ldots +(-1)^nf_n$。
 

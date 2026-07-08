@@ -280,9 +280,9 @@ $$
 已知 $n=pq，$ 计算 $\phi(n)$ 的逆：辗转相除&裴蜀定理。
 下面是一道 RSA 密钥计算的例题，图中保留了完整的辗转相除与模幂计算过程。
 
-![alt text](assets/04-number-theory/01.png)
+![](assets/04-number-theory/01.png)
 
-![alt text](assets/04-number-theory/02.png)
+![](assets/04-number-theory/02.png)
 
 得到的密文可以写成数字形式。
 

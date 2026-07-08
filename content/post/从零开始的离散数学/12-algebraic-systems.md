@@ -204,7 +204,7 @@ $$
 
 8. 设 $A=\lbrace0,1\rbrace,S=A^A$。 ，请写出 $S$ 上合成运算的运算表。
 
-![alt text](assets/12-algebraic-systems/01.png)
+![](assets/12-algebraic-systems/01.png)
 
 9. 设 $A=\lbrace{}a,b,c\rbrace,$ 能否确定 $a,b,c$ 的值使得。
 

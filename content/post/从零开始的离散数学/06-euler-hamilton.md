@@ -78,7 +78,7 @@ $G=\langle V,E,W \rangle$。 指的是一个带权图， $W(e)$ 指的是边 $e$
 
 操作过程和算法竞赛中的 Dijkstra 写法基本一致。下面保留一份完整计算过程。
 
-![alt text](assets/06-euler-hamilton/01.png)
+![](assets/06-euler-hamilton/01.png)
 
 中国邮递员问题：本质上就是给定一个带权无向图，每条边的权为非负实数，求每一条边至少经过一次的最短回路。
 
@@ -142,7 +142,7 @@ $$
 
 示意图如下图所示。
 
-![alt text](assets/06-euler-hamilton/02.png)
+![](assets/06-euler-hamilton/02.png)
 
 8. 今有 $n$ 个人，已知他们中任何二人合起来认识其余的 $n-2$ 个人。证明：$n \ge 3$ 时，这 $n$ 个人能排成一列，使得任何两个相邻的人都相互认识；当 $n \ge 4$ 时，这 $n$ 个人能排成一个圆圈，使得每个人都认识两旁的人。
 

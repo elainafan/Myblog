@@ -68,9 +68,9 @@ $C_n^r$ 通常被称作二项式系数，有时也记作 $\dbinom{n}{r}$。
 
 例 10.2.3 下面给出一个简单的程序，问：它的输出 $x$ 是什么？
 
-![alt text](assets/10-counting/01.png)
+![](assets/10-counting/01.png)
 
-![alt text](assets/10-counting/02.png)
+![](assets/10-counting/02.png)
 
 解答：我们将其抽象为 $\lbrace+\infty \cdot 1,+\infty \cdot 2,\ldots,+\infty \cdot n\rbrace$ 的 $k$ 组合数，于是答案为 $C_{n+k-1}^k$。
 

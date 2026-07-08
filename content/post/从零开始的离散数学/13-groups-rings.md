@@ -268,7 +268,7 @@ $S_n$ 的所有子群被称为 $n$ 元置换群。
 
 相关算法：
 
-![alt text](assets/13-groups-rings/01.png)
+![](assets/13-groups-rings/01.png)
 
 多次测试，使其出错概率指数级下降。
 
