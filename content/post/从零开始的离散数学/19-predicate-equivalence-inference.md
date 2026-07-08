@@ -14,50 +14,50 @@ seriesOrder: 19
 
 有的命题可以有不同的符号化形式。
 
-设 $A,B$ 是一阶逻辑中任意两个公式，若 $A \leftrightarrow B$ 是永真式，则称 $A$ 与 $B$ 等值，记作 $A \Leftrightarrow B,$ 称 $A \Leftrightarrow B$ 是等值式.
+设 $A,B$ 是一阶逻辑中任意两个公式，若 $A \leftrightarrow B$ 是永真式，则称 $A$ 与 $B$ 等值，记作 $A \Leftrightarrow B,$ 称 $A \Leftrightarrow B$ 是等值式。
 
 我们给出一阶逻辑中的基本等值式：
 
 - (1) 由命题逻辑等值式模式的代换示例给出。
-- (2) 消去量词等值式 设个体域是有限集 $D=\{a_1,a_2,\ldots,a_n\},$ 有
+- (2) 消去量词等值式 设个体域是有限集 $D=\lbrace{}a_1,a_2,\ldots,a_n\rbrace,$ 有
 
 $$
-\forall xA(x) \Leftrightarrow A(a_1) \wedge A(a_2) \wedge \ldots \wedge A(a_n) \\
-\exists xA(x) \Leftrightarrow A(a_1) \vee A(a_2) \vee \ldots A(a_n).
+\forall xA(x) \Leftrightarrow A(a_1) \wedge A(a_2) \wedge \ldots \wedge A(a_n) \\\\
+\exists xA(x) \Leftrightarrow A(a_1) \vee A(a_2) \vee \ldots A(a_n)
 $$
 
 - (3) 量词否定等值式 设公式 $A(x)$ 含自由出现的个体变项 $x,$ 则
 
 $$
-\neg \forall xA(x) \Leftrightarrow \exists x \neg A(x) \\
-\neg \exists xA(x) \Leftrightarrow \forall x \neg A(x).
+\neg \forall xA(x) \Leftrightarrow \exists x \neg A(x) \\\\
+\neg \exists xA(x) \Leftrightarrow \forall x \neg A(x)
 $$
 
 - (4) 量词辖域收缩与扩张等值式
 
 $$
-\forall x(A(x) \vee B) \Leftrightarrow \forall xA(x) \vee B. \\
-\forall x(A(x) \wedge B) \Leftrightarrow \forall xA(x) \wedge B. \\
-\forall x(A(x) \rightarrow B) \Leftrightarrow \exists xA(x) \rightarrow B \\
-\forall x(B \rightarrow A(x)) \Leftrightarrow B \rightarrow \forall xA(x) \\
-\exists x(A(x) \vee B) \Leftrightarrow \exists xA(x) \vee B \\
-\exists x(A(x) \wedge B) \Leftrightarrow \exists xA(x) \wedge B \\
-\exists x(A(x) \rightarrow B) \Leftrightarrow \forall xA(x) \rightarrow B \\
-\exists x(B \rightarrow A(x)) \Leftrightarrow B \rightarrow \exists xA(x) \\
+\forall x(A(x) \vee B) \Leftrightarrow \forall xA(x) \vee B. \\\\
+\forall x(A(x) \wedge B) \Leftrightarrow \forall xA(x) \wedge B. \\\\
+\forall x(A(x) \rightarrow B) \Leftrightarrow \exists xA(x) \rightarrow B \\\\
+\forall x(B \rightarrow A(x)) \Leftrightarrow B \rightarrow \forall xA(x) \\\\
+\exists x(A(x) \vee B) \Leftrightarrow \exists xA(x) \vee B \\\\
+\exists x(A(x) \wedge B) \Leftrightarrow \exists xA(x) \wedge B \\\\
+\exists x(A(x) \rightarrow B) \Leftrightarrow \forall xA(x) \rightarrow B \\\\
+\exists x(B \rightarrow A(x)) \Leftrightarrow B \rightarrow \exists xA(x) \\\\
 $$
 
 - (5) 量词分配等值式
 
 $$
-\forall x(A(x) \wedge B(x)) \Leftrightarrow \forall xA(x) \wedge \forall xB(x) \\
-\exists x(A(x) \vee B(x)) \Leftrightarrow \exists xA(x) \vee \exists xB(x).
+\forall x(A(x) \wedge B(x)) \Leftrightarrow \forall xA(x) \wedge \forall xB(x) \\\\
+\exists x(A(x) \vee B(x)) \Leftrightarrow \exists xA(x) \vee \exists xB(x)
 $$
 
 这里要看好哪个对哪个是不可分配的。
 
-- (6) 置换规则：设 $\Phi(A)$ 是含公式 $A$ 的公式， $\Phi(B)$ 是用公式 $B$ 取代 $\Phi(A)$ 中所有的 $A$ 之后得到的公式，若 $A \Leftrightarrow B,$ 则 $\Phi(A) \Leftrightarrow \Phi(B).$
+- (6) 置换规则：设 $\Phi(A)$ 是含公式 $A$ 的公式， $\Phi(B)$ 是用公式 $B$ 取代 $\Phi(A)$ 中所有的 $A$ 之后得到的公式，若 $A \Leftrightarrow B,$ 则 $\Phi(A) \Leftrightarrow \Phi(B)$。
 
-- (7) 换名规则：设 $A$ 为一公式，将 $A$ 中某量词辖域中的一个约束变项的所有出现及相应的指导变元全部改成该量词辖域中未曾出现过的某个个体变项符号，公式中其余部分不变，将所得公式记作 $A',$ 则 $A \Leftrightarrow A'.$
+- (7) 换名规则：设 $A$ 为一公式，将 $A$ 中某量词辖域中的一个约束变项的所有出现及相应的指导变元全部改成该量词辖域中未曾出现过的某个个体变项符号，公式中其余部分不变，将所得公式记作 $A',$ 则 $A \Leftrightarrow A'$。
 
 ## 一阶逻辑前束范式
 
@@ -69,7 +69,7 @@ $$
 
 ## 一阶逻辑的推理理论
 
-若以下的蕴涵式形式：$A_1 \wedge A_2 \wedge A_3 \ldots A_k \rightarrow B$ 为永真式，则称推理正确，反之称推理不正确.
+若以下的蕴涵式形式：$A_1 \wedge A_2 \wedge A_3 \ldots A_k \rightarrow B$ 为永真式，则称推理正确，反之称推理不正确。
 
 在一阶逻辑中称永真式的蕴涵式为推理定律，若一个推理的形式结构是推理定律，则这个推理是正确。
 
@@ -80,10 +80,10 @@ $$
 - (3) 一些常用的重要推理定律
 
 $$
-\forall xA(x) \vee \forall xB(x) \Rightarrow \forall x(A(x) \vee B(x)) \\
-\exists x(A(x) \wedge B(x)) \Rightarrow \exists xA(x) \wedge \exists xB(x) \\
-\forall x(A(x) \rightarrow B(x)) \Rightarrow \forall xA(x) \rightarrow \forall xB(x) \\
-\exists x(A(x) \rightarrow B(x)) \Rightarrow \exists xA(x) \rightarrow \exists xB(x) \\
+\forall xA(x) \vee \forall xB(x) \Rightarrow \forall x(A(x) \vee B(x)) \\\\
+\exists x(A(x) \wedge B(x)) \Rightarrow \exists xA(x) \wedge \exists xB(x) \\\\
+\forall x(A(x) \rightarrow B(x)) \Rightarrow \forall xA(x) \rightarrow \forall xB(x) \\\\
+\exists x(A(x) \rightarrow B(x)) \Rightarrow \exists xA(x) \rightarrow \exists xB(x) \\\\
 $$
 
 - (4) 四条常用的带条件规则。
@@ -104,11 +104,11 @@ $$
 
 3. 分配时要看清符号。
 
-4. 自然推理系统：考虑量词的增减
+4. 自然推理系统：考虑量词的增减。
 
-5. 设个体域 $D=\{a,b\},$ 消去下列公式中的谓词：
+5. 设个体域 $D=\lbrace{}a,b\rbrace,$ 消去下列公式中的谓词：
 
-- (2) $\forall x \exists y(F(x,y) \rightarrow G(x,y)).$
+- (2) $\forall x \exists y(F(x,y) \rightarrow G(x,y))$。
 
 答案为
 
@@ -116,12 +116,12 @@ $$
 ((F(a,a) \rightarrow G(a,a)) \vee (F(a,b) \rightarrow G(a,b))) \wedge ((F(b,a) \rightarrow G(b,a)) \vee (F(b,b) \rightarrow G(b,b)))
 $$
 
-6. 求下列公式的前束范式
+6. 求下列公式的前束范式。
 
 - (1) $\exists yF(x,y) \wedge \forall xG(x,y,z)$
-- (2) $\forall xF(x,y) \leftrightarrow \exists xG(x,y).$
+- (2) $\forall xF(x,y) \leftrightarrow \exists xG(x,y)$。
 
-答案：(1) $\exists v \forall u(F(x,v) \wedge G(u,v,z)).$
+答案：(1) $\exists v \forall u(F(x,v) \wedge G(u,v,z))$。
 
 - (2)
 
@@ -131,9 +131,9 @@ $$
 
 7. 构造下列推理的证明。
 
-前提：$\forall x(F(x) \rightarrow G(x)),\exists xF(x).$
+前提：$\forall x(F(x) \rightarrow G(x)),\exists xF(x)$。
 
-结论：$\exists xG(x).$
+结论：$\exists xG(x)$。
 
 ![alt text](assets/19-predicate-equivalence-inference/02.png)
 
@@ -143,8 +143,8 @@ $$
 
 9. 在自然推理系统中 $N_\mathscr{L}$ 中，构造下列推理的证明：
 
-前提：$\exists xF(x) \rightarrow \forall xG(x)$
+前提：$\exists xF(x) \rightarrow \forall xG(x)$。
 
-结论：$\forall x(F(x) \rightarrow G(x)).$
+结论：$\forall x(F(x) \rightarrow G(x))$。
 
 ![alt text](assets/19-predicate-equivalence-inference/03.png)
