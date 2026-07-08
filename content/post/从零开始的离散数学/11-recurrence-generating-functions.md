@@ -28,8 +28,8 @@ $k$ 阶常系数线性递推方程，齐次方程，定义类似高数中的初�
 
 $$
 \begin{cases}
-& H(n)-a_1H(n-1)-a_2H(n-2)-\ldots -a_kH(n-k)=0, \\
-& H(0)=b_1,H(1)=b_1,H(2)=b_2,\ldots,H(k-1)=b_{k-1}, \\
+& H(n)-a_1H(n-1)-a_2H(n-2)-\ldots -a_kH(n-k)=0, \\\\
+& H(0)=b_1,H(1)=b_1,H(2)=b_2,\ldots,H(k-1)=b_{k-1}, \\\\
 \end{cases}
 $$
 
@@ -87,12 +87,12 @@ $$
 
 $$
 \begin{pmatrix}
-F_{n+1} & F_n \\
+F_{n+1} & F_n \\\\
 F_n & F_{n-1}
 \end{pmatrix}=
 \begin{pmatrix}
-1 & 1 \\
-1 & 0 \\
+1 & 1 \\\\
+1 & 0 \\\\
 \end{pmatrix}^n
 $$
 
@@ -105,9 +105,9 @@ $$
 $$
 \dbinom{r}{n}=
 \begin{cases}
-0, \ n<0, \\
-1, \ n=0 \\
-\frac{r(r-1)\ldots (r-n+1)}{n!}, \ n>0,
+0, & n<0, \\\\
+1, & n=0, \\\\
+\frac{r(r-1)\ldots (r-n+1)}{n!}, & n>0,
 \end{cases}
 $$
 
@@ -117,14 +117,14 @@ $$
 (x+y)^{\alpha}=\sum\limits_{n=0}^{+\infty}\dbinom{\alpha}{n}x^ny^{\alpha-n},\quad \alpha,x,y \in R,\quad |x/y|<1
 $$
 
-可以导出以下公式：
-
-- (1) $\frac{1}{1-x}=1+x+x^2+\ldots,$
-- (2) $\frac{1}{(1-x)^2}=\sum\limits_{n=0}^{+\infty}(n+1)x^n.$
-- (3)
+可以导出以下公式
 
 $$
-(1+x)^{\frac{1}{2}}=1+\sum\limits_{n=0}^{+\infty}\frac{(-1)^{n-1}}{2^{2n-1}n}\dbinom{2n-2}{n-1}x^n
+\begin{aligned}
+\frac{1}{1-x} &= 1+x+x^2+\ldots, \\\\
+\frac{1}{(1-x)^2} &= \sum\limits_{n=0}^{+\infty}(n+1)x^n, \\\\
+(1+x)^{\frac{1}{2}} &= 1+\sum\limits_{n=0}^{+\infty}\frac{(-1)^{n-1}}{2^{2n-1}n}\dbinom{2n-2}{n-1}x^n.
+\end{aligned}
 $$
 
 给定序列 $\{a_n\},$ 构造函数 $G(x)=a_0+a_1x+a_2x^2+\ldots +a_nx^n.$ 称为其生成函数.
@@ -231,8 +231,8 @@ $$
 
 $$
 \begin{cases}
-h_n=\sum\limits_{k=1}^{n-1}h_kh_n-k,n \ge 2. \\
-h_1=1 \\
+h_n=\sum\limits_{k=1}^{n-1}h_kh_n-k,n \ge 2. \\\\
+h_1=1 \\\\
 \end{cases}
 $$
 
@@ -246,11 +246,11 @@ $$
 
 则它满足下列递推方程与恒等式：
 
-- (1)
+- (1) 递推式为
 
 $$
 \begin{cases}
-\displaystyle\genfrac{[}{]}{0pt}{}{n}{r}=(n-1)\displaystyle\genfrac{[}{]}{0pt}{}{n-1}{r}+\displaystyle\genfrac{[}{]}{0pt}{}{n-1}{r-1},n>r \ge 1, \\
+\displaystyle\genfrac{[}{]}{0pt}{}{n}{r}=(n-1)\displaystyle\genfrac{[}{]}{0pt}{}{n-1}{r}+\displaystyle\genfrac{[}{]}{0pt}{}{n-1}{r-1},n>r \ge 1, \\\\
 \displaystyle\genfrac{[}{]}{0pt}{}{n}{0}=0,\displaystyle\genfrac{[}{]}{0pt}{}{n}{1}=(n-1)!.
 \end{cases}
 $$
@@ -265,12 +265,12 @@ $$
 
 则它满足下列递推方程和恒等式：
 
-- (1)
+- (1) 递推式为
 
 $$
 \begin{cases}
-\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{r}=r\displaystyle\genfrac{\{}{\}}{0pt}{}{n-1}{r}+\displaystyle\genfrac{\{}{\}}{0pt}{}{n-1}{r-1}, \\
-\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{0}=0,\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{1}=1 \\
+\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{r}=r\displaystyle\genfrac{\{}{\}}{0pt}{}{n-1}{r}+\displaystyle\genfrac{\{}{\}}{0pt}{}{n-1}{r-1}, \\\\
+\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{0}=0,\displaystyle\genfrac{\{}{\}}{0pt}{}{n}{1}=1 \\\\
 \end{cases}
 $$
 
@@ -370,9 +370,9 @@ $$
 $$
 \begin{aligned}
 f_{n+1+m}
-&=f_{n+m}+f_{n-1+m} \\
-&=f_{m-1}f_{n+1}+f_{m-2}f_n+f_{m-1}f_n+f_{m-2}f_{n-1} \\
-&=f_{m-1}(f_{n-1}+f_n)+f_{m-2}(f_n+f_{n-1}) \\
+&=f_{n+m}+f_{n-1+m} \\\\
+&=f_{m-1}f_{n+1}+f_{m-2}f_n+f_{m-1}f_n+f_{m-2}f_{n-1} \\\\
+&=f_{m-1}(f_{n-1}+f_n)+f_{m-2}(f_n+f_{n-1}) \\\\
 &=f_{m-1}f_{n+2}+f_{m-2}f_{n}
 \end{aligned}
 $$
@@ -396,8 +396,8 @@ $$
 $$
 \begin{aligned}
 f_0-f_1+f_2-\ldots +(-1)^{n+1}f_{n+1}
-&=1+(-1)^nf_{n-1}+(-1)^{n+1}f_{n+1} \\
-&=1+(-1)^nf_{n-1}-(-1)^nf_{n+1} \\
+&=1+(-1)^nf_{n-1}+(-1)^{n+1}f_{n+1} \\\\
+&=1+(-1)^nf_{n-1}-(-1)^nf_{n+1} \\\\
 &=1+(-1)^{n+1}f_n
 \end{aligned}
 $$
@@ -417,9 +417,9 @@ $$
 
 $$
 \begin{align*}
-LHS & =f_{n-1}(f_n+f_{n-1})+f_{n-2}f_n \\
-& =f_{n-1}^2+f_n(f_{n-1}+f_{n-2}) \\
-& =f_{n-1}^2+f_n^2 \\
+LHS & =f_{n-1}(f_n+f_{n-1})+f_{n-2}f_n \\\\
+& =f_{n-1}^2+f_n(f_{n-1}+f_{n-2}) \\\\
+& =f_{n-1}^2+f_n^2 \\\\
 \end{align*}
 $$
 
@@ -427,10 +427,10 @@ $$
 
 $$
 \begin{align*}
-RHS-LHS & =f_nf_{n+1}-f_{n-1}f_{n-2}-f_{n-1}f_{n+1}-f_{n-2}f_n \\
-& =f_{n-2}f_{n+1}-f_{n-1}f_{n-2}-f_{n-2}f_n \\
-& =f_{n-2}f_{n-1}-f_{n-1}f_{n-2} \\
-& =0 \\
+RHS-LHS & =f_nf_{n+1}-f_{n-1}f_{n-2}-f_{n-1}f_{n+1}-f_{n-2}f_n \\\\
+& =f_{n-2}f_{n+1}-f_{n-1}f_{n-2}-f_{n-2}f_n \\\\
+& =f_{n-2}f_{n-1}-f_{n-1}f_{n-2} \\\\
+& =0 \\\\
 \end{align*}
 $$
 
@@ -450,10 +450,10 @@ $$
 
 $$
 \begin{aligned}
-& f_{n+1}f_{n+3}-f_{n+2}^2+f_{n+2}f_{n}-f_{n+1}^2 \\
-= {} & f_{n+1}^2+f_{n+2}f_{n+1}-f_{n+2}^2+f_{n+2}f_n-f_{n+1}^2 \\
-= {} & f_{n+2}f_n+f_{n+1}f_{n+2}-f_{n+2}^2 \\
-= {} & f_{n+2}^2-f_{n+2}^2 \\
+& f_{n+1}f_{n+3}-f_{n+2}^2+f_{n+2}f_{n}-f_{n+1}^2 \\\\
+= {} & f_{n+1}^2+f_{n+2}f_{n+1}-f_{n+2}^2+f_{n+2}f_n-f_{n+1}^2 \\\\
+= {} & f_{n+2}f_n+f_{n+1}f_{n+2}-f_{n+2}^2 \\\\
+= {} & f_{n+2}^2-f_{n+2}^2 \\\\
 = {} & 0
 \end{aligned}
 $$
@@ -463,7 +463,7 @@ $$
 - (1) 若 $b_n=\alpha a_n,$ 则 $B(x)=\alpha A(x).$
 - (2) 若 $c_n=a_n+b_n,$ 则 $C(x)=A(x)+B(x).$
 - (3) 若 $c_n=\sum\limits_{i=0}^{n}a_ib_{n-i},$ 则 $C(x)=A(x)B(x).$
-- (4) 若 $b_n=\begin{cases} 0,n<l \\ a_{n-1},n \ge l \end{cases},$ 则 $B(x)=x^lA(x).$
+- (4) 若 $b_n$ 在 $n<l$ 时为 $0$ ，在 $n \ge l$ 时为 $a_{n-1}$ ，则 $B(x)=x^lA(x).$
 - (5) 若 $b_n=a_{n+l},$ 则 $B(x)=\frac{A(x)-\sum\limits_{n=0}^{l-1}a_nx^n}{x^l}.$
 - (6) 若 $b_n=\sum\limits_{i=0}^{n}a_i,$ 则 $B(x)=\frac{A(x)}{1-x}.$
 - (7) 若 $b_n=\sum\limits_{i=0}^{+\infty}a_i,$ 且 $A(1)=\sum\limits_{i=0}^{+\infty}a_i$ 收敛，则 $B(x)=\frac{A(1)-xA(x)}{1-x}.$
@@ -556,7 +556,7 @@ $$
 $$
 a_n=
 \begin{cases}
-4^{n-1}+2^{n-1}, n \ge 1 \\
+4^{n-1}+2^{n-1}, n \ge 1 \\\\
 1,n=0
 \end{cases}
 $$
