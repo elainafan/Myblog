@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-09T04:18:41.839350+00:00",
+  "generated_at": "2026-07-09T07:12:31.501734+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -260,6 +260,17 @@
   "warnings": [],
   "posts": [
     {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "论文精读 | Belief Memory精读",
+      "url": "https://equinox.wiki/post/paper-reading/agent-memory/belief-memory%E7%B2%BE%E8%AF%BB/",
+      "summary": "论文精读 | Belief Memory精读 作者：Equinox（shixy2003@gmail.com） 本文2026-07-09首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-09",
+      "published": "2026-07-08T16:00:08+00:00",
+      "published_text": "Thu, 09 Jul 2026 00:00:08 +0800"
+    },
+    {
       "friend": "Aerisun",
       "site": "https://aerisun.top/",
       "feed": "https://aerisun.top/feeds/posts.xml",
@@ -286,6 +297,39 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "论文精读 | Delta Mem精读",
+      "url": "https://equinox.wiki/post/paper-reading/agent-memory/delta-mem%E7%B2%BE%E8%AF%BB/",
+      "summary": "论文精读 | Delta Mem精读 作者：Equinox（shixy2003@gmail.com） 本文2026-07-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-03",
+      "published": "2026-07-03T03:07:41+00:00",
+      "published_text": "Fri, 03 Jul 2026 11:07:41 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Mem0框架解读",
+      "url": "https://equinox.wiki/post/agent/mem0/",
+      "summary": "Mem0框架解读 作者：Equinox（shixy2003@gmail.com） 本文2026-07-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-03",
+      "published": "2026-07-03T03:07:35+00:00",
+      "published_text": "Fri, 03 Jul 2026 11:07:35 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "论文精读 | 斯坦福小镇",
+      "url": "https://equinox.wiki/post/paper-reading/agent-memory/%E6%96%AF%E5%9D%A6%E7%A6%8F%E5%B0%8F%E9%95%87/",
+      "summary": "论文精读 | 斯坦福小镇 作者：Equinox（shixy2003@gmail.com） 本文2026-07-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-01",
+      "published": "2026-07-01T05:23:14+00:00",
+      "published_text": "Wed, 01 Jul 2026 13:23:14 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "并行训练优化、MoE扩展与系统瓶颈",
       "url": "https://equinox.wiki/post/cs336/%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96moe%E6%89%A9%E5%B1%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%93%B6%E9%A2%88/",
       "summary": "并行训练优化、MoE扩展与系统瓶颈 作者：Equinox（shixy2003@gmail.com） 本文2026-06-25首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-25",
@@ -298,7 +342,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Self Consistency泛读",
-      "url": "https://equinox.wiki/post/paper-reading/self-consistency%E6%B3%9B%E8%AF%BB/",
+      "url": "https://equinox.wiki/post/paper-reading/cot/self-consistency%E6%B3%9B%E8%AF%BB/",
       "summary": "Self Consistency泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-23T12:58:41+00:00",
       "published_text": "Tue, 23 Jun 2026 20:58:41 +0800"
@@ -309,7 +353,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Auto CoT精读",
-      "url": "https://equinox.wiki/post/paper-reading/auto-cot%E7%B2%BE%E8%AF%BB/",
+      "url": "https://equinox.wiki/post/paper-reading/cot/auto-cot%E7%B2%BE%E8%AF%BB/",
       "summary": "Auto CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-23T08:56:38+00:00",
       "published_text": "Tue, 23 Jun 2026 16:56:38 +0800"
@@ -320,7 +364,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Zero Shot CoT精读",
-      "url": "https://equinox.wiki/post/paper-reading/zero_shot_cot%E7%B2%BE%E8%AF%BB/",
+      "url": "https://equinox.wiki/post/paper-reading/cot/zero_shot_cot%E7%B2%BE%E8%AF%BB/",
       "summary": "Zero Shot CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-22T16:36:28+00:00",
       "published_text": "Tue, 23 Jun 2026 00:36:28 +0800"
@@ -364,7 +408,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "CoT精读",
-      "url": "https://equinox.wiki/post/paper-reading/cot%E7%B2%BE%E8%AF%BB/",
+      "url": "https://equinox.wiki/post/paper-reading/cot/cot%E7%B2%BE%E8%AF%BB/",
       "summary": "CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
       "published": "2026-06-16T05:40:54+00:00",
       "published_text": "Tue, 16 Jun 2026 13:40:54 +0800"
@@ -392,39 +436,6 @@
       "published_text": "Sat, 13 Jun 2026 17:04:17 +0800"
     },
     {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Qwen3 VL精读",
-      "url": "https://equinox.wiki/post/paper-reading/qwen3-vl%E7%B2%BE%E8%AF%BB/",
-      "summary": "Qwen3 VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-10首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-10",
-      "published": "2026-06-10T05:48:44+00:00",
-      "published_text": "Wed, 10 Jun 2026 13:48:44 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Qwen2.5 VL泛读",
-      "url": "https://equinox.wiki/post/paper-reading/qwen2.5-vl%E6%B3%9B%E8%AF%BB/",
-      "summary": "Qwen2.5 VL泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-09首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-09",
-      "published": "2026-06-09T08:07:55+00:00",
-      "published_text": "Tue, 09 Jun 2026 16:07:55 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Qwen2 VL精读",
-      "url": "https://equinox.wiki/post/paper-reading/qwen2-vl%E7%B2%BE%E8%AF%BB/",
-      "summary": "Qwen2 VL精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-08首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-08",
-      "published": "2026-06-08T07:45:43+00:00",
-      "published_text": "Mon, 08 Jun 2026 15:45:43 +0800"
-    },
-    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -434,17 +445,6 @@
       "summary": "Introduction 支配树在编译器中最主要的作用是用于计算支配边界，用于插入 $\\phi$ 函数，将 ir 提升到 SSA 形式。以及提供循环优化，DCE 等 pass 需要的结构信息。 Control Flow Graph 有如下代码： 1 2 3 4 5 6 7 8 9 10 11 12 13 int main () { int a = 1 ;...",
       "published": "2026-06-07T19:34:49+00:00",
       "published_text": "Mon, 08 Jun 2026 03:34:49 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "Benchmarking、Profiling 与 Triton Kernels",
-      "url": "https://equinox.wiki/post/cs336/benchmarkingprofiling-%E4%B8%8E-triton-kernels/",
-      "summary": "Benchmarking、Profiling 与 Triton Kernels 作者：Equinox（shixy2003@gmail.com） 本文2026-06-07首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-07",
-      "published": "2026-06-07T14:08:23+00:00",
-      "published_text": "Sun, 07 Jun 2026 22:08:23 +0800"
     },
     {
       "friend": "~zzz",
