@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-04
 hidden: true
-seriesOrder: 23
+seriesOrder: 3
 ---
 
 ## ISA
@@ -154,12 +154,12 @@ Y86-64 状态码用来描述程序当前是否正常执行。
 - 多路复用器(MUX)
 
 ```c
-bool re = (s && a) || (!s && b)
+bool re = (s && a) || (!s && b);
 ```
 
 - 情况表达式(Case Expression)
 
-```c
+```text
 T out = [
     select1 : Expr1;
     select2 : Expr2;

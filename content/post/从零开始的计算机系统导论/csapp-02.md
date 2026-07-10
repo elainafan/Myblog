@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-02
 hidden: true
-seriesOrder: 21
+seriesOrder: 1
 ---
 
 ## 信息存储
@@ -190,8 +190,7 @@ for (size_t i = n - 1; i >= 0; --i) {
 直接计算 ``x + y`` 再看符号，在 C 中仍可能先触发未定义行为。实际代码常在运算前检查边界：
 
 ```c
-bool add_overflow(int x, int y)
-{
+bool add_overflow(int x, int y) {
     if (y > 0 && x > INT_MAX - y) return true;
     if (y < 0 && x < INT_MIN - y) return true;
     return false;

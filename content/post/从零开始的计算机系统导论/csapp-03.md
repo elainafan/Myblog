@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-03
 hidden: true
-seriesOrder: 22
+seriesOrder: 2
 ---
 
 ## 历史观点
@@ -351,7 +351,7 @@ x86-64 架构中的整数寄存器先按用途记。
 - 第二种编码方法是给出绝对地址。
 - 先看第一种编码方法。
 
-```
+```asm
 4004d3 eb 03 jmp 4004d8<loop+0x8>
 4004d5 ...
 4004d8 ...
@@ -368,24 +368,24 @@ x86-64 架构中的整数寄存器先按用途记。
 - C 语言的 ``goto`` 可以描述汇编中的控制流，但不建议在普通 C 程序中滥用。
 - 下面是C语言中的if-else语句通用模板：
 
-```
-    if(test-expr)
-        then-statement
-    else
-        else-statement
+```text
+if (test-expr)
+    then-statement
+else
+    else-statement
 ```
 
 - 我们用C语法来描述转换为汇编后的控制流：
 
-```
-        t=test-expr;
-        if(!t)
-            goto false;
-        then-statement
-        goto done;
-    false:
-        else-statement
-    done:
+```text
+t = test-expr;
+if (!t)
+    goto false;
+then-statement
+goto done;
+false:
+    else-statement
+done:
 ```
 
 - 汇编器为then-statement和else-statement产生各自的代码块，它会插入条件和无条件分支，以确保能执行正确的代码块。
@@ -430,23 +430,24 @@ x86-64 架构中的整数寄存器先按用途记。
 
 - 用条件控制编译：
 
-```
-    if(!test-expr)
-        goto false;
-    v=then-expr;
-    goto done;
+```text
+if (!test-expr)
+    goto false;
+v = then-expr;
+goto done;
 false:
-    v=else-expr;
+    v = else-expr;
 done:
 ```
 
 - 用抽象代码描述：
 
-```
-    v=then-expr;
-    ve=else-expr;
-    t=test-expr;
-    if(!r) v=ve;
+```text
+v = then-expr;
+ve = else-expr;
+t = test-expr;
+if (!r)
+    v = ve;
 ```
 
 循环。
@@ -455,11 +456,11 @@ done:
 
 - 通常采用以下通用形式：
 
-```
+```text
 loop:
     body-statement
-    t=test-expr;
-    if(t)
+    t = test-expr;
+    if (t)
         goto loop;
 ```
 
@@ -467,26 +468,26 @@ loop:
 
 - 通用形式有两种，一种称为jump to middle，即跳转到中间。
 
-```
-    goto test;
+```text
+goto test;
 loop:
     body-statement
 test:
-    t=test-expr;
-    if(t)
+    t = test-expr;
+    if (t)
         goto loop;
 ```
 
 - 第二种我们称之为 guarded-do，形式是：
 
-```
-t=test-expr;
-if(!t)
+```text
+t = test-expr;
+if (!t)
     goto done;
 loop:
     body-statement
-    t=test-expr;
-    if(t)
+    t = test-expr;
+    if (t)
         goto loop;
 done:
 ```
@@ -498,30 +499,30 @@ done:
 - 我们通常将其转化为while循环判断。
 - 若采用 jump to middle 形式，通用结构可以写成：
 
-```
+```text
 init-expr;
 goto test;
 loop:
     body-statement
     update-expr;
 test:
-    t=test-expr;
-    if(t)
+    t = test-expr;
+    if (t)
         goto loop;
 ```
 
 - 若采用 guarded-do 形式，通用结构可以写成：
 
-```
-    init-expr;
-    t=test-expr;
-    if(!t)
-        goto done;
+```text
+init-expr;
+t = test-expr;
+if (!t)
+    goto done;
 loop:
     body-statement
     update-expr;
-    t=test-expr;
-    if(t)
+    t = test-expr;
+    if (t)
         goto loop;
 done:
 ```
@@ -571,9 +572,7 @@ done:
 以七个整数参数的函数为例：
 
 ```c
-long sum7(long a, long b, long c, long d,
-          long e, long f, long g)
-{
+long sum7(long a, long b, long c, long d, long e, long f, long g) {
     return a + g;
 }
 ```

@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的proxy-lab
 hidden: true
-seriesOrder: 8
+seriesOrder: 19
 ---
 # 从零开始的Proxy Lab
 
@@ -222,23 +222,21 @@ ssh <username>@<hostname> \
 ```c
 // reader-priority.c - 第一类读者-写者问题的解答，读者优先级高于写者
 /* 全局变量 */
-int readcnt; /* 共享变量，记录当前正在读取的读者数量 */
+int readcnt;    /* 共享变量，记录当前正在读取的读者数量 */
 sem_t mutex, w; /* 两个信号量，分别用于互斥访问 readcnt 和写者优先级 */
 
 void reader(void) {
     while (1) {
         P(&mutex);
         readcnt++;
-        if (readcnt == 1)
-            P(&w); /* 阻塞写者 */
+        if (readcnt == 1) P(&w); /* 阻塞写者 */
         V(&mutex);
 
         /* 读取数据 */
 
         P(&mutex);
         readcnt--;
-        if (readcnt == 0)
-            V(&w); /* 释放写者 */
+        if (readcnt == 0) V(&w); /* 释放写者 */
         V(&mutex);
     }
 }
@@ -314,11 +312,10 @@ GET http://www.example.com:8080/foo/bar.html?x=1 HTTP/1.1
 为了相对方便，需要将URL封装为相应的结构体，如下：
 
 ```c
-typedef struct _URL
-{
-    string hostname; // 要连接的服务器
-    string port; // TCP端口（默认80）
-    string path; // GET请求里的路径
+typedef struct _URL {
+    string hostname;  // 要连接的服务器
+    string port;      // TCP端口（默认80）
+    string path;      // GET请求里的路径
 } URL;
 ```
 
@@ -342,8 +339,7 @@ void *thread(void *vargp);
 
 sbuf_t sbuf; /* Shared buffer of connected descriptors */
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int i, listenfd, connfd;
     socklen_t clientlen;
     struct sockaddr_storage clientaddr;
@@ -366,8 +362,7 @@ int main(int argc, char **argv)
     }
 }
 
-void *thread(void *vargp)
-{
+void *thread(void *vargp) {
     Pthread_detach(pthread_self());
     while (1) {
         int connfd = sbuf_remove(&sbuf); /* Remove connfd from buffer */
@@ -394,8 +389,7 @@ void *thread(void *vargp)
 根据以上思路，得到以下代码：
 
 ```c
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     /* 避免对已关闭 socket 写入导致进程被 SIGPIPE 终止。 */
     Signal(SIGPIPE, SIG_IGN);
     int listenfd, *connfd;
@@ -404,15 +398,13 @@ int main(int argc, char **argv)
     struct sockaddr_storage clientaddr;
     pthread_t tid;
 
-    if (argc != 2)
-    {
+    if (argc != 2) {
         fprintf(stderr, "usage: %s <port>\n", argv[0]);
         exit(1);
     }
 
     /* 在 query/add 之前必须初始化缓存一次。 */
-    if (init() < 0)
-    {
+    if (init() < 0) {
         fprintf(stderr, "cache init failed\n");
         exit(1);
     }
@@ -420,17 +412,14 @@ int main(int argc, char **argv)
     listenfd = Open_listenfd(argv[1]);
     clientlen = sizeof(clientaddr);
 
-    while (1)
-    {
+    while (1) {
         connfd = (int *)malloc(sizeof(int));
         *connfd = accept(listenfd, (SA *)&clientaddr, &clientlen);
-        if (*connfd < 0)
-        {
+        if (*connfd < 0) {
             fprintf(stderr, "accept error: %s\n", strerror(errno));
             continue;
         }
-        if (getnameinfo((SA *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0) < 0)
-        {
+        if (getnameinfo((SA *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0) < 0) {
             fprintf(stderr, "getnameinfo error: %s\n", strerror(errno));
             continue;
         }
@@ -456,11 +445,9 @@ int main(int argc, char **argv)
 根据以上思路，写出以下代码：
 
 ```c
-static void *thread(void *vargp)
-{
+static void *thread(void *vargp) {
     /* 分离线程：线程退出后由系统自动回收资源。 */
-    if (pthread_detach(pthread_self()) < 0)
-    {
+    if (pthread_detach(pthread_self()) < 0) {
         fprintf(stderr, "pthread_detach error: %s\n", strerror(errno));
         return (void *)-1;
     }
@@ -471,13 +458,11 @@ static void *thread(void *vargp)
     free(vargp);
 
     /* 读取请求行："METHOD URL VERSION\r\n" */
-    if (rio_readlineb(&rio, buf, MAXLINE) <= 0)
-    {
+    if (rio_readlineb(&rio, buf, MAXLINE) <= 0) {
         fprintf(stderr, "fail to read request line\n");
         return (void *)-1;
     }
-    if (sscanf(buf, "%s%s%s", method, url, version) != 3)
-    {
+    if (sscanf(buf, "%s%s%s", method, url, version) != 3) {
         fprintf(stderr, "malformed request line\n");
         return (void *)-1;
     }
@@ -509,21 +494,18 @@ static void *thread(void *vargp)
 根据以上思路，写出以下代码：
 
 ```c
-static void do_get(rio_t *client, string url)
-{
+static void do_get(rio_t *client, string url) {
     string buf;
     ssize_t n = 0;
     int tot = 0;
     /* 若命中缓存，直接返回。 */
-    if (query(client, url))
-    {
+    if (query(client, url)) {
         drain_request_headers(client);
         return;
     }
     URL _url;
     /* 解析绝对 URL（期望格式 http://host[:port]/path）。 */
-    if (parse_url(url, &_url) < 0)
-    {
+    if (parse_url(url, &_url) < 0) {
         fprintf(stderr, "Parse url error\n");
         return;
     }
@@ -535,8 +517,7 @@ static void do_get(rio_t *client, string url)
 
     /* 与源站建立连接。 */
     int serverfd = open_clientfd(_url.hostname, _url.port);
-    if (serverfd < 0)
-    {
+    if (serverfd < 0) {
         fprintf(stderr, "open_clientfd error\n");
         return;
     }
@@ -550,30 +531,24 @@ static void do_get(rio_t *client, string url)
 
     /* 将源站响应流式写回；若对象足够小则同时缓冲用于缓存。 */
     char cache[MAX_OBJECT_SIZE];
-    while ((n = rio_readnb(&server_rio, buf, MAXLINE)))
-    {
-        if (n == -1)
-        {
+    while ((n = rio_readnb(&server_rio, buf, MAXLINE))) {
+        if (n == -1) {
             fprintf(stderr, "rio_readlineb error\n");
             close(serverfd);
             return;
         }
-        if (tot + n > MAX_OBJECT_SIZE)
-            tot = -1;
-        if (tot != -1)
-        {
+        if (tot + n > MAX_OBJECT_SIZE) tot = -1;
+        if (tot != -1) {
             memcpy(cache + tot, buf, n);
             tot += n;
         }
-        if (rio_writen(client->rio_fd, buf, n) != n)
-        {
+        if (rio_writen(client->rio_fd, buf, n) != n) {
             fprintf(stderr, "rio_written error\n");
             close(serverfd);
             return;
         }
     }
-    if (tot != -1)
-        add(url, cache, tot);
+    if (tot != -1) add(url, cache, tot);
     close(serverfd);
     return;
 }
@@ -585,17 +560,14 @@ static void do_get(rio_t *client, string url)
 写成代码如下：
 
 ```c
-static void drain_request_headers(rio_t *client)
-{
+static void drain_request_headers(rio_t *client) {
     /*
      * 命中缓存时也要把客户端剩余请求头读完再关闭连接，
      * 否则客户端可能还在发送头部就遇到提前关闭。
      */
     char buf[MAXLINE];
-    while (Rio_readlineb(client, buf, MAXLINE) > 0)
-    {
-        if (!strcmp(buf, "\r\n"))
-            break;
+    while (Rio_readlineb(client, buf, MAXLINE) > 0) {
+        if (!strcmp(buf, "\r\n")) break;
     }
 }
 ```
@@ -612,8 +584,7 @@ static void drain_request_headers(rio_t *client)
 根据以上思路，写出代码如下：
 
 ```c
-static int parse_url(string url, URL *parsed)
-{
+static int parse_url(string url, URL *parsed) {
     /*
      * parse_url - 将绝对 URL 拆分为 hostname / port / path。
      *
@@ -623,23 +594,18 @@ static int parse_url(string url, URL *parsed)
      */
     char *host, *port, *path;
     const int n = strlen("http://");
-    if (strncmp(url, "http://", n))
-        return -1;
+    if (strncmp(url, "http://", n)) return -1;
     host = url + n;
     port = strchr(url + n, ':');
     path = strchr(url + n, '/');
-    if (!path)
-        return -1;
-    if (!port)
-    {
+    if (!path) return -1;
+    if (!port) {
         *path = '\0';
         strcpy(parsed->hostname, host);
         strcpy(parsed->port, "80");
         *path = '/';
         strcpy(parsed->path, path);
-    }
-    else
-    {
+    } else {
         *port = '\0';
         strcpy(parsed->hostname, host);
         *port = ':';
@@ -671,8 +637,7 @@ Proxy-Connection: close
 根据以上思路，写出以下代码：
 
 ```c
-static int parse_header(rio_t *client, string res, const string host)
-{
+static int parse_header(rio_t *client, string res, const string host) {
     /*
      * parse_header - 读取客户端请求头，并构造一个“规范化”的请求头块转发给源站。
      *
@@ -686,40 +651,29 @@ static int parse_header(rio_t *client, string res, const string host)
     string buf;
     char host_hdr[MAXLINE];
     host_hdr[0] = '\0';
-    while (Rio_readlineb(client, buf, MAXLINE) > 0)
-    {
-        if (!strcmp(buf, "\r\n"))
-            break;
-        if (!strncasecmp(buf, "Host:", 5))
-        {
+    while (Rio_readlineb(client, buf, MAXLINE) > 0) {
+        if (!strcmp(buf, "\r\n")) break;
+        if (!strncasecmp(buf, "Host:", 5)) {
             strncpy(host_hdr, buf, MAXLINE - 1);
             host_hdr[MAXLINE - 1] = '\0';
             continue;
         }
-        if (!strncasecmp(buf, "User-Agent:", 11) ||
-            !strncasecmp(buf, "Connection:", 11) ||
-            !strncasecmp(buf, "Proxy-Connection:", 17))
+        if (!strncasecmp(buf, "User-Agent:", 11) || !strncasecmp(buf, "Connection:", 11) || !strncasecmp(buf, "Proxy-Connection:", 17))
             continue;
 
         size_t left = MAXLINE - strlen(res) - 1;
-        if (left > 0)
-            strncat(res, buf, left);
+        if (left > 0) strncat(res, buf, left);
     }
-    if (host_hdr[0] == '\0')
-        snprintf(host_hdr, MAXLINE, "Host: %s\r\n", host);
+    if (host_hdr[0] == '\0') snprintf(host_hdr, MAXLINE, "Host: %s\r\n", host);
     size_t left;
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, host_hdr, left);
+    if (left > 0) strncat(res, host_hdr, left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, user_agent_hdr, left);
+    if (left > 0) strncat(res, user_agent_hdr, left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, "Connection: close\r\n", left);
+    if (left > 0) strncat(res, "Connection: close\r\n", left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, "Proxy-Connection: close\r\n\r\n", left);
+    if (left > 0) strncat(res, "Proxy-Connection: close\r\n\r\n", left);
     return 0;
 }
 ```
@@ -759,8 +713,7 @@ static int parse_header(rio_t *client, string res, const string host)
 #define MAX_CACHE_NUM 10
 
 typedef char string[MAXLINE];
-typedef struct
-{
+typedef struct {
     /* timestamp 越大表示“越久未被访问”（越不常用）。 */
     int timestamp;
     /* 1 = 有效缓存行，0 = 空行。 */
@@ -772,8 +725,7 @@ typedef struct
     int size;
 } Line;
 
-struct _Cache
-{
+struct _Cache {
     /* 当前有效缓存行数量（尽力维护的计数，用于统计/调试）。 */
     int used_cache;
     Line Cache[MAX_CACHE_NUM];
@@ -1030,8 +982,7 @@ clean:
  */
 
 typedef char string[MAXLINE];
-typedef struct _URL
-{
+typedef struct _URL {
     string hostname;
     string port;
     string path;
@@ -1045,8 +996,7 @@ static int parse_header(rio_t *client, string res, const string host);
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     /* 避免对已关闭 socket 写入导致进程被 SIGPIPE 终止。 */
     Signal(SIGPIPE, SIG_IGN);
     int listenfd, *connfd;
@@ -1055,15 +1005,13 @@ int main(int argc, char **argv)
     struct sockaddr_storage clientaddr;
     pthread_t tid;
 
-    if (argc != 2)
-    {
+    if (argc != 2) {
         fprintf(stderr, "usage: %s <port>\n", argv[0]);
         exit(1);
     }
 
     /* 在 query/add 之前必须初始化缓存一次。 */
-    if (init() < 0)
-    {
+    if (init() < 0) {
         fprintf(stderr, "cache init failed\n");
         exit(1);
     }
@@ -1071,17 +1019,14 @@ int main(int argc, char **argv)
     listenfd = Open_listenfd(argv[1]);
     clientlen = sizeof(clientaddr);
 
-    while (1)
-    {
+    while (1) {
         connfd = (int *)malloc(sizeof(int));
         *connfd = accept(listenfd, (SA *)&clientaddr, &clientlen);
-        if (*connfd < 0)
-        {
+        if (*connfd < 0) {
             fprintf(stderr, "accept error: %s\n", strerror(errno));
             continue;
         }
-        if (getnameinfo((SA *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0) < 0)
-        {
+        if (getnameinfo((SA *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0) < 0) {
             fprintf(stderr, "getnameinfo error: %s\n", strerror(errno));
             continue;
         }
@@ -1092,11 +1037,9 @@ int main(int argc, char **argv)
     return 0;
 }
 
-static void *thread(void *vargp)
-{
+static void *thread(void *vargp) {
     /* 分离线程：线程退出后由系统自动回收资源。 */
-    if (pthread_detach(pthread_self()) < 0)
-    {
+    if (pthread_detach(pthread_self()) < 0) {
         fprintf(stderr, "pthread_detach error: %s\n", strerror(errno));
         return (void *)-1;
     }
@@ -1107,13 +1050,11 @@ static void *thread(void *vargp)
     free(vargp);
 
     /* 读取请求行："METHOD URL VERSION\r\n" */
-    if (rio_readlineb(&rio, buf, MAXLINE) <= 0)
-    {
+    if (rio_readlineb(&rio, buf, MAXLINE) <= 0) {
         fprintf(stderr, "fail to read request line\n");
         return (void *)-1;
     }
-    if (sscanf(buf, "%s%s%s", method, url, version) != 3)
-    {
+    if (sscanf(buf, "%s%s%s", method, url, version) != 3) {
         fprintf(stderr, "malformed request line\n");
         return (void *)-1;
     }
@@ -1126,35 +1067,29 @@ static void *thread(void *vargp)
     return NULL;
 }
 
-static void drain_request_headers(rio_t *client)
-{
+static void drain_request_headers(rio_t *client) {
     /*
      * 命中缓存时也要把客户端剩余请求头读完再关闭连接，
      * 否则客户端可能还在发送头部就遇到提前关闭。
      */
     char buf[MAXLINE];
-    while (Rio_readlineb(client, buf, MAXLINE) > 0)
-    {
-        if (!strcmp(buf, "\r\n"))
-            break;
+    while (Rio_readlineb(client, buf, MAXLINE) > 0) {
+        if (!strcmp(buf, "\r\n")) break;
     }
 }
 
-static void do_get(rio_t *client, string url)
-{
+static void do_get(rio_t *client, string url) {
     string buf;
     ssize_t n = 0;
     int tot = 0;
     /* 若命中缓存，直接返回。 */
-    if (query(client, url))
-    {
+    if (query(client, url)) {
         drain_request_headers(client);
         return;
     }
     URL _url;
     /* 解析绝对 URL（期望格式 http://host[:port]/path）。 */
-    if (parse_url(url, &_url) < 0)
-    {
+    if (parse_url(url, &_url) < 0) {
         fprintf(stderr, "Parse url error\n");
         return;
     }
@@ -1166,8 +1101,7 @@ static void do_get(rio_t *client, string url)
 
     /* 与源站建立连接。 */
     int serverfd = open_clientfd(_url.hostname, _url.port);
-    if (serverfd < 0)
-    {
+    if (serverfd < 0) {
         fprintf(stderr, "open_clientfd error\n");
         return;
     }
@@ -1181,36 +1115,29 @@ static void do_get(rio_t *client, string url)
 
     /* 将源站响应流式写回；若对象足够小则同时缓冲用于缓存。 */
     char cache[MAX_OBJECT_SIZE];
-    while ((n = rio_readnb(&server_rio, buf, MAXLINE)))
-    {
-        if (n == -1)
-        {
+    while ((n = rio_readnb(&server_rio, buf, MAXLINE))) {
+        if (n == -1) {
             fprintf(stderr, "rio_readlineb error\n");
             close(serverfd);
             return;
         }
-        if (tot + n > MAX_OBJECT_SIZE)
-            tot = -1;
-        if (tot != -1)
-        {
+        if (tot + n > MAX_OBJECT_SIZE) tot = -1;
+        if (tot != -1) {
             memcpy(cache + tot, buf, n);
             tot += n;
         }
-        if (rio_writen(client->rio_fd, buf, n) != n)
-        {
+        if (rio_writen(client->rio_fd, buf, n) != n) {
             fprintf(stderr, "rio_written error\n");
             close(serverfd);
             return;
         }
     }
-    if (tot != -1)
-        add(url, cache, tot);
+    if (tot != -1) add(url, cache, tot);
     close(serverfd);
     return;
 }
 
-static int parse_url(string url, URL *parsed)
-{
+static int parse_url(string url, URL *parsed) {
     /*
      * parse_url - 将绝对 URL 拆分为 hostname / port / path。
      *
@@ -1220,23 +1147,18 @@ static int parse_url(string url, URL *parsed)
      */
     char *host, *port, *path;
     const int n = strlen("http://");
-    if (strncmp(url, "http://", n))
-        return -1;
+    if (strncmp(url, "http://", n)) return -1;
     host = url + n;
     port = strchr(url + n, ':');
     path = strchr(url + n, '/');
-    if (!path)
-        return -1;
-    if (!port)
-    {
+    if (!path) return -1;
+    if (!port) {
         *path = '\0';
         strcpy(parsed->hostname, host);
         strcpy(parsed->port, "80");
         *path = '/';
         strcpy(parsed->path, path);
-    }
-    else
-    {
+    } else {
         *port = '\0';
         strcpy(parsed->hostname, host);
         *port = ':';
@@ -1248,8 +1170,7 @@ static int parse_url(string url, URL *parsed)
     return 0;
 }
 
-static int parse_header(rio_t *client, string res, const string host)
-{
+static int parse_header(rio_t *client, string res, const string host) {
     /*
      * parse_header - 读取客户端请求头，并构造一个“规范化”的请求头块转发给源站。
      *
@@ -1263,40 +1184,29 @@ static int parse_header(rio_t *client, string res, const string host)
     string buf;
     char host_hdr[MAXLINE];
     host_hdr[0] = '\0';
-    while (Rio_readlineb(client, buf, MAXLINE) > 0)
-    {
-        if (!strcmp(buf, "\r\n"))
-            break;
-        if (!strncasecmp(buf, "Host:", 5))
-        {
+    while (Rio_readlineb(client, buf, MAXLINE) > 0) {
+        if (!strcmp(buf, "\r\n")) break;
+        if (!strncasecmp(buf, "Host:", 5)) {
             strncpy(host_hdr, buf, MAXLINE - 1);
             host_hdr[MAXLINE - 1] = '\0';
             continue;
         }
-        if (!strncasecmp(buf, "User-Agent:", 11) ||
-            !strncasecmp(buf, "Connection:", 11) ||
-            !strncasecmp(buf, "Proxy-Connection:", 17))
+        if (!strncasecmp(buf, "User-Agent:", 11) || !strncasecmp(buf, "Connection:", 11) || !strncasecmp(buf, "Proxy-Connection:", 17))
             continue;
 
         size_t left = MAXLINE - strlen(res) - 1;
-        if (left > 0)
-            strncat(res, buf, left);
+        if (left > 0) strncat(res, buf, left);
     }
-    if (host_hdr[0] == '\0')
-        snprintf(host_hdr, MAXLINE, "Host: %s\r\n", host);
+    if (host_hdr[0] == '\0') snprintf(host_hdr, MAXLINE, "Host: %s\r\n", host);
     size_t left;
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, host_hdr, left);
+    if (left > 0) strncat(res, host_hdr, left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, user_agent_hdr, left);
+    if (left > 0) strncat(res, user_agent_hdr, left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, "Connection: close\r\n", left);
+    if (left > 0) strncat(res, "Connection: close\r\n", left);
     left = MAXLINE - strlen(res) - 1;
-    if (left > 0)
-        strncat(res, "Proxy-Connection: close\r\n\r\n", left);
+    if (left > 0) strncat(res, "Proxy-Connection: close\r\n\r\n", left);
     return 0;
 }
 
@@ -1326,8 +1236,7 @@ static int parse_header(rio_t *client, string res, const string host)
 #define MAX_CACHE_NUM 10
 
 typedef char string[MAXLINE];
-typedef struct
-{
+typedef struct {
     /* timestamp 越大表示“越久未被访问”（越不常用）。 */
     int timestamp;
     /* 1 = 有效缓存行，0 = 空行。 */
@@ -1339,8 +1248,7 @@ typedef struct
     int size;
 } Line;
 
-struct _Cache
-{
+struct _Cache {
     /* 当前有效缓存行数量（尽力维护的计数，用于统计/调试）。 */
     int used_cache;
     Line Cache[MAX_CACHE_NUM];
@@ -1366,57 +1274,45 @@ int add(string url, char buf[], int size);
 
 // cache.c
 //*
- * name: <your name here>
- * student-id: <2200011111>
- */
+*name : <your name here> *student - id : <2200011111> * /
 #include "cache.h"
 #include "csapp.h"
 
-/*
- * 使用一个全局互斥量保护整个缓存。
- *
- * 为什么用单锁？
- * - 实现简单，避免复杂锁顺序带来的隐蔽死锁。
- * - 缓存行数量少、对象较小，粗粒度加锁开销可接受。
- */
-static sem_t cache_mutex;
+                                         /*
+                                          * 使用一个全局互斥量保护整个缓存。
+                                          *
+                                          * 为什么用单锁？
+                                          * - 实现简单，避免复杂锁顺序带来的隐蔽死锁。
+                                          * - 缓存行数量少、对象较小，粗粒度加锁开销可接受。
+                                          */
+                                         static sem_t cache_mutex;
 
 /* 全局缓存实例（在 init 中分配）。 */
 Cache *cache = NULL;
 
 /* 若 url 存在则返回对应缓存行下标，否则返回 -1。调用者需已持有锁。 */
-static int find_line(const char *url)
-{
-    for (int i = 0; i < MAX_CACHE_NUM; i++)
-    {
-        if (cache->Cache[i].valid && !strcmp(cache->Cache[i].url, url))
-            return i;
+static int find_line(const char *url) {
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
+        if (cache->Cache[i].valid && !strcmp(cache->Cache[i].url, url)) return i;
     }
     return -1;
 }
 
 /* 返回一个空缓存行下标，否则返回 -1。调用者需已持有锁。 */
-static int find_empty(void)
-{
-    for (int i = 0; i < MAX_CACHE_NUM; i++)
-    {
-        if (!cache->Cache[i].valid)
-            return i;
+static int find_empty(void) {
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
+        if (!cache->Cache[i].valid) return i;
     }
     return -1;
 }
 
 /* 返回 LRU（最近最少使用）缓存行下标，否则返回 -1。调用者需已持有锁。 */
-static int find_lru(void)
-{
+static int find_lru(void) {
     int idx = -1;
     int max_ts = -1;
-    for (int i = 0; i < MAX_CACHE_NUM; i++)
-    {
-        if (!cache->Cache[i].valid)
-            continue;
-        if (cache->Cache[i].timestamp > max_ts)
-        {
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
+        if (!cache->Cache[i].valid) continue;
+        if (cache->Cache[i].timestamp > max_ts) {
             max_ts = cache->Cache[i].timestamp;
             idx = i;
         }
@@ -1431,27 +1327,20 @@ static int find_lru(void)
  * - 所有有效行 timestamp++；
  * - 被访问的那一行设为 0（最新使用）。
  */
-static void touch(int idx)
-{
-    for (int i = 0; i < MAX_CACHE_NUM; i++)
-    {
-        if (!cache->Cache[i].valid)
-            continue;
+static void touch(int idx) {
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
+        if (!cache->Cache[i].valid) continue;
         cache->Cache[i].timestamp++;
     }
-    if (idx >= 0 && idx < MAX_CACHE_NUM && cache->Cache[idx].valid)
-        cache->Cache[idx].timestamp = 0;
+    if (idx >= 0 && idx < MAX_CACHE_NUM && cache->Cache[idx].valid) cache->Cache[idx].timestamp = 0;
 }
 
 /* 分配并初始化缓存元数据。 */
-int init(void)
-{
+int init(void) {
     cache = calloc(1, sizeof(Cache));
-    if (!cache)
-        return -1;
+    if (!cache) return -1;
     cache->used_cache = 0;
-    for (int i = 0; i < MAX_CACHE_NUM; i++)
-    {
+    for (int i = 0; i < MAX_CACHE_NUM; i++) {
         cache->Cache[i].valid = 0;
         cache->Cache[i].timestamp = 0;
         cache->Cache[i].size = 0;
@@ -1468,21 +1357,16 @@ int init(void)
  * - 在持锁状态下把缓存内容拷贝到栈上临时缓冲区，随后释放锁，再调用 rio_writen()。
  * - 这样可以避免在“向客户端写数据”这种潜在慢操作期间长期占用缓存锁。
  */
-int query(rio_t *p, string url)
-{
-    if (!cache)
-        return 0;
+int query(rio_t *p, string url) {
+    if (!cache) return 0;
 
     P(&cache_mutex);
     int idx = find_line(url);
-    if (idx >= 0)
-    {
+    if (idx >= 0) {
         char tmp[MAX_OBJECT_SIZE];
         int size = cache->Cache[idx].size;
-        if (size < 0)
-            size = 0;
-        if (size > MAX_OBJECT_SIZE)
-            size = MAX_OBJECT_SIZE;
+        if (size < 0) size = 0;
+        if (size > MAX_OBJECT_SIZE) size = MAX_OBJECT_SIZE;
         memcpy(tmp, cache->Cache[idx].content, size);
         touch(idx);
         V(&cache_mutex);
@@ -1501,28 +1385,21 @@ int query(rio_t *p, string url)
  * - 否则优先使用空行；若无空行则淘汰 LRU 行。
  * - 仅缓存 size 在 [0, MAX_OBJECT_SIZE] 范围内的对象。
  */
-int add(string url, char buf[], int size)
-{
-    if (!cache)
-        return -1;
-    if (size < 0 || size > MAX_OBJECT_SIZE)
-        return -1;
+int add(string url, char buf[], int size) {
+    if (!cache) return -1;
+    if (size < 0 || size > MAX_OBJECT_SIZE) return -1;
 
     P(&cache_mutex);
 
     int idx = find_line(url);
-    if (idx < 0)
-    {
+    if (idx < 0) {
         idx = find_empty();
-        if (idx < 0)
-            idx = find_lru();
-        if (idx < 0)
-        {
+        if (idx < 0) idx = find_lru();
+        if (idx < 0) {
             V(&cache_mutex);
             return -1;
         }
-        if (!cache->Cache[idx].valid)
-            cache->used_cache++;
+        if (!cache->Cache[idx].valid) cache->used_cache++;
     }
 
     cache->Cache[idx].valid = 1;

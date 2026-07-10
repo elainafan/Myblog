@@ -5,7 +5,7 @@ categories:
     - 操作系统
 updates:
     - date: 2026-07-10
-      content: 重整并扩充 CSAPP 第 2–12 章，补充关键例题、系统接口与实验相关细节。
+      content: 重整并扩充 CSAPP 第 2–12 章，调整课程与 Lab 顺序，并统一代码块格式。
 seriesExclude: true
 ---
 

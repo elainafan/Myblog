@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-08
 hidden: true
-seriesOrder: 27
+seriesOrder: 7
 ---
 
 ## 异常控制流（Exceptional Control Flow，ECF）
@@ -162,14 +162,14 @@ seriesOrder: 27
 - 进行函数包装
 
 ```c
-pid_t Fork(){
+pid_t Fork() {
     pid_t pid;
-    if((pid=fork())<0){
+    if ((pid = fork()) < 0) {
         unix_error("fork error");
     }
     return pid;
 }
-pid=Fork();
+pid = Fork();
 ```
 
 ## 进程控制（Process Control）
@@ -214,7 +214,7 @@ pid=Fork();
 - 父进程通过调用``waitpid``函数等待子进程终止或者停止。
 
 ```c
-pid_t waitpid(pid_t pid,int* statusp,int options);
+pid_t waitpid(pid_t pid, int* statusp, int options);
 ```
 
 - ``waitpid``函数的三个参数：
@@ -251,8 +251,7 @@ pid_t wait(int *statusp)
 #include "csapp.h"
 #define N 2
 
-int main()
-{
+int main() {
     int status, i;
     pid_t pid;
 
@@ -318,7 +317,7 @@ int execve(const char *filename, const char *argv[], const char *envp[]);
 - 对于 ``LD_PRELOAD=/usr/lib/libkdebug.so ls -l /usr/include`` 这样的指令，参数列表和环境变量需要分开看。
 - 参数列表保存传递给新程序的参数，其栈布局见图。
 
-```c
+```text
 argv[0] -> "ls" // 可执行文件名
 argv[1] -> "-l" // 参数 1
 argv[2] -> "/usr/include" // 参数 2
@@ -327,7 +326,7 @@ argv[3] -> NULL
 
 - 环境变量，即``key=value``的键值对
 
-```c
+```text
 envp[0] -> "LD_PRELOAD=/usr/lib/libkdebug.so"
 envp[1] -> NULL
 ```
@@ -351,7 +350,7 @@ Shell 的核心逻辑是读命令、解析命令，再执行命令。
 - ``Shell``负责解释用户命令，并执行相应的操作。
 - ``Shell`` 命令可以是内置命令或外部程序。对于外部程序，Shell 会创建一个子进程来执行；若命令以 ``&`` 结尾，就放到后台执行，否则在前台执行。代码框架可以写成这样。
 
-```c
+```text
 while (true) {
     读取命令行输入;
     if (命令为空) {
@@ -442,7 +441,7 @@ int setpgid(pid_t pid, pid_t pgid);
 - 用``kill``函数发送信号
 
 ```c
-int kill(pid_t pid,int sig)
+int kill(pid_t pid, int sig)
 ```
 
 - 若``pid>0``，将信号``sig``发送给``PID``为``pid``的进程。
@@ -472,7 +471,7 @@ unsigned int alarm(unsigned int secs);
 - 可以使用 ``signal`` 修改除了 ``SIGKILL`` 和 ``SIGSTOP`` 之外的信号处理方式：
 
 ```c
-typedef void (*sighandler_t)(int); // 函数指针类型
+typedef void (*sighandler_t)(int);  // 函数指针类型
 sighandler_t signal(int signum, sighandler_t handler);
 ```
 
@@ -490,8 +489,7 @@ sa.sa_handler = sigchld_handler;
 sigemptyset(&sa.sa_mask);
 sa.sa_flags = SA_RESTART;
 
-if (sigaction(SIGCHLD, &sa, NULL) < 0)
-    unix_error("sigaction error");
+if (sigaction(SIGCHLD, &sa, NULL) < 0) unix_error("sigaction error");
 ```
 
 ``SA_RESTART`` 会让一部分被信号打断的慢速系统调用自动重启，但并非所有接口都受它影响。调用代码仍要知道何时检查 ``errno == EINTR`` 并重试。
@@ -508,15 +506,15 @@ if (sigaction(SIGCHLD, &sa, NULL) < 0)
 - 显式阻塞机制：使用``sigprocmask``函数。
 
 ```c
-int sigprocmask(int how, const sigset_t *set, sigset_t *oldset); // 改变当前阻塞的信号集合
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);  // 改变当前阻塞的信号集合
 
 // 以下操作 sigset_t 的函数本质都是对位向量进行操作
-int sigemptyset(sigset_t *set); // 初始化信号集合为空
-int sigfillset(sigset_t *set); // 将所有信号添加到信号集合中
-int sigaddset(sigset_t *set, int signum); // 将指定信号添加到信号集合中
-int sigdelset(sigset_t *set, int signum); // 从信号集合中删除指定信号
+int sigemptyset(sigset_t *set);            // 初始化信号集合为空
+int sigfillset(sigset_t *set);             // 将所有信号添加到信号集合中
+int sigaddset(sigset_t *set, int signum);  // 将指定信号添加到信号集合中
+int sigdelset(sigset_t *set, int signum);  // 从信号集合中删除指定信号
 
-int sigismember(const sigset_t *set, int signum); // 返回：若 signum 是 set 的成员则为 1，否则为 0。
+int sigismember(const sigset_t *set, int signum);  // 返回：若 signum 是 set 的成员则为 1，否则为 0。
 ```
 
 - ``sigprocmask``：改变当前阻塞的信号集合，取决于``how``的值：
@@ -589,8 +587,7 @@ exit(0);
 一个更完整的 ``SIGCHLD`` 处理程序通常写成：
 
 ```c
-void sigchld_handler(int sig)
-{
+void sigchld_handler(int sig) {
     int olderrno = errno;
     int status;
     pid_t pid;
@@ -614,17 +611,16 @@ void sigchld_handler(int sig)
 
 ```c
 #include "csapp.h"
-volatile sig_atomic_t pid; // 定义一个易失性的原子类型变量 pid
-void sigchld_handler(int s) // 定义一个处理 SIGCHLD 信号的处理函数
+volatile sig_atomic_t pid;   // 定义一个易失性的原子类型变量 pid
+void sigchld_handler(int s)  // 定义一个处理 SIGCHLD 信号的处理函数
 {
-    int olderrno = errno; // 保存当前的 errno 值
-    pid = waitpid(-1, NULL, 0); // 等待任意子进程结束，并将其 pid 保存到全局变量 pid 中
-    errno = olderrno; // 恢复之前的 errno 值
+    int olderrno = errno;        // 保存当前的 errno 值
+    pid = waitpid(-1, NULL, 0);  // 等待任意子进程结束，并将其 pid 保存到全局变量 pid 中
+    errno = olderrno;            // 恢复之前的 errno 值
 }
-void sigint_handler(int s){};
+void sigint_handler(int s) {};
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     sigset_t mask, prev;
 
     Signal(SIGCHLD, sigchld_handler);
@@ -634,7 +630,7 @@ int main(int argc, char **argv)
 
     while (1) {
         Sigprocmask(SIG_BLOCK, &mask, &prev); /* 阻塞 SIGCHLD */
-        if (Fork() == 0) /* 子进程 */
+        if (Fork() == 0)                      /* 子进程 */
             exit(0);
 
         /* 父进程 */
@@ -653,7 +649,7 @@ int main(int argc, char **argv)
 
 ```c
 /* 等待接收 SIGCHLD 信号 (可能引发竞争条件) */
-while (!pid)  /* 竞争! */
+while (!pid) /* 竞争! */
     pause();
 ```
 
@@ -661,7 +657,7 @@ while (!pid)  /* 竞争! */
 
 ```c
 /* 等待接收 SIGCHLD 信号 (速度太慢) */
-while (!pid)  /* 太慢! */
+while (!pid) /* 太慢! */
     sleep(1);
 ```
 
@@ -682,17 +678,16 @@ sigprocmask(SIG_SETMASK, &prev, NULL);
 
 ```c
 #include "csapp.h"
-volatile sig_atomic_t pid; // 定义一个易失性的原子类型变量 pid
-void sigchld_handler(int s) // 定义一个处理 SIGCHLD 信号的处理函数
+volatile sig_atomic_t pid;   // 定义一个易失性的原子类型变量 pid
+void sigchld_handler(int s)  // 定义一个处理 SIGCHLD 信号的处理函数
 {
-    int olderrno = errno; // 保存当前的 errno 值
-    pid = waitpid(-1, NULL, 0); // 等待任意子进程结束，并将其 pid 保存到全局变量 pid 中
-    errno = olderrno; // 恢复之前的 errno 值
+    int olderrno = errno;        // 保存当前的 errno 值
+    pid = waitpid(-1, NULL, 0);  // 等待任意子进程结束，并将其 pid 保存到全局变量 pid 中
+    errno = olderrno;            // 恢复之前的 errno 值
 }
-void sigint_handler(int s){};
+void sigint_handler(int s) {};
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     sigset_t mask, prev;
 
     Signal(SIGCHLD, sigchld_handler);
@@ -702,13 +697,12 @@ int main(int argc, char **argv)
 
     while (1) {
         Sigprocmask(SIG_BLOCK, &mask, &prev); /* 阻塞 SIGCHLD */
-        if (Fork() == 0) /* 子进程 */
+        if (Fork() == 0)                      /* 子进程 */
             exit(0);
 
         /* 等待接收 SIGCHLD */
         pid = 0;
-        while (!pid)
-            sigsuspend(&prev);
+        while (!pid) sigsuspend(&prev);
 
         /* 可选地解除阻塞 SIGCHLD */
         Sigprocmask(SIG_SETMASK, &prev, NULL);

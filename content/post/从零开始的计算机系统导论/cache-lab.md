@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的cache-lab
 hidden: true
-seriesOrder: 5
+seriesOrder: 16
 ---
 # 从零开始的Cache Lab
 
@@ -162,18 +162,18 @@ sudo apt-get install valgrind
 
 ```c
 struct Line {
-    int valid; // 有效位
-    int tag; // 标记位
-    int time_stamp; // 时间戳
-};// 缓冲行
+    int valid;       // 有效位
+    int tag;         // 标记位
+    int time_stamp;  // 时间戳
+};  // 缓冲行
 
 typedef struct Line line;
 
 struct _Cache {
-    int S;  // 组数
-    int E;  // 相联度
-    int B;  // 块大小
-    line** l; // 二维指针表明缓存
+    int S;     // 组数
+    int E;     // 相联度
+    int B;     // 块大小
+    line** l;  // 二维指针表明缓存
 };
 
 typedef struct _Cache Cache;
@@ -187,9 +187,7 @@ typedef struct _Cache Cache;
 首先，与计概/程设/数算中课程不同，此处的``main``函数需要从命令行中接受参数，因此其参数应当如下：
 
 ```c
-int main(int argc, char** argv) {
-
-}
+int main(int argc, char** argv) {}
 ```
 
 其中，``argc``记录命令行参数总数量（包括程序本身名称），``argv``表示指向字符串的指针数组。
@@ -212,31 +210,31 @@ int main(int argc, char** argv) {
 
 ```c
 char opt;
-    while (-1 != (opt = getopt(argc, argv, "hvs:E:b:t:"))) {
-        switch (opt) {
-            case 'h':// 输出帮助
-                print_help();
-                exit(0);
-            case 'v':// 是否跟踪
-                verbose = 1;
-                break;
-            case 's':// 索引位大小
-                s = atoi(optarg);
-                break;
-            case 'E':// 相联度大小
-                E = atoi(optarg);
-                break;
-            case 'b':// 块大小
-                b = atoi(optarg);
-                break;
-            case 't':// 待跟踪的文件名
-                p = fopen(optarg, "r");
-                break;
-            default:
-                print_help();
-                exit(0);
-        }
+while (-1 != (opt = getopt(argc, argv, "hvs:E:b:t:"))) {
+    switch (opt) {
+        case 'h':  // 输出帮助
+            print_help();
+            exit(0);
+        case 'v':  // 是否跟踪
+            verbose = 1;
+            break;
+        case 's':  // 索引位大小
+            s = atoi(optarg);
+            break;
+        case 'E':  // 相联度大小
+            E = atoi(optarg);
+            break;
+        case 'b':  // 块大小
+            b = atoi(optarg);
+            break;
+        case 't':  // 待跟踪的文件名
+            p = fopen(optarg, "r");
+            break;
+        default:
+            print_help();
+            exit(0);
     }
+}
 ```
 
 其中，当输入非法参数或者``-h``时，跳转到``print_help``函数，输出帮助内容并退出。
@@ -246,9 +244,9 @@ char opt;
 根据``writeup``，在``main``函数的结尾，需要调用``cachelab.h``中的``printSummary``函数输出``命中/不命中/冲突``数量，与标准模拟器对比，因此在文件中加上以下两行：
 
 ```c
-#include "cachelab.h" //printsummary
+#include "cachelab.h"  //printsummary
 
-printSummary(hit_cnt, miss_cnt, eviction_cnt);// 输出三个计数
+printSummary(hit_cnt, miss_cnt, eviction_cnt);  // 输出三个计数
 ```
 
 此时``hit_cnt/miss_cnt/eviction_cnt``分别表示``命中/不命中/冲突``数量，在全局变量中定义。
@@ -256,10 +254,10 @@ printSummary(hit_cnt, miss_cnt, eviction_cnt);// 输出三个计数
 为了后续讨论方便，将全局变量写出：
 
 ```c
-int verbose = 0, s, E, b, t; // 读入的几个参数
-int hit_cnt = 0, miss_cnt = 0, eviction_cnt = 0; // 输出的几个参数
-Cache* cache; // 缓存指针
-FILE* p; // 文件读写
+int verbose = 0, s, E, b, t;                      // 读入的几个参数
+int hit_cnt = 0, miss_cnt = 0, eviction_cnt = 0;  // 输出的几个参数
+Cache* cache;                                     // 缓存指针
+FILE* p;                                          // 文件读写
 ```
 
 结合以上，得到``main``函数的大致框架：
@@ -269,22 +267,22 @@ int main(int argc, char** argv) {
     int opt;
     while (-1 != (opt = getopt(argc, argv, "hvs:E:b:t:"))) {
         switch (opt) {
-            case 'h':// 输出版主
+            case 'h':  // 输出版主
                 print_help();
                 exit(0);
-            case 'v':// 是否跟踪
+            case 'v':  // 是否跟踪
                 verbose = 1;
                 break;
-            case 's':// 索引位大小
+            case 's':  // 索引位大小
                 s = atoi(optarg);
                 break;
-            case 'E':// 相联度大小
+            case 'E':  // 相联度大小
                 E = atoi(optarg);
                 break;
-            case 'b':// 块大小
+            case 'b':  // 块大小
                 b = atoi(optarg);
                 break;
-            case 't':// 待跟踪的文件名
+            case 't':  // 待跟踪的文件名
                 p = fopen(optarg, "r");
                 break;
             default:
@@ -293,7 +291,7 @@ int main(int argc, char** argv) {
         }
     }
     // 此处为模拟执行函数，还未讨论先放空
-    printSummary(hit_cnt, miss_cnt, eviction_cnt);// 输出三个计数
+    printSummary(hit_cnt, miss_cnt, eviction_cnt);  // 输出三个计数
     return 0;
 }
 ```
@@ -315,7 +313,7 @@ void print_help() {
     printf("  linux>  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace");
     printf("  linux>  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace");
     return;
-}// 当遇到-h或者结束的时候输出，模仿行为
+}  // 当遇到-h或者结束的时候输出，模仿行为
 ```
 
 ### 缓存初始化/内存分配
@@ -341,13 +339,13 @@ void init_cache() {
     for (int i = 0; i < S; i++) {
         cache->l[i] = malloc(sizeof(line) * E);
         for (int j = 0; j < E; j++) {
-            cache->l[i][j].tag = -1; // 标记位记为1，表示没有标记
-            cache->l[i][j].time_stamp = 0; // 时间戳初始化为0
-            cache->l[i][j].valid = 0; // 有效位初始化为0
+            cache->l[i][j].tag = -1;        // 标记位记为1，表示没有标记
+            cache->l[i][j].time_stamp = 0;  // 时间戳初始化为0
+            cache->l[i][j].valid = 0;       // 有效位初始化为0
         }
     }
     return;
-} // 初始化Cache的空间
+}  // 初始化Cache的空间
 ```
 
 同时，别忘了在主函数中添加``init_cache``函数的调用入口。
@@ -364,8 +362,8 @@ void init_cache() {
 回忆第二章和``Data Lab``中``掩码``的相关知识，以及读入的地址是``64位无符号整数``(因为只需要其位表示，无符号整数方便逻辑右移)，可以这样取出``索引位``和``标记位``：
 
 ```c
-int opt_s = (address >> b) & ((1ULL << s) - 1); // 掩码取出索引位
-int opt_tag = address >> (b + s);// 掩码取出标记位
+int opt_s = (address >> b) & ((1ULL << s) - 1);  // 掩码取出索引位
+int opt_tag = address >> (b + s);                // 掩码取出标记位
 ```
 
 同时，考虑跟踪逻辑，结合以上思路，可以写出以下代码：
@@ -376,26 +374,26 @@ void get_trace() {
     unsigned long address;
     int size;
     while (fscanf(p, "%s %lx,%d\n", &opt, &address, &size) > 0) {
-        int opt_s = (address >> b) & ((1ULL << s) - 1); // 掩码取出索引位
-        int opt_tag = address >> (b + s);// 掩码取出标记位
-        if (verbose) printf("%c %lx,%d\n", opt, address, size); // 输出跟踪
+        int opt_s = (address >> b) & ((1ULL << s) - 1);          // 掩码取出索引位
+        int opt_tag = address >> (b + s);                        // 掩码取出标记位
+        if (verbose) printf("%c %lx,%d\n", opt, address, size);  // 输出跟踪
         switch (opt) {
             case 'L':
-                update(opt_s, opt_tag);// 进行数据加载
+                update(opt_s, opt_tag);  // 进行数据加载
                 break;
             case 'M':
-                update(opt_s, opt_tag);// 进行数据加载
-                update(opt_s, opt_tag);// 进行数据存储
+                update(opt_s, opt_tag);  // 进行数据加载
+                update(opt_s, opt_tag);  // 进行数据存储
                 break;
             case 'S':
-                update(opt_s, opt_tag);// 进行数据存储
+                update(opt_s, opt_tag);  // 进行数据存储
                 break;
             default:
                 continue;
         }
     }
     return;
-}// 处理trace文件中的操作
+}  // 处理trace文件中的操作
 ```
 
 其中，``update``函数用于整合整体的缓存操作逻辑，即对缓存进行访问，它接受当前地址的索引位``opt_s``和标记位``opt_tag``。
@@ -413,24 +411,24 @@ void get_trace() {
 
 ```c
 void update(int opt_s, int opt_tag) {
-    int tem = get_index(opt_s, opt_tag);//是否能够匹配
-    if (tem == -1) {// 如果找不到
-        miss_cnt++;// 不命中计数器增加
-        if (verbose) printf("miss "); // 输出跟踪
-        int flag = is_full(opt_s);// 是否是因为冷不命中
-        if (flag == -1) {// 如果冲突不命中
-            eviction_cnt++; // 冲突不命中计数器增加
-            if (verbose) printf("eviction "); // 输出跟踪
-            flag = find_LRU(opt_s);// 找到LRU策略对应的行序号
+    int tem = get_index(opt_s, opt_tag);       // 是否能够匹配
+    if (tem == -1) {                           // 如果找不到
+        miss_cnt++;                            // 不命中计数器增加
+        if (verbose) printf("miss ");          // 输出跟踪
+        int flag = is_full(opt_s);             // 是否是因为冷不命中
+        if (flag == -1) {                      // 如果冲突不命中
+            eviction_cnt++;                    // 冲突不命中计数器增加
+            if (verbose) printf("eviction ");  // 输出跟踪
+            flag = find_LRU(opt_s);            // 找到LRU策略对应的行序号
         }
-        update_2(flag, opt_s, opt_tag);// 更新时间戳和对应行的标记位/有效位
+        update_2(flag, opt_s, opt_tag);  // 更新时间戳和对应行的标记位/有效位
         return;
     }
-    hit_cnt++;// 命中计数器增加
-    if (verbose) printf("hit ");// 输出跟踪
-    update_2(tem, opt_s, opt_tag);// 更新时间戳和对应行的标记位/有效位
+    hit_cnt++;                      // 命中计数器增加
+    if (verbose) printf("hit ");    // 输出跟踪
+    update_2(tem, opt_s, opt_tag);  // 更新时间戳和对应行的标记位/有效位
     return;
-}// 进行对应的读写访问操作
+}  // 进行对应的读写访问操作
 ```
 
 其中，``get_index``用于查找索引位对应的组中是否存在标记位相同并且有效位有效的行，``is_full``用于检测是否是冷不命中，``find_LRU``用于找到当前组中最早更新的行，``update_2``用于更新找到的空行/冲突LRU行。
@@ -444,10 +442,10 @@ void update(int opt_s, int opt_tag) {
 int get_index(int opt_s, int opt_tag) {
     for (int i = 0; i < cache->E; i++) {
         if (cache->l[opt_s][i].tag == opt_tag && cache->l[opt_s][i].valid == 1)
-            return i; // 如果存在有效位有效，并且标记位相同的行，就返回索引
+            return i;  // 如果存在有效位有效，并且标记位相同的行，就返回索引
     }
-    return -1; // 否则，表示未找到
-}// 寻找是否存在能够匹配的行
+    return -1;  // 否则，表示未找到
+}  // 寻找是否存在能够匹配的行
 ```
 
 ### 判断是否冷不命中
@@ -462,10 +460,10 @@ int get_index(int opt_s, int opt_tag) {
 ```c
 int is_full(int opt_s) {
     for (int i = 0; i < cache->E; i++) {
-        if (cache->l[opt_s][i].valid == 0) return i;// 如果找到空行就返回
+        if (cache->l[opt_s][i].valid == 0) return i;  // 如果找到空行就返回
     }
-    return -1;// 否则返回-1表示没有空行
-}// 判断是冷不命中还是冲突不命中
+    return -1;  // 否则返回-1表示没有空行
+}  // 判断是冷不命中还是冲突不命中
 ```
 
 ### 冲突不命中/LRU策略
@@ -483,10 +481,10 @@ int find_LRU(int opt_s) {
         if (cache->l[opt_s][i].time_stamp > tem_stamp) {
             idx = i;
             tem_stamp = cache->l[opt_s][i].time_stamp;
-        }// 比较时间戳，时间戳越大说明越早被使用
+        }  // 比较时间戳，时间戳越大说明越早被使用
     }
     return idx;
-}// 根据LRU策略，在填满的组中寻找最远未被使用的行
+}  // 根据LRU策略，在填满的组中寻找最远未被使用的行
 ```
 
 ### 更新缓存
@@ -506,7 +504,7 @@ void update_2(int flag, int opt_s, int opt_tag) {
         if (cache->l[opt_s][i].valid == 1) cache->l[opt_s][i].time_stamp++;
     }
     return;
-}// 更新时间戳，同时更新被驱逐或者填充的行的标记位/有效位
+}  // 更新时间戳，同时更新被驱逐或者填充的行的标记位/有效位
 // 时间戳越大，表示越久没被使用；同样地，刚刚被使用的行的时间戳为0。
 ```
 
@@ -520,7 +518,7 @@ void free_cache() {
     free(cache->l);
     free(cache);
     return;
-}// 释放全部内存
+}  // 释放全部内存
 ```
 
 同时，不要忘了在``main``函数中加上``free``函数的调用入口。
@@ -531,32 +529,32 @@ void free_cache() {
 ```c
 #include <getopt.h>  // getopt
 #include <stdio.h>   // fscanf
-#include <stdlib.h> //atoi
+#include <stdlib.h>  //atoi
 
-#include "cachelab.h" //printsummary
+#include "cachelab.h"  //printsummary
 #include "contracts.h"
 
 struct Line {
-    int valid; // 有效位
-    int tag; // 标记位
-    int time_stamp; // 时间戳
-};// 缓冲行
+    int valid;       // 有效位
+    int tag;         // 标记位
+    int time_stamp;  // 时间戳
+};  // 缓冲行
 
 typedef struct Line line;
 
 struct _Cache {
-    int S;  // 组数
-    int E;  // 相联度
-    int B;  // 块大小
-    line** l; // 二维指针表明缓存
+    int S;     // 组数
+    int E;     // 相联度
+    int B;     // 块大小
+    line** l;  // 二维指针表明缓存
 };
 
 typedef struct _Cache Cache;
 
-int verbose = 0, s, E, b, t; // 读入的几个参数
-int hit_cnt = 0, miss_cnt = 0, eviction_cnt = 0; // 输出的几个参数
-Cache* cache; // 缓存指针
-FILE* p; // 文件读写
+int verbose = 0, s, E, b, t;                      // 读入的几个参数
+int hit_cnt = 0, miss_cnt = 0, eviction_cnt = 0;  // 输出的几个参数
+Cache* cache;                                     // 缓存指针
+FILE* p;                                          // 文件读写
 
 void init_cache() {
     int S = 1 << s;
@@ -569,21 +567,21 @@ void init_cache() {
     for (int i = 0; i < S; i++) {
         cache->l[i] = malloc(sizeof(line) * E);
         for (int j = 0; j < E; j++) {
-            cache->l[i][j].tag = -1; // 标记位记为1，表示没有标记
-            cache->l[i][j].time_stamp = 0; // 时间戳初始化为0
-            cache->l[i][j].valid = 0; // 有效位初始化为0
+            cache->l[i][j].tag = -1;        // 标记位记为1，表示没有标记
+            cache->l[i][j].time_stamp = 0;  // 时间戳初始化为0
+            cache->l[i][j].valid = 0;       // 有效位初始化为0
         }
     }
     return;
-} // 初始化Cache的空间
+}  // 初始化Cache的空间
 
 int get_index(int opt_s, int opt_tag) {
     for (int i = 0; i < cache->E; i++) {
         if (cache->l[opt_s][i].tag == opt_tag && cache->l[opt_s][i].valid == 1)
-            return i; // 如果存在有效位有效，并且标记位相同的行，就返回索引
+            return i;  // 如果存在有效位有效，并且标记位相同的行，就返回索引
     }
-    return -1; // 否则，表示未找到
-}// 寻找是否存在能够匹配的行
+    return -1;  // 否则，表示未找到
+}  // 寻找是否存在能够匹配的行
 
 int find_LRU(int opt_s) {
     int tem_stamp = 0;
@@ -592,17 +590,17 @@ int find_LRU(int opt_s) {
         if (cache->l[opt_s][i].time_stamp > tem_stamp) {
             idx = i;
             tem_stamp = cache->l[opt_s][i].time_stamp;
-        }// 比较时间戳，时间戳越大说明越早被使用
+        }  // 比较时间戳，时间戳越大说明越早被使用
     }
     return idx;
-}// 根据LRU策略，在填满的组中寻找最远未被使用的行
+}  // 根据LRU策略，在填满的组中寻找最远未被使用的行
 
 int is_full(int opt_s) {
     for (int i = 0; i < cache->E; i++) {
-        if (cache->l[opt_s][i].valid == 0) return i;// 如果找到空行就返回
+        if (cache->l[opt_s][i].valid == 0) return i;  // 如果找到空行就返回
     }
-    return -1;// 否则返回-1表示没有空行
-}// 判断是冷不命中还是冲突不命中
+    return -1;  // 否则返回-1表示没有空行
+}  // 判断是冷不命中还是冲突不命中
 
 void update_2(int flag, int opt_s, int opt_tag) {
     for (int i = 0; i < cache->E; i++) {
@@ -615,54 +613,54 @@ void update_2(int flag, int opt_s, int opt_tag) {
         if (cache->l[opt_s][i].valid == 1) cache->l[opt_s][i].time_stamp++;
     }
     return;
-}// 更新时间戳，同时更新被驱逐或者填充的行的标记位/有效位
+}  // 更新时间戳，同时更新被驱逐或者填充的行的标记位/有效位
 // 时间戳越大，表示越久没被使用；同样地，刚刚被使用的行的时间戳为0。
 
 void update(int opt_s, int opt_tag) {
-    int tem = get_index(opt_s, opt_tag);//是否存在空行
-    if (tem == -1) {// 如果找不到
-        miss_cnt++;// 不命中计数器增加
-        if (verbose) printf("miss "); // 输出跟踪
-        int flag = is_full(opt_s);// 是否是因为冷不命中
-        if (flag == -1) {// 如果冲突不命中
-            eviction_cnt++; // 冲突不命中计数器增加
-            if (verbose) printf("eviction "); // 输出跟踪
-            flag = find_LRU(opt_s);// 找到LRU策略对应的行序号
+    int tem = get_index(opt_s, opt_tag);       // 是否存在空行
+    if (tem == -1) {                           // 如果找不到
+        miss_cnt++;                            // 不命中计数器增加
+        if (verbose) printf("miss ");          // 输出跟踪
+        int flag = is_full(opt_s);             // 是否是因为冷不命中
+        if (flag == -1) {                      // 如果冲突不命中
+            eviction_cnt++;                    // 冲突不命中计数器增加
+            if (verbose) printf("eviction ");  // 输出跟踪
+            flag = find_LRU(opt_s);            // 找到LRU策略对应的行序号
         }
-        update_2(flag, opt_s, opt_tag);// 更新时间戳和对应行的标记位/有效位
+        update_2(flag, opt_s, opt_tag);  // 更新时间戳和对应行的标记位/有效位
         return;
     }
-    hit_cnt++;// 命中计数器增加
-    if (verbose) printf("hit ");// 输出跟踪
-    update_2(tem, opt_s, opt_tag);// 更新时间戳和对应行的标记位/有效位
+    hit_cnt++;                      // 命中计数器增加
+    if (verbose) printf("hit ");    // 输出跟踪
+    update_2(tem, opt_s, opt_tag);  // 更新时间戳和对应行的标记位/有效位
     return;
-}// 进行对应的读写访问操作
+}  // 进行对应的读写访问操作
 
 void get_trace() {
     char opt;
     unsigned long address;
     int size;
     while (fscanf(p, "%s %lx,%d\n", &opt, &address, &size) > 0) {
-        int opt_s = (address >> b) & ((1ULL << s) - 1); // 掩码取出索引位
-        int opt_tag = address >> (b + s);// 掩码取出标记位
-        if (verbose) printf("%c %lx,%d\n", opt, address, size); // 输出跟踪
+        int opt_s = (address >> b) & ((1ULL << s) - 1);          // 掩码取出索引位
+        int opt_tag = address >> (b + s);                        // 掩码取出标记位
+        if (verbose) printf("%c %lx,%d\n", opt, address, size);  // 输出跟踪
         switch (opt) {
             case 'L':
-                update(opt_s, opt_tag);// 进行数据加载
+                update(opt_s, opt_tag);  // 进行数据加载
                 break;
             case 'M':
-                update(opt_s, opt_tag);// 进行数据加载
-                update(opt_s, opt_tag);// 进行数据存储
+                update(opt_s, opt_tag);  // 进行数据加载
+                update(opt_s, opt_tag);  // 进行数据存储
                 break;
             case 'S':
-                update(opt_s, opt_tag);// 进行数据存储
+                update(opt_s, opt_tag);  // 进行数据存储
                 break;
             default:
                 continue;
         }
     }
     return;
-}// 处理trace文件中的操作
+}  // 处理trace文件中的操作
 
 void free_cache() {
     int S = cache->S;
@@ -670,7 +668,7 @@ void free_cache() {
     free(cache->l);
     free(cache);
     return;
-}// 释放全部内存
+}  // 释放全部内存
 
 void print_help() {
     printf("Usage: ./csim-ref [-hv] -s <num> -E <num> -b <num> -t <file>\n");
@@ -686,28 +684,28 @@ void print_help() {
     printf("  linux>  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace");
     printf("  linux>  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace");
     return;
-}// 当遇到-h或者结束的时候输出，模仿行为
+}  // 当遇到-h或者结束的时候输出，模仿行为
 
 int main(int argc, char** argv) {
     char opt;
     while (-1 != (opt = getopt(argc, argv, "hvs:E:b:t:"))) {
         switch (opt) {
-            case 'h':// 输出帮助
+            case 'h':  // 输出帮助
                 print_help();
                 exit(0);
-            case 'v':// 是否跟踪
+            case 'v':  // 是否跟踪
                 verbose = 1;
                 break;
-            case 's':// 索引位大小
+            case 's':  // 索引位大小
                 s = atoi(optarg);
                 break;
-            case 'E':// 相联度大小
+            case 'E':  // 相联度大小
                 E = atoi(optarg);
                 break;
-            case 'b':// 块大小
+            case 'b':  // 块大小
                 b = atoi(optarg);
                 break;
-            case 't':// 待跟踪的文件名
+            case 't':  // 待跟踪的文件名
                 p = fopen(optarg, "r");
                 break;
             default:
@@ -715,10 +713,10 @@ int main(int argc, char** argv) {
                 exit(0);
         }
     }
-    init_cache();// 初始化缓存
-    get_trace();// 对文件处理
-    free_cache();// 释放缓存
-    printSummary(hit_cnt, miss_cnt, eviction_cnt);// 输出三个计数
+    init_cache();                                   // 初始化缓存
+    get_trace();                                    // 对文件处理
+    free_cache();                                   // 释放缓存
+    printSummary(hit_cnt, miss_cnt, eviction_cnt);  // 输出三个计数
     return 0;
 }
 ```
@@ -789,9 +787,9 @@ int main(int argc, char** argv) {
 根据以上思路，编写代码如下：
 
 ```c
-void trans_32_32(int M, int N, int A[N][M], int B[M][N]);// 先声明函数
+void trans_32_32(int M, int N, int A[N][M], int B[M][N]);  // 先声明函数
 
-if (M == 32 && N == 32) trans_32_32(M, N, A, B);//增加在transpose_submit中
+if (M == 32 && N == 32) trans_32_32(M, N, A, B);  // 增加在transpose_submit中
 
 char trans_desc_32_32[] = "8*8 elements per block transpose";
 void trans_32_32(int M, int N, int A[N][M], int B[M][N]) {
@@ -808,7 +806,7 @@ void trans_32_32(int M, int N, int A[N][M], int B[M][N]) {
                 a_4 = A[k][j + 4];
                 a_5 = A[k][j + 5];
                 a_6 = A[k][j + 6];
-                a_7 = A[k][j + 7];//用临时变量取出，增加时间局部性
+                a_7 = A[k][j + 7];  // 用临时变量取出，增加时间局部性
                 B[j + (k - i)][i] = a_0;
                 B[j + (k - i)][i + 1] = a_1;
                 B[j + (k - i)][i + 2] = a_2;
@@ -816,21 +814,21 @@ void trans_32_32(int M, int N, int A[N][M], int B[M][N]) {
                 B[j + (k - i)][i + 4] = a_4;
                 B[j + (k - i)][i + 5] = a_5;
                 B[j + (k - i)][i + 6] = a_6;
-                B[j + (k - i)][i + 7] = a_7;// 先按顺序存在B的相应位置
+                B[j + (k - i)][i + 7] = a_7;  // 先按顺序存在B的相应位置
             }
             for (int k = j; k < j + 8; k++) {
                 for (int v = i; v - i < k - j; v++) {
                     a_0 = B[k][v];
                     B[k][v] = B[j + (v - i)][i + (k - j)];
                     B[j + (v - i)][i + (k - j)] = a_0;
-                }// 对B进行转置，注意类似于冒泡排序的交换只需要一半次数
+                }  // 对B进行转置，注意类似于冒泡排序的交换只需要一半次数
             }
         }
     }
     ENSURES(is_transpose(M, N, A, B));
-}// 8*8分块
+}  // 8*8分块
 
-registerTransFunction(trans_32_32, trans_desc_32_32);// 注册函数，写在registerFunctions中
+registerTransFunction(trans_32_32, trans_desc_32_32);  // 注册函数，写在registerFunctions中
 ```
 
 运行``make``和``./test-trans -M 32 -N 32``指令，得到以下结果：
@@ -869,7 +867,7 @@ registerTransFunction(trans_32_32, trans_desc_32_32);// 注册函数，写在reg
 根据以上思路，编写代码：
 
 ```c
-void trans_64_64(int M, int N, int A[N][M], int B[M][N]);// 先声明函数
+void trans_64_64(int M, int N, int A[N][M], int B[M][N]);  // 先声明函数
 
 char trans_desc_64_64[] = "8*8 elements per block transpose";
 void trans_64_64(int M, int N, int A[N][M], int B[M][N]) {
@@ -882,37 +880,37 @@ void trans_64_64(int M, int N, int A[N][M], int B[M][N]) {
                 a_0 = A[k][j];
                 a_1 = A[k][j + 1];
                 a_2 = A[k][j + 2];
-                a_3 = A[k][j + 3];// 取出A的左上部分
+                a_3 = A[k][j + 3];  // 取出A的左上部分
                 a_4 = A[k][j + 4];
                 a_5 = A[k][j + 5];
                 a_6 = A[k][j + 6];
-                a_7 = A[k][j + 7];// 取出A的右上部分
+                a_7 = A[k][j + 7];  // 取出A的右上部分
                 B[j][k] = a_0;
                 B[j + 1][k] = a_1;
                 B[j + 2][k] = a_2;
-                B[j + 3][k] = a_3;// 左上直接转置存入
+                B[j + 3][k] = a_3;  // 左上直接转置存入
                 B[j][k + 4] = a_4;
                 B[j + 1][k + 4] = a_5;
                 B[j + 2][k + 4] = a_6;
-                B[j + 3][k + 4] = a_7;// 右上作为暂存区，先存转置后的
+                B[j + 3][k + 4] = a_7;  // 右上作为暂存区，先存转置后的
             }
             for (int k = j; k < j + 4; k++) {
                 a_0 = B[k][i + 4];
                 a_1 = B[k][i + 5];
                 a_2 = B[k][i + 6];
-                a_3 = B[k][i + 7];// 取出B的右上部分
+                a_3 = B[k][i + 7];  // 取出B的右上部分
                 a_4 = A[i + 4][k];
                 a_5 = A[i + 5][k];
                 a_6 = A[i + 6][k];
-                a_7 = A[i + 7][k];// 取出A的左下部分
+                a_7 = A[i + 7][k];  // 取出A的左下部分
                 B[k][i + 4] = a_4;
                 B[k][i + 5] = a_5;
                 B[k][i + 6] = a_6;
-                B[k][i + 7] = a_7;// B的右上部分，存上A的左下的转置
+                B[k][i + 7] = a_7;  // B的右上部分，存上A的左下的转置
                 B[k + 4][i] = a_0;
                 B[k + 4][i + 1] = a_1;
                 B[k + 4][i + 2] = a_2;
-                B[k + 4][i + 3] = a_3;// B的左下部分，直接由存好的右上部分提供
+                B[k + 4][i + 3] = a_3;  // B的左下部分，直接由存好的右上部分提供
             }
             for (int k = i + 4; k < i + 8; k++) {
                 a_4 = A[k][j + 4];
@@ -930,13 +928,13 @@ void trans_64_64(int M, int N, int A[N][M], int B[M][N]) {
                     B[k][v] = B[j + (v - i)][i + (k - j)];
                     B[j + (v - i)][i + (k - j)] = a_0;
                 }
-            }// 跟32*32的思路一样，对右下进行转置
+            }  // 跟32*32的思路一样，对右下进行转置
         }
     }
     ENSURES(is_transpose(M, N, A, B));
-}// 采用8*8后细分的策略，进行分块后暂存，再转置，减小不命中次数。
+}  // 采用8*8后细分的策略，进行分块后暂存，再转置，减小不命中次数。
 
-registerTransFunction(trans_64_64, trans_desc_64_64);// 注册函数，写在registerFunctions中
+registerTransFunction(trans_64_64, trans_desc_64_64);  // 注册函数，写在registerFunctions中
 ```
 
 运行``make``和``./test-trans -M 64 -N 64``指令，得到以下结果，表示完成了 $64 \times 64$ ``的矩阵优化``：
@@ -967,7 +965,7 @@ registerTransFunction(trans_64_64, trans_desc_64_64);// 注册函数，写在reg
 根据以上猜测，写出以下代码：
 
 ```c
-void trans_60_68(int M, int N, int A[N][M], int B[M][N]);// 先声明函数
+void trans_60_68(int M, int N, int A[N][M], int B[M][N]);  // 先声明函数
 
 char trans_desc_60_68[] = "8*8/4*4 elements per block";
 void trans_60_68(int M, int N, int A[N][M], int B[M][N]) {
@@ -1002,7 +1000,7 @@ void trans_60_68(int M, int N, int A[N][M], int B[M][N]) {
                 }
             }
         }
-    }// 类似于32*32的思路，实现8*8分块转置
+    }  // 类似于32*32的思路，实现8*8分块转置
     for (int j = 56; j < 60; j += 4) {     // 这是列
         for (int i = 0; i < 68; i += 4) {  // 这是行
             for (int k = i; k < i + 4; k++) {
@@ -1023,7 +1021,7 @@ void trans_60_68(int M, int N, int A[N][M], int B[M][N]) {
                 }
             }
         }
-    }// 将剩余部分进行4*4分块转置
+    }  // 将剩余部分进行4*4分块转置
     for (int j = 0; j < 56; j += 4) {
         for (int i = 64; i < 68; i += 4) {
             for (int k = i; k < i + 4; k++) {
@@ -1044,11 +1042,11 @@ void trans_60_68(int M, int N, int A[N][M], int B[M][N]) {
                 }
             }
         }
-    }// 将剩余部分进行4*4分块转置
+    }  // 将剩余部分进行4*4分块转置
     ENSURES(is_transpose(M, N, A, B));
-}// 先进行8*8分块转置，再进行4*4分块转置
+}  // 先进行8*8分块转置，再进行4*4分块转置
 
-registerTransFunction(trans_64_64, trans_desc_60_68);// 注册函数，写在registerFunctions中
+registerTransFunction(trans_64_64, trans_desc_60_68);  // 注册函数，写在registerFunctions中
 ```
 
 运行``make``和``./test-trans -M 60 -N 68``指令，得到以下结果：

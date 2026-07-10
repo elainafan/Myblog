@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-11
 hidden: true
-seriesOrder: 30
+seriesOrder: 10
 ---
 
 网络编程将系统级 I/O 扩展到不同机器之间。套接字（Socket）也是文件描述符，可以通过系统级 I/O 接口读写。
@@ -186,8 +186,7 @@ int open_clientfd(const char *hostname, const char *port) {
     }
 
     for (p = listp; p != NULL; p = p->ai_next) {
-        clientfd = socket(p->ai_family, p->ai_socktype,
-                          p->ai_protocol);
+        clientfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (clientfd < 0) {
             continue;
         }
@@ -219,14 +218,12 @@ int open_listenfd(const char *port) {
     }
 
     for (p = listp; p != NULL; p = p->ai_next) {
-        listenfd = socket(p->ai_family, p->ai_socktype,
-                          p->ai_protocol);
+        listenfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (listenfd < 0) {
             continue;
         }
 
-        setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR,
-                   &optval, sizeof(optval));
+        setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
         if (bind(listenfd, p->ai_addr, p->ai_addrlen) == 0) {
             break;
         }

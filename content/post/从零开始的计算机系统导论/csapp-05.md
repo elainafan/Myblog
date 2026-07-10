@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-05
 hidden: true
-seriesOrder: 24
+seriesOrder: 4
 ---
 
 ## 性能优化概况
@@ -53,17 +53,17 @@ $$
 - 这种优化也被称为``代码移动``
 - 比较以下两段代码
 
-```c
-int combine_1(vector<int>& nums,int x){
-    int n=nums.size();
-    for(int i=0;i<=n-1;i++){
-        x+=nums[i];
+```cpp
+int combine_1(vector<int>& nums, int x) {
+    int n = nums.size();
+    for (int i = 0; i <= n - 1; i++) {
+        x += nums[i];
     }
     return x;
 }
-int combine_2(vector<int>& nums,int x){
-    for(int i=0;i<nums.size();i++){
-        x+=nums[i];
+int combine_2(vector<int>& nums, int x) {
+    for (int i = 0; i < nums.size(); i++) {
+        x += nums[i];
     }
     return x;
 }
@@ -83,26 +83,27 @@ int combine_2(vector<int>& nums,int x){
 - 参考以下代码：
 
 ```c
-void combine_3(vec_ptr v,data_t *dest){
+void combine_3(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    data_t *data=get_vec_start(v);
-    *dest=IDENT;
-    for(i=0;i<length;i++){
-        *dest=*dest OP data[i];
+    long length = vec_length(v);
+    data_t *data = get_vec_start(v);
+    *dest = IDENT;
+    for (i = 0; i < length; i++) {
+        *dest = *dest OP data[i];
     }
-    return ;
+    return;
 }
-void combine_4(vec_ptr v,data_t *dest){
+
+void combine_4(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    data_t *data=get_vec_start(v);
-    data_t acc=IDENT;
-    for(i=0;i<length;i++){
-        acc=acc OP data[i];
+    long length = vec_length(v);
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENT;
+    for (i = 0; i < length; i++) {
+        acc = acc OP data[i];
     }
-    *dest=acc;
-    return ;
+    *dest = acc;
+    return;
 }
 ```
 
@@ -124,14 +125,14 @@ void combine_4(vec_ptr v,data_t *dest){
 
 ```c
 long f();
-long func1(){
-    return f()+f()+f()+f();
+long func1() {
+    return f() + f() + f() + f();
 }
-long func2(){
-    return 4*f();
+long func2() {
+    return 4 * f();
 }
-long counter=0;
-long f(){
+long counter = 0;
+long f() {
     return counter++;
 }
 ```
@@ -152,14 +153,12 @@ long f(){
 下面两段代码在 ``xp`` 和 ``yp`` 指向不同对象时结果相同，但在二者相同时并不等价：
 
 ```c
-void twiddle1(long *xp, long *yp)
-{
+void twiddle1(long *xp, long *yp) {
     *xp += *yp;
     *xp += *yp;
 }
 
-void twiddle2(long *xp, long *yp)
-{
+void twiddle2(long *xp, long *yp) {
     *xp += 2 * *yp;
 }
 ```
@@ -283,20 +282,20 @@ $$
 - 例如以下代码：
 
 ```c
-void combine5(vec_ptr v,data_t *dest){
+void combine5(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    long limit=length-1;
-    data_t *data=get_vec_start(v);
-    data_t acc=IDENT;
-    for(i=0;i<limit;i+=2){
-        acc=(acc OP data[i]) OP data[i+1];
+    long length = vec_length(v);
+    long limit = length - 1;
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENT;
+    for (i = 0; i < limit; i += 2) {
+        acc = (acc OP data[i]) OP data[i + 1];
     }
-    for(;i<length;i++){
-        acc=acc OP data[i];
+    for (; i < length; i++) {
+        acc = acc OP data[i];
     }
-    *dest=acc;
-    return ;
+    *dest = acc;
+    return;
 }
 ```
 
@@ -311,22 +310,22 @@ void combine5(vec_ptr v,data_t *dest){
 - 比如以下代码：
 
 ```c
-void combine6(vec_ptr v,data_t *dest){
+void combine6(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    long limit=length-1;
-    data_t *data=get_vec_start(v);
-    data_t acc0=IDENT;
-    data_t acc1=IDENT;
-    for(i=0;i<limit;i+=2){
-        acc0=acc0 OP data[i];
-        acc1=acc1 OP data[i+1];
+    long length = vec_length(v);
+    long limit = length - 1;
+    data_t *data = get_vec_start(v);
+    data_t acc0 = IDENT;
+    data_t acc1 = IDENT;
+    for (i = 0; i < limit; i += 2) {
+        acc0 = acc0 OP data[i];
+        acc1 = acc1 OP data[i + 1];
     }
-    for(;i<length;i++){
-        acc0=acc0 OP data[i];
+    for (; i < length; i++) {
+        acc0 = acc0 OP data[i];
     }
-    *dest=acc0 OP acc1;
-    return ;
+    *dest = acc0 OP acc1;
+    return;
 }
 ```
 
@@ -343,19 +342,19 @@ void combine6(vec_ptr v,data_t *dest){
 - 比如，以下代码：
 
 ```c
-void combine7(vec_ptr v,data_t *dest){
+void combine7(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    long limit=length-1;
-    data_t *data=get_vec_start(v);
-    data_t acc=IDENT;
-    for(i=0;i<limit;i+=2){
-        acc=acc OP (data[i] OP data[i+1]);
+    long length = vec_length(v);
+    long limit = length - 1;
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENT;
+    for (i = 0; i < limit; i += 2) {
+        acc = acc OP (data[i] OP data[i + 1]);
     }
-    for(;i<length;i++){
-        acc=acc OP data[i];
+    for (; i < length; i++) {
+        acc = acc OP data[i];
     }
-    *dest=acc;
+    *dest = acc;
 }
 ```
 

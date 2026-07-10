@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的arch-lab
 hidden: true
-seriesOrder: 4
+seriesOrder: 15
 ---
 # 从零开始的Arch Lab
 
@@ -64,32 +64,32 @@ rustup default 1.90
 比较下列两个函数：
 
 ```c
-void combine_4(vec_ptr v,data_t *dest){
+void combine_4(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    data_t *data=get_vec_start(v);
-    data_t acc=IDENT;
-    for(i=0;i<length;i++){
-        acc=acc OP data[i];
+    long length = vec_length(v);
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENT;
+    for (i = 0; i < length; i++) {
+        acc = acc OP data[i];
     }
-    *data=acc;
-    return ;
+    *data = acc;
+    return;
 }
 
-void combine5(vec_ptr v,data_t *dest){
+void combine5(vec_ptr v, data_t *dest) {
     long i;
-    long length=vec_length(v);
-    long limit=length-1;
-    data_t *data=get_vec_start(v);
-    data_t acc=IDENT;
-    for(i=0;i<limit;i+=2){
-        acc=(acc OP data[i]) OP data[i+1];
+    long length = vec_length(v);
+    long limit = length - 1;
+    data_t *data = get_vec_start(v);
+    data_t acc = IDENT;
+    for (i = 0; i < limit; i += 2) {
+        acc = (acc OP data[i])OP data[i + 1];
     }
-    for(;i<length;i++){
-        acc=acc OP data[i];
+    for (; i < length; i++) {
+        acc = acc OP data[i];
     }
-    *dest=acc;
-    return ;
+    *dest = acc;
+    return;
 }
 ```
 
@@ -882,17 +882,16 @@ $$
 
 ```c
 word_t ncopy(word_t *src, word_t *dst, word_t len) {
-  word_t count = 0;
-  word_t val;
+    word_t count = 0;
+    word_t val;
 
-  while (len > 0) {
-    val = *src++;
-    *dst++ = val;
-    if (val > 0)
-      count++;
-    len--;
-  }
-  return count;
+    while (len > 0) {
+        val = *src++;
+        *dst++ = val;
+        if (val > 0) count++;
+        len--;
+    }
+    return count;
 }
 ```
 

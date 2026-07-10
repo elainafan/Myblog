@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-06
 hidden: true
-seriesOrder: 25
+seriesOrder: 5
 ---
 
 ## 随机访问存储器（Random-Access Memory，RAM）
@@ -258,9 +258,9 @@ I/O 设备通过总线和控制器接入系统。
 - 请看以下代码：
 
 ```c
-int sum(int v[N]){
-    int i,sum=0;
-    for(i=0;i<N;i++) sum+=v[i];
+int sum(int v[N]) {
+    int i, sum = 0;
+    for (i = 0; i < N; i++) sum += v[i];
     return sum;
 }
 ```

@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的bomb-lab
 hidden: true
-seriesOrder: 2
+seriesOrder: 13
 ---
 # 从零开始的Bomb Lab
 
@@ -50,7 +50,7 @@ Bomb Lab是《计算机系统导论》课程的第2个Lab，对应教材第三�
 
 有关``p``和``x``两条指令，几个常用示例如下：
 
-```
+```bash
 p $rax  # 打印寄存器 rax 的值
 p $rsp  # 打印栈指针的值
 p/x $rsp  # 打印栈指针的值，以十六进制显示
@@ -82,7 +82,7 @@ delete breakpoints 1  # 删除第一个断点，可以简写为 d 1
 
 在这个Lab和接下来的Attack Lab中，打开终端，操作通常是
 
-```
+```bash
 gdb bomb
 b phase_x // 这条如果配置了.gdbinit文件就无须再输入
 layout asm
@@ -114,7 +114,7 @@ layout regs
 
 在终端中运行以下代码：
 
-```
+```bash
 cd ~\bomb xx // 注意换成你的bomb所在地址
 touch .gdbinit // 创建当前目录下的.gdbinit文件
 mkdir -p ~/.config/gdb // 创建 ./config/gdb 文件夹
@@ -180,7 +180,7 @@ echo "set auto-load safe-path" > ~/.config/gdb/gdbinit // 允许gdb预加载根�
 
 然后，打开``.gdbinit``文件，输入以下内容：
 
-```
+```bash
 # ./gdbinit
 # 设置默认文件输入，这样我们不必每次手动输入答案
 set args psol.txt
@@ -268,7 +268,7 @@ r
 
 值得一提的是，如果需要在DDL后再运行炸弹文件，比如笔者撰写这篇笔记时就在期中后，此时需要在``.gdbinit``中加上以上代码以跳过校验函数，否则会报错。
 
-```
+```bash
 # 为校验函数设置断点
 b phase_defused
 # 为此断点编程
@@ -296,9 +296,10 @@ end
 
 ```c
 /* Hmm...  Six phases must be more secure than one phase! */
-    input = read_line();             /* Get input                   */
-    phase_1(input);                  /* Run the phase               */
-    phase_defused(fp);                 /* Drat!  They figured it out!
+input = read_line(); /* Get input                   */
+phase_1(input);      /* Run the phase               */
+phase_defused(fp);
+/* Drat!  They figured it out!
 ```
 
 这说明每次我们输入的字符串``input``会被作为传进的参数，拆弹的关键就在于找到正确的字符串。
@@ -330,13 +331,13 @@ end
 
 首先，打开``psol.txt``文件，随便输入一行:
 
-```
+```text
 I love elaina.
 ```
 
 然后运行以下指令：
 
-```
+```bash
 gdb bomb
 b *(phase_1+15)
 layout asm
@@ -355,7 +356,7 @@ x/s $rsi
 
 把这句话写到``psol.txt``的第一行，再次打开终端，运行以下指令：
 
-```
+```bash
 gdb bomb
 layout asm
 layout regs
@@ -412,11 +413,13 @@ c
 
 于是，基本弄懂了这个函数的逻辑，用C代码写来就是：
 
-```c
+```text
 int a[6];
-if(a[0] != 1) bomb!
-for(int i = 1;i <= 5;i++){
-    if(a[i] != 2 * a[i - 1]) bomb!
+if (a[0] != 1)
+    bomb!
+for (int i = 1; i <= 5; i++) {
+    if (a[i] != 2 * a[i - 1])
+        bomb!
 }
 ```
 
@@ -448,7 +451,7 @@ for(int i = 1;i <= 5;i++){
 
 再看一下``sccanf``函数的签名：
 
-```
+```c
 int sscanf(const char *str, const char *format, ...);
 ```
 
@@ -465,7 +468,7 @@ int sscanf(const char *str, const char *format, ...);
 
 把它写到``psol.txt``的第二行，打开终端，运行以下指令：
 
-```
+```bash
 gdb bomb
 layout asm
 layout regs
@@ -558,7 +561,7 @@ c
 
 运行以下指令，看看它输入了什么：
 
-```
+```bash
 gdb bomb
 layout asm
 layout regs 
@@ -583,7 +586,7 @@ x/s $rsi
 
 然后，在跳转前打下断点，打开终端，运行以下指令：
 
-```
+```bash
 gdb bomb
 b *(phase_3+76)
 layout asm
@@ -597,9 +600,10 @@ ni
 
 再回到代码，看出它大概的C语言逻辑：
 
-```c
+```text
 int result = x + 163;
-if(x != 326) bomb!
+if (x != 326)
+    bomb!
 ```
 
 于是求得 ``x = 163``。
@@ -608,7 +612,7 @@ if(x != 326) bomb!
 
 将新找出的答案写到``psol.txt``的第三行，运行以下指令：
 
-```
+```bash
 gdb bomb
 layout asm
 layout regs
@@ -709,16 +713,15 @@ c
 阅读这段代码，大致能给出以下递归结构：
 
 ```c
-int func4(int x, int y, int z){
+int func4(int x, int y, int z) {
     int res = z - y;
-    res = res >> 31; // 此处为逻辑右移
+    res = res >> 31;  // 此处为逻辑右移
     res += (z - y);
-    res = res >> 1; // 此处为算术右移
+    res = res >> 1;  // 此处为算术右移
     res += y;
-    if(x < res){
+    if (x < res) {
         return 2 * func4(x, y, res - 1);
-    }
-    else if(x > res){
+    } else if (x > res) {
         return 2 * func4(x, res + 1, z) + 1;
     }
     return 0;
@@ -733,7 +736,7 @@ int func4(int x, int y, int z){
 
 将答案写到``psol.txt``的第四行，打开终端，运行以下指令：
 
-```
+```bash
 gdb bomb
 layout asm
 layout regs
@@ -808,7 +811,7 @@ c
 
 使用GDB工具看看这个数组是啥：
 
-```
+```bash
 gdb bomb
 b *(phase_5+54)
 layout asm
@@ -829,7 +832,7 @@ x/8d $rsi
 
 将``psol.txt``的第五行替换为答案，打开终端，运行以下命令：
 
-```
+```bash
 gdb bomb
 layout asm 
 layout regs
@@ -1014,18 +1017,18 @@ c
 函数首先进入一个循环，写成C代码大概如下
 
 ```c
-for(int ebp = 0;ebp <= 5;ebp++){
+for (int ebp = 0; ebp <= 5; ebp++) {
     rax = ebp;
-    eax = rsp + rax*4; // 即eax = 第ebp个参数
+    eax = rsp + rax * 4;  // 即eax = 第ebp个参数
     eax--;
-    if(eax > 5) boom!
-    for(int ebx = rbp + 1;ebx <= 5; ebx++){
-        rax = ebp;
-        rdx = ebx;
-        edi = rsp + 4 * rdx; // 也就是将第(ebp+1)个参数加载到edi
-        if(edi == rsp + rax * 4) boom! // 若第ebp个参数等于第(ebx)个参数，爆炸
-        ebx++;
-    }
+    if (eax > 5) boom !for (int ebx = rbp + 1; ebx <= 5; ebx++) {
+            rax = ebp;
+            rdx = ebx;
+            edi = rsp + 4 * rdx;  // 也就是将第(ebp+1)个参数加载到edi
+            if (edi == rsp + rax * 4)
+                boom !  // 若第ebp个参数等于第(ebx)个参数，爆炸
+                    ebx++;
+        }
 }
 ```
 
@@ -1034,16 +1037,16 @@ for(int ebp = 0;ebp <= 5;ebp++){
 接着往下看，函数跳出循环到``1a7d``处。写成C代码大概如下：
 
 ```c
-for(int esi=0;esi<=5;esi++){
-    eax=1;
-    rdx=?;
-    rcx=esi;
-    while((rsp+rcx*4)>eax){
-        rdx=(rdx+8);
+for (int esi = 0; esi <= 5; esi++) {
+    eax = 1;
+    rdx = ? ;
+    rcx = esi;
+    while ((rsp + rcx * 4) > eax) {
+        rdx = (rdx + 8);
         eax++;
-        rcx=esi;
+        rcx = esi;
     }
-    (rsp+32+rcx*8)=rdx;
+    (rsp + 32 + rcx * 8) = rdx;
 }
 ```
 
@@ -1055,7 +1058,7 @@ for(int esi=0;esi<=5;esi++){
 
 运行以下指令，看看``<node1>``到底是个啥：
 
-```
+```bash
 gdb bomb
 b *(phase_6+157)
 layout asm
@@ -1073,7 +1076,7 @@ x/24x $rdx // 如上文分析，打印96个字节的值。
 分析每个节点的结构，由于``x86-64``的体系结构中，数据按照``小端法``存储，因此每个节点的结构大致为
 
 ```c
-struct node{
+struct node {
     int val;
     int key;
     node* next;
@@ -1089,14 +1092,14 @@ struct node{
 于是就能确认这个数据结构是链表，同时可以补全上述代码：
 
 ```c
-for(int esi = 0;esi <= 5;esi++){
+for (int esi = 0; esi <= 5; esi++) {
     eax = 1;
     rdx = node1;
-    while((rsp + esi * 4) > eax){ 
+    while ((rsp + esi * 4) > eax) {
         rdx = rdx->next;
         eax++;
     }
-    (rsp + 32 + esi*8)=rdx;
+    (rsp + 32 + esi * 8) = rdx;
 }
 ```
 
@@ -1107,8 +1110,8 @@ for(int esi = 0;esi <= 5;esi++){
 ```c
 rbx = (rsp + 32);
 rcx = rbx;
-for(int eax = 1;eax <= 5;eax++){
-    rdx = eax;    
+for (int eax = 1; eax <= 5; eax++) {
+    rdx = eax;
     rdx = (rsp + rdx * 8 + 32);
     (rcx + 8) = rdx;
     rcx = rdx;
@@ -1119,12 +1122,13 @@ for(int eax = 1;eax <= 5;eax++){
 
 最后，看下最后一个循环，写出大概的C代码：
 
-```c
-(rcx+8)=0;
-for(int ebp=0;ebp<=4;ebp++){
+```text
+(rcx + 8) = 0;
+for (int ebp = 0; ebp <= 4; ebp++) {
     rax = (rbx + 8);
     eax = rax;
-    if((rbx) > eax) boom!
+    if ((rbx) > eax)
+        boom!
     rbx = (rbx + 8);
 }
 ```
@@ -1137,7 +1141,7 @@ for(int ebp=0;ebp<=4;ebp++){
 
 将``psol.txt``的第六行替换为答案，注释掉``b phase_6``，打开终端，运行以下命令：
 
-```
+```bash
 gdb bomb
 layout asm 
 layout regs
@@ -1146,7 +1150,7 @@ c
 
 此时的``psol.txt``应该是这样的：
 
-```
+```text
 A secret makes a woman a woman
 1 2 4 8 16 32
 6 163
@@ -1170,7 +1174,7 @@ I love elaina.
 
 这句话来自``bomb.c``的注释：
 
-```
+```text
 Wow, they got it!  But isn't something... missing?  
 Perhaps something they overlooked?  
 Mua ha ha ha ha!
@@ -1182,7 +1186,7 @@ Mua ha ha ha ha!
 
 这句话来自``writeup``：
 
-```
+```text
 Never could a muggle senses the magic. It’s purely beyond their ken. 
 Do they really think alohomora could open all the doors in the world?
 No way! 
@@ -1251,7 +1255,7 @@ Mua ha ha ha! Just bother with these most impregnable spells ever!
 
 首先，回看``.gdbinit``文件，发现有这几行：
 
-```
+```bash
 b phase_defused
 command 
 jump *(phase_defused+0x2A)
@@ -1311,7 +1315,7 @@ end
 
 在``gdb``调试器中输入以下命令：
 
-```
+```bash
 b *(phase_defused+0x8)
 commands 9 # 此处视实际编号而定
 j *(phase_defused+0xE) 
@@ -1394,7 +1398,7 @@ b *(phase_defused+0x20) # 跳过判断语句
 
 可以看到，它通过调用``sscanf``函数读入一个字符串，回顾``Phase 2``中``sscanf``函数的签名：
 
-```
+```c
 int sscanf(const char *str, const char *format, ...);
 ```
 
@@ -1405,7 +1409,7 @@ int sscanf(const char *str, const char *format, ...);
 
 再对照源码，即可以发现此处传入的``rdi``和``rsi``参数可以通过``info address``查看，在``16a4``处打上断点，运行命令查看其内容：
 
-```
+```bash
 b *(abracadabra+0x40)
 c
 info address _IO_stdin_used
@@ -1432,7 +1436,7 @@ x/s ??+0x168 # 此处??为显示的地址
 
 还是按照先前的解法，先在``Phase 4``的答案后面随便加上一个字符串，笔者此处选用的为``elaina``，然后在``调用比对函数前``打个断点，运用``info address``命令读出内存内容。
 
-```
+```bash
 b *(abracadabra+0x76)
 c
 info address _IO_stdin_used
@@ -1509,7 +1513,7 @@ x/s ??+0x168 # 此处??为显示的地址
 
 可以发现，它首先将``%rax``赋值成为一个不知道是啥的东西，还是老方法，打上断点使用``info address``命令查找：
 
-```
+```bash
 b *(alohomora+0x1B)
 c
 info address input_strings
@@ -1578,7 +1582,7 @@ x/s ??+0x78 # 此处??为显示的地址
 
 仍然在``Phase 2``答案后加上随便一个字符串，此处笔者选用的仍为``elaina``，采用打断点并采用``info address``的方法，查找比对字符串的内容：
 
-```
+```bash
 b *(alohomora+0x61)
 c
 info address _IO_stdin_used
@@ -1591,7 +1595,7 @@ x/s ??+0x190 # 此处??为显示的地址
 
 将其加到``Phase 2``答案之后，在``secret phase``调用前加上断点，运行``gdb``调试程序，如下：
 
-```
+```bash
 b *(phase_defused+0xA0)
 c
 ```
@@ -1840,7 +1844,7 @@ FSM(Finite State Machine，有限状态自动机)是一种用来描述系统在`
 
 因此在``psol.txt``的第七行随便填上一个二进制字符串，笔者选择的是``11111111``，在``1b49``处打断点，读出其值，一共需要读取``56个字节``。
 
-```
+```bash
 b *(emulate_fsm+0x2B)
 c
 info address transition_table

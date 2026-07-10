@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-09
 hidden: true
-seriesOrder: 28
+seriesOrder: 8
 ---
 
 虚拟内存（Virtual Memory，VM）为程序提供统一的虚拟地址空间，并由硬件与操作系统完成地址翻译、页面缓存、进程隔离和权限保护。

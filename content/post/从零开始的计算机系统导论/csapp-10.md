@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-10
 hidden: true
-seriesOrder: 29
+seriesOrder: 9
 ---
 
 系统级 I/O（System-level I/O）是网络编程和 `Proxy Lab` 的前置知识。Unix 将普通文件、目录、终端和套接字统一抽象为文件，并通过相近的接口读写。
@@ -208,8 +208,7 @@ typedef struct {
 ```c
 static ssize_t rio_read(rio_t *rp, char *usrbuf, size_t n) {
     while (rp->rio_cnt <= 0) {
-        rp->rio_cnt = read(rp->rio_fd, rp->rio_buf,
-                           sizeof(rp->rio_buf));
+        rp->rio_cnt = read(rp->rio_fd, rp->rio_buf, sizeof(rp->rio_buf));
         if (rp->rio_cnt < 0) {
             if (errno != EINTR) {
                 return -1;

@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: 从零开始的data-lab
 hidden: true
-seriesOrder: 1
+seriesOrder: 12
 ---
 # 从零开始的Data Lab
 
@@ -101,7 +101,7 @@ Data Lab对应的为教材第二章《信息的表示与处理》，主要考察
 每次修改你的``bits.c``文件，在进行测评前，都需要在终端内输入``make``命令进行编译。
 
 ``btest``：在一个小的数据集上进行测试，不检查函数规范以及函数要求，不保证测评正确。
-```
+```bash
 ./btest -f [func]
 # 对函数[func]进行测试
 ./btest -f [func] -1 7 -2 0xF
@@ -112,7 +112,7 @@ Data Lab对应的为教材第二章《信息的表示与处理》，主要考察
 ``./dlc bits.c``
 
 ``bddcheck``：在测试集上测试你的函数，检查是否能通过测试。
-```
+```bash
 ./bddcheck/check.pl -f [func]
 # 对函数[func]进行完整测试
 ./bddcheck/check.pl 
@@ -120,7 +120,7 @@ Data Lab对应的为教材第二章《信息的表示与处理》，主要考察
 ```
 
 ``drivsr.pl``：对所有函数评分，运行上述三个测试器。
-```
+```bash
 ./driver.pl
 ```
 
@@ -141,7 +141,7 @@ $$ \sim ((\sim x) \And (\sim y))=x \mid y$$
 因此得到以下代码：
 ```c
 int bitOr(int x, int y) {
-  return ~((~x)&(~y));
+    return ~((~x) & (~y));
 }
 ```
 
@@ -156,7 +156,7 @@ int bitOr(int x, int y) {
 答案呼之欲出：
 ```c
 int upperBits(int n) {
-    return (1<<31)>>(n-1);
+    return (1 << 31) >> (n - 1);
 }
 ```
 然后，就会遇到尴尬的情况：当``n=0``时，无法使用条件分支判断其存在，必须另寻他路。  
@@ -166,8 +166,8 @@ int upperBits(int n) {
 然后取``mask``的相反数，左移``(32-n)``位，就能得到答案。  
 ```c
 int upperBits(int n) {
-  int mask=!!n;
-  return (~mask+1)<<(33+~n);
+    int mask = !!n;
+    return (~mask + 1) << (33 + ~n);
 }
 ```
 
@@ -192,11 +192,11 @@ int upperBits(int n) {
 分治得到以下代码：
 ```c
 int fullAdd(int x, int y) {
-  int sum_1=x^y,c_1=(x&y)<<1;
-  int sum_2=sum_1^c_1,c_2=(sum_1&c_1)<<1;
-  int sum_3=sum_2^c_2,c_3=(sum_2&c_2)<<1;
-  int sum_4=sum_3^c_3;
-  return sum_4&15;
+    int sum_1 = x ^ y, c_1 = (x & y) << 1;
+    int sum_2 = sum_1 ^ c_1, c_2 = (sum_1 & c_1) << 1;
+    int sum_3 = sum_2 ^ c_2, c_3 = (sum_2 & c_2) << 1;
+    int sum_4 = sum_3 ^ c_3;
+    return sum_4 & 15;
 }
 ```
 
@@ -215,19 +215,19 @@ int fullAdd(int x, int y) {
 没关系，笔者从24秋的Data Lab中拷贝了逻辑右移的一份模板，可以直接使用（这个是24秋的puzzle）。
 ```c
 int logicalShift(int x, int n) {
-   // 对Tmin（最高位为1）执行同样的右移操作，然后左移一位取反即得所需掩码
-   int mask = ~(1 << 31 >> n << 1);
-   return x >> n & mask;
+    // 对Tmin（最高位为1）执行同样的右移操作，然后左移一位取反即得所需掩码
+    int mask = ~(1 << 31 >> n << 1);
+    return x >> n & mask;
 }
 ```
 
 于是，结合我们的上述分析，得到以下代码
 ```c
 int rotateLeft(int x, int n) {
-  int temp=x<<n;
-  int mask=~(1<<31>>(33+~n)<<1);
-  int temp_2=x>>(33+~n)&mask;
-  return temp|temp_2;
+    int temp = x << n;
+    int mask = ~(1 << 31 >> (33 + ~n) << 1);
+    int temp_2 = x >> (33 + ~n) & mask;
+    return temp | temp_2;
 }
 ```
 
@@ -244,12 +244,12 @@ int rotateLeft(int x, int n) {
 于是得到以下代码：  
 ```c
 int bitParity(int x) {
-  x=x^(x>>16);
-  x=x^(x>>8);
-  x=x^(x>>4);
-  x=x^(x>>2);
-  x=x^(x>>1);
-  return x&1;
+    x = x ^ (x >> 16);
+    x = x ^ (x >> 8);
+    x = x ^ (x >> 4);
+    x = x ^ (x >> 2);
+    x = x ^ (x >> 1);
+    return x & 1;
 }
 ```
 
@@ -274,13 +274,13 @@ int bitParity(int x) {
 可以写出以下代码：
 ```c
 int palindrome(int x) {
-  int temp_1=(x>>16);
-  int temp_2=x&0x0000FFFF;
-  temp_1=((temp_1&0x00005555)<<1) | ((temp_1>>1)&0x00005555);
-  temp_1=((temp_1&0x00003333)<<2) | ((temp_1>>2)&0x00003333);
-  temp_1=((temp_1&0x00000F0F)<<4) | ((temp_1>>4)&0x00000F0F);
-  temp_1=((temp_1&0x000000FF)<<8) | ((temp_1>>8)&0x000000FF);
-  return !(temp_1^temp_2);
+    int temp_1 = (x >> 16);
+    int temp_2 = x & 0x0000FFFF;
+    temp_1 = ((temp_1 & 0x00005555) << 1) | ((temp_1 >> 1) & 0x00005555);
+    temp_1 = ((temp_1 & 0x00003333) << 2) | ((temp_1 >> 2) & 0x00003333);
+    temp_1 = ((temp_1 & 0x00000F0F) << 4) | ((temp_1 >> 4) & 0x00000F0F);
+    temp_1 = ((temp_1 & 0x000000FF) << 8) | ((temp_1 >> 8) & 0x000000FF);
+    return !(temp_1 ^ temp_2);
 }
 ```
 
@@ -294,7 +294,7 @@ int palindrome(int x) {
 于是得到以下代码：
 ```c
 int negate(int x) {
-  return ~x+1;
+    return ~x + 1;
 }
 ```
 
@@ -309,17 +309,17 @@ int negate(int x) {
 这时怎么办？当然是采用特判了！即如何合理转化``if(x==TMAX) return 0``  
 还记得上文提到的``用!!n将非零数字转化为1，零不变``这条结论吗，没错，可以写出以下代码。  
 ```c
-int TMAX=~(1<<31);
-int if_TMAX=!!(x^TMAX);
+int TMAX = ~(1 << 31);
+int if_TMAX = !!(x ^ TMAX);
 ```
 如果``if_TMAX = 0``，直接返回``0``，否则返回``!((x+1)^y)``。  
 于是得到以下代码：
 ```c
 int oneMoreThan(int x, int y) {
-  /* 反例是TMIN,TMAX*/
-  int tmax=~(1<<31);
-  int if_overflow=!!(x^tmax);
-  return (if_overflow & !((x+1)^y));
+    /* 反例是TMIN,TMAX*/
+    int tmax = ~(1 << 31);
+    int if_overflow = !!(x ^ tmax);
+    return (if_overflow & !((x + 1) ^ y));
 }
 ```
 
@@ -337,9 +337,9 @@ int oneMoreThan(int x, int y) {
 于是，得到以下代码：
 ```c
 int ezThreeFourths(int x) {
-  int sum=(x<<1)+x;
-  int bias=(sum>>31)&3;
-  return (sum+bias)>>2;
+    int sum = (x << 1) + x;
+    int bias = (sum >> 31) & 3;
+    return (sum + bias) >> 2;
 }
 ```
 
@@ -357,13 +357,13 @@ int ezThreeFourths(int x) {
 基于以上思路，得到以下代码：
 ```c
 int isLess(int x, int y) {
-  int x_is_equal_to_y=x^y;
-  int x_sign=(x>>31)&1,y_sign=(y>>31)&1;
-  int sum=((x+(~y))>>31)&1;
-  int is_not_same_sign=(x_sign^y_sign)&((x_sign^0)&(y_sign^1));
-  int is_the_same_sign=!(x_sign^y_sign);
-  int res= (is_not_same_sign | (is_the_same_sign & sum)) & !!(x_is_equal_to_y);
-  return res;
+    int x_is_equal_to_y = x ^ y;
+    int x_sign = (x >> 31) & 1, y_sign = (y >> 31) & 1;
+    int sum = ((x + (~y)) >> 31) & 1;
+    int is_not_same_sign = (x_sign ^ y_sign) & ((x_sign ^ 0) & (y_sign ^ 1));
+    int is_the_same_sign = !(x_sign ^ y_sign);
+    int res = (is_not_same_sign | (is_the_same_sign & sum)) & !!(x_is_equal_to_y);
+    return res;
 }
 ```
 
@@ -386,11 +386,11 @@ int isLess(int x, int y) {
 于是得到以下代码：
 ```c
 int satMul2(int x) {
-  int sum=x+x;
-  int if_overflow=(x^sum)>>31;
-  int t_min=1<<31;
-  int x_sign=x>>31;
-  return (~if_overflow & sum) | (if_overflow & (~x_sign ^ t_min));
+    int sum = x + x;
+    int if_overflow = (x ^ sum) >> 31;
+    int t_min = 1 << 31;
+    int x_sign = x >> 31;
+    return (~if_overflow & sum) | (if_overflow & (~x_sign ^ t_min));
 }
 ```
 
@@ -414,29 +414,29 @@ int satMul2(int x) {
 基于以上思路，得到以下代码：
 ```c
 int modThree(int x) {
-  int x_sign=(x>>31)&1;
-  int tmin=1<<31;
-  int mask_1=0xFF+(0xFF<<8);
-  int mask_2=~(tmin>>8<<1);
-  int mask_3=~(tmin>>4<<1);
-  int mask_4=~(tmin>>2<<1);
-  int is_3;
-  int mask_sign;
-  int x_1,x_2;
-  int pd;
-  x=(x>>16&mask_1)+(x&mask_1);
-  x=(x>>8&mask_2)+(x&0xFF);
-  x=(x>>4&mask_3)+(x&0xF);
-  x=(x>>2&mask_4)+(x&3);
-  x=(x>>2&mask_4)+(x&3);
-  x=(x>>2&mask_4)+(x&3);
-  is_3=!(x^3);
-  x=x+((~3+1)&(~is_3+1));
-  mask_sign=~x_sign+1;
-  x_1=x+mask_sign;
-  pd=!(x_1^1)&x_sign;
-  x_2=x_1+((~3+1)&(~pd+1));
-  return x_2;
+    int x_sign = (x >> 31) & 1;
+    int tmin = 1 << 31;
+    int mask_1 = 0xFF + (0xFF << 8);
+    int mask_2 = ~(tmin >> 8 << 1);
+    int mask_3 = ~(tmin >> 4 << 1);
+    int mask_4 = ~(tmin >> 2 << 1);
+    int is_3;
+    int mask_sign;
+    int x_1, x_2;
+    int pd;
+    x = (x >> 16 & mask_1) + (x & mask_1);
+    x = (x >> 8 & mask_2) + (x & 0xFF);
+    x = (x >> 4 & mask_3) + (x & 0xF);
+    x = (x >> 2 & mask_4) + (x & 3);
+    x = (x >> 2 & mask_4) + (x & 3);
+    x = (x >> 2 & mask_4) + (x & 3);
+    is_3 = !(x ^ 3);
+    x = x + ((~3 + 1) & (~is_3 + 1));
+    mask_sign = ~x_sign + 1;
+    x_1 = x + mask_sign;
+    pd = !(x_1 ^ 1) & x_sign;
+    x_2 = x_1 + ((~3 + 1) & (~pd + 1));
+    return x_2;
 }
 ```
 
@@ -460,15 +460,15 @@ int modThree(int x) {
 基于以上思路，得到以下代码：
 ```c
 unsigned float_half(unsigned uf) {
-  int x_sign=uf&(0x80000000); # 取符号位
-  int e_mask=0x7f800000; # 指数位补码
-  int x_e=uf&e_mask; # 取指数位
-  int x_m=uf&(0x007fffff); # 尾数位补码
-  int if_double_one=!((uf&3)^3); # 是否需要进位
-  if(x_e==e_mask) return uf; # 特殊情况直接返回
-  if(!x_e) return x_sign | ((x_m>>1)+if_double_one); # 非规格化数的情况
-  if((x_e>>23)==1) return x_sign | (((x_e | x_m)>>1)+if_double_one); # 指数位为1的情况
-  return x_sign | ((((x_e>>23)-1)<<23)&e_mask) | x_m; # 一般化情况
+    int x_sign = uf & 0x80000000;                                                // 取符号位
+    int e_mask = 0x7f800000;                                                     // 指数位掩码
+    int x_e = uf & e_mask;                                                       // 取指数位
+    int x_m = uf & 0x007fffff;                                                   // 取尾数位
+    int if_double_one = !((uf & 3) ^ 3);                                         // 是否需要进位
+    if (x_e == e_mask) return uf;                                                // 特殊情况直接返回
+    if (!x_e) return x_sign | ((x_m >> 1) + if_double_one);                      // 非规格化数
+    if ((x_e >> 23) == 1) return x_sign | (((x_e | x_m) >> 1) + if_double_one);  // 指数位为 1
+    return x_sign | ((((x_e >> 23) - 1) << 23) & e_mask) | x_m;                  // 一般情况
 }
 ```
 
@@ -490,20 +490,23 @@ unsigned float_half(unsigned uf) {
 基于上述思路，得到以下代码：
 ```c
 unsigned float_i2f(int x) {
-  unsigned x_sign=(x>>31)&1,x_e=31,x_m,is_add,bias=0x7F,ux_e,mask=0x7FFFFF;
-  if(x==0) return 0;
-  if(x==(1<<31)) return 0xCF000000;
-  if(x_sign) x=-x; # 特判
-  while(!(x>>x_e)) x_e--; # 找到有效位
-  ux_e=x_e+bias; # 得到指数位
-  x=x<<(31-x_e); # 取出x的有效位
-  x_m=(x>>8)&mask; # 去掉规格化数隐含的前导1
-  is_add=x&0xFF; # 判断是否要进位
-  x_m+=((is_add>0x80) || ((is_add==0x80)&&(x_m&1)));
-  if(x_m>>23){
-    x_m=x_m&mask;ux_e++;
-  } # 小数位溢出
-  return (x_sign<<31) | (ux_e<<23) | x_m;
+    unsigned x_sign = (x >> 31) & 1, x_e = 31, x_m, is_add, bias = 0x7F, ux_e, mask = 0x7FFFFF;
+    if (x == 0) return 0;
+    if (x == (1 << 31)) return 0xCF000000;
+    if (x_sign) x = -x;
+    // 找到最高有效位。
+    while (!(x >> x_e)) x_e--;
+    ux_e = x_e + bias;
+    x = x << (31 - x_e);
+    x_m = (x >> 8) & mask;
+    is_add = x & 0xFF;
+    // 按向偶数舍入规则决定是否进位。
+    x_m += (is_add > 0x80) || ((is_add == 0x80) && (x_m & 1));
+    if (x_m >> 23) {
+        x_m = x_m & mask;
+        ux_e++;
+    }
+    return (x_sign << 31) | (ux_e << 23) | x_m;
 }
 ```
 
@@ -525,18 +528,23 @@ unsigned float_i2f(int x) {
 基于以上思路，得到以下代码：
 ```c
 int float64_f2i(unsigned uf1, unsigned uf2) {
-  unsigned x_sign=(uf2)>>31;
-  int x_exp=(((uf2)>>20)&0x7FF)-1023;
-  unsigned x_m;
-  int res_mask;
-  unsigned res;
-  if(x_exp<0) return 0;
-  else if(x_exp>=31) return 0x80000000u;
-  x_m=((uf2&0xFFFFF)<<11) | ((uf1>>21)&0x7FF) | (0x80000000); // 只能取uf1的高11位和uf2的低20位，后续位数乘上指数一定不得整数，我们把前导1放在最高位
-  res_mask=~(0x80000000>>(31-x_exp)<<1);//用于消除算术右移可能产生的1
-  res=(x_m>>(31-x_exp)) & res_mask;//乘上前面的指数，因为默认前导1放在最高位，并且消掉算术右移可能存在的1
-  if(x_sign) return -res;
-  else return res;
+    unsigned x_sign = (uf2) >> 31;
+    int x_exp = (((uf2) >> 20) & 0x7FF) - 1023;
+    unsigned x_m;
+    int res_mask;
+    unsigned res;
+    if (x_exp < 0)
+        return 0;
+    else if (x_exp >= 31)
+        return 0x80000000u;
+    x_m = ((uf2 & 0xFFFFF) << 11) | ((uf1 >> 21) & 0x7FF) |
+          (0x80000000);  // 只能取uf1的高11位和uf2的低20位，后续位数乘上指数一定不得整数，我们把前导1放在最高位
+    res_mask = ~(0x80000000 >> (31 - x_exp) << 1);  // 用于消除算术右移可能产生的1
+    res = (x_m >> (31 - x_exp)) & res_mask;  // 乘上前面的指数，因为默认前导1放在最高位，并且消掉算术右移可能存在的1
+    if (x_sign)
+        return -res;
+    else
+        return res;
 }
 ```
 
@@ -559,17 +567,17 @@ int float64_f2i(unsigned uf1, unsigned uf2) {
 基于上述思路，得出以下代码：
 ```c
 unsigned float_pwr2(int x) {
-  if(x<-149) return 0; # 太小
-  else if(x<-126) return 1<<(x+149); # 非规格化数
-  else if(x<=127) return (x+127)<<23; # 规格化数
-  return 0x7f800000; # 太大
+    if (x < -149) return 0;                // 太小
+    if (x < -126) return 1 << (x + 149);   // 非规格化数
+    if (x <= 127) return (x + 127) << 23;  // 规格化数
+    return 0x7f800000;                     // 太大
 }
 ```
 注：该代码无法通过本地``./bddcheck/check.pl``测试，但是在``Autolab``上满分，原因未知。
 
 ## 进行评测
 运行``make``以及``./driver.pl``，得到以下结果：
-```
+```text
 Correctness Results     Perf Results
 Points  Rating  Errors  Points  Ops     Puzzle
 1       1       0       2       4       bitOr

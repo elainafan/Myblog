@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-07
 hidden: true
-seriesOrder: 26
+seriesOrder: 6
 ---
 
 ## 链接（Linking）
@@ -284,16 +284,18 @@ gcc main.c -lmath -L. -o main
 #include <dlfcn.h>
 
 void *handle = dlopen("libmath.so", RTLD_LAZY);
-if (!handle)
+if (!handle) {
     // 错误处理
+}
 
 void *func = dlsym(handle, "my_function");
-if (!func)
+if (!func) {
     // 错误处理
+}
 
 // 使用函数指针调用函数
 typedef int (*my_function_t)(int, int);
-my_function_t my_function = (my_function_t) func;
+my_function_t my_function = (my_function_t)func;
 int result = my_function(1, 2);
 
 dlclose(handle);

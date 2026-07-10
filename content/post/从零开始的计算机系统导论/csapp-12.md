@@ -5,7 +5,7 @@ categories:
     - 操作系统
 slug: csapp-12
 hidden: true
-seriesOrder: 31
+seriesOrder: 11
 ---
 
 并发编程处理多个逻辑流在时间上重叠的情况，可以使用进程、I/O 多路复用或线程实现。
@@ -127,11 +127,7 @@ while (1) {
 `select` 接收待读、待写和异常描述符集合，并在至少一个描述符就绪、超时或被信号中断时返回。第一个参数不是描述符数量，而是最大描述符加一。
 
 ```c
-int select(int n,
-           fd_set *readfds,
-           fd_set *writefds,
-           fd_set *exceptfds,
-           struct timeval *timeout);
+int select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 ```
 
 描述符集合由几个宏维护。
@@ -151,8 +147,7 @@ int maxfd = listenfd;
 
 while (1) {
     ready_set = read_set;
-    int nready = select(maxfd + 1, &ready_set,
-                        NULL, NULL, NULL);
+    int nready = select(maxfd + 1, &ready_set, NULL, NULL, NULL);
 
     if (FD_ISSET(listenfd, &ready_set)) {
         int connfd = accept(listenfd, NULL, NULL);
