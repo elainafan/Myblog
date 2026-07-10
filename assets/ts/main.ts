@@ -629,8 +629,8 @@ let Stack = {
         if (articleContent) {
             new StackGallery(articleContent);
             setupSmoothAnchors();
-            setupScrollspy();
         }
+        setupScrollspy();
 
         // 调用search脚本初始化方法
         searchInit();

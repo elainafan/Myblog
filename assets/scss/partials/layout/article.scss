@@ -94,13 +94,26 @@
     color: var(--card-text-color-main);
     overflow: hidden;
 
-    ::-webkit-scrollbar-thumb {
-        background-color: var(--card-separator-color);
-    }
-
     #TableOfContents {
-        overflow-x: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
         max-height: 75vh;
+        scrollbar-width: thin;
+        scrollbar-color: var(--card-separator-color) transparent;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+            margin-block: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--card-separator-color);
+            border-radius: 6px;
+        }
 
         ol,
         ul {

@@ -17,13 +17,17 @@ const tocQuery = "#TableOfContents";
 const navigationQuery = "#TableOfContents li";
 const activeClass = "active-class";
 
+let cleanupScrollspy: (() => void) | undefined;
+
 function scrollToTocElement(tocElement: HTMLElement, scrollableNavigation: HTMLElement) {
-    let textHeight = tocElement.querySelector("a").offsetHeight;
-    let scrollTop = tocElement.offsetTop - scrollableNavigation.offsetHeight / 2 + textHeight / 2 - scrollableNavigation.offsetTop;
-    if (scrollTop < 0) {
-        scrollTop = 0;
-    }
-    scrollableNavigation.scrollTo({ top: scrollTop, behavior: "smooth" });
+    const navigationRect = scrollableNavigation.getBoundingClientRect();
+    const elementRect = tocElement.getBoundingClientRect();
+    const scrollTop = scrollableNavigation.scrollTop
+        + elementRect.top
+        - navigationRect.top
+        - (navigationRect.height - elementRect.height) / 2;
+
+    scrollableNavigation.scrollTo({ top: Math.max(0, scrollTop), behavior: "smooth" });
 }
 
 type IdToElementMap = { [key: string]: HTMLElement };
@@ -43,14 +47,24 @@ function buildIdToNavigationElementMap(navigation: NodeListOf<Element>): IdToEle
 
 function computeOffsets(headers: NodeListOf<Element>) {
     let sectionsOffsets = [];
-    headers.forEach((header: HTMLElement) => { sectionsOffsets.push({ id: header.id, offset: header.offsetTop }) });
+    const documentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    headers.forEach((header: HTMLElement) => {
+        sectionsOffsets.push({
+            id: header.id,
+            offset: header.getBoundingClientRect().top + documentScrollTop
+        });
+    });
     sectionsOffsets.sort((a, b) => a.offset - b.offset);
     return sectionsOffsets;
 }
 
 function setupScrollspy() {
+    cleanupScrollspy?.();
+    cleanupScrollspy = undefined;
+
     let headers = document.querySelectorAll(headersQuery);
-    if (!headers) {
+    if (headers.length === 0) {
         console.warn("No header matched query", headers);
         return;
     }
@@ -62,7 +76,7 @@ function setupScrollspy() {
     }
 
     let navigation = document.querySelectorAll(navigationQuery);
-    if (!navigation) {
+    if (navigation.length === 0) {
         console.warn("No navigation matched query", navigationQuery);
         return;
     }
@@ -72,8 +86,10 @@ function setupScrollspy() {
     // We need to avoid scrolling when the user is actively interacting with the ToC. Otherwise, if the user clicks on a link in the ToC,
     // we would scroll their view, which is not optimal usability-wise.
     let tocHovered: boolean = false;
-    scrollableNavigation.addEventListener("mouseenter", debounced(() => tocHovered = true));
-    scrollableNavigation.addEventListener("mouseleave", debounced(() => tocHovered = false));
+    const mouseenterHandler = debounced(() => tocHovered = true);
+    const mouseleaveHandler = debounced(() => tocHovered = false);
+    scrollableNavigation.addEventListener("mouseenter", mouseenterHandler);
+    scrollableNavigation.addEventListener("mouseleave", mouseleaveHandler);
 
     let activeSectionLink: Element;
 
@@ -83,11 +99,12 @@ function setupScrollspy() {
         let scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
 
         let newActiveSection: HTMLElement | undefined;
+        const activationOffset = Math.min(window.innerHeight * 0.25, 240);
 
         // Find the section that is currently active.
         // It is possible for no section to be active, so newActiveSection may be undefined.
         sectionsOffsets.forEach((section) => {
-            if (scrollPosition >= section.offset - 20) {
+            if (scrollPosition >= section.offset - activationOffset) {
                 newActiveSection = document.getElementById(section.id);
             }
         });
@@ -117,7 +134,8 @@ function setupScrollspy() {
         }
     }
 
-    window.addEventListener("scroll", debounced(scrollHandler));
+    const windowScrollHandler = debounced(scrollHandler);
+    window.addEventListener("scroll", windowScrollHandler, { passive: true });
     
     // Resizing may cause the offset values to change: recompute them.
     function resizeHandler() {
@@ -125,7 +143,24 @@ function setupScrollspy() {
         scrollHandler();
     }
 
-    window.addEventListener("resize", debounced(resizeHandler));
+    const windowResizeHandler = debounced(resizeHandler);
+    window.addEventListener("resize", windowResizeHandler);
+
+    const articleContent = document.querySelector(".article-content");
+    const contentResizeObserver = articleContent && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(debounced(resizeHandler))
+        : undefined;
+    contentResizeObserver?.observe(articleContent);
+
+    cleanupScrollspy = () => {
+        window.removeEventListener("scroll", windowScrollHandler);
+        window.removeEventListener("resize", windowResizeHandler);
+        scrollableNavigation.removeEventListener("mouseenter", mouseenterHandler);
+        scrollableNavigation.removeEventListener("mouseleave", mouseleaveHandler);
+        contentResizeObserver?.disconnect();
+    };
+
+    scrollHandler();
 }
 
 export { setupScrollspy };

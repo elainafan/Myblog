@@ -1,6 +1,8 @@
 html {
     font-size: 62.5%;
     overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 * {
@@ -36,3 +38,17 @@ body {
     background-color: transparent;
 }
 /**/
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track);
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border: 2px solid var(--scrollbar-track);
+    border-radius: 10px;
+}
