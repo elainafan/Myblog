@@ -4,6 +4,8 @@ date: 2026-05-20
 categories: 
     - 建站
 updates:
+    - date: 2026-07-10
+      content: 收紧页脚的文章数量统计，排除隐藏子页和独立功能页。
     - date: 2026-06-23
       content: 将文章加密的密码校验改为 PBKDF2 派生摘要，并调整加密入口与错误提示样式。
     - date: 2026-06-22
@@ -941,15 +943,17 @@ function updateRunningDays() {
 总字数统计则完全由 Hugo 模板完成，这段加在 `layouts/partials/footer/footer.html` 中：
 
 ```go-html-template
+{{ $publishedArticles := where .Site.RegularPages "Section" "post" }}
+{{ $publishedArticles = where $publishedArticles "Params.hidden" "!=" true }}
 {{$scratch := newScratch}}
 {{ range (where .Site.Pages "Kind" "page" )}}
     {{$scratch.Add "total" .WordCount}}
 {{ end }}
-发表了{{ len (where .Site.RegularPages "Section" "post") }}篇文章 · 
+发表了{{ len $publishedArticles }}篇文章 ·
 总计{{ div ($scratch.Get "total") 1000.0 | lang.FormatNumber 2 }}k字
 ```
 
-这里用 `newScratch` 临时累加所有页面的 `.WordCount`，再统计 `post` 分区下的文章数量。Hugo 模板语法看起来比较奇怪，但做这种静态统计非常方便。
+这里先从 `.Site.RegularPages` 中取出 `post` 分区，再排除带有 `hidden: true` 的系列子页。About、Anime 等独立功能页位于 `page` 分区，同样不会进入 `$publishedArticles`。总字数仍保留原来的全部内容页口径，因此只会修正“发表了多少篇文章”这一项。
 
 对应样式在 `assets/scss/partials/footer.scss` 中，额外给 `.totalcount` 和 `.running-time` 做了颜色、字号和间距调整。
 
