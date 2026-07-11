@@ -13,10 +13,12 @@
 -}}
 {{- $isOperatingSystemSeries := in $sourcePath "从零开始的操作系统" -}}
 {{- $isProgrammingPracticeSeries := in $sourcePath "从零开始的程序设计实习" -}}
+{{- $isDataStructuresSeries := in $sourcePath "从零开始的数算" -}}
 {{- $useAlgorithmEntryMusic := and
     (or $isAlgorithmCategory $isAlgorithmSeries)
     (not $isOperatingSystemSeries)
     (not $isProgrammingPracticeSeries)
+    (not $isDataStructuresSeries)
 -}}
 
 <article class="{{ if .Params.image }}has-image {{ end }}main-article"

@@ -4,6 +4,8 @@ date: 2026-05-20
 categories: 
     - 建站
 updates:
+    - date: 2026-07-11
+      content: 将操作系统、程序设计实习和数算课程笔记排除在算法文章自动切歌规则之外。
     - date: 2026-06-24
       content: 为算法分类文章接入进入页面时的随机曲目联动。
 ---
@@ -192,9 +194,9 @@ window.onload = () => {
 不过，这只能缓解刷新后的恢复问题，不能解决“每次点链接都会中断播放”的问题。要真正做到站内跳转时不断歌，就需要 PJAX。
 
 ## 按文章类型切换曲目
-播放器常驻之后，就可以顺手做一点和文章内容相关的联动。比如笔者希望进入算法分类文章时，播放器从 `Magia` 和 `Everyday World` 里随机挑一首播放；但《从零开始的操作系统》虽然也归在算法分类下，更像课程笔记，不适合被这条规则影响。
+播放器常驻之后，就可以顺手做一点和文章内容相关的联动。比如笔者希望进入算法分类文章时，播放器从 `Magia` 和 `Everyday World` 里随机挑一首播放；但《从零开始的操作系统》《从零开始的程序设计实习》和《从零开始的数算》都属于课程笔记，不适合被这条规则影响。
 
-这里没有逐篇文章写配置，而是在 `layouts/partials/article/article.html` 渲染文章时判断源文件路径和分类：如果文章属于算法分类，或者位于 Codeforces、AtCoder、XCPC、题目难度归档、随机算法这些长期更新目录下，并且不在 `从零开始的操作系统` 目录，就给 `<article>` 加上 `data-entry-music="algorithm-random"`。
+这里没有逐篇文章写配置，而是在 `layouts/partials/article/article.html` 渲染文章时判断源文件路径和分类：如果文章属于算法分类，或者位于 Codeforces、AtCoder、XCPC、题目难度归档、随机算法这些长期更新目录下，并且不在上述三个课程笔记目录中，就给 `<article>` 加上 `data-entry-music="algorithm-random"`。
 
 前端则仍然写在 `layouts/partials/footer/custom.html`。播放器初始化后会在歌单里找这两首歌：
 
