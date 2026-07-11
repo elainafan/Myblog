@@ -176,7 +176,7 @@ void bubbleSort(std::vector<T>& data) {
 
 ![快速排序围绕枢轴递归划分区间](assets/08-quicksort-partition.png)
 
-这里使用 Hoare 风格的双指针划分
+这里使用 Hoare 风格的双指针划分。
 
 ```cpp
 template <class T>

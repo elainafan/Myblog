@@ -341,49 +341,136 @@ void floydWarshall(std::vector<std::vector<long long>>& distance,
 
 ## 最小生成树
 
-连通无向图的生成树包含全部顶点，并用恰好 $|V|-1$ 条边保持连通。边权总和最小的生成树称为最小生成树（Minimum Spanning Tree，MST）。
+图的生成树包含全部顶点，并用恰好 $|V|-1$ 条边保持连通。各边权值之和称为生成树的代价，代价最小的生成树称为最小生成树（Minimum-cost Spanning Tree，MST）。
 
 MST 与最短路径解决的是不同问题。最短路径要求某些点对之间的路线最短，MST 只要求全图连通时总边权最小，树中两点之间的路径不一定是原图最短路。
 
-Prim 算法从任意起点建立一棵树。每一步选择连接“树内顶点”和“树外顶点”的最小边，把新顶点并入。它与 Dijkstra 的框架相似，但优先级保存的是新顶点到当前树的最小边权，不累加源点距离。
+![课件示例图与其中一棵最小生成树](assets/07-kruskal-cycle.png)
 
-Kruskal 算法把所有边按权值升序处理。若一条边的两个端点位于不同连通分量，就选择这条边并合并两个分量；若端点已经连通，加入它会形成环，因此跳过。并查集可以高效维护这些分量。
+### Prim
 
-![Kruskal 算法跳过会形成环的较重边](assets/07-kruskal-cycle.png)
+课件把正在构造的生成树记为 $T=(V^\ast,E^\ast)$ 。从任意起点 `s` 开始时，`V*` 只含 `s`，`E*` 为空。随后反复寻找一条最轻边：它的一个端点已经位于 `V*`，另一个端点还在 `V*` 之外。加入这条边及其树外端点后，继续下一轮，直到全部顶点都进入 `V*`。
+
+#### MST 性质
+
+设 `e = (vx, vy)` 是当前跨越已标记与未标记顶点的最轻边，其中 `vx` 位于 `V*`，`vy` 位于 `V*` 之外。课件给出的 MST 性质是：一定存在一棵包含当前部分树 `T` 的最小生成树，同时包含边 `e`。
+
+![Prim 算法选择跨越当前割的最轻边](assets/07-prim-cut.png)
+
+证明使用交换边。假设所有包含 `T` 的 MST 都不包含 `e`，任取其中一棵 `T'`。由于 `T'` 连通，从 `vx` 到 `vy` 的路径上必有另一条边 `e'` 跨越同一道分界。把 `e` 加入 `T'` 会形成一个环，再从环中删去 `e'`，便得到另一棵生成树 `T''`。
+
+`e` 是所有跨界边中最轻的，因此 `w(e) <= w(e')`，`T''` 的总代价不会大于 `T'`。于是 `T''` 仍是 MST，而且既包含 `T` 又包含 `e`，与假设矛盾。Prim 从一个顶点和零条边开始，每一步都加入一条可以属于某棵 MST 的边，最终得到最小生成树。
+
+#### D 数组实现
+
+课件使用 `D` 数组维护树外顶点。`D[v].length` 表示当前树连接到 `v` 的最小边权，`D[v].parent` 保存这条边在树内的端点。每加入一个顶点，只需扫描它的邻边并刷新对应的 `D` 值，然后在线性表中找出最小值。
 
 ```cpp
-struct WeightedEdge {
+struct MstEdge {
     int from;
     int to;
     long long weight;
 };
 
-long long kruskal(int vertexCount, std::vector<WeightedEdge> edges) {
-    std::sort(edges.begin(), edges.end(), [](const auto& a, const auto& b) {
-        return a.weight < b.weight;
-    });
+std::vector<MstEdge> prim(const Graph& graph, int start = 0) {
+    if (graph.empty()) return {};
 
-    DisjointSet sets(vertexCount);
-    long long total = 0;
-    int chosen = 0;
+    const long long inf = std::numeric_limits<long long>::max() / 4;
+    int vertexCount = static_cast<int>(graph.size());
+    std::vector<bool> visited(vertexCount, false);
+    std::vector<long long> best(vertexCount, inf);
+    std::vector<int> parent(vertexCount, -1);
+    std::vector<MstEdge> mst;
+    mst.reserve(vertexCount - 1);
 
-    for (const WeightedEdge& edge : edges) {
-        if (!sets.unite(edge.from, edge.to)) continue;
-        total += edge.weight;
-        ++chosen;
+    best[start] = 0;
+
+    for (int count = 0; count < vertexCount; ++count) {
+        int v = -1;
+        for (int u = 0; u < vertexCount; ++u) {
+            if (!visited[u] &&
+                (v == -1 || best[u] < best[v])) {
+                v = u;
+            }
+        }
+
+        if (v == -1 || best[v] == inf) {
+            throw std::runtime_error("graph is disconnected");
+        }
+
+        visited[v] = true;
+        if (parent[v] != -1) {
+            mst.push_back({parent[v], v, best[v]});
+        }
+
+        for (const Edge& edge : graph[v]) {
+            if (!visited[edge.to] && edge.weight < best[edge.to]) {
+                best[edge.to] = edge.weight;
+                parent[edge.to] = v;
+            }
+        }
     }
 
-    if (chosen != vertexCount - 1) {
-        throw std::runtime_error("graph is disconnected");
-    }
-    return total;
+    return mst;
 }
 ```
 
-Kruskal 的主要成本是排序，时间复杂度为 $O(|E|\log |E|)$ 。Prim 使用邻接表和堆时为 $O(|E|\log |V|)$ ；使用邻接矩阵并线性寻找最小边时为 $O(|V|^2)$ ，在稠密图上反而可能更合适。
+`best[start]` 的零只负责选出起点，不对应生成树中的边。若某一轮找不到有限的最小值，说明仍有顶点无法从当前连通分量到达，原图不存在覆盖全部顶点的生成树。
 
-两种算法都依赖割性质：任意把顶点划分为两个非空集合，跨越这道割的最轻边一定可以出现在某棵最小生成树中。若所有边权互不相同，最小生成树唯一；存在相同边权时，可能有多棵权值相同的最小生成树。
+直接扫描 `D` 数组寻找最小值需要 $O(|V|^2)$ 时间，所有邻边更新共需 $O(|E|)$ 时间，因此课件中的实现以 $O(|V|^2)$ 为主，适合稠密图。稀疏图可以像 Dijkstra 一样用最小堆维护 `D` 值。
 
-Kruskal 当前选中的边把顶点划分成若干连通分量。下一条连接不同分量的最轻边跨越某道割，按割性质可以安全加入。Prim 则始终只维护“已选顶点集合”与其补集这一道割。
+Prim 与 Dijkstra 的框架相似，但 `D` 的含义不同。Dijkstra 保存从源点出发的累积距离；Prim 保存当前树连接到树外顶点的单条最轻边，更新时直接比较 `edge.weight`，不与此前路径相加。
 
-图不连通时不存在覆盖全部顶点的生成树。分别在每个连通分量上运行算法会得到最小生成森林，边数为 $|V|-c$ ，其中 $c$ 是连通分量数。
+### Kruskal
+
+Kruskal 从没有边的森林开始，把每个顶点看作一个独立的连通分量。所有边按权值从小到大取出：若一条边连接两个不同分量，就把它加入森林并合并这两个分量；若两个端点已经连通，加入该边会形成环，因此直接舍去。所有顶点合并为一个分量后，森林便成为 MST。
+
+课件用最小堆保存候选边，用并查集维护等价类。无向图从邻接表收集边时，同一条边会出现两次，可以只保留 `from < to` 的一份。
+
+```cpp
+struct HeavierEdge {
+    bool operator()(const MstEdge& left, const MstEdge& right) const {
+        return left.weight > right.weight;
+    }
+};
+
+std::vector<MstEdge> kruskal(int vertexCount,
+                             const std::vector<MstEdge>& edges) {
+    if (vertexCount == 0) return {};
+
+    std::priority_queue<MstEdge,
+                        std::vector<MstEdge>,
+                        HeavierEdge> heap;
+    for (const MstEdge& edge : edges) {
+        heap.push(edge);
+    }
+
+    DisjointSet sets(vertexCount);
+    std::vector<MstEdge> mst;
+    mst.reserve(vertexCount - 1);
+    int componentCount = vertexCount;
+
+    while (componentCount > 1) {
+        if (heap.empty()) {
+            throw std::runtime_error("graph is disconnected");
+        }
+
+        MstEdge edge = heap.top();
+        heap.pop();
+        if (!sets.unite(edge.from, edge.to)) continue;
+
+        mst.push_back(edge);
+        --componentCount;
+    }
+
+    return mst;
+}
+```
+
+课件示例按顺序检查 `(D,E,5)`、`(F,E,7)`、`(A,B,9)`、`(F,G,10)` 与 `(A,C,11)`。轮到 `(B,C,12)` 时，`B` 与 `C` 已在同一等价类中，这条边会成环，因此跳过；再加入 `(A,G,13)` 后，全部顶点归入同一分量。
+
+![Kruskal 按边权合并等价类的课件演示](assets/07-kruskal-demo.png)
+
+路径压缩与按大小合并使并查集的查询、合并开销接近常数。最坏情况下可能检查几乎全部边，建堆与取边的总复杂度为 $O(|E|\log |E|)$。课件还指出，实际构造 MST 时往往只取出略多于顶点数的边；但完整算法的最坏界仍由边的堆排序决定。
+
+最小生成树不一定唯一。若所有边权互不相同，MST 一定唯一；存在相同边权时，不同的安全边选择可能得到代价相同的多棵生成树。图不连通时，Prim 会留下不可达顶点，Kruskal 会在等价类尚未合并完时耗尽候选边，此时不存在覆盖全部顶点的 MST。

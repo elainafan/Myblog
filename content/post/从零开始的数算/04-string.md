@@ -106,7 +106,7 @@ KMP 不在失配后把模式完全清空，而是保留已经匹配部分中可�
 
 字符串的真前缀不包含字符串本身，真后缀同理。对 `ababa` 而言，前缀 `aba` 与后缀 `aba` 相等，所以它有长度为三的边界； `ababa` 本身不能作为自己的真边界。
 
-设 $\pi[i]$ 表示子串 $P[0\ldots i]$ 的最长相等真前缀与后缀长度。模式 `ababaca` 的前缀函数为
+设 $\pi[i]$ 表示子串 $P[0\ldots i]$ 的最长相等真前缀与后缀长度。模式 `ababaca` 的前缀函数为：
 
 ```text
 pattern: a b a b a c a
@@ -116,7 +116,9 @@ pi:      0 0 1 2 3 0 1
 
 例如 `ababa` 的最长边界是 `aba`，因此 $\pi[4]=3$ 。加入字符 `c` 后，候选边界 `aba` 不能延长；退到 `a` 仍不能延长；最后退到空边界，所以 $\pi[5]=0$ 。
 
-### 构造前缀函数
+### 前缀函数写法
+
+#### 构造
 
 计算 $\pi[i]$ 时，令 $j=\pi[i-1]$ 。这表示前一个前缀已经有长度为 $j$ 的边界。如果 $P[i]=P[j]$ ，新字符能同时接到前缀和后缀后面，边界长度增加一。
 
@@ -143,7 +145,7 @@ std::vector<int> prefixFunction(const std::string& pattern) {
 
 变量 $j$ 在成功比较时增加，在 `while` 中只会减小。虽然循环嵌套在 `for` 内，整个构造过程不会对每个位置从头扫描，时间复杂度为 $O(m)$ 。
 
-### KMP 匹配
+#### 匹配
 
 匹配阶段令 $j$ 表示当前已经匹配的模式长度。若 `text[i]` 与 `pattern[j]` 失配，已经匹配的文本后缀等于模式前缀，因此直接令 $j=\pi[j-1]$ ，文本下标 $i$ 不回退。
 
@@ -174,15 +176,103 @@ int kmpMatch(const std::string& text, const std::string& pattern) {
 
 文本扫描为 $O(n)$ 时间，加上前缀函数预处理，总复杂度为 $O(n+m)$ ，额外空间为 $O(m)$ 。若要寻找全部出现位置，发现完整匹配后记录答案，再令 $j=\pi[j-1]$ ，即可继续寻找允许重叠的下一处匹配。
 
-### `next` 数组
+### 教材中的普通 KMP
 
-另一种教材写法令 `next[0] = -1`，并让 `next[j]` 表示模式位置 $j$ 失配后，模式指针应跳到的位置。
+教材把失败数组称为字符串的特征向量，记作 $N$ 。代码中通常写作 `next`。约定 `next[0] = -1`，模式位置 `j` 失配后执行 `j = next[j]`；当 `j == -1` 时，文本指针与模式指针同时右移。
 
-![以 -1 为初值计算模式串的 next 数组](assets/04-next-array.png)
+对 `j > 0`，`next[j]` 保存模式前缀 `pattern[0 ... j - 1]` 的最长边界长度。它与前缀函数描述同一组边界，但下标错开一位：这里有 `next[j] = pi[j - 1]`。因此普通 `next` 的构造为：
 
-前缀函数保存“可保留的匹配长度”， `next` 保存“下一次尝试的模式下标”。两种数组描述同一套边界信息，但初值、下标含义和匹配循环不同。抄写实现时必须连同数组定义一起使用，不能把 `next[0] = -1` 与前缀函数的转移式拼在一起。
+![以 -1 为初值计算模式串的普通 next 数组](assets/04-next-array.png)
 
-当 `pattern[j] == pattern[next[j]]` 时，跳到 `next[j]` 后会立刻在同一字符上再次失配。优化版 `nextval` 可以继续沿失败链接跳转，减少这种无效比较。它只改变常数，不改变线性复杂度。
+```cpp
+std::vector<int> buildNext(const std::string& pattern) {
+    if (pattern.empty()) return {};
+
+    std::vector<int> next(pattern.size());
+    next[0] = -1;
+
+    int j = 0;
+    int k = -1;
+    while (j + 1 < static_cast<int>(pattern.size())) {
+        while (k >= 0 && pattern[j] != pattern[k]) {
+            k = next[k];
+        }
+        ++j;
+        ++k;
+        next[j] = k;
+    }
+    return next;
+}
+```
+
+匹配时，文本下标 `i` 只增不减；失配只沿 `next` 回退模式下标 `j`：
+
+```cpp
+int kmpMatchByFailure(const std::string& text,
+                      const std::string& pattern,
+                      const std::vector<int>& failure) {
+    if (pattern.empty()) return 0;
+
+    int i = 0;
+    int j = 0;
+    while (i < static_cast<int>(text.size()) &&
+           j < static_cast<int>(pattern.size())) {
+        if (j == -1 || text[i] == pattern[j]) {
+            ++i;
+            ++j;
+        } else {
+            j = failure[j];
+        }
+    }
+    return j == static_cast<int>(pattern.size()) ? i - j : -1;
+}
+```
+
+普通 KMP 调用 `kmpMatchByFailure(text, pattern, buildNext(pattern))`。预处理需要 $O(m)$ 时间，匹配需要 $O(n)$ 时间，总时间为 $O(n+m)$ 。
+
+### 优化 KMP
+
+普通 KMP 回退到 `k = next[j]` 后，若 `pattern[j] == pattern[k]`，当前文本字符既然已经与 `pattern[j]` 失配，也一定会与相同的 `pattern[k]` 再次失配。这次比较没有提供新信息，可以继续沿失败链接回退。
+
+课件把优化后的数组仍记为特征向量 $N$ 。为避免与普通版本混淆，这里记作 `nextval`：若新位置 `j` 与候选位置 `k` 的字符相同，则令 `nextval[j] = nextval[k]`；否则仍令 `nextval[j] = k`。
+
+```cpp
+std::vector<int> buildNextval(const std::string& pattern) {
+    if (pattern.empty()) return {};
+
+    std::vector<int> nextval(pattern.size());
+    nextval[0] = -1;
+
+    int j = 0;
+    int k = -1;
+    while (j + 1 < static_cast<int>(pattern.size())) {
+        while (k >= 0 && pattern[j] != pattern[k]) {
+            k = nextval[k];
+        }
+        ++j;
+        ++k;
+        if (pattern[j] == pattern[k]) {
+            nextval[j] = nextval[k];
+        } else {
+            nextval[j] = k;
+        }
+    }
+    return nextval;
+}
+```
+
+以课件中的模式 `abcaababc` 为例，两组特征向量为：
+
+```text
+index:    0  1  2  3  4  5  6  7  8
+pattern:  a  b  c  a  a  b  a  b  c
+next:    -1  0  0  0  1  1  2  1  2
+nextval: -1  0  0 -1  1  0  2  0  0
+```
+
+![同一模式串的普通 next 与优化 nextval 对照](assets/04-next-nextval-comparison.png)
+
+优化 KMP 仍使用同一个匹配函数，只需改为传入 `buildNextval(pattern)`。它减少了回退后立刻重复失败的比较，最坏时间与额外空间仍分别为 $O(n+m)$ 和 $O(m)$ 。考试中要区分的是失败数组的构造规则，不能只把普通 `next` 改名为 `nextval`。
 
 ### 其他匹配方法
 

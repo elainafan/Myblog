@@ -12,7 +12,7 @@ seriesOrder: 3
 
 栈只允许在同一端插入和删除元素。这个位置称为栈顶，另一端称为栈底。最后进入的元素最先离开，因此栈遵循后进先出（Last In First Out，LIFO）规则。
 
-栈的基本操作有三个
+栈的基本操作有三个：
 
 - `push` 把元素压入栈顶。
 - `pop` 删除栈顶元素。
@@ -197,7 +197,7 @@ int evaluatePostfix(const std::vector<std::string>& tokens) {
 
 队列在一端插入，在另一端删除。插入的一端称为队尾，删除的一端称为队头。最先进入的元素最先离开，因此队列遵循先进先出（First In First Out，FIFO）规则。
 
-基本操作包括
+基本操作包括：
 
 - `enqueue` 在队尾加入元素。
 - `dequeue` 删除队头元素。
