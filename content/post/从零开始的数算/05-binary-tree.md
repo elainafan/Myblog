@@ -85,6 +85,8 @@ struct BinaryNode {
 - 中序遍历按左子树、根、右子树的顺序访问。
 - 后序遍历按左子树、右子树、根的顺序访问。
 
+![同一棵二叉树的前序、中序与后序遍历序列](assets/05-traversal-orders.png)
+
 ```cpp
 template <class T>
 void preorder(BinaryNode<T>* root) {
@@ -358,6 +360,12 @@ bool insert(BinaryNode<T>*& root, const T& value) {
 - 只有一个孩子的结点可以由该孩子顶替。
 - 有两个孩子的结点可以用中序前驱或中序后继替换，再删除那个至多只有一个孩子的替代结点。
 
+![二叉搜索树直接删除叶结点](assets/05-bst-delete-leaf.png)
+
+![二叉搜索树删除单孩子结点并由孩子顶替](assets/05-bst-delete-one-child.png)
+
+![二叉搜索树删除双孩子结点时寻找替代结点](assets/05-bst-delete-two-children.png)
+
 中序前驱是左子树中的最大结点，它大于左子树其余结点，又小于右子树全部结点；用它替换被删键后，BST 的次序不变。使用中序后继时理由对称。
 
 两个孩子都存在时，可以复制后继的键，再删除右子树最左结点。真正释放的结点至多只有一个孩子。
@@ -395,6 +403,8 @@ bool erase(BinaryNode<T>*& root, const T& key) {
 
 例如向最小堆 `[4, 10, 7, 18, 13]` 插入 `5`。新元素先放到下标五，与父结点 `7` 交换；新的父结点是根 `4`，已经不大于 `5`，调整结束。整个过程中只有插入路径上的结点可能违反堆序。
 
+![最小堆插入新元素后沿父链向上调整](assets/05-heap-insert.png)
+
 ```cpp
 void pushHeap(std::vector<int>& heap, int value) {
     heap.push_back(value);
@@ -416,6 +426,8 @@ int popHeap(std::vector<int>& heap) {
     return answer;
 }
 ```
+
+![最小堆的根被替换后沿较小孩子向下调整](assets/05-heap-siftdown.png)
 
 ```cpp
 void siftDown(std::vector<int>& heap, int index, int size) {

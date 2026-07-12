@@ -18,7 +18,7 @@ $$
 
 这里的“有序”指元素之间存在先后关系，并不表示元素值已经按大小排列。 $a_0$ 没有直接前驱， $a_{n-1}$ 没有直接后继，其余元素都只有一个直接前驱和一个直接后继。
 
-线性表可以从三个角度观察：
+描述线性表时要分清三个层面：
 
 - 逻辑结构回答哪些元素相邻。
 - 存储结构回答元素与关系如何放入内存。
@@ -74,6 +74,8 @@ public:
 
 向位置 $i$ 插入新元素后，原来的 $a_i$ 到 $a_{n-1}$ 都要向后移动一格。移动必须从尾端开始，否则 `data[i + 1]` 会覆盖尚未搬走的旧值。
 
+![顺序表插入元素时从尾端向后搬移后缀](assets/02-array-insert.png)
+
 ```cpp
 bool insert(int index, const T& value) {
     if (index < 0 || index > length || length == capacity) {
@@ -90,6 +92,8 @@ bool insert(int index, const T& value) {
 ```
 
 删除位置 $i$ 后，后缀元素向前移动，循环方向则应从前向后。
+
+![顺序表删除元素时从前向后填补空位](assets/02-array-delete.png)
 
 ```cpp
 bool erase(int index) {
@@ -162,6 +166,8 @@ void pushFront(ListNode<T>*& head, const T& value) {
 
 已知前驱结点 $p$ 时，在它后面插入新结点只需改变两条链接。
 
+![单链表在已知前驱后插入结点的链接变化](assets/02-singly-linked-insert.png)
+
 ```cpp
 template <class T>
 void insertAfter(ListNode<T>* p, const T& value) {
@@ -172,6 +178,8 @@ void insertAfter(ListNode<T>* p, const T& value) {
 右侧的 `p->next` 会先求值并保存到新结点中，然后左侧赋值才覆盖旧链接。若拆成多条语句，也必须先让新结点指向原后继，再修改 $p$ 的后继。
 
 删除后继结点时，要先保存将被释放的地址。
+
+![单链表删除结点时让前驱越过待删结点](assets/02-singly-linked-delete.png)
 
 ```cpp
 template <class T>
@@ -245,6 +253,8 @@ void insertAfter(DoublyNode<T>* p, DoublyNode<T>* node) {
 ![双向链表插入结点时的四次指针修改](assets/02-doubly-linked-insert.png)
 
 删除结点时，前驱的 `next` 要越过它，后继的 `prev` 也要越过它。若表首或表尾没有哨兵，两个方向都要检查空指针。使用首尾哨兵后，每个有效结点都有前驱和后继，删除代码可以不再区分首尾。
+
+![双向链表删除结点时同时接回前驱与后继](assets/02-doubly-linked-delete.png)
 
 ### 循环链表
 

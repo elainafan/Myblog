@@ -28,6 +28,8 @@ seriesOrder: 8
 
 插入排序始终维护一个已经有序的前缀。处理第 $i$ 个元素时，先保存它，再把前缀中所有更大的元素向右移动一格，最后放入空出的插入位置。
 
+![直接插入排序把当前记录插入已经有序的前缀](assets/08-insertion-sort.png)
+
 ```cpp
 template <class T>
 void insertionSort(std::vector<T>& data) {
@@ -64,6 +66,8 @@ $$
 
 直接插入排序只能让元素逐格移动。Shell 排序先按较大的间隔把序列分成若干子序列，对每个子序列做插入排序，再逐步缩小间隔，最后以间隔一完成全局排序。
 
+![Shell 排序按增量划分子序列并分别执行插入排序](assets/08-shell-sort.png)
+
 ```cpp
 template <class T>
 void shellSort(std::vector<T>& data) {
@@ -91,6 +95,8 @@ void shellSort(std::vector<T>& data) {
 ### 选择排序
 
 直接选择排序维护已经就位的前缀。第 $i$ 轮在后缀中寻找最小元素，并与位置 $i$ 交换。
+
+![直接选择排序每轮从未排序区间选择最小记录](assets/08-selection-sort.png)
 
 ```cpp
 template <class T>
@@ -310,6 +316,8 @@ for (int width = 1; width < n; width *= 2) {
 
 若键是范围有限的整数，可以不通过两两比较排序。计数排序先统计每个键出现次数，再计算每个键在输出数组中的结束位置。
 
+![计数排序由频数计算起始位置并稳定收集记录](assets/08-counting-sort.png)
+
 ```cpp
 std::vector<int> countingSort(const std::vector<int>& data, int maximum) {
     std::vector<int> count(maximum + 1);
@@ -368,6 +376,8 @@ $$
 ### 比较排序的下界
 
 只通过比较决定顺序的算法可以表示为一棵决策树。每个内部结点代表一次比较，每个叶结点代表一种可能的排列。含 $n$ 个互异元素时共有 $n!$ 种排列，因此决策树至少有 $n!$ 个叶结点。
+
+![三个元素的比较排序决策树必须区分全部排列](assets/08-comparison-lower-bound.png)
 
 高度为 $h$ 的二叉树最多有 $2^h$ 个叶结点，所以
 

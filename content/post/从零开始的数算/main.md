@@ -3,6 +3,9 @@ title: 从零开始的数算
 date: 2025-09-14
 categories:
     - 算法
+updates:
+    - date: 2026-07-12
+      content: 补充各章课件图示，扩写散列检索、红黑树删除与伸展树，并收紧正文表述。
 seriesExclude: true
 ---
 

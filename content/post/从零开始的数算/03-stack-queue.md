@@ -126,6 +126,8 @@ bool isStackPermutation(const std::vector<int>& target) {
 
 中缀表达式把运算符写在两个操作数之间，计算顺序由优先级、结合性和括号共同决定。后缀表达式把运算符写在操作数之后，计算顺序已经包含在记号排列中，不再需要括号。
 
+![中缀表达式按照运算优先级形成的表达式树](assets/03-expression-tree.png)
+
 中缀表达式
 
 $$
@@ -231,6 +233,8 @@ $$
 
 长度为 $m$ 的数组最多保存 $m-1$ 个元素。
 
+![循环队列中 front 与 rear 随入队出队发生的回绕](assets/03-circular-queue-transitions.png)
+
 ```cpp
 template <class T>
 class CircularQueue {
@@ -282,6 +286,8 @@ $$
 链式队列同时保存队头和队尾指针。只保存队头会让尾插需要遍历整条链；只保存队尾则无法删除首结点。
 
 加入一个哨兵头结点后， `front` 指向哨兵， `rear` 指向最后一个有效结点。空队列满足 `front == rear`。
+
+![链式队列用队头和队尾指针维护首尾操作](assets/03-linked-queue.png)
 
 ```cpp
 template <class T>
@@ -393,6 +399,8 @@ T(n)=2^n-1
 $$
 
 递归深度只有 $O(n)$ ，但调用总数为指数级。栈空间和运行时间衡量的是不同对象，不能因为递归深度为线性就把时间也写成线性。
+
+![汉诺塔递归调用在运行栈中的展开与返回](assets/03-hanoi-stack.png)
 
 ### 显式模拟递归
 

@@ -74,6 +74,8 @@ $$
 
 朴素算法依次尝试每个起点。匹配途中失配时，文本起点向后移动一位，模式重新从首字符比较。
 
+![朴素模式匹配在每次失配后把模式串向后移动一位](assets/04-naive-matching.png)
+
 ```cpp
 int naiveMatch(const std::string& text, const std::string& pattern) {
     if (pattern.empty()) return 0;
@@ -206,6 +208,8 @@ std::vector<int> buildNext(const std::string& pattern) {
 ```
 
 匹配时，文本下标 `i` 只增不减；失配只沿 `next` 回退模式下标 `j`：
+
+![普通 KMP 在失配后保留可复用前后缀并移动模式串](assets/04-kmp-match-trace.png)
 
 ```cpp
 int kmpMatchByFailure(const std::string& text,
