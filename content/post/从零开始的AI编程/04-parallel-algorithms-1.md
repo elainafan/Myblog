@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 4
 ---
 
-## Work 与 Step
+## 并行算法的代价
 
 分析串行算法时，通常只计算总操作数。并行算法还要区分 work complexity 与 step complexity。
 
@@ -151,7 +151,9 @@ Down-sweep 从树根向下传播前缀。对每个内部节点，左孩子接收
 
 输入长度不是二次幂时，可以补到下一个二次幂，补充值使用运算的单位元。块内 scan 完成后，每个 block 还要输出自己的区间和；再 scan 这些区间和，并把对应偏移加回各 block，才能得到全数组结果。
 
-## Compact
+## Scan 的应用
+
+### Compact
 
 Parallel Compact 从数组中保留满足条件的元素，并把它们紧密写入输出。假设输入与保留标记为
 
@@ -172,7 +174,7 @@ $$
 
 这一过程分为 predicate、scan 与 scatter 三步。Scan 先为每个保留元素分配唯一目标位置，scatter 因而没有写冲突。
 
-## Segmented Scan
+### Segmented Scan
 
 Segmented scan 在一条数组中同时计算多个彼此独立的前缀。除数值外，还要有一组 segment head 标记，说明哪些位置是新段的起点。
 

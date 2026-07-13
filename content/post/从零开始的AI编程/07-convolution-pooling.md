@@ -17,8 +17,7 @@ seriesOrder: 7
 对单通道输入，用 $W$ 表示 $3\times3$ 卷积核。当前窗口左上角坐标取 $(h,w)$ 时，输出为
 
 $$
-Y_{h,w}
-=
+Y_{h,w} =
 \sum_{i=0}^{2}
 \sum_{j=0}^{2}
 W_{i,j}X_{h+i,w+j}
@@ -43,8 +42,7 @@ $$
 用 $S$ 表示 stride，用 $D$ 表示 dilation，用 $P$ 表示 padding，输出元素为
 
 $$
-Y_{n,o,h,w}
-=
+Y_{n,o,h,w} =
 b_o
 +
 \sum_{c=0}^{C_{\mathrm{in}}-1}
@@ -57,8 +55,7 @@ $$
 超出输入边界的位置按 padding 规则处理。输出高度为
 
 $$
-H_{\mathrm{out}}
-=
+H_{\mathrm{out}} =
 \left\lfloor
 \frac{
 H+2P_H-D_H(K_H-1)-1
@@ -154,8 +151,7 @@ $$
 给定记作 $\partial L/\partial Y$ 的上游梯度，权重梯度为
 
 $$
-\frac{\partial L}{\partial W}
-=
+\frac{\partial L}{\partial W} =
 \frac{\partial L}{\partial Y}
 \widetilde{X}^{\mathsf T}
 $$
@@ -163,8 +159,7 @@ $$
 展开后输入的梯度为
 
 $$
-\frac{\partial L}{\partial\widetilde{X}}
-=
+\frac{\partial L}{\partial\widetilde{X}} =
 W^{\mathsf T}
 \frac{\partial L}{\partial Y}
 $$
@@ -173,7 +168,9 @@ Col2im 再把 $\partial L/\partial\widetilde{X}$ 放回原输入布局。多个�
 
 Bias 对同一输出通道的所有 batch 与空间位置共享，因此 bias 梯度沿 batch、高度和宽度三个维度做 Reduce。
 
-## Grouped 与 Depthwise Convolution
+## 卷积变体
+
+### Grouped 与 Depthwise Convolution
 
 `groups` 把输入、输出通道划分为互不连接的组。普通卷积使用 `groups=1`，每个输出通道读取全部输入通道。
 
@@ -187,7 +184,7 @@ Depthwise convolution 不混合不同通道，通常再接一个 $1\times1$ poin
 
 计算量减少后，算子可能从 compute-bound 变为 memory-bound。理论 FLOPs 很低并不保证实际延迟按同样比例下降，布局转换和 kernel launch 的占比会变大。
 
-## Transposed Convolution
+### Transposed Convolution
 
 普通卷积展平后可以写成线性变换
 
@@ -198,8 +195,7 @@ $$
 其输入梯度为
 
 $$
-\frac{\partial L}{\partial X}
-=
+\frac{\partial L}{\partial X} =
 W^\mathsf{T}
 \frac{\partial L}{\partial Y}
 $$
@@ -236,13 +232,14 @@ torch.nn.functional.max_pool2d(
 
 卷积与池化都属于 stencil。每个输出从规则邻域 gather 数据，邻域较大或窗口重叠较多时，可以用 shared memory tile 复用输入。
 
-## Softmax
+## 分类输出与损失
+
+### Softmax
 
 分类网络输出的 logits 没有范围限制。Softmax 将一行 logits 变为和为 1 的正数，其定义为
 
 $$
-p_i
-=
+p_i =
 \frac{e^{z_i}}
 {\sum_j e^{z_j}}
 $$
@@ -250,8 +247,7 @@ $$
 指数函数很容易上溢。令行最大值为 $m=\max_j z_j$ 并利用 Softmax 的平移不变性，可以改写为
 
 $$
-p_i
-=
+p_i =
 \frac{e^{z_i-m}}
 {\sum_j e^{z_j-m}}
 $$
@@ -261,14 +257,13 @@ $$
 Softmax 的 Jacobian 为
 
 $$
-\frac{\partial p_i}{\partial z_j}
-=
+\frac{\partial p_i}{\partial z_j} =
 p_i(\delta_{ij}-p_j)
 $$
 
 ![Softmax 梯度](assets/imported/3.png)
 
-## Cross Entropy
+### Cross Entropy
 
 对 one-hot 标签 $y$ 和预测分布 $p$ 计算交叉熵
 

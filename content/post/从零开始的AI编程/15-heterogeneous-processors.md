@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 15
 ---
 
-## Deep Learning Processor
+## AI 加速器
 
 深度学习处理器围绕大规模矩阵运算、低精度计算和高带宽数据搬运设计。GPU 仍保留图形与通用并行计算能力，NPU、TPU 等加速器则把更多芯片面积用于 Tensor 运算阵列和片上存储。
 
@@ -20,7 +20,7 @@ CPU 与 GPU 的设计取向不同。CPU 用较少的复杂核心处理分支、�
 
 这条路径里任一环节都可能限制速度。矩阵单元空闲可能是数据没到，显存带宽没满可能是 kernel 太碎，GPU utilization 很高也可能只是大量 warp 在等待通信。
 
-## GPU 结构
+### GPU 结构
 
 NVIDIA GPU 由若干 Graphics Processing Cluster 组成，每个 GPC 继续包含 Texture Processing Cluster 与 Streaming Multiprocessor。CUDA thread block 会被调度到某个 SM，warp 则是 SIMT 执行的基本单位。
 
@@ -38,7 +38,7 @@ SM 内包含 CUDA Core、Tensor Core、warp scheduler、register file、shared m
 
 若 register 或 shared memory 使用过多，一个 SM 能同时驻留的 block 会减少。Occupancy 下降后，等待内存时可切换的 warp 也更少。
 
-## Tensor Core
+### Tensor Core
 
 Tensor Core 执行小矩阵的 fused multiply-add，并把许多小块组合成 GEMM。Volta 引入的 WMMA 接口以 warp 为协作单位，后续架构继续扩展支持的数据类型和 tile shape。
 
@@ -54,7 +54,7 @@ $$
 
 CUDA 的 `wmma` namespace 可以显式管理 fragment。生产代码一般通过 cuBLAS、cuDNN 或编译器生成 Tensor Core kernel，因为它们还会处理不同架构、边界 tile 和 pipeline。
 
-## GPU、NPU 与 TPU
+### GPU、NPU 与 TPU
 
 GPU 具有较成熟的通用编程生态和较强的算子覆盖，适合训练、推理以及非 AI 并行任务。NPU 通常针对移动端或数据中心推理设计，强调能效和固定算子路径。TPU 使用大规模矩阵阵列，并通过 XLA 等编译系统安排数据流。
 
@@ -85,7 +85,9 @@ NVSwitch 把多条 NVLink 接成交换网络，让节点内多 GPU 获得更接�
 
 Collective library 会结合拓扑选择 ring、tree 或分层算法。节点内走 NVLink，节点间走 RDMA，是大型训练中常见的两级通信结构。
 
-## 异构计算
+## 异构系统与集群
+
+### 异构计算
 
 同构系统使用同类处理器，任务切分与负载均衡相对直接。异构系统同时使用 CPU、GPU、NPU 或专用 accelerator，把不同阶段放到更合适的设备。
 
@@ -95,7 +97,7 @@ CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的
 
 任务图需要同时考虑计算成本和 transfer cost。把一个很小的算子单独送到 GPU 往往得不偿失；把相邻算子融合或把完整阶段下沉到 device，才能摊薄传输与 launch overhead。
 
-## AI Cluster
+### AI Cluster
 
 单机显存与算力有限，大模型训练会扩展到由大量计算节点组成的集群。节点通常包含多 GPU、CPU、host memory、本地 SSD 与高速网卡。
 
@@ -110,7 +112,9 @@ CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的
 
 训练网络强调高带宽、低延迟与可预测的 tail latency。存储网络更关心总吞吐和大对象读取。把全部流量混在同一网络中，checkpoint 或数据读取可能与梯度同步互相争抢。
 
-## RDMA 与 RoCE
+## 集群网络与软件栈
+
+### RDMA 与 RoCE
 
 Remote Direct Memory Access 允许网卡直接在远端注册内存与本地内存之间传输，减少 CPU 参与和额外复制。InfiniBand 原生提供 RDMA，RoCE 则把 RDMA 语义运行在 Ethernet 上。
 
@@ -118,7 +122,7 @@ Remote Direct Memory Access 允许网卡直接在远端注册内存与本地内�
 
 GPU Direct RDMA 可以让网卡直接访问 GPU memory，省去先拷贝到 host buffer 的路径。要稳定获得性能，还需配置 lossless 或拥塞控制、队列、路由和 NUMA affinity。网络中少量拥塞就可能拖慢等待同一次 collective 的全部 worker。
 
-## 软件栈
+### 软件栈
 
 硬件之上还需要驱动、runtime、通信库、算子库、编译器与框架。CUDA、ROCm 和不同 NPU SDK 提供的算子覆盖与调试工具并不一致。模型迁移失败时，问题可能来自不支持的 dtype、布局、动态 shape 或通信原语，而不只是算力不足。
 

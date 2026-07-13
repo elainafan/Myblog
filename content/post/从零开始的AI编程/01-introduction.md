@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 1
 ---
 
-## 一轮训练
+## 训练循环
 
 图像分类程序接收一批图片，给每张图片输出十个分数，再根据正确标签修正网络参数。第一次接触 PyTorch 时，代码通常只有几十行，但这几十行已经串起了一个深度学习框架的主要部分。
 
@@ -32,13 +32,13 @@ for images, labels in train_loader:
 4. `backward()` 沿前向计算留下的依赖关系反向求导。
 5. 优化器读取梯度，更新模型参数。
 
-后面的 CUDA 算子、计算图、自动微分、编译优化和分布式训练，都是在拆解这五步背后的实现。整门课程的大致结构见下图。
+这五步分别牵涉数据读取、算子执行、自动微分和参数更新。CUDA 决定算子怎样落到 GPU，计算图保存数据依赖，编译器负责整理和优化算子，多块设备之间还要同步参数与梯度。
 
 ![](assets/imported/微信图片_20250917134607_2081_208.png)
 
-## Tensor
+## Tensor 与数据
 
-Tensor 可以先理解为带有元信息的多维数组。数组元素存放在一段内存中，Tensor 对象还要记录这段内存应该怎样解释。
+Tensor 是带有元信息的多维数组。数组元素存放在一段内存中，Tensor 对象还要记录这段内存应该怎样解释。
 
 - `shape` 记录各维长度。
 - `stride` 记录某一维下标增加 $1$ 时，线性地址需要跨过多少个元素。
@@ -62,7 +62,7 @@ x_rand = torch.rand_like(x_np)
 
 `torch.tensor` 会根据 Python 数据创建新的 Tensor。`torch.from_numpy` 通常与 NumPy 数组共享底层内存，因此修改一方可能影响另一方。共享内存省去了一次复制，也要求两边共同维护数据的生命周期。
 
-### Shape
+### Shape 与 Stride
 
 一批彩色图片常用 `[N, C, H, W]` 表示。
 
@@ -72,7 +72,7 @@ x_rand = torch.rand_like(x_np)
 
 假设输入形状为 `[4, 3, 32, 32]`，它包含四张 $32 \times 32$ 的彩色图片。卷积层按相同规则处理这四张图片，batch 维不会参与单张图片内部的卷积。
 
-### Device
+### Device 与数据搬运
 
 CPU 内存与 GPU 显存属于不同的地址空间。`.to("cuda")` 可能分配一块新的显存，并把数据从主机复制到设备。
 
@@ -83,7 +83,7 @@ x_gpu = x_data.to(device)
 
 把每个小算子的结果来回搬运会让传输时间盖过计算时间。实际训练通常在进入循环后把输入搬到 GPU，让同一批数据在设备上连续完成多个算子，直到需要打印、保存或交给 CPU 处理时再取回结果。
 
-## 数据
+### Dataset 与 DataLoader
 
 `Dataset` 描述一个样本怎样读取，`DataLoader` 负责把样本组成 batch。两者分开后，同一份数据集可以换用不同的 batch size、打乱方式和并行加载设置。
 
@@ -124,6 +124,8 @@ train_loader = torch.utils.data.DataLoader(
 
 LeNet 将局部特征逐步汇总为十个类别分数。卷积层在图像上滑动小窗口，池化层缩小空间尺寸，全连接层再把提取到的特征映射到类别空间。
 
+![LeNet 的前向、损失与反向传播](assets/slides/01-lenet-training.png)
+
 ```python
 import torch
 import torch.nn as nn
@@ -155,7 +157,7 @@ class LeNet(nn.Module):
 
 最后一层输出的是 logits。它们可以为任意实数，也不要求所有分数相加得到 $1$ 这个值。`CrossEntropyLoss` 内部会用稳定的方式完成 LogSoftmax 和负对数似然，不应在模型末尾再手动加一次 Softmax。
 
-## 梯度与参数更新
+## 反向传播与参数更新
 
 前向计算过程中，只要输入或参数需要梯度，PyTorch 就会记录算子和数据依赖。损失是一个标量，`loss.backward()` 从它出发，按依赖关系的反方向应用链式法则。
 
@@ -194,11 +196,11 @@ with torch.no_grad():
 
 `torch.no_grad()` 防止参数更新本身进入计算图。实际训练交给 `torch.optim`，因为 Momentum、Adam、权重衰减和混合精度训练还要维护额外状态。
 
-## 框架内部
+## 深度学习框架
 
 从 Python 看到的 `conv2d` 只是入口。一个完整框架还要决定算子在哪种设备上执行、使用哪种数据类型、选择哪个 kernel、怎样分配中间内存，以及反向传播时需要保存哪些值。
 
-大致可以分成几层。
+框架通常由几层接口组成。
 
 - Python API 提供 Tensor、Module、Optimizer 和数据加载接口。
 - 计算图记录算子及其依赖，供自动微分和图优化使用。
@@ -206,4 +208,8 @@ with torch.no_grad():
 - 后端把算子映射到 CUDA kernel、cuBLAS、cuDNN 或其他硬件库。
 - 运行时管理显存、异步队列、跨设备通信与分布式执行。
 
-同一段模型代码能在 CPU 和 GPU 上运行，是因为这些层之间约定了稳定的接口。后面的内容会沿一轮训练的数据流，逐步拆开这些接口。
+早期模型需要研究者自己维护大量训练代码，框架把 Tensor、自动微分、算子库和硬件后端接到统一接口后，同一段模型程序才能在不同设备上复用。
+
+![早期深度学习系统的开发方式](assets/slides/01-training-evolution.png)
+
+![深度学习框架缩短了模型实现路径](assets/slides/01-framework-workflow.png)

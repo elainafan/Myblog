@@ -14,7 +14,7 @@ seriesOrder: 9
 
 ![AI 框架的层次结构](assets/imported/17.png)
 
-## 三种求导方法
+## 符号、数值与自动微分
 
 符号微分把表达式当作代数对象，应用求导规则后生成一条新的表达式。它很适合处理规模不大的显式公式，例如 SymPy 可以直接计算导函数。
 
@@ -42,7 +42,7 @@ $$
 
 自动微分仍然执行数值程序，但在执行过程中额外传播导数。它没有有限差分的截断误差，也不会把整个网络展开成一条巨大的符号表达式。
 
-## 从一张小图算起
+## 计算图与链式法则
 
 考虑输入 $x_1$ 和 $x_2$ 以及三个中间结果
 
@@ -77,26 +77,23 @@ $$
 最后一个加法节点对两个输入的导数都是 $1$ 这个常数。完整导数由这些局部结果沿路径相乘，再把通向同一变量的不同路径相加。于是
 
 $$
-\frac{\partial y}{\partial x_1}
-=
+\frac{\partial y}{\partial x_1} =
 x_2\cos(x_1x_2)
 $$
 
 $$
-\frac{\partial y}{\partial x_2}
-=
+\frac{\partial y}{\partial x_2} =
 x_1\cos(x_1x_2)+1
 $$
 
-$x_2$ 对输出有两条影响路径。一条经过乘法和正弦，另一条直接进入最后的加法，所以它的梯度里出现了两项。以后看到残差连接、同一参数被反复使用，反向传播也遵守同样的累加规则。
+$x_2$ 对输出有两条影响路径。一条经过乘法和正弦，另一条直接进入最后的加法，所以它的梯度里出现了两项。残差连接和共享参数也会产生多条路径，反向传播必须累加每条路径的贡献。
 
 ## 前向模式
 
 前向模式为每个中间变量同时保存普通数值和方向导数。普通数值常称为 primal，方向导数常称为 tangent。给定输入方向
 
 $$
-\dot{x}
-=
+\dot{x} =
 \begin{bmatrix}
 \dot{x}_1\\
 \dot{x}_2
@@ -106,20 +103,17 @@ $$
 前面的计算会按原来的顺序继续传播
 
 $$
-\dot{u}
-=
+\dot{u} =
 x_2\dot{x}_1+x_1\dot{x}_2
 $$
 
 $$
-\dot{v}
-=
+\dot{v} =
 \cos(u)\dot{u}
 $$
 
 $$
-\dot{y}
-=
+\dot{y} =
 \dot{v}+\dot{x}_2
 $$
 
@@ -136,8 +130,7 @@ $$
 Dual Number 可以把这套规则写进运算符。令双数单位满足 $\epsilon^2=0$ 以后，对光滑函数有
 
 $$
-f(x+\epsilon\dot{x})
-=
+f(x+\epsilon\dot{x}) =
 f(x)+\epsilon f'(x)\dot{x}
 $$
 
@@ -150,8 +143,7 @@ $$
 用 $L$ 表示损失，用 $u$ 表示中间变量，它的伴随量记作
 
 $$
-\bar{u}
-=
+\bar{u} =
 \frac{\partial L}{\partial u}
 $$
 
@@ -169,8 +161,7 @@ $$
 前面小图的反向计算从 $\bar{y}=1$ 开始。加法节点把 $1$ 作为变量 $v$ 的梯度，也直接给 $x_2$ 累加一份数值为 $1$ 的梯度。正弦节点把伴随量更新为 $\bar{u}=\cos u$ 后，乘法节点再得到
 
 $$
-\bar{x}_1
-=
+\bar{x}_1 =
 \bar{u}x_2
 $$
 
@@ -190,7 +181,9 @@ $$
 
 标量损失的输出维度满足 $m=1$ 这一条件，输出端只需用 $1$ 作为起点。训练框架因此普遍使用反向模式。
 
-## 框架怎样记录运算
+![前向模式与反向模式的计算方向](assets/slides/09-forward-reverse.png)
+
+## 自动微分的框架实现
 
 动态图框架会在 Tensor 运算发生时创建图节点。输出 Tensor 保存生成它的操作、父节点，以及反向时要调用的函数。一个极简的乘法可以写成
 
@@ -214,7 +207,9 @@ class Tensor:
 
 叶子 Tensor 通常是用户创建的参数或输入。PyTorch 默认把梯度累积到需要求导的叶子 Tensor 的 `.grad` 中；中间 Tensor 为了节省内存不会保留 `.grad`，调试时可以显式调用 `retain_grad()`。
 
-## 前向值为什么要保存
+![Tensor 反向传播中的梯度累加](assets/slides/09-tensor-backward.png)
+
+### 前向值与显存
 
 许多局部导数依赖前向结果。乘法需要原来的两个输入，ReLU 要知道哪些位置大于零，卷积的 backward 需要输入和权重。前向算完以后，这些值不能立刻全部释放。
 
@@ -222,7 +217,7 @@ class Tensor:
 
 In-place 操作会直接覆盖已有存储。如果被覆盖的值恰好是 backward 需要的输入，导数就无法正确计算。PyTorch 为 Tensor 维护 version counter，发现保存后的值被原地修改时会报错，而不是悄悄给出错误梯度。
 
-## 在 PyTorch 中使用 Autograd
+### PyTorch Autograd
 
 ![PyTorch Autograd](assets/imported/22.png)
 
@@ -252,7 +247,7 @@ y.backward(torch.tensor([0.5, 3.0]))
 
 推理时不需要计算参数梯度，可以使用 `torch.no_grad()`。`torch.inference_mode()` 还会关闭一部分与 Autograd 相关的 metadata 更新，限制也更强，适合纯推理路径。
 
-## 检查梯度
+## 梯度检查与高阶导数
 
 自己实现 CUDA 算子时，forward 能跑通并不说明 backward 正确。可以用中心差分抽查少量元素
 
@@ -260,8 +255,7 @@ $$
 g_i^{\mathrm{num}}
 \approx
 \frac{
-L(\theta+\varepsilon e_i)
--
+L(\theta+\varepsilon e_i) -
 L(\theta-\varepsilon e_i)
 }
 {2\varepsilon}
@@ -284,7 +278,7 @@ $$
 
 梯度检查应使用 `float64`、较小输入和确定性算子。ReLU 的零点、`max` 的并列最大值等位置本来就不可微或导数不唯一，随机抽到这些点时，数值结果可能与框架选择的次梯度不同。
 
-## 高阶导数
+### 高阶导数
 
 如果 backward 内部也由可微算子构成，反向传播可以继续构图。PyTorch 用 `create_graph=True` 保留这部分关系。
 

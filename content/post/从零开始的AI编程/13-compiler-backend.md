@@ -14,13 +14,12 @@ seriesOrder: 13
 
 后端的输出可以是一段机器代码、GPU kernel、设备二进制，也可以是一份包含 kernel 与数据传输的执行计划。
 
-## 计算定义与 Schedule
+## 计算与调度
 
 计算定义回答要算什么。以矩阵乘法为例
 
 $$
-C_{ij}
-=
+C_{ij} =
 \sum_{k=0}^{K-1}
 A_{ik}B_{kj}
 $$
@@ -43,15 +42,14 @@ Schedule 回答这些循环怎样执行。它会决定循环顺序、分块大�
 
 同一个计算定义可以有许多合法 Schedule。它们都返回相同矩阵，性能却可能相差几个数量级。
 
-## 循环变换在改变什么
+### 循环变换
 
 Interchange 调整循环顺序。若内层循环沿连续地址前进，cache line 或 memory transaction 中的数据能被充分使用；若每次跨很大步长，带宽会浪费在没有访问的字节上。
 
 Split 把一条长轴拆成外层与内层。例如长度为 $N$ 的轴可以写成
 
 $$
-i
-=
+i =
 i_oT+i_i
 $$
 
@@ -65,7 +63,9 @@ Fuse 把多个循环轴压成一条线性轴，方便映射到 thread id。Unrol
 
 这些变换会互相影响。更大的 tile 能增加复用，也会占用更多 shared memory；融合减少中间写回，却可能生成一个寄存器需求很高的 kernel。后端要同时满足依赖关系与资源限制。
 
-## 调度树
+## 调度表示与 GPU 映射
+
+### 调度树
 
 Schedule 可以表示为一棵嵌套树。树上包含循环节点、存储节点与计算节点。
 
@@ -83,7 +83,7 @@ root
 
 存在循环携带依赖时，变换还要保证顺序。例如前缀和的第 $i$ 项依赖第 $i-1$ 项，不能直接把这条轴上的所有迭代并行执行。Tensor 算子中的循环通常规则，依赖也比较清楚，因此适合做自动分析。
 
-## 把矩阵乘法映射到 GPU
+### 矩阵乘法的 GPU 映射
 
 GPU Schedule 会把外层 tile 绑定到 block，把 tile 内的工作分给 warp 与 thread。
 
@@ -110,7 +110,9 @@ GPU Schedule 会把外层 tile 绑定到 block，把 tile 内的工作分给 war
 
 Occupancy 表示一个 SM 上实际活跃 warp 相对硬件上限的比例。较高 occupancy 有助于隐藏访存延迟，但并不自动带来最高性能。计算密集 kernel 可能更需要 register 复用，强行降低寄存器用量反而会增加访存。
 
-## 算子选择与整图代价
+## 算子选择与自动调优
+
+### 整图代价
 
 后端可以调用 cuBLAS、cuDNN 一类库，也可以生成专用 kernel。通用库覆盖大量 shape，成熟且稳定；生成代码能够针对固定 shape、融合区域或特殊布局专门优化。
 
@@ -120,13 +122,13 @@ Arithmetic Intensity 较高的算子更容易受峰值算力限制，较低的�
 
 自动混合精度也属于这类选择。矩阵乘法可以用 `float16` 输入和 `float32` 累加，归一化、指数与 loss reduction 则可能保留更高精度。插入过多 cast 会损失性能，精度过低又会溢出或下溢。
 
-## Auto-Tuning
+### Auto-Tuning
 
 Tile size、循环顺序、unroll factor、thread binding 和 vector width 组合起来会形成很大的搜索空间。手写规则很难覆盖所有设备和 shape，Auto-Tuning 会生成候选 Schedule，并实际测量其中一部分。
 
 ![AutoTVM 的搜索流程](assets/slides/13-autotvm.png)
 
-一次搜索通常包含三个部分。
+一次搜索由 Search Space、Cost Model 和 Search Strategy 共同完成。
 
 1. Search Space 定义哪些变换与参数组合合法。
 2. Cost Model 根据已经测过的候选预测性能。
@@ -138,7 +140,9 @@ Tile size、循环顺序、unroll factor、thread binding 和 vector width 组�
 
 调优结果通常按算子、shape、dtype、layout 与设备架构存入数据库。输入条件变化后，原来的最优 Schedule 未必仍然合适。
 
-## 内存与执行计划
+## 内存、执行与缓存
+
+### 内存与执行计划
 
 单算子 Schedule 决定局部数据放进 register、shared memory 还是 global memory。整图后端还要复用 Tensor 缓冲区、分配 workspace，并安排 device copy。
 
@@ -154,7 +158,7 @@ Tile size、循环顺序、unroll factor、thread binding 和 vector width 组�
 
 一份模型可以混合两种方式。无法捕获的动态区域保留交互式执行，稳定子图下沉；少量动态维度通过 guard、shape bucket 或设备侧控制流处理。
 
-## 编译缓存
+### 编译缓存
 
 JIT 的首次运行要经历图捕获、优化、代码生成与编译，延迟可能远高于普通前向。生成结果只有被反复复用，编译成本才值得。
 

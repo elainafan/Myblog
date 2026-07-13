@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 17
 ---
 
-## 模型放不下时
+## 参数与状态分片
 
 普通数据并行要求每个 rank 保存完整参数、梯度和 optimizer state。以混合精度 Adam 为例，一份参数可能同时对应低精度权重、FP32 master weight、梯度以及两份 moment，实际占用远大于模型文件本身。
 
@@ -16,7 +16,7 @@ seriesOrder: 17
 
 一个常用的粗略估算是每个参数需要 $16$ byte。FP16 参数和梯度各占 $2$ byte，FP32 master weight、Adam 一阶矩和二阶矩各占 $4$ byte。以 $7$ billion 参数为例，仅这些状态就约需 $112$ GB，还没有计算 activation、临时 workspace 和通信 buffer。模型文件能放进显存，并不代表模型能够训练。
 
-## ZeRO
+### ZeRO
 
 Zero Redundancy Optimizer 逐步消除数据并行 rank 之间重复保存的状态。
 
@@ -88,7 +88,9 @@ Q、K、V projection 可以按 attention head 划分，每个 rank 处理一部�
 
 head 数必须能够合理分给 tensor-parallel group。Grouped Query Attention 中 Q head 与较少的 K/V head 比例还会约束切分方式。
 
-## Inter-op 与 Intra-op
+## 序列维与算子级并行
+
+### Inter-op 与 Intra-op
 
 Inter-op parallelism 把不同算子放到不同 device，典型形式是 pipeline。Intra-op parallelism 切分单个算子，典型形式是 tensor parallel。
 
@@ -96,13 +98,13 @@ Inter-op parallelism 把不同算子放到不同 device，典型形式是 pipeli
 
 计算图分区后，边上的 Tensor 可能从 replicated 变成 sharded，也可能沿另一维重新分片。编译器需要插入 AllGather、ReduceScatter、AllReduce 或 AllToAll 完成 reshard。两个局部最优分区之间若需要昂贵 reshard，整图性能仍可能很差。
 
-## Sequence Parallelism
+### Sequence Parallelism
 
 Tensor parallel 常让 layer norm、dropout 等操作的 activation 在每个 rank 重复保存。Sequence Parallelism 把这些操作沿 sequence 维切分，减少 activation memory，并在进入需要不同布局的算子前执行 AllGather 或 ReduceScatter。
 
 它与 tensor parallel 通常使用同一组 rank。通信量未必减少，但每 rank activation 占用降低，适合长序列训练。
 
-## Ring Attention
+### Ring Attention
 
 标准 attention 需要构造长度为 $S$ 的 query 与 key 交互，计算量和 score matrix 都随 $S^2$ 增长。Ring Attention 沿 sequence 维切分 Q、K、V，每个 rank 保留一段 query，并让 K/V block 沿 ring 轮转。
 
@@ -125,7 +127,7 @@ Causal mask 允许跳过部分无效 block，但各 rank 的工作量可能因�
 
 总 world size 是各并行维度乘积。每个维度建立自己的 process group，collective 只能在对应 group 内执行。rank mapping 应让通信最频繁的 tensor parallel 尽量留在节点内，较能容忍延迟的数据并行再跨节点。
 
-## 通信瓶颈
+### 通信瓶颈
 
 ![分布式训练中的通信瓶颈](assets/slides/17-bottleneck.png)
 
@@ -140,4 +142,4 @@ Causal mask 允许跳过部分无效 block，但各 rank 的工作量可能因�
 - 使用 activation checkpointing 降低显存，以额外重算换取更大的 micro-batch。
 - 调整模型分区，使各 stage 的计算与显存接近均衡。
 
-多维并行没有只看参数量就能决定的固定答案。需要同时估计参数、activation、optimizer state、每层计算量、collective message size 与实际拓扑，再用 profiler 验证通信是否真正被覆盖。
+并行方案不能只按参数量决定。参数、activation、optimizer state、每层计算量、collective message size 和实际拓扑都会改变结果，最终还要用 profiler 检查通信与计算是否重叠。

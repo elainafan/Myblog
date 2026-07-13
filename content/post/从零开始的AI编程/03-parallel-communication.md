@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 3
 ---
 
-## Block 与 SM
+## Block、SM 与 Warp
 
 CUDA 代码用 thread、block 和 grid 描述逻辑上的并行任务，GPU 再把 block 调度到 Streaming Multiprocessor，简称 SM。
 
@@ -26,7 +26,7 @@ CUDA 代码用 thread、block 和 grid 描述逻辑上的并行任务，GPU 再�
 
 CUDA 只保证同一 stream 中，后一个 kernel 会在前一个 kernel 完成后开始。一个 kernel 内没有普通的跨 block barrier。需要全 grid 的阶段同步时，最直接的办法是结束当前 kernel，再启动下一个 kernel。
 
-## Warp 与 SIMT
+### Warp 与 SIMT
 
 NVIDIA GPU 通常以 $32$ 个线程组成一个 warp。调度器给一个 warp 发出一条指令，warp 中处于 active 状态的线程各自用自己的寄存器和地址执行这条指令。这种模型称为 Single Instruction, Multiple Threads，简称 SIMT。
 
@@ -50,7 +50,7 @@ if (threadIdx.x % 2 == 0) {
 
 短小分支不一定值得强行消除。优化前要判断它是否位于热点、两条路径的工作量是否明显，以及编译器是否已经使用 predication。为了避免一个很小的分支而增加大量计算，收益可能更差。
 
-## 数据竞争
+## 同步与数据竞争
 
 多个线程并发访问同一地址，并且至少一个访问是写操作时，若没有合适的同步或原子语义，结果会依赖实际执行顺序。这种错误称为 data race。
 
@@ -99,7 +99,7 @@ __global__ void shift_sum(
 }
 ```
 
-这里的 barrier 位于条件分支之外，因此 block 中全部线程都会到达。把 `__syncthreads()` 放进 `if (global < n)` 会让最后一个不满的 block 中只有部分线程等待，其余线程永远不到达，kernel 可能挂起。
+Barrier 必须位于条件分支之外，保证 block 中全部线程都会到达。若把 `__syncthreads()` 放进 `if (global < n)`，最后一个不满的 block 只会有部分线程等待，其余线程永远不到达，kernel 可能挂起。
 
 `__syncthreads()` 只同步当前 block。若 `array[i + 1]` 位于相邻 block，shared memory 方案还要给 tile 增加 halo，或者把计算拆成多个 kernel。Barrier 也不能修复多个线程同时更新同一 global address 的问题，因为线程越过 barrier 后仍可能同时执行读、改、写。
 

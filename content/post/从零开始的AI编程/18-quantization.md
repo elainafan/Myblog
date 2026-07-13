@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 18
 ---
 
-## 数值格式
+## 量化表示
 
 量化用更小或更规则的数值集合近似原模型。目标可能是缩小模型、降低内存带宽、提高矩阵单元吞吐，或在只支持整数运算的设备上执行。
 
@@ -24,7 +24,7 @@ $$
 
 FP16 的 exponent 较少，容易 overflow；bfloat16 保留与 FP32 相同数量的 exponent bit，范围更大但 fraction 更短。模型是否适合某种格式取决于权重、activation、gradient 与 accumulator 的数值分布。
 
-## K-means Quantization
+### K-means Quantization
 
 K-means quantization 从权重中学习 $K$ 个中心，模型只保存 codebook 和每个权重的中心 index。
 
@@ -69,8 +69,7 @@ $$
 可以手算一个 UINT8 例子。把 $[-1,3]$ 这一实数区间映射到 $[0,255]$ 这一整数区间，scale 约为
 
 $$
-s
-=
+s =
 \frac{3-(-1)}{255}
 \approx
 0.015686
@@ -79,8 +78,7 @@ $$
 Zero point 取接近 $64$ 的整数。实数零映射到整数 $64$ 这一位置，实数 $1$ 则映射到整数 $128$ 附近，反量化后得到
 
 $$
-\widehat{r}
-=
+\widehat{r} =
 0.015686
 \times
 (128-64)
@@ -98,7 +96,7 @@ $$
 
 非对称量化允许 $z\neq0$ ，能更好利用偏移分布的整数范围。代价是矩阵乘法中要处理额外的 offset 项。
 
-## 范围校准
+### 范围校准
 
 直接用绝对最小值和最大值确定 scale，容易被少量 outlier 拉宽范围，让大部分值集中在几个整数 bin 中。Post-Training Quantization 通常用 calibration dataset 统计 activation 分布，再选择 min-max、percentile、KL divergence 或均方误差等准则。
 
@@ -106,7 +104,7 @@ Clipping 会让超出范围的值饱和，却能提高主体区间的分辨率�
 
 Weight 在部署前固定，范围可以离线计算；activation 随输入变化，可能使用静态 calibration scale，也可能在每次运行时动态计算 scale。Dynamic quantization 更灵活，但会增加运行时归约成本。
 
-## 量化粒度
+### 量化粒度
 
 ![量化粒度](assets/slides/18-granularity.png)
 
@@ -117,7 +115,7 @@ Weight 在部署前固定，范围可以离线计算；activation 随输入变�
 
 更细粒度能适应不同通道的范围，却需要保存更多 scale，并在 kernel 内加载和广播。硬件是否支持对应粒度会直接影响实际速度。
 
-## 整数矩阵乘法
+### 整数矩阵乘法
 
 设输入与权重近似为
 
@@ -137,7 +135,9 @@ $$
 
 Bias 的 scale 通常取 $s_xs_w$ 并存为 INT32。若 weight 使用 per-channel scale，每个输出通道的 bias scale 也不同。
 
-## Post-Training Quantization
+## PTQ 与 QAT
+
+### Post-Training Quantization
 
 PTQ 在训练结束后执行，不需要完整反向传播。基本步骤为：
 
@@ -149,7 +149,7 @@ PTQ 在训练结束后执行，不需要完整反向传播。基本步骤为：
 
 PTQ 成本低，但极低 bit、outlier 明显或分布变化大的模型可能损失较多精度。
 
-## Quantization-Aware Training
+### Quantization-Aware Training
 
 QAT 在训练图中插入 fake quantization。前向过程执行 round、clamp 和 dequantization，模拟部署时的误差；参数仍以浮点格式保存和更新。
 
@@ -159,13 +159,15 @@ Round 的导数几乎处处为零，直接求导会让权重无法更新。Strai
 
 Observer 或可学习参数负责更新 scale 与 zero point。训练后期常冻结统计量，避免量化范围继续抖动。BatchNorm 也可以提前 fold 到卷积权重和 bias 中，使训练图与部署图一致。
 
-## 混合精度量化
+## 混合精度与剪枝
+
+### 混合精度量化
 
 不同层对量化误差的敏感性不同。输入层、输出层、LayerNorm、Softmax 或少数 outlier-heavy projection 可以保留 FP16，其余矩阵乘使用 INT8 或更低 bit。
 
 精度选择还要考虑转换边界。若相邻算子在 INT8 与 FP16 之间频繁切换，quantize/dequantize kernel 和中间写回可能吃掉算力收益。整段子图保持同一格式通常更高效。
 
-## Pruning
+### Pruning
 
 Pruning 删除不重要的参数或结构。
 

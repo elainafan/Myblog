@@ -93,7 +93,7 @@ $$
 
 每轮由 Map、Scan 与 Scatter 组成。稳定性保证低位已经排好的相对顺序不会被高位打乱。对固定字长整数，轮数由每次处理的 bit 数决定。工程实现常一次处理多个 bit，以更大的局部 histogram 换取更少轮次。
 
-## Stream
+## Stream 与异步流水线
 
 Stream 是一条有序的设备工作队列。Host 把 kernel、内存复制和 event 依次提交到 stream，同一 stream 中的工作按顺序执行。
 
@@ -148,9 +148,9 @@ for (int i = 0; i < stream_count; ++i) {
 
 Chunk 太小会让 launch 与调度开销占比过高，太大又会减少可重叠的阶段数。合适大小要结合传输带宽、kernel 时间和显存容量测量。
 
-### Pinned memory
+### Pinned Memory
 
-真正的异步 host-device 复制要求 host 缓冲区位于 pinned memory，也称 page-locked memory。操作系统不会把这部分物理页换出，GPU 的 DMA engine 因而可以直接访问稳定的物理地址。
+Host-device 复制要与 kernel 稳定重叠，host 缓冲区应位于 pinned memory，也称 page-locked memory。操作系统不会把这部分物理页换出，GPU 的 DMA engine 因而可以直接访问稳定的物理地址。
 
 ![Pinned Memory 与异步拷贝](assets/slides/05-async-pinned-memory.png)
 
@@ -193,4 +193,4 @@ consume<<<grid, block, 0, consumer_stream>>>(buffer);
 - `cudaEventSynchronize` 等待某个 event 完成。
 - `cudaStreamWaitEvent` 在设备队列之间建立依赖。
 
-排序算法描述一个 kernel 内部怎样组织比较，stream 描述多个 kernel 与数据传输怎样排队。完整 GPU 程序通常同时利用这两层并行。
+排序的 compare-exchange 在 kernel 内并行执行，多个 kernel 与数据传输再通过 stream 形成流水线。两层并行分别减少算法内部的依赖和设备队列之间的空闲。

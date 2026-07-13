@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 16
 ---
 
-## 为什么要分布式训练
+## 分布式训练环境
 
 模型参数、训练数据和单次实验所需算力都在增长。单个加速器可能放不下模型，也可能需要几个月才能完成训练。分布式训练把计算、内存和存储扩展到多个 device 与多个节点。
 
@@ -38,7 +38,7 @@ model = torch.nn.parallel.DistributedDataParallel(
 
 一机四卡时，rank 常取 $0$ 到 $3$ 这四个值，每个进程只控制自己的 GPU。多机训练还需要把全局 rank 映射到节点和本地设备，不能把 global rank 直接当作本机 CUDA id。
 
-## 通信层次
+### 通信层次
 
 同一系统内的传输路径可以分成几层：
 
@@ -55,7 +55,7 @@ $$
 
 $\alpha$ 是每次通信的固定启动延迟， $\beta$ 是每 byte 的传输成本， $n$ 是消息大小。小消息主要受 latency 限制，大消息主要受 bandwidth 限制。把许多小 Tensor 合并成 bucket，可以减少重复支付 $\alpha$ 的次数。
 
-## Collective Communication
+### Collective Communication
 
 Collective 由一组 rank 共同参与。所有 rank 必须以一致的顺序进入相同 collective，否则程序会永久等待或直接报错。
 
@@ -72,7 +72,7 @@ Collective 由一组 rank 共同参与。所有 rank 必须以一致的顺序进
 
 Reduce 的运算可以是 sum、max、min 或其他满足要求的结合操作。浮点加法不严格满足结合律，通信树和 rank 数改变后，低位结果可能略有差异。
 
-## MapReduce
+### MapReduce 与迭代训练
 
 MapReduce 把数据处理拆成 Map、Shuffle 与 Reduce。Map 将输入记录变成键值对，Shuffle 把同 key 的值送到同一个 Reduce，Reduce 再完成聚合。
 
@@ -104,7 +104,9 @@ Backward 从输出层向输入层逐步产生梯度。DistributedDataParallel �
 
 Bucket 太小会产生大量小 collective，太大则推迟第一轮通信。参数在 backward 中的 ready 顺序与 bucket 顺序不匹配时，也会形成等待。
 
-## 同步与异步 SGD
+## 参数同步架构
+
+### 同步与异步 SGD
 
 Synchronous SGD 每一步等待所有 worker 完成梯度。参数版本一致，行为最接近单机大 batch；最慢 worker 会决定整步时间，straggler 因此很昂贵。
 
@@ -112,7 +114,7 @@ Asynchronous SGD 允许 worker 使用稍旧的参数计算并独立提交梯度�
 
 实践中的 GPU 大模型训练通常使用同步 collective，再通过数据预取、通信重叠和故障恢复降低等待成本。
 
-## Parameter Server
+### Parameter Server
 
 Parameter Server 架构把参数分片放在 server，worker 拉取参数、计算梯度并推送更新。
 
@@ -122,7 +124,7 @@ Parameter Server 架构把参数分片放在 server，worker 拉取参数、计�
 
 AllReduce 则让 worker 直接协作完成聚合，不保留中心 server。稠密梯度训练中，它通常能更充分地利用集群互连。
 
-## Reduction 拓扑
+## AllReduce 拓扑与集合通信
 
 ### Tree Reduction
 
@@ -146,7 +148,7 @@ $$
 
 真实库会根据消息大小、rank 数和硬件拓扑在 ring、tree、CollNet 等算法间选择。多节点系统还可以先在节点内 ReduceScatter，再跨节点归约，最后回到节点内 AllGather。
 
-## AllReduce 与 AllToAll
+### AllReduce 与 AllToAll
 
 数据并行以 AllReduce 为主，Mixture-of-Experts 的 token dispatch 则常使用 AllToAll。
 
@@ -154,7 +156,9 @@ $$
 
 AllToAll 中每个 rank 都与其他 rank 交换不同分片，对网络双向带宽、路由和负载均衡要求更高。Expert 分配不均时，即使总 token 数相同，最拥挤的 rank 仍会决定整体速度。
 
-## 性能分析
+## 性能与容错
+
+### 性能分析
 
 单步时间可以粗略拆成
 
@@ -175,7 +179,7 @@ $$
 
 分析时要对齐各 rank 的 timeline。单看某一张 GPU 图，很容易把等待其他 rank 的空白误判成自身 kernel 性能不足。
 
-## 容错与 Checkpoint
+### 容错与 Checkpoint
 
 同步训练中任一 rank 失效都会中断 collective。训练系统需要定期保存模型、optimizer、scheduler、scaler 与数据位置。大规模任务还会使用 sharded checkpoint，避免由单一 rank 汇总全部状态。
 

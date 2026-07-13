@@ -12,7 +12,7 @@ seriesOrder: 14
 
 ![训练中的数据管线](assets/slides/14-data-pipeline.png)
 
-一批图像从磁盘到模型大致经过这条路径
+一批图像从磁盘进入模型时会经过这条路径
 
 ```text
 文件或对象存储
@@ -27,7 +27,9 @@ seriesOrder: 14
 
 每一级都可以有自己的 worker 和队列。调优数据管线时，要找出最慢的一级，而不是盲目把 `num_workers` 调到很大。
 
-## Dataset 表达样本来源
+## Dataset 与文件组织
+
+### Dataset 表达样本来源
 
 Map-style Dataset 实现 `__len__` 与 `__getitem__`。给定一个 index，它能定位并返回对应样本。
 
@@ -81,7 +83,7 @@ class ShardedStream(IterableDataset):
 
 流式数据可能没有精确长度，epoch 可以由读取样本数、token 数或训练 step 数定义。
 
-## 文件组织会影响吞吐
+### 文件组织与吞吐
 
 数百万个小文件会产生大量目录查找与随机 I/O。每张图片本身很小，打开文件的成本却无法忽略。常见做法是把许多样本打包成较大的 shard，并在 shard 内保存索引。
 
@@ -93,7 +95,9 @@ class ShardedStream(IterableDataset):
 
 JPEG decode、音频解码与 tokenization 常在 CPU 上进行。增加 worker 只在这些操作能够并行、且存储带宽尚未饱和时有效。瓶颈已经是网络或磁盘时，再开进程只会增加竞争。
 
-## Shuffle 到底打乱了什么
+## Batch 的形成
+
+### Shuffle
 
 Map-style Dataset 可以在每个 epoch 生成完整 index permutation，获得全局 shuffle。
 
@@ -109,7 +113,7 @@ Map-style Dataset 可以在每个 epoch 生成完整 index permutation，获得�
 
 只保存一个全局 seed 还不够。精确恢复流式训练时，还要记住当前 shard、reader offset 和 shuffle buffer 状态。
 
-## Transform 与 Collate
+### Transform 与 Collate
 
 Transform 把单个原始样本变成模型需要的表示。训练集可以随机裁剪、翻转或加入颜色扰动；验证集应保留确定性的 resize 与 normalize，不能沿用训练增强。
 
@@ -128,7 +132,9 @@ def collate_batch(samples):
 
 按长度分桶可以减少 padding。若把整个数据集彻底按长度排序，相邻 batch 会长期包含相似样本，随机性也随之下降。更稳妥的做法是先全局 shuffle，再在局部窗口内按长度组 batch。
 
-## DataLoader 中有哪些进程
+## DataLoader 并行
+
+### Worker 进程
 
 `DataLoader` 把 Dataset、Sampler、worker process、batching 与队列组合起来。
 
@@ -152,7 +158,7 @@ Linux 的 `fork` 与 Windows 的 `spawn` 创建进程方式不同。使用 `spaw
 
 `persistent_workers=True` 让 worker 跨 epoch 保留，省去反复启动进程与建立连接的成本。Dataset 状态若依赖 epoch，需要显式通知 worker 更新；长期增长的 worker cache 也会造成内存泄漏。
 
-## Prefetch 与设备传输
+### Prefetch 与设备传输
 
 ![DataLoader Prefetch](assets/slides/14-prefetch.png)
 
@@ -173,7 +179,7 @@ for features, labels in loader:
 
 更完整的预取器会在 copy stream 中传输下一批数据，让 compute stream 继续处理当前 batch。使用下一批前，compute stream 等待对应 event 即可，不需要同步整张 GPU。
 
-## 顺序、队列与背压
+### 顺序、队列与背压
 
 不同样本的解码时间可能相差很大。多个 worker 并行时，后面的 batch 已经完成，前面的慢 batch 却仍未返回。若 DataLoader 严格遵守 Sampler 顺序，完成的后续 batch只能在队列里等待，这叫 head-of-line blocking。
 
@@ -192,7 +198,9 @@ Producer 快于 Consumer 时，队列不能无限增长。每一级都要设置�
 
 只有 DataLoader wait 明显占比高时，增加 worker 或预取才可能有效。
 
-## 分布式采样
+## 分布式采样与恢复
+
+### 分布式采样
 
 数据并行中，每个 rank 都有一份模型副本，但必须取得不同样本。Distributed Sampler 先生成同一份全局随机排列，再按 rank 切成若干子序列。
 
@@ -200,7 +208,7 @@ Producer 快于 Consumer 时，队列不能无限增长。每一级都要设置�
 
 Map-style Dataset 通常在每个 epoch 调用 `sampler.set_epoch(epoch)`，让所有 rank 使用共同的新随机排列。Iterable Dataset 则要在 reader 内同时考虑 rank 与 worker 的 shard 划分。
 
-## Checkpoint 还要保存数据位置
+### Checkpoint 与数据位置
 
 训练恢复涉及模型参数、optimizer、scheduler、GradScaler、随机数状态、epoch 与 global step。
 

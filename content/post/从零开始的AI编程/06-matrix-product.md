@@ -8,9 +8,9 @@ hidden: true
 seriesOrder: 6
 ---
 
-## GEMM
+## 稠密矩阵乘法
 
-设矩阵 $A$ 有 $M$ 行和 $K$ 列，矩阵 $B$ 有 $K$ 行和 $N$ 列，结果 $C=AB$ 的尺寸为 $M\times N$ 大小。其中一个输出元素为
+设矩阵 $A$ 有 $M$ 行和 $K$ 列，矩阵 $B$ 有 $K$ 行和 $N$ 列，结果 $C=AB$ 的尺寸为 $M\times N$ 。其中一个输出元素为
 
 $$
 C_{i,j}=\sum_{p=0}^{K-1}A_{i,p}B_{p,j}
@@ -22,7 +22,7 @@ $$
 C=\alpha AB+\beta C
 $$
 
-$\alpha$ 与 $\beta$ 让调用者可以在同一次操作中完成缩放和累加。全连接层、注意力中的线性投影和卷积的矩阵化实现最终都会调用 GEMM。
+$\alpha$ 与 $\beta$ 让调用者可以在同一次操作中完成缩放和累加。全连接层、注意力中的线性投影和卷积的矩阵化实现都可以归结为 GEMM。
 
 ### 行主序
 
@@ -57,7 +57,7 @@ void matmul_cpu(
 
 三重循环的 work complexity 为 $O(MKN)$ 量级。调整循环顺序不会改变运算次数，却会改变缓存与连续访存情况。上面的内层循环沿 $A$ 的一行连续前进，同时沿 $B$ 的一列跨步访问。
 
-## 朴素 CUDA 实现
+### 朴素 CUDA 实现
 
 $C$ 中各元素彼此独立，可以让一个 thread 负责一个输出位置。二维 block 的 $x$ 方向对应列，并让 block 的 $y$ 方向对应行。
 
@@ -103,7 +103,7 @@ matmul_naive<<<grid, block>>>(a, b, c, m, k, n);
 
 矩阵边长不是 block size 的整数倍时，边缘 block 会包含越界 thread。边界判断保证正确性，也意味着这些 block 的一部分计算资源处于空闲状态。
 
-## Shared Memory Tiling
+### Shared Memory Tiling
 
 一个 $T\times T$ 的输出 tile 需要 $A$ 的 $T\times K$ 行片段和 $B$ 的 $K\times T$ 列片段。若每个 thread 都从 global memory 独立读取，那么 $A$ 与 $B$ 的同一元素会被同 block 的多个 thread 重复访问。
 

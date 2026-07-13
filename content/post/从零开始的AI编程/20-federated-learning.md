@@ -8,13 +8,13 @@ hidden: true
 seriesOrder: 20
 ---
 
-## 数据不能集中时
+## 联邦学习场景
 
 移动设备、医疗机构与企业各自持有数据，隐私、法规、带宽或所有权限制可能不允许把原始样本汇总到同一数据中心。Federated Learning 把模型发送到数据所在位置，在本地训练后只汇总模型更新。
 
 原始数据留在本地并不能直接保证隐私安全。Gradient 和 parameter update 仍可能泄露样本信息，server、client 与通信链路都需要明确的威胁模型。
 
-## Cross-device 与 Cross-silo
+### Cross-device 与 Cross-silo
 
 ![Cross-device 与 Cross-silo](assets/slides/20-cross-device-silo.png)
 
@@ -26,7 +26,9 @@ Cross-silo FL 面向少量组织或数据中心。参与方较稳定，单方数
 
 分布式训练默认各 worker 由同一主体管理，数据划分相对可控；联邦学习的 client 属于不同故障域和信任域，数据分布也通常高度 non-IID。
 
-## 训练流程
+## FedAvg 与训练流程
+
+### 训练流程
 
 一轮联邦训练包含几步：
 
@@ -40,23 +42,21 @@ Cross-silo FL 面向少量组织或数据中心。参与方较稳定，单方数
 
 Client selection 会影响统计偏差。总是选择网络快、充电中或高端设备，模型可能长期忽略另一部分用户分布。系统可用性与数据代表性需要一起考虑。
 
-把一轮过程缩成一个标量例子。全局参数从 $w_t=1$ 这一数值开始。Client 1 拥有 $100$ 个样本，Client 2 拥有 $300$ 个样本，Client 3 拥有 $600$ 个样本。本地训练后，Client 1 提交 $\Delta w_1=-0.2$ 这一变化，Client 2 提交 $\Delta w_2=0.1$ 这一变化，Client 3 提交 $\Delta w_3=0.05$ 这一变化。按样本数加权后
+设全局参数为 $w_t=1$ 。Client 1、Client 2 和 Client 3 分别拥有 $100$ 、 $300$ 和 $600$ 个样本，本地更新依次为 $\Delta w_1=-0.2$ 、 $\Delta w_2=0.1$ 和 $\Delta w_3=0.05$ 。按样本数加权后
 
 $$
-\Delta w
-=
+\Delta w =
 0.1\times(-0.2)
 +
 0.3\times0.1
 +
-0.6\times0.05
-=
+0.6\times0.05 =
 0.04
 $$
 
-Server 把全局参数更新为 $w_{t+1}=1.04$ 以后，再将它发给下一轮 client。真实模型只不过把这个标量换成了很长的参数向量。
+Server 将全局参数更新为 $w_{t+1}=1.04$ ，并把新参数发给下一轮 client。完整模型执行同样的加权，只是 $\Delta w_k$ 由标量变为参数向量。
 
-## FedAvg
+### FedAvg
 
 设第 $k$ 个 client 有 $n_k$ 个样本，本地训练后得到参数 $w_{t+1}^{(k)}$ 。FedAvg 按样本数加权聚合
 
@@ -72,7 +72,9 @@ $$
 
 当所有 client 数据近似 IID、每轮参与充分且 local step 较少时，FedAvg 接近大 batch 的分布式 SGD。non-IID 数据下，不同 client 的局部最优方向可能差异很大，简单平均会出现 client drift。
 
-## 系统与统计异质性
+## 数据异质性与个性化
+
+### 系统与统计异质性
 
 系统异质性来自设备算力、内存、网络、电量和在线时间差异。设置严格 deadline 会丢弃慢 client，等待全部 client 又会让 straggler 主导一轮时间。
 
@@ -86,7 +88,7 @@ $$
 
 本地 loss 下降并不保证全局目标同步下降。除了训练平均模型，还要观察不同 client 群体上的 accuracy、worst-group performance 与收敛速度。
 
-## FedProx
+### FedProx
 
 FedProx 在 client 本地目标中增加与全局参数的 proximal term
 
@@ -100,7 +102,7 @@ $$
 
 FedProx 不能消除全部异质性。Server momentum、control variate、adaptive aggregation 和不同 client 的动态 local step 还可以从其他方向改善稳定性。
 
-## 个性化
+### 个性化
 
 单个全局模型未必同时适合所有 client。Personalized FL 可以共享 backbone，只在本地保存 head；也可以先训练全局模型，再用本地数据 fine-tune。
 
@@ -108,7 +110,9 @@ FedProx 不能消除全部异质性。Server momentum、control variate、adapti
 
 个性化模型更贴近本地分布，却增加模型版本、评估和部署复杂度。只在参与训练的 client 上报告结果，也可能高估对新 client 的泛化。
 
-## 公平性
+## 公平性与威胁模型
+
+### 公平性
 
 按样本数加权优化的是总体平均损失，数据多的 client 影响更大。少数 client 即使表现很差，也可能对平均指标影响很小。
 
@@ -118,7 +122,7 @@ FedProx 不能消除全部异质性。Server momentum、control variate、adapti
 
 系统公平同样重要。老旧设备若总因 deadline 被排除，对应用户的数据也不会影响模型。
 
-## 威胁模型
+### 威胁模型
 
 ![联邦学习的威胁模型](assets/slides/20-threat-model.png)
 
@@ -131,7 +135,9 @@ FedProx 不能消除全部异质性。Server momentum、control variate、adapti
 
 TLS 保护 in-transit 数据，磁盘加密保护 at-rest 数据，但 server 解密后仍能看到单个更新。要隐藏更新内容，还需要 secure aggregation、trusted execution environment 或更强的密码学协议。
 
-## Secure Aggregation
+## 隐私保护
+
+### Secure Aggregation
 
 Secure Aggregation 让 server 只能得到更新之和，不能看到单个 client update。一个基本思路是 client 两两生成相反 mask，所有更新求和后 mask 自动抵消。
 
@@ -141,13 +147,13 @@ Secure Aggregation 让 server 只能得到更新之和，不能看到单个 clie
 
 Secure Aggregation 保护 update 的可见性，不限制聚合结果本身泄露的信息，也不能自动阻止恶意 client 上传异常值。聚合前无法直接查看单个 update 后，robust aggregation 和异常检测还会更难实现。
 
-## Trusted Execution Environment
+### Trusted Execution Environment
 
 TEE 在硬件隔离区域中解密并聚合 update，外部系统只能看到 attestation 与输出。它通常比完全密码学方案更高效，也能执行复杂聚合逻辑。
 
 安全性依赖硬件、固件、attestation 和侧信道防护。Enclave 内存受限时，还要分块处理大型模型更新。
 
-## Differential Privacy
+### Differential Privacy
 
 Differential Privacy 限制单个样本或单个 client 对输出分布的影响。Client-level DP 通常先裁剪每个 client update 的范数，再对聚合结果加入噪声。
 
@@ -169,13 +175,15 @@ $$
 
 Secure Aggregation 与 DP 可以组合：前者防止 server 看到单个 update，后者限制最终聚合结果泄露个体信息。两者解决的问题不同。
 
-## Poisoning 与鲁棒聚合
+## 鲁棒性与通信
+
+### Poisoning 与鲁棒聚合
 
 恶意 client 可以放大 update、定向修改某类输入，或协同植入 backdoor。按范数裁剪、median、trimmed mean 和 anomaly detection 可以降低部分攻击影响，但在 non-IID 数据下，正常少数 client 的更新本来就可能看起来异常。
 
 模型更新还应绑定 round、模型版本和 client 身份，防止重放旧 update。部署前需要在正常分布、少数群体和安全测试集上分别评估，不能只观察聚合 loss。
 
-## 通信与恢复
+### 通信与恢复
 
 联邦训练的瓶颈常是上行网络。Update compression、量化、稀疏化和减少通信轮数都能降低流量，但可能引入额外误差。Client 本地训练更多 step 能减少轮数，也会加重 client drift。
 

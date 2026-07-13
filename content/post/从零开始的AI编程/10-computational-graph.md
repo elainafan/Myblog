@@ -21,7 +21,7 @@ loss = output.mean()
 
 图里会出现矩阵乘法、加法、ReLU 和 ReduceMean 四个算子节点。`x`、`weight`、`bias` 与各级中间 Tensor 沿边流动。只看这张图，就能知道 ReLU 必须等待加法，加法必须等待矩阵乘法，而 `x` 与 `weight` 在矩阵乘法开始前都要准备好。
 
-## 节点、边与属性
+## 计算图的表示
 
 图中的节点一般表示算子，边表示算子之间传递的值。没有循环控制流时，这是一张 Directed Acyclic Graph。边除了保存 Tensor 的连接关系，还可附带 shape、dtype、device、stride 和 layout；节点则保存算子类型、轴、步长、padding 等属性。
 
@@ -35,7 +35,7 @@ loss = output.mean()
 
 两个节点之间若没有依赖路径，执行器可以让它们并行。两个独立分支可以进入不同 CUDA stream，直到后面的拼接或求和节点再汇合。计算图因此既是表达模型的结构，也是运行时调度的依据。
 
-## 控制流怎样进入图
+## 控制流与图类型
 
 神经网络里也会出现条件和循环。RNN 要按序列长度循环，Mixture of Experts 会按路由结果选择专家，部分模型还会根据输入内容提前退出。
 
@@ -54,7 +54,7 @@ def normalize_or_clip(x):
 
 固定次数的短循环还可以展开成重复节点。展开后容易优化，却会增大图，也不适合运行次数依赖输入的循环。
 
-## 动态图与静态图
+### 动态图与静态图
 
 动态图采用 define-by-run。Python 代码一边执行，框架一边记录 Tensor 运算；遇到普通 Python 逻辑时，解释器照常处理。
 
@@ -103,11 +103,11 @@ Source Transformation 读取 Python 的抽象语法树，识别变量、分支�
 
 编译结果通常带有 guard。假设第一次捕获时输入为 `float32`、二维，并且第二维固定为 $768$ 这一大小，生成的代码只在这些条件成立时复用。新输入破坏 guard 后，框架会编译另一个版本或回退到普通执行。动态 shape 很多时，版本数量可能快速增长。
 
-## 一张图经历的步骤
+## 图的生命周期
 
 ![计算图在框架中的位置](assets/slides/10-framework-stack.png)
 
-仍以 `relu(x @ weight + bias)` 为例，图从 Python 到 GPU 大致经历这些处理。
+以 `relu(x @ weight + bias)` 为例，图从 Python 到 GPU 依次经过这些处理。
 
 1. 捕获矩阵乘法、加法和 ReLU，记录输入输出关系。
 2. 推断每条边的 shape、dtype、layout 与 device。
@@ -118,7 +118,7 @@ Source Transformation 读取 Python 的抽象语法树，识别变量、分支�
 
 训练图的输出不止模型结果，还包括参数梯度和优化器更新。推理图没有这部分依赖，可以释放更多中间值，也可以把固定权重提前变换成硬件偏好的布局。
 
-## 执行器怎样跑图
+### 图执行器
 
 最简单的执行器按拓扑序逐个运行节点。实现容易，但两条无关分支也会被强制串行。
 
@@ -135,7 +135,7 @@ GPU kernel 的提交通常是异步的。Host 把任务放入 stream 后可以�
 
 多设备图还会增加 `Send`、`Recv`、device copy 或 collective communication 节点。它们与普通计算一样参与依赖调度。若梯度 AllReduce 只依赖某一层 backward 的输出，它可以在更早层还在计算时开始通信。
 
-## 图为何要交给编译器
+## 编译入口
 
 预先实现的算子库可以直接执行图中的每个节点，但大量小算子会反复启动 kernel、读写 global memory。编译器看到整段依赖后，可以把相邻算子合并，消除中间 Tensor，并为当前 shape 生成更合适的实现。
 

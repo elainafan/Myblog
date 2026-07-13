@@ -8,7 +8,9 @@ hidden: true
 seriesOrder: 19
 ---
 
-## Serving 指标
+## Serving 工作负载
+
+### Serving 指标
 
 在线 LLM 服务同时关心用户延迟与系统吞吐。只报告一轮完整生成耗时，很难看出瓶颈位于输入处理还是逐 token 解码。
 
@@ -22,7 +24,7 @@ seriesOrder: 19
 
 提高 batch size 往往提升 throughput，也会增加排队和单轮执行时间。服务系统通常以 TTFT、TPOT 的 Service Level Objective 为约束，在允许的延迟内尽量装入更多请求。
 
-## 一个请求的完整路径
+### 请求处理路径
 
 用户提交 prompt 后，服务端先完成 tokenization，并检查输入长度、生成参数与可用显存。Scheduler 为请求分配 KV cache block，再把它放入等待队列。
 
@@ -30,9 +32,9 @@ seriesOrder: 19
 
 请求随后进入 decode 阶段。每轮只把最新 token 送进模型，读取此前的 KV cache，生成一个新 token，再把新 K/V 追加到 cache。Scheduler 会在每一轮把多个活跃请求重新组成 batch。某个请求遇到 EOS、达到长度上限或被用户取消后，它占用的 KV block 要立即归还。
 
-这条路径把 TTFT 与 TPOT 的来源分开了。排队、tokenization 和 prefill 主要影响首 token；decode 调度、权重带宽与 KV cache 读取主要影响后续 token 间隔。
+排队、tokenization 和 prefill 主要影响 TTFT；decode 调度、权重带宽与 KV cache 读取主要影响 TPOT。
 
-## Prefill 与 Decode
+### Prefill 与 Decode
 
 Autoregressive generation 分为两个阶段。Prefill 一次处理整个 prompt，计算各层 activation 并建立 KV cache；Decode 每轮只输入最新 token，复用已有 K/V，再生成下一个 token。
 
@@ -46,7 +48,9 @@ Decode 每轮矩阵的 token 维接近 $1$ ，要读取完整权重和不断增�
 
 两阶段对硬件资源的偏好不同。把长 prefill 与低延迟 decode 无条件塞进同一 batch，前者可能阻塞后者，造成 TPOT 抖动。
 
-## KV Cache
+## KV Cache 与 Attention
+
+### KV Cache
 
 Self-Attention 中，历史 token 的 K 与 V 在后续 decode 不会改变。把它们缓存后，每轮只计算新 token 的 Q、K、V，再让新 Q 与全部历史 K/V 做 attention。
 
@@ -62,7 +66,7 @@ $$
 
 请求长度不同，cache 还会产生空洞和预留浪费。只按最大长度为每个请求分配连续区域，显存利用率很低。
 
-## MHA、MQA 与 GQA
+### MHA、MQA 与 GQA
 
 Multi-Head Attention 为每个 Q head 配置独立 K/V head。Multi-Query Attention 让所有 Q head 共享一组 K/V，显著缩小 cache 与 decode 带宽；Grouped Query Attention 则让一组 Q head 共享一个 K/V head，在质量与效率之间折中。
 
@@ -90,7 +94,7 @@ Continuous batching 以 iteration 为单位调度。某个序列生成 EOS 后�
 
 Scheduler 每轮选择 active sequences，准备 token、position 与 KV block table，再启动模型。它需要在吞吐、到达顺序、优先级与 SLO 之间取舍。只追求最大 batch 可能让早到请求长期等待。
 
-## Prefill 与 Decode 混合调度
+### Prefill 与 Decode 的混合调度
 
 若长 prompt 整段 prefill 一次执行，decode 请求会等待很久。Chunked Prefill 把 prompt 切成若干 token chunk，与 decode token 一起进入迭代。
 
@@ -100,7 +104,9 @@ Scheduler 每轮选择 active sequences，准备 token、position 与 KV block t
 
 Prefill 与 decode 的矩阵形状不同，混入同一个 kernel batch 未必最高效。系统可以在一轮中分别形成两个子 batch，再共享调度与 KV memory manager。
 
-## PagedAttention
+## KV Cache 管理
+
+### PagedAttention
 
 PagedAttention 把每个序列的 KV cache 切成固定大小 block，物理 block 不必连续。每个请求维护逻辑 block 到物理 block 的映射，与虚拟内存页表相似。
 
@@ -118,7 +124,9 @@ Attention kernel 根据 block table 找到 K/V。间接寻址增加少量开销�
 
 分支真正写入新 token 时分配新 block，必要时对最后一个未满 block 执行 copy-on-write。Prefix cache 还可以跨不同时间到达的请求复用，但要用模型版本、token 序列和位置编码配置构造可靠 cache key。
 
-## FlashAttention
+## Kernel 优化
+
+### FlashAttention
 
 标准 attention 写成
 
@@ -136,13 +144,15 @@ FlashAttention 按 block 遍历 Q、K、V，在 SRAM 中计算局部 score，并
 
 FlashAttention 的关键收益来自减少 HBM I/O，不是近似 attention。Backward 可以重算部分 score，以额外计算换取更少 activation memory。
 
-## Kernel Fusion 与 CUDA Graph
+### Kernel Fusion 与 CUDA Graph
 
 Decode 中单个 kernel 很短，RMSNorm、rotary embedding、bias、activation 和 residual add 等操作可以融合，减少中间读写与 launch 数量。
 
 CUDA Graph 预先捕获一段稳定的 kernel launch 序列，后续整体重放，降低 CPU dispatch overhead。Continuous batching 的 active shape 不断变化，系统通常用若干固定 batch bucket 和 padding 复用已捕获的 graph。
 
-## Speculative Decoding
+## 解码与容量规划
+
+### Speculative Decoding
 
 Speculative Decoding 使用较小的 draft model 一次提出多个候选 token，再由 target model 并行验证。
 
@@ -152,7 +162,7 @@ Speculative Decoding 使用较小的 draft model 一次提出多个候选 token�
 
 收益取决于 draft model 速度和接受率。Draft 太大时自身成本过高，太弱时大部分候选被拒绝。Greedy decoding 可以采用更简单的匹配规则，sampling 则必须按概率比修正。
 
-## 容量规划
+### 容量规划
 
 单实例可服务的并发数受权重、KV cache、activation workspace 和 allocator reserve 共同限制。权重相对固定，KV cache 随 active token 数增长，因此 admission control 应按 token budget 而不只按 request count。
 

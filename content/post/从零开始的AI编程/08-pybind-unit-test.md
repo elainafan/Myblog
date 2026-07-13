@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 8
 ---
 
-## Python 与 C++
+## Python 与 C++ 的分工
 
 模型结构、训练循环和实验配置经常变化，使用 Python 编写更方便。卷积、矩阵乘法等算子执行次数多、性能要求高，通常由 C++ 或 CUDA 实现。
 
@@ -124,7 +124,7 @@ Python 对象销毁时，PyBind11 会根据 holder 释放 C++ 对象。默认 ho
 
 返回 C++ 内部成员的指针或引用时，必须保证父对象仍然存活。`py::return_value_policy::reference_internal` 可以把返回对象的生命期绑定到父对象，但更稳妥的接口通常直接返回值，或者让所有权在类型设计中清楚表达。
 
-## NumPy
+## NumPy 与 GIL
 
 `py::array_t<T>` 通过 NumPy 的 buffer protocol 暴露 data pointer、shape、stride 与 dtype。C++ 可以直接读取 NumPy 内存，不必先转换成 `std::vector`。
 
@@ -277,7 +277,7 @@ GPU 算子最方便的 reference 往往是 PyTorch 自带实现。测试给两�
 
 一次随机输入通过并不充分。边界尺寸最容易暴露索引错误，例如元素数刚好等于 block size、刚好多一个元素、某一维为零，以及矩阵边长无法整除 tile size。
 
-### 接口测试
+### 接口与边界
 
 ```python
 import unittest
@@ -326,9 +326,13 @@ if __name__ == "__main__":
 
 黑盒测试只验证公开输入输出，适合与 reference 对拍。白盒测试根据实现路径构造样例，例如专门跨过 tile 边界、触发有无 bias 分支，或者让最后一个 block 只有一个有效 thread。
 
+![黑盒测试从公开接口检查输入输出](assets/slides/08-black-box-test.png)
+
+![白盒测试覆盖实现中的分支与路径](assets/slides/08-white-box-test.png)
+
 浮点结果使用 `torch.testing.assert_close`。容差要与 dtype 和归约长度相符。`float16` 的累计误差通常大于 `float32`，但把容差设得过宽会掩盖漏项和错误索引。
 
-### 梯度
+### 梯度检查
 
 Backward 可以直接与 reference 比较。
 
@@ -367,7 +371,7 @@ self.assertTrue(
 
 不可导点附近的数值梯度会不稳定。测试 ReLU 时应避免输入恰好为零，或明确约定该点采用哪一侧导数。
 
-### CUDA 错误
+### CUDA 错误定位
 
 Kernel launch 异步返回，测试若只构造输出而不读取它，越界访问可能到后续用例才报错。调试测试可以在自定义算子后调用 `torch.cuda.synchronize()`，把错误定位到当前用例。
 

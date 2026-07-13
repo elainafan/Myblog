@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 11
 ---
 
-用户写下的是带有类、函数和 Python 控制流的模型，硬件执行的却是形状明确的 Tensor 运算与 kernel。编译器前端负责把前一种表达逐步整理成后一种表达，同时尽量保留模型原本的数值语义。
+模型程序包含类、函数和 Python 控制流，硬件执行的则是形状明确的 Tensor 运算与 kernel。编译器前端逐层降低程序表示，同时保持模型原有的数值语义。
 
 ![AI 编译器的前端与后端](assets/imported/24.png)
 
@@ -21,7 +21,7 @@ def layer(x, weight, bias):
 
 前端要识别矩阵乘法、广播加法与 ReLU，确定每条边的类型和形状，检查设备是否一致，再把结构交给优化 pass。处理结束后，后端才决定矩阵乘法调用哪个库、ReLU 是否并入同一个 kernel，以及线程怎样映射。
 
-## 从模型程序到 IR
+## 前端与 IR
 
 Intermediate Representation 是编译器内部使用的程序表示。它比 Python 约束更明确，又比机器指令保留更多 Tensor 语义。一个系统通常不只使用一种 IR。
 
@@ -34,7 +34,7 @@ Intermediate Representation 是编译器内部使用的程序表示。它比 Pyt
 
 LLVM 用统一低层 IR 连接语言前端和机器后端。MLIR 允许不同 dialect 在同一套基础设施里共存，可以让神经网络算子、线性代数循环、GPU kernel 和 LLVM 指令依次出现。前一层完成适合自己的优化后，再转换到下一层。
 
-## Shape 与类型推断
+### Shape 与类型推断
 
 前端拿到 `x @ weight` 时，要先验证两个输入能否相乘。若
 
@@ -54,7 +54,7 @@ dtype 推断同样会影响结果。`float16` 矩阵乘法可能用 `float32` �
 
 Device 与 layout 也属于类型信息。CPU Tensor 与 CUDA Tensor 不能直接参加同一个普通加法；NCHW 与 NHWC 的逻辑 shape 可以对应同一幅图像，但物理地址计算完全不同。
 
-## 用一条算子链看图优化
+## 图优化
 
 假设捕获到这样的子图
 
@@ -98,7 +98,7 @@ $$
 
 ![死代码消除](assets/imported/52.png)
 
-## 算子融合
+### 算子融合
 
 GPU 执行 `add`、`relu`、`multiply` 三个独立 kernel 时，中间 Tensor 至少要写回和读出 global memory，三个 kernel 也各自承担 launch overhead。若每个输出元素的索引关系一致，可以让一个 thread 连续完成三步。
 
@@ -120,7 +120,9 @@ Producer 直接嵌入 Consumer 的循环称为垂直融合。Element-wise 链最
 
 融合并非越多越好。一个很大的 kernel 会占用更多寄存器和 shared memory，降低同时驻留的 block 数；Producer 有多个 Consumer 时，内联还可能重复计算。前端先判断依赖和索引是否允许，后端的资源模型再判断这样做是否划算。
 
-## Layout Transformation
+## Layout 与内存规划
+
+### Layout Transformation
 
 逻辑形状相同的 Tensor 可以采用不同物理布局。图像常见 NCHW 与 NHWC，矩阵还分 row-major、column-major 和分块布局。Tensor Core 对内部排列、对齐和维度倍数也有要求。
 
@@ -130,7 +132,7 @@ Producer 直接嵌入 Consumer 的循环称为垂直融合。Element-wise 链最
 
 `reshape`、`transpose` 和切片常常只修改 shape、stride 与 offset，共享原来的存储。后续算子若只支持 contiguous 输入，才需要真正复制。编译器必须区分 view 与拥有独立存储的 Tensor，否则内存复用会覆盖仍被其他 view 使用的数据。
 
-## 内存规划
+### 内存规划
 
 Tensor 的生命周期从 Producer 写完开始，到最后一个 Consumer 读完为止。生命周期不重叠的 Tensor 可以复用同一段缓冲区。
 
@@ -144,7 +146,7 @@ Tensor 的生命周期从 Producer 写完开始，到最后一个 Consumer 读�
 
 训练图还要保存 backward 所需的 activation。前端可以标记哪些值必须保留、哪些值能够重算，后端再据此安排显存。
 
-## Pass 怎样配合
+## Pass 管线与后端接口
 
 一个 pass 只负责一种变换。常量折叠可能让条件恒定，随后死代码消除删掉未选择的分支；代数简化去掉无效节点后，原本隔开的两个 element-wise 算子又可以融合。优化 pipeline 因此会多轮执行部分 pass，直到图稳定或达到迭代上限。
 
@@ -159,7 +161,7 @@ Tensor 的生命周期从 Producer 写完开始，到最后一个 Consumer 读�
 
 顺序不是固定模板。布局选择会改变融合机会，融合也会改变内存需求；训练图与推理图的安全变换也不同。编译器需要在每次变换后继续验证 IR，而不能只看最终图能否运行。
 
-## 前端交给后端什么
+### 后端接口
 
 处理后的 IR 已经明确每个算子的语义、输入输出类型和设备归属。跨设备边会变成 `Send`、`Recv` 或 collective，能够并行的节点保留独立依赖。
 
