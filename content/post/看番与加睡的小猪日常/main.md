@@ -5,7 +5,6 @@ encrypt: true
 image: "/images/1.png"
 categories: 
     - 算法
-    - 动漫
 updates:
     - date: 2026-06-23
       content: 重新对题目难度归档主页面启用加密阅读。

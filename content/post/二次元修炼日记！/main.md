@@ -5,7 +5,6 @@ encrypt: true
 image: "/images/anime-diary/5.png"
 categories: 
     - 算法
-    - 动漫
 updates:
     - date: 2026-06-25
       content: 同步 PaperMemory 与 Kuro_neko 的官方参赛记录，补充 Unrated / VP 状态和近期场次入口。
