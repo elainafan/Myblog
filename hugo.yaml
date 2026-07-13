@@ -221,6 +221,16 @@ related:
 
 markup:
     goldmark:
+        extensions:
+            passthrough:
+                delimiters:
+                    block:
+                        - ["\\[", "\\]"]
+                        - ["$$", "$$"]
+                    inline:
+                        - ["\\(", "\\)"]
+                        - ["$", "$"]
+                enable: true
         renderer:
             ## Set to true if you have HTML content inside Markdown
             unsafe: true
