@@ -21,6 +21,10 @@ loss = output.mean()
 
 图里会出现矩阵乘法、加法、ReLU 和 ReduceMean 四个算子节点。`x`、`weight`、`bias` 与各级中间 Tensor 沿边流动。只看这张图，就能知道 ReLU 必须等待加法，加法必须等待矩阵乘法，而 `x` 与 `weight` 在矩阵乘法开始前都要准备好。
 
+早期系统把卷积、池化和全连接封装成算子库，模型由一串预先实现的 layer 组成，每个 layer 同时提供 forward 与 backward。接口简单，但循环、分支和新训练过程很难越过已有层边界。
+
+后来的框架把算子与 Tensor 显式组织为 DAG。TensorFlow 1.x 先构图再执行，便于整体优化与部署；PyTorch 先执行 Python，再记录本次运行经过的图，调试和控制流更自然。静态系统后来加入 eager mode，动态图系统也加入图捕获与编译，两条路径逐渐靠拢。
+
 ## 计算图的表示
 
 图中的节点一般表示算子，边表示算子之间传递的值。没有循环控制流时，这是一张 Directed Acyclic Graph。边除了保存 Tensor 的连接关系，还可附带 shape、dtype、device、stride 和 layout；节点则保存算子类型、轴、步长、padding 等属性。
@@ -156,3 +160,12 @@ AI 编译器通常分成前端与后端。前端接收框架程序或模型文�
 动态图框架普及后，捕获器开始从普通 Python 程序中提取稳定子图。用户不必先写一份静态模型描述，编译器则通过 guard、graph break 和多版本缓存处理动态行为。前端捕获到的仍是 Tensor 算子，后端可以选择库函数，也可以继续 lowering。
 
 更深的编译路径会把 Tensor 算子降低成循环、索引和标量操作，再映射到 thread、vector instruction 与专用矩阵单元。算子边界不再限制融合，但编译器也要自己处理循环变换、存储层次、动态 shape 与代码生成。生成版本过多时，编译和缓存的成本会反过来抵消执行阶段省下的时间。
+
+PyTorch 2.x 用 `torch.compile` 把捕获、AOT Autograd 与后端编译接在一个入口中。
+
+```python
+compiled_model = torch.compile(model)
+output = compiled_model(input_tensor)
+```
+
+第一次命中某组输入条件时会产生编译开销，后续调用只有在 guard 仍成立时才能复用生成结果。

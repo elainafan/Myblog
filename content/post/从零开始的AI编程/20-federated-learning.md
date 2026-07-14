@@ -8,11 +8,15 @@ hidden: true
 seriesOrder: 20
 ---
 
+## 为什么让数据留在本地
+
+把所有数据集中到数据中心最容易训练，却可能卡在隐私、法规、上传成本和数据所有权上。让每个机构或设备独立训练也不理想。单个参与方的数据通常更少，覆盖的用户和标签也更窄，模型很容易只适应本地分布。
+
+Federated Learning 让参与方共享训练结果，而不直接共享原始样本。它仍然需要通信与聚合，也不能因为原始数据没有上传就宣称安全；模型更新同样可能泄露训练信息。
+
 ## 联邦学习场景
 
-移动设备、医疗机构与企业各自持有数据，隐私、法规、带宽或所有权限制可能不允许把原始样本汇总到同一数据中心。Federated Learning 把模型发送到数据所在位置，在本地训练后只汇总模型更新。
-
-原始数据留在本地并不能直接保证隐私安全。Gradient 和 parameter update 仍可能泄露样本信息，server、client 与通信链路都需要明确的威胁模型。
+典型参与方包括移动设备、医疗机构与企业。Federated Learning 把模型发送到数据所在位置，在本地训练后只汇总模型更新。Gradient 和 parameter update 仍可能泄露样本信息，server、client 与通信链路都需要明确的威胁模型。
 
 ### Cross-device 与 Cross-silo
 
@@ -108,6 +112,16 @@ FedProx 不能消除全部异质性。Server momentum、control variate、adapti
 
 另一类方法把每个 client 的参数写成全局部分与个性部分的组合，并用正则项约束它们不要相差过远。相似 client 还可以聚类，共享组内模型。
 
+Federated Multi-Task Learning 为每个 client 保留一组参数，再用任务关系矩阵约束相似 client 的模型靠近。它可以表达多个群体之间的关联，但需要额外估计任务关系，参与方数量很大时开销也会迅速增加。
+
+Ditto 先用 FedAvg 等方法维护全局模型 $w$ 并让 client $k$ 另外优化个性化参数 $v_k$ 。本地目标为
+
+$$
+\min_{v_k} F_k(v_k)+\frac{\lambda}{2}\lVert v_k-w\rVert_2^2
+$$
+
+$\lambda$ 较大时，个性化模型更接近全局模型；较小时，它可以更多地适应本地数据。全局模型继续用于协作训练和新 client 初始化，本地模型则负责实际预测。
+
 个性化模型更贴近本地分布，却增加模型版本、评估和部署复杂度。只在参与训练的 client 上报告结果，也可能高估对新 client 的泛化。
 
 ## 公平性与威胁模型
@@ -156,6 +170,8 @@ TEE 在硬件隔离区域中解密并聚合 update，外部系统只能看到 at
 ### Differential Privacy
 
 Differential Privacy 限制单个样本或单个 client 对输出分布的影响。Client-level DP 通常先裁剪每个 client update 的范数，再对聚合结果加入噪声。
+
+Record-level DP 把相邻数据集定义为相差一条样本记录，保护的是同一 client 内的单个样本。User-level DP 把一个用户的全部记录视为一个整体，更符合跨设备联邦学习的隐私目标，也更难获得相同精度。后文的裁剪单位是完整 client update，因此对应 user-level DP。
 
 设裁剪阈值为 $C$ ，更新 $u_k$ 变为
 

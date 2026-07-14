@@ -28,6 +28,8 @@ seriesOrder: 19
 
 用户提交 prompt 后，服务端先完成 tokenization，并检查输入长度、生成参数与可用显存。Scheduler 为请求分配 KV cache block，再把它放入等待队列。
 
+Tokenizer 把文本转为 token id，服务端再生成 position id 和 attention mask。批处理中不同请求的有效长度并不相同，mask 必须阻止 padding 和尚未生成的位置参与 attention。Tokenizer 版本也属于模型接口的一部分；同一段文本若被不同词表切分，已有 prefix cache 便不能继续复用。
+
 请求第一次进入模型时执行 prefill。模型并行处理全部输入 token，建立每一层的 K/V，并计算最后一个位置的 logits。采样器从 logits 选出首个输出 token，服务端可以立刻把它流式返回给用户。
 
 请求随后进入 decode 阶段。每轮只把最新 token 送进模型，读取此前的 KV cache，生成一个新 token，再把新 K/V 追加到 cache。Scheduler 会在每一轮把多个活跃请求重新组成 batch。某个请求遇到 EOS、达到长度上限或被用户取消后，它占用的 KV block 要立即归还。
@@ -94,6 +96,14 @@ Continuous batching 以 iteration 为单位调度。某个序列生成 EOS 后�
 
 Scheduler 每轮选择 active sequences，准备 token、position 与 KV block table，再启动模型。它需要在吞吐、到达顺序、优先级与 SLO 之间取舍。只追求最大 batch 可能让早到请求长期等待。
 
+Continuous batching 还可以按执行方式细分：
+
+- Iterative scheduling 每轮重新挑选请求，控制最灵活，也会引入更多 CPU 调度开销。
+- Coalesced batching 把一组相近请求合并执行若干轮，减少调度次数，但新请求需要等待下一个合并点。
+- Selective batching 只替换已经结束的序列，在稳定 batch shape 与快速补位之间折中。
+
+无论采用哪一种方式，scheduler 都要和 KV cache manager 一起工作。只看空闲 batch slot 而不检查可用 KV block，仍可能在长上下文请求进入后耗尽显存。
+
 ### Prefill 与 Decode 的混合调度
 
 若长 prompt 整段 prefill 一次执行，decode 请求会等待很久。Chunked Prefill 把 prompt 切成若干 token chunk，与 decode token 一起进入迭代。
@@ -123,6 +133,8 @@ Attention kernel 根据 block table 找到 K/V。间接寻址增加少量开销�
 ![Prefix Sharing](assets/slides/19-prompt-sharing.png)
 
 分支真正写入新 token 时分配新 block，必要时对最后一个未满 block 执行 copy-on-write。Prefix cache 还可以跨不同时间到达的请求复用，但要用模型版本、token 序列和位置编码配置构造可靠 cache key。
+
+Beam search 也能共享分叉前的 block。多个 beam 最初只保存不同的逻辑 block table，某个 beam 写入新 token 时才复制末尾 block。显存不足时还可以把冷 block 换到 host memory，再在请求继续运行前取回；这种两级管理提高了容量，却会把 PCIe 延迟带入调度决策。
 
 ## Kernel 优化
 

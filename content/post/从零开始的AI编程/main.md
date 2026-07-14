@@ -5,7 +5,7 @@ categories:
     - AI
 updates:
     - date: 2026-07-14
-      content: 补回 CUDA、计算图、编译器与优化器中的实现细节和推导。
+      content: 补齐各讲的实现细节，重组标题层级与阅读顺序。
 seriesExclude: true
 ---
 
@@ -15,12 +15,9 @@ seriesExclude: true
 
 ## 阅读入口
 
-### 框架基础
+### PyTorch 与 CUDA
 
 - [导论]({{< ref "01-introduction.md" >}})
-
-### CUDA 与并行计算
-
 - [并行编程]({{< ref "02-parallel-programming.md" >}})
 - [并行通信]({{< ref "03-parallel-communication.md" >}})
 - [并行算法 I]({{< ref "04-parallel-algorithms-1.md" >}})
@@ -36,13 +33,16 @@ seriesExclude: true
 - [AI 编译器前端]({{< ref "11-compiler-frontend.md" >}})
 - [优化]({{< ref "12-optimization.md" >}})
 - [AI 编译器后端]({{< ref "13-compiler-backend.md" >}})
+
+### 数据与分布式训练
+
 - [数据处理]({{< ref "14-data-processing.md" >}})
 - [异构处理器]({{< ref "15-heterogeneous-processors.md" >}})
-
-### 训练与部署
-
 - [分布式训练与数据并行]({{< ref "16-distributed-data-parallel.md" >}})
 - [模型并行与张量并行]({{< ref "17-model-tensor-parallel.md" >}})
+
+### 部署与联邦学习
+
 - [量化]({{< ref "18-quantization.md" >}})
 - [LLM 推理与服务]({{< ref "19-llm-inference-serving.md" >}})
 - [联邦学习]({{< ref "20-federated-learning.md" >}})

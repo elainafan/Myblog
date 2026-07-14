@@ -100,6 +100,8 @@ GPU Schedule 会把外层 tile 绑定到 block，把 tile 内的工作分给 war
 
 若目标支持 Tensor Core，中间计算会继续切成 MMA 指令要求的 fragment。后端还要处理维度不足整块时的边界、数据对齐和累加精度。
 
+较新的 GPU 可以用 `cp.async` 把 global memory 数据直接搬到 shared memory，并让传输与当前 tile 的计算重叠。双缓冲会准备两组 shared-memory tile，一组参与计算时，另一组提前加载下一轮数据。同步位置必须保证消费者不会读到尚未完成的异步副本。
+
 可用 Schedule 受到硬件上限约束。
 
 - 一个 block 的 thread 数不能超过设备上限。
@@ -116,7 +118,7 @@ Occupancy 表示一个 SM 上实际活跃 warp 相对硬件上限的比例。较
 
 后端可以调用 cuBLAS、cuDNN 一类库，也可以生成专用 kernel。通用库覆盖大量 shape，成熟且稳定；生成代码能够针对固定 shape、融合区域或特殊布局专门优化。
 
-Arithmetic Intensity 较高的算子更容易受峰值算力限制，较低的算子更容易受内存带宽限制。Element-wise 运算每读一个元素只做少量计算，单独优化算术指令意义不大；把它并入前后 kernel，减少一次完整读写往往更有效。
+Arithmetic Intensity 较高的算子属于计算密集型，也就是 compute-bound，更容易受峰值算力限制；较低的算子属于访存密集型，也就是 memory-bound，更容易受内存带宽限制。Element-wise 运算每读一个元素只做少量计算，单独优化算术指令意义不大；把它并入前后 kernel，减少一次完整读写往往更有效。
 
 布局选择必须看整张图。某个卷积在 NHWC 下更快，但前后都使用 NCHW 时，两次 layout transform 可能抵消收益。后端要比较一串算子的总代价，而不是只选每个节点的局部最快实现。
 
@@ -145,6 +147,28 @@ Tile size、循环顺序、unroll factor、thread binding 和 vector width 组�
 测量程序要预热设备，多次运行并排除异常值。若 kernel 只有几微秒，Python 调用和同步开销会淹没真实时间，应在设备端连续执行多次并使用 CUDA event 计时。
 
 调优结果通常按算子、shape、dtype、layout 与设备架构存入数据库。输入条件变化后，原来的最优 Schedule 未必仍然合适。
+
+AutoTVM 依赖人工编写的 Schedule template，再搜索 tile、unroll 和 thread 配置。Ansor 把计算图转成可变换的调度状态，自动生成更大的搜索空间，并用学习得到的 cost model 选择候选。它减少了模板工作量，也增加了搜索与编译成本。
+
+Polyhedral 方法把循环迭代看作满足仿射约束的整数点集合，再在保持依赖的条件下求解合法调度。它适合规则循环和仿射下标，面对数据相关分支、间接寻址和复杂库调用时，需要回退到其他分析或把区域留作黑盒。
+
+## 大模型训练的内存
+
+训练显存由模型参数、梯度、优化器状态、activation 和临时 workspace 组成。混合精度 Adam 常同时保存低精度模型参数、低精度梯度、FP32 master weight 以及 FP32 的一阶矩和二阶矩。只看模型文件大小会严重低估训练所需显存。
+
+| 内容 | 常见格式 | 每个参数的字节数 |
+| --- | --- | ---: |
+| 模型参数 | FP16 / BF16 | 2 |
+| 梯度 | FP16 / BF16 | 2 |
+| Master weight | FP32 | 4 |
+| Adam 一阶矩 | FP32 | 4 |
+| Adam 二阶矩 | FP32 | 4 |
+
+这部分合计约为每参数 16 bytes，还没有计算 activation、通信 buffer 和算子 workspace。实现若让梯度保留 FP32，或额外保存参数副本，数字还会继续增加。
+
+推理只需要把当前层输出交给下一层，很多中间缓冲区可以循环复用，activation 空间接近由少数最大层决定。训练的 backward 要读取前向中间值，直接保存全部 activation 时，空间会随网络深度 $N$ 线性增长。
+
+Gradient Checkpointing 每隔 $K$ 层保存一个边界，反向传播到该区间时重算内部前向。均匀分段时，activation 空间可以降到 $O(N/K+K)$ 这一数量级。令 $K$ 约为 $\sqrt{N}$ 时，空间降到 $O(\sqrt{N})$ 这一数量级，代价是额外前向计算和更复杂的执行计划。
 
 ## 内存、执行与缓存
 

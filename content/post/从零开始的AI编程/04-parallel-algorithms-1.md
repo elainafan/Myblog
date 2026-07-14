@@ -107,6 +107,22 @@ atomicAdd(&histogram[bin], 1);
 
 所有线程直接更新 global histogram 时，热门 bin 会产生严重竞争。常见做法是每个 block 在 shared memory 中维护一份局部 histogram，完成后再合并到 global memory。Bin 数很大时，一份局部数组可能放不进 shared memory，需要按区间分批、按 warp 私有化，或者改用排序与 Reduce。
 
+#### Histogram Equalization
+
+灰度图像的 histogram 记录每个亮度出现了多少次。若像素集中在很窄的亮度区间，图像对比度会偏低。Histogram Equalization 先对计数做前缀和，得到累计分布
+
+$$
+c(k)=\sum_{j=0}^{k}h(j)
+$$
+
+再把原亮度 $p$ 映射到新的亮度
+
+$$
+p'=\left\lfloor (L-1)\frac{c(p)}{N}\right\rfloor
+$$
+
+其中 $L$ 表示灰度级数量， $N$ 表示像素总数。Histogram 负责统计，Scan 负责计算累计分布，最后的 Map 为每个像素查表。
+
 ## Scan
 
 Scan 为每个位置计算一个前缀结果。以加法为例，inclusive scan 包含当前位置，exclusive scan 不包含当前位置。

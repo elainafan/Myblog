@@ -27,6 +27,18 @@ seriesOrder: 14
 
 每一级都可以有自己的 worker 和队列。调优数据管线时，要找出最慢的一级，而不是盲目把 `num_workers` 调到很大。
 
+## 数据处理框架
+
+数据进入模型前会经历 Extract、Transform、Load 三类操作。Extract 从本地文件、对象存储、数据库或数据流读取记录；Transform 完成解码、清洗、增强和类型转换；Load 把样本组成 batch 并送入训练设备。
+
+一套数据框架要同时处理三件事。
+
+- 灵活性：支持不同存储设备、数据格式、自定义 Dataset 与自定义算子。
+- 效率：让读取、变换、组 batch 和设备传输彼此重叠。
+- 顺序：在并行 worker 与分布式 rank 之间保持约定的采样顺序。
+
+Unified I/O 用统一 reader 接入本地文件、HDFS、S3 与内存对象。Python 接口便于组合数据算子，耗时较长的 reader、decode 和 batch 操作通常落在 C++、GPU 或独立服务中执行，避免 Python 调度成为瓶颈。
+
 ## Dataset 与文件组织
 
 ### Dataset 表达样本来源
@@ -83,11 +95,17 @@ class ShardedStream(IterableDataset):
 
 流式数据可能没有精确长度，epoch 可以由读取样本数、token 数或训练 step 数定义。
 
+DataPipe 把数据源、shuffle、map、batch 与 prefetch 表示成可组合的迭代节点。每个节点只负责一类变换，运行时可以在节点之间插入缓存、并行执行或分布式分片。复杂管线因此不必全部塞进一个 `Dataset.__iter__`。
+
+Stateful DataLoader 在普通 DataLoader 接口上增加 `state_dict`。除了随机数状态，还要记录 sampler、当前 batch、worker 进度和流式 reader 位置，才能从 checkpoint 附近继续读取。若自定义 Dataset 内部还有不可见状态，仍需主动实现保存与恢复。
+
 ### 文件组织与吞吐
 
 数百万个小文件会产生大量目录查找与随机 I/O。每张图片本身很小，打开文件的成本却无法忽略。常见做法是把许多样本打包成较大的 shard，并在 shard 内保存索引。
 
 训练时可以随机打乱 shard 顺序，再顺序读取每个 shard 内的字节。这样减少了 metadata 操作，也更适合对象存储的高延迟访问。
+
+Unirecord 一类记录格式把索引块与数据块放在同一文件中。索引保存每条记录的 offset、size 和 checksum，reader 先查索引，再定位到对应字节区间。顺序训练可以连续读取数据块，随机样本仍能通过索引定位；不同数据类型则由 schema 与 decoder 解释。
 
 ![统一数据访问接口](assets/slides/14-unified-io.png)
 
@@ -198,6 +216,16 @@ Producer 快于 Consumer 时，队列不能无限增长。每一级都要设置�
 
 只有 DataLoader wait 明显占比高时，增加 worker 或预取才可能有效。
 
+## 管线优化
+
+朴素管线按读取、解码、变换和训练的顺序串行执行，总耗时等于各阶段耗时之和。异步流水线为阶段之间加入有界队列，让不同 batch 同时处在不同阶段。吞吐由最慢阶段决定，队列负责吸收短时抖动，不能长期掩盖真正瓶颈。
+
+算子并行比整段 pipeline 更细。耗时长的 decode 可以分配更多 worker，便宜的 normalize 只保留少量实例。数据图还可以做 map fusion、向量化和冗余变换消除，减少 Python 调用与中间对象。
+
+NVIDIA DALI 把 JPEG decode、resize、crop 等操作放到 CPU 与 GPU 混合管线中，并直接产出设备 Tensor。它适合图像和视频预处理，但不能绕过存储带宽，也要计算预处理占用的 GPU 资源是否会挤压模型训练。
+
+数据规模超过单机后，可以先用 Spark 或 Dask 批量清洗并写回分布式文件系统，也可以使用独立的数据服务按训练节点分发样本。训练侧仍要约定 shard、epoch 和随机种子，否则多个节点可能重复读取同一批数据。
+
 ## 分布式采样与恢复
 
 ### 分布式采样
@@ -217,3 +245,13 @@ Map-style Dataset 通常在每个 epoch 调用 `sampler.set_epoch(epoch)`，让�
 若希望恢复后继续读取完全相同的数据顺序，还要保存 sampler permutation、流式 reader offset、当前 shard 和 shuffle buffer。只恢复模型权重，训练能够继续，但后续样本可能重复或跳过。
 
 大模型 checkpoint 往往由多个 rank 分片写入。每个进程保存自己持有的参数与 optimizer state，metadata 记录这些分片怎样重组。写入时可以先生成临时文件，全部完成后再原子更新 manifest，避免中断后留下一个名称完整、内容却缺失的 checkpoint。
+
+## 存储层次
+
+Checkpoint 通常包含模型参数、梯度缩放状态、optimizer state、训练 step 和数据读取位置。分片文件要与 manifest 一起版本化，否则只有部分 rank 写入成功时，文件名存在也无法恢复。
+
+- 块存储暴露固定大小的 block，数据库或文件系统在其上组织更高层结构，随机读写性能稳定。
+- 文件存储提供目录、文件名与 POSIX 风格接口，训练程序使用方便，大量小文件时 metadata 压力明显。
+- 对象存储用 key 访问完整对象，容量和扩展性较好，延迟较高，通常配合较大的 shard 与本地缓存。
+
+集群常把热数据放在本地 NVMe 或内存缓存，把完整数据集和 checkpoint 放在共享文件系统或对象存储。Data lake 保存原始数据与不同处理阶段的产物，lakehouse 再补充 schema、事务和版本管理。训练作业读取哪个副本、缓存何时失效、产物怎样追溯，都要由 metadata 统一记录。

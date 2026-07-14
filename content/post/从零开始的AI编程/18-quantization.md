@@ -24,6 +24,8 @@ $$
 
 FP16 的 exponent 较少，容易 overflow；bfloat16 保留与 FP32 相同数量的 exponent bit，范围更大但 fraction 更短。模型是否适合某种格式取决于权重、activation、gradient 与 accumulator 的数值分布。
 
+## 量化方法
+
 ### K-means Quantization
 
 K-means quantization 从权重中学习 $K$ 个中心，模型只保存 codebook 和每个权重的中心 index。
@@ -38,7 +40,7 @@ K-means quantization 从权重中学习 $K$ 个中心，模型只保存 codebook
 
 非均匀中心比统一间隔更贴合权重分布，但硬件实现和向量化更复杂。中心还可以在训练中继续更新，以减少聚类造成的损失。
 
-## Affine Quantization
+### Affine Quantization
 
 Affine quantization 用 scale $s$ 与 zero point $z$ 在线性网格上建立实数和整数的映射。
 
@@ -88,15 +90,15 @@ $$
 
 这 $0.0039$ 就是网格取整带来的量化误差。区间越宽，同样 $256$ 个整数格子越稀，误差通常也越大。
 
-### Symmetric Quantization
+#### Symmetric Quantization
 
 对称量化令 $z=0$ ，使用正负对称范围。它省去 zero point 修正，kernel 更简单，常用于近似零均值的权重。若 activation 明显只分布在一侧，对称范围会浪费一部分整数码值。
 
-### Asymmetric Quantization
+#### Asymmetric Quantization
 
 非对称量化允许 $z\neq0$ ，能更好利用偏移分布的整数范围。代价是矩阵乘法中要处理额外的 offset 项。
 
-### 范围校准
+#### 范围校准
 
 直接用绝对最小值和最大值确定 scale，容易被少量 outlier 拉宽范围，让大部分值集中在几个整数 bin 中。Post-Training Quantization 通常用 calibration dataset 统计 activation 分布，再选择 min-max、percentile、KL divergence 或均方误差等准则。
 
@@ -104,7 +106,7 @@ Clipping 会让超出范围的值饱和，却能提高主体区间的分辨率�
 
 Weight 在部署前固定，范围可以离线计算；activation 随输入变化，可能使用静态 calibration scale，也可能在每次运行时动态计算 scale。Dynamic quantization 更灵活，但会增加运行时归约成本。
 
-### 量化粒度
+#### 量化粒度
 
 ![量化粒度](assets/slides/18-granularity.png)
 
@@ -115,7 +117,7 @@ Weight 在部署前固定，范围可以离线计算；activation 随输入变�
 
 更细粒度能适应不同通道的范围，却需要保存更多 scale，并在 kernel 内加载和广播。硬件是否支持对应粒度会直接影响实际速度。
 
-### 整数矩阵乘法
+#### 整数矩阵乘法
 
 设输入与权重近似为
 

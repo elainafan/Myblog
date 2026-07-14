@@ -343,7 +343,7 @@ $$
 \end{aligned}
 $$
 
-若 $X$ 的形状为 `[N, in_features]`，$W$ 的形状为 `[out_features, in_features]`，则 $G$ 的形状为 `[N, out_features]`。输入梯度和权重梯度都是矩阵乘法，bias 梯度则沿 batch 维把每个输出通道的贡献相加。
+若 $X$ 的形状为 `[N, in_features]`， $W$ 的形状为 `[out_features, in_features]`，则 $G$ 的形状为 `[N, out_features]`。输入梯度和权重梯度都是矩阵乘法，bias 梯度则沿 batch 维把每个输出通道的贡献相加。
 
 框架需要保留前向时的输入 $X$ 与权重 $W$ ，反向 kernel 才能得到上面两次 GEMM 的操作数。只冻结 bias 不会省掉权重梯度的矩阵乘法；冻结整层权重后，才可以跳过 $\partial L/\partial W$ 与 $\partial L/\partial b$ 的计算。
 
