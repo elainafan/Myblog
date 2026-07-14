@@ -215,17 +215,51 @@ y_t =
 g_{t+1}-g_t
 $$
 
-BFGS 用这两组向量更新逆 Hessian 近似。
+BFGS 用这两组向量更新逆 Hessian 近似。记近似矩阵为 $Q_t$ ，并令
+
+$$
+\rho_t=\frac{1}{y_t^\mathsf{T}s_t}
+$$
+
+一次更新为
+
+$$
+\begin{aligned}
+Q_{t+1}
+&=
+\left(I-\rho_t s_t y_t^\mathsf{T}\right)
+Q_t
+\left(I-\rho_t y_t s_t^\mathsf{T}\right)\\\\
+&\quad+
+\rho_t s_t s_t^\mathsf{T}
+\end{aligned}
+$$
+
+这个构造使新矩阵满足 secant condition $Q_{t+1}y_t=s_t$ ，也就是用最近一次观测到的参数变化解释梯度变化。当 $y_t^\mathsf{T}s_t$ 为正且 $Q_t$ 正定时，新近似仍保持正定，方向 $-Q_tg_t$ 才是下降方向。实际实现常配合 line search；曲率条件不满足时，会跳过、修正或 damping 这次更新。
 
 ![BFGS](assets/imported/57.png)
 
-L-BFGS 只保留最近若干组 $(s_t,y_t)$ 向量，通过 two-loop recursion 计算方向，空间从 $O(d^2)$ 降到 $O(md)$ 这一量级。它更适合全批量、目标平滑的任务，mini-batch 噪声会让曲率估计变得不稳定。
+L-BFGS 不显式保存 $Q_t$ ，只保留最近 $m$ 组 $(s_t,y_t)$ 向量。Two-loop recursion 先从新到旧消去各组 $y_t$ 分量，乘上一个标量初始矩阵，再从旧到新补回 $s_t$ 分量，得到与 BFGS 近似相同的搜索方向。空间从 $O(d^2)$ 降到 $O(md)$ ，其中 $m$ 通常远小于参数维度 $d$ 。
+
+曲率信息来自相邻两次梯度之差。Mini-batch 每轮换一批样本时，$y_t$ 同时包含参数移动造成的变化和采样噪声，secant condition 会变得很不可靠。L-BFGS 因而更适合全批量或较稳定的目标，神经网络随机训练中远没有 Adam 和 SGD 常见。
 
 ![L-BFGS](assets/imported/58.png)
 
 ## 学习率与正则化
 
 固定学习率很少从头用到尾。训练初期参数与梯度状态尚不稳定，warmup 让学习率从较小值逐步升高；进入稳定阶段后，再用 step decay、cosine decay 或 polynomial decay 缩小步长。
+
+在随机近似的经典收敛分析中，步长序列常满足
+
+$$
+\eta_t\geq 0,
+\qquad
+\sum_{t=0}^{\infty}\eta_t=\infty,
+\qquad
+\sum_{t=0}^{\infty}\eta_t^2<\infty
+$$
+
+第一项求和发散，保证更新不会过早停止在离最优点仍很远的位置；平方和收敛，使后期随机梯度噪声的累计影响保持有限。深度网络通常不满足这套分析所需的凸性与噪声假设，训练中使用 warmup、cosine decay 或有限步数 schedule，也不能直接套用定理判断收敛。这里的条件更适合解释学习率为何要逐渐减小。
 
 Cosine schedule 常写成
 
@@ -268,6 +302,36 @@ $$
 随后再执行 Adam 的梯度步。这样可以直接控制参数衰减，不让它被各维自适应缩放改变。
 
 L1 regularization 使用 $\lambda\lVert\theta\rVert_1$ 作为惩罚项，会推动更多参数靠近零。零点处不可导，需要次梯度或 proximal method 处理。
+
+取输入向量 $x=(1,2,1)$ ，两组参数都给出内积 $3/2$ 这一结果
+
+$$
+\begin{aligned}
+\theta_{\mathrm{sparse}}
+&=
+\left(0,\frac{3}{4},0\right),\\\\
+\theta_{\mathrm{spread}}
+&=
+\left(\frac{1}{4},\frac{1}{2},\frac{1}{4}\right)
+\end{aligned}
+$$
+
+它们的范数关系为
+
+$$
+\begin{aligned}
+\left\lVert\theta_{\mathrm{sparse}}\right\rVert_1
+&=\frac{3}{4}
+<1
+=\left\lVert\theta_{\mathrm{spread}}\right\rVert_1,\\\\
+\left\lVert\theta_{\mathrm{sparse}}\right\rVert_2^2
+&=\frac{9}{16}
+>\frac{3}{8}
+=\left\lVert\theta_{\mathrm{spread}}\right\rVert_2^2
+\end{aligned}
+$$
+
+在预测相同的这个例子中，L1 惩罚更小的是只使用中间特征的稀疏解，L2 惩罚更小的是把权重分散到三个维度的解。这也是两种正则化分别容易产生稀疏参数与平滑权重的直观来源。
 
 模型过度贴合训练数据时，还可从训练过程控制泛化。
 

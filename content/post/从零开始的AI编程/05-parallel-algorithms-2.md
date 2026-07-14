@@ -105,6 +105,14 @@ Kernel launch 对 host 通常是异步的。异步只表示 CPU 不等待 GPU，
 - GPU 有足够的计算、copy engine 和其他资源。
 - 使用的 API 与内存类型支持异步执行。
 
+### 默认 Stream
+
+没有显式传入 stream 的 kernel launch 和 CUDA 操作会进入 default stream，也常被称为 Stream 0。同一条 stream 内仍然严格按提交顺序执行，所以连续发出两个默认 stream kernel 时，第二个 kernel 不会越过第一个。
+
+Legacy default stream 还会与其他 blocking stream 建立隐式同步。某个操作一旦落入其中，原本互不依赖的队列也可能被迫等待。启用 per-thread default stream 后，每个 host thread 拥有自己的默认队列，语义会有所不同。代码若依赖这两种模式的差异，换一个编译选项或调用环境就可能改变并发行为。
+
+需要稳定并发时，最好显式创建 stream，并用 event 写出真正的数据依赖。这样可以从代码中看出某次复制和某个 kernel 属于哪条队列，也不会让一个遗漏的 stream 参数悄悄打断流水线。
+
 ### 分块流水线
 
 一大批数据可以切成多个 chunk。每个 chunk 依次经历 host-to-device、kernel、device-to-host 三步，不同 chunk 放入不同 stream。

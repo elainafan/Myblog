@@ -96,6 +96,15 @@ int main() {
 }
 ```
 
+把代码保存为 `relu.cu` 后，可以直接交给 `nvcc` 编译。
+
+```bash
+nvcc -O2 -std=c++17 relu.cu -o relu
+./relu
+```
+
+`nvcc` 会分别处理 host 代码与 device 代码，再把两部分链接成同一个可执行文件。普通 C++ 编译器不认识 `__global__`、kernel launch 语法和设备端指令，因此不能直接用 `g++ relu.cu` 代替。项目需要面向特定 GPU 架构时，还可以通过 `-arch=sm_xx` 指定目标；`xx` 应与实际设备的 compute capability 对应。
+
 变量名前的 `h_` 与 `d_` 只是常用命名习惯，用来区分 host pointer 和 device pointer。二者都是 C++ 指针，但 host 代码不能直接解引用普通 device pointer。把地址传给 kernel 后，GPU 才能访问对应显存。
 
 频繁调用 `cudaMalloc` 和跨设备复制都很昂贵。深度学习框架会复用显存块，并让多个算子连续处理已经留在 GPU 上的数据。
@@ -237,7 +246,20 @@ $$
 
 转置可以只交换 shape 与 stride，而不复制元素。原 Tensor 的 stride 为 `[3, 1]`，转置后的视图可以使用 `[1, 3]`。此时逻辑上的相邻元素在物理内存中未必相邻，这种 Tensor 称为 non-contiguous。
 
-`view`、`reshape`、`permute` 和切片是否复制数据，取决于新布局能否仅用 shape、stride 与起始偏移表示。CUDA kernel 若只按连续数组寻址，就要在入口处要求 contiguous，或者显式按 stride 计算地址。
+以一次转置为例，`transpose` 没有搬动元素，只修改了 Tensor 对存储的解释方式。
+
+```python
+x = torch.arange(6).reshape(2, 3)
+y = x.transpose(0, 1)
+
+print(x.stride())          # (3, 1)
+print(y.stride())          # (1, 3)
+print(y.is_contiguous())   # False
+```
+
+`view` 只允许在现有 shape、stride 与起始偏移能够表示新布局时重解释存储。对上面的 `y` 直接执行 `y.view(-1)` 会报错，因为它的逻辑顺序无法映射成一段连续区间。`y.contiguous()` 会按当前逻辑顺序复制出一份连续存储，之后才能安全地 `view`。
+
+`reshape` 会先尝试返回 view，做不到时再创建副本，所以它能成功并不表示没有复制。`permute` 与大多数转置操作通常只改元信息，切片则可能改变 stride 和起始偏移。CUDA kernel 若只按连续数组寻址，就要在入口处要求 contiguous；需要接受任意视图时，则必须把各维 stride 纳入地址计算。
 
 ### GPU 存储层次
 

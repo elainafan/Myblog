@@ -332,6 +332,30 @@ if __name__ == "__main__":
 
 浮点结果使用 `torch.testing.assert_close`。容差要与 dtype 和归约长度相符。`float16` 的累计误差通常大于 `float32`，但把容差设得过宽会掩盖漏项和错误索引。
 
+### Fixture、覆盖率与 Mock
+
+`unittest.TestCase` 采用 xUnit 的组织方式。多项测试都要创建相同输入或初始化同一套扩展时，可以把这部分准备工作放进 `setUp`，把临时文件、环境变量和外部资源的清理放进 `tearDown`。它们会在每个 test method 前后各执行一次，前一项测试留下的状态不会直接流入后一项。
+
+```python
+class LinearTest(unittest.TestCase):
+    def setUp(self):
+        torch.manual_seed(0)
+        self.input = torch.randn(
+            17,
+            31,
+            device="cuda",
+        )
+
+    def tearDown(self):
+        torch.cuda.synchronize()
+```
+
+初始化代价很高的只读资源可以放进 `setUpClass`，它在整组测试开始前运行一次。可变的 GPU buffer 不宜在测试间直接共享，否则上一次 kernel 的异步执行或原地写入可能让失败结果依赖测试顺序。
+
+Line coverage 只说明某行代码执行过，branch coverage 进一步检查条件的真假分支。它们都不能证明数值结果正确。一个越界 kernel 可能碰巧在当前输入上没有报错，一条归约路径也可能执行完整却漏加最后一个 tile。覆盖率适合寻找从未触达的区域，结果仍要靠 reference、边界样例和梯度检查判断。
+
+Mock 用来替换测试对象之外的依赖，例如远程存储、时钟或 RPC client。测试 CUDA 算子时不应把 kernel 本身 mock 掉，否则只验证了 Python 包装层；可以 mock 的是下载输入、写日志或上报指标等外围行为。这样既保留算子的真实执行，也不会让单元测试依赖网络和外部服务。
+
 ### 梯度检查
 
 Backward 可以直接与 reference 比较。

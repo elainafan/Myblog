@@ -122,6 +122,12 @@ Arithmetic Intensity 较高的算子更容易受峰值算力限制，较低的�
 
 自动混合精度也属于这类选择。矩阵乘法可以用 `float16` 输入和 `float32` 累加，归一化、指数与 loss reduction 则可能保留更高精度。插入过多 cast 会损失性能，精度过低又会溢出或下溢。
 
+后端通常先标出适合低精度的候选算子。MatMul 与 Conv 能使用 Tensor Core，降低输入精度的收益明显；Softmax、归约、`exp`、`log` 和较小数值的累加更容易受舍入影响，常保留 `float32`。候选表只能给出起点，最终选择还要结合输入范围、累加 dtype 和用户允许的精度策略。
+
+精度可以沿连续的兼容算子传播。例如 MatMul 后接 bias 与 ReLU 时，三者都接受低精度，就不必在每个节点之间往返 cast。到达需要 `float32` 的 Reduce 前再转换，既减少 kernel 和内存流量，也缩短低精度值的传播范围。若一个低精度分支很短，转换两次的开销可能比该算子省下的时间更大，整图代价模型应保留原精度。
+
+训练图还要顾及 backward。Forward 某个输出改成低精度后，它可能成为 backward 保存的 activation，并影响梯度计算。混合精度 pass 因此不能只看前向节点的白名单，还要检查保存值、梯度累加和 loss scaling 的路径。
+
 ### Auto-Tuning
 
 Tile size、循环顺序、unroll factor、thread binding 和 vector width 组合起来会形成很大的搜索空间。手写规则很难覆盖所有设备和 shape，Auto-Tuning 会生成候选 Schedule，并实际测量其中一部分。

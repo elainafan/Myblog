@@ -3,6 +3,9 @@ title: 从零开始的AI编程
 date: 2025-09-10
 categories:
     - AI
+updates:
+    - date: 2026-07-14
+      content: 补回 CUDA、计算图、编译器与优化器中的实现细节和推导。
 seriesExclude: true
 ---
 
