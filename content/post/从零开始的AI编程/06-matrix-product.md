@@ -189,8 +189,8 @@ Intensity 较低时，算子受带宽限制，减少 global memory 流量比增�
 $$
 A=
 \begin{bmatrix}
-0&5&0&0\\\\
-2&0&0&7\\\\
+0&5&0&0\\
+2&0&0&7\\
 0&0&3&0
 \end{bmatrix}
 $$
@@ -337,8 +337,8 @@ x = torch.nn.functional.linear(x, weight, bias)
 
 $$
 \begin{aligned}
-\frac{\partial L}{\partial X}&=GW,\\\\
-\frac{\partial L}{\partial W}&=G^\mathsf{T}X,\\\\
+\frac{\partial L}{\partial X}&=GW,\\
+\frac{\partial L}{\partial W}&=G^\mathsf{T}X,\\
 \frac{\partial L}{\partial b}&=\sum_{i=1}^{N}G_{i,:}
 \end{aligned}
 $$

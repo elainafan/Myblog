@@ -67,6 +67,16 @@ GPU 具有较成熟的通用编程生态和较强的算子覆盖，适合训练�
 
 吞吐率描述单位时间完成的样本、token 或请求数，延迟描述单个任务完成时间。硬件利用率则比较实测吞吐与理论峰值。三者对应的优化目标并不相同。
 
+### 运行生态
+
+一块加速卡能否用于真实模型，还取决于它上面的软件是否完整。框架要能创建 device Tensor，编译器要能降低计算图，算子库要覆盖模型中的卷积、矩阵乘法、归一化和 attention，通信库还要支持多卡 collective。任何一层缺少实现，模型都可能回退到 CPU，或在 device 之间多做一次格式转换。
+
+CUDA 生态从 driver 与 runtime 向上提供了多组专用库。cuBLAS 负责稠密线性代数，cuDNN 提供神经网络算子，cuSPARSE、cuFFT 与 cuRAND 处理各自的计算类型，NCCL 负责 GPU collective。PyTorch 等框架通常调用这些库，遇到需要融合或定制的子图时再生成 CUDA 或 Triton kernel。
+
+ROCm 采用 HIP 作为编程接口，并提供 rocBLAS、MIOpen、rocSPARSE、rocFFT、rocRAND 与 RCCL 等对应组件。接口名称能够映射，不代表程序一定可以直接迁移。算子覆盖、支持的 dtype、编译器行为、kernel 性能与框架版本都可能不同，依赖 CUDA 特定扩展的项目还需要单独移植。
+
+NPU SDK 也要解决相同问题，只是底层指令、内存层次和算子格式由厂商定义。一个算子即使能够运行，若需要频繁在设备偏好的 layout 与框架 layout 之间转换，端到端速度仍可能低于理论算力。评价硬件时，开发工具、调试器、profiler 和长期版本兼容性与 TOPS 同样重要。
+
 ## 节点内互连
 
 PCIe 负责连接 CPU、GPU、网卡和存储设备，兼容性强，也承担 host 与 device 之间的大部分传输。它的物理拓扑并不是一条共享总线。两张 GPU 可能位于同一个 PCIe switch 下，也可能分别连接到不同 CPU socket；后一种路径需要跨 root complex 或 CPU 间互连，延迟更高，peer-to-peer 甚至可能不可用。
@@ -90,6 +100,10 @@ Collective library 会结合消息大小和拓扑选择 ring、tree 或分层算
 CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的大规模并行，专用处理器则对特定算子具有更高能效。异构系统的难点是设备之间内存不统一，迁移数据可能比计算本身还贵。
 
 任务图需要同时考虑计算成本和 transfer cost。把一个很小的算子单独送到 GPU 往往得不偿失；把相邻算子融合或把完整阶段下沉到 device，才能摊薄传输与 launch overhead。
+
+超异构系统继续把基础设施任务交给 DPU 或其他领域专用处理器。CPU 保留 Python、控制流和系统服务，GPU 或 NPU 执行矩阵与 Tensor 运算，DPU 处理虚拟化、网络、存储和安全。用户看到的仍是一段模型程序，编译器与 runtime 要把子图、数据和控制消息送到不同处理器。
+
+这种分工让大部分算力落在高能效的专用单元上，同时保留 CPU 的可编程性。代价是系统边界更多。一次算子切分可能跨越不同地址空间，任务完成顺序要用 event 或消息表达，错误也可能来自 host、device、网络或编译后的某一层，不能只检查单个 kernel。
 
 ### 集群
 
@@ -115,7 +129,7 @@ CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的
 
 训练网络强调高带宽、低延迟与可预测的 tail latency。存储网络更关心总吞吐和大对象读取。把全部流量混在同一网络中，checkpoint 或数据读取可能与梯度同步互相争抢。
 
-## 集群软件
+## 通信与软件栈
 
 ### RDMA 与 RoCE
 
@@ -127,6 +141,18 @@ GPU Direct RDMA 可以让网卡直接访问 GPU memory，省去先拷贝到 host
 
 ### 软件栈
 
-硬件之上还需要驱动、runtime、通信库、算子库、编译器与框架。CUDA、ROCm 和不同 NPU SDK 提供的算子覆盖与调试工具并不一致。模型迁移失败时，问题可能来自不支持的 dtype、布局、动态 shape 或通信原语，而不只是算力不足。
+硬件之上还需要驱动、runtime、通信库、算子库、编译器与框架。它们并非彼此独立的工具集合，一次普通的模型调用会从上到下穿过整条路径。
 
-完整性能分析要同时观察 kernel timeline、memory bandwidth、collective duration、网络计数器和 DataLoader wait time。只看 GPU utilization 很难区分计算繁忙、通信等待或 kernel 过碎。
+![AI 框架的软件层次](assets/slides/15-framework-stack.png)
+
+Python 接口先接收模型与 Tensor。Eager 模式会逐个下发算子，编译模式则捕获连续的计算区域，建立带有 shape、dtype、layout 与 device 信息的 Graph IR。自动微分在这里生成反向依赖，图优化再执行常量折叠、死代码消除与算子融合。
+
+编译器后端接过 Tensor IR 后选择算子实现、tile、并行轴和内存布局。成熟算子可以直接调用 cuBLAS、cuDNN、MIOpen 等库；融合子图或特殊 shape 则可能由 Triton、CUDA、HIP 或厂商编译器生成 kernel。选中的实现还要满足精度、workspace 和 determinism 等限制，不能只挑理论 FLOPs 最高的一项。
+
+Runtime 负责分配 device memory、管理 stream 与 event、装载 kernel 并提交 launch。Driver 再把这些命令交给硬件队列。多卡训练还要经过 NCCL、RCCL 或厂商通信库，把框架中的 AllReduce、AllGather 和 AllToAll 映射到 NVLink、PCIe、InfiniBand 或 RoCE。
+
+以 `relu(x @ weight + bias)` 为例，前端可以把三个操作识别成一个子图，后端为矩阵乘法选择 Tensor Core kernel，并把 bias 与 ReLU 放进 epilogue。Runtime 准备参数和 stream 依赖，driver 启动 kernel。若 shape 不满足 tile 条件，后端可能改用普通 CUDA Core；若 device 上没有某个算子，框架甚至会插入数据传输并回退到 host。
+
+模型迁移失败时，应先确定问题停在哪一层。Graph break 属于捕获边界，unsupported dtype 或 layout 常出现在编译与算子选择阶段，invalid device function 多半与生成代码和硬件架构不匹配，collective timeout 则要继续检查 rank 顺序、网络和进程状态。把这些错误都归因于“设备不支持”很难找到真正的边界。
+
+完整性能分析也要沿同一层次展开。Framework profiler 用来观察算子和 Graph break，kernel timeline 检查 launch、并发和同步，硬件计数器给出 memory bandwidth 与计算单元利用率，collective duration 与网络计数器则解释跨卡等待。DataLoader wait time 还会暴露 host 端供数不足。只看 GPU utilization 无法区分计算繁忙、通信等待或大量细碎 kernel。

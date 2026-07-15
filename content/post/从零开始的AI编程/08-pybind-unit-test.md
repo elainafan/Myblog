@@ -156,8 +156,6 @@ float sum(
 
 C++ 返回的 NumPy array 若引用外部内存，外部内存不能在 Python array 之前释放。可以用 capsule 保存析构函数，也可以把拥有内存的 Python 对象作为 base。把局部 `std::vector` 的 `data()` 直接返回会留下悬空指针。
 
-### GIL
-
 Global Interpreter Lock 保证同一 Python 解释器中只有一个线程执行 Python bytecode。长时间运行且完全不调用 Python API 的 C++ 计算可以暂时释放 GIL。
 
 ```cpp

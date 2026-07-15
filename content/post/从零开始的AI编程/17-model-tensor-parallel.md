@@ -88,11 +88,25 @@ $$
 
 ### Attention
 
-Q、K、V projection 可以按 attention head 划分，每个 rank 处理一部分 head。各 head 的 attention 独立，直到 output projection 才需要合并。
+Self-attention 的四个线性变换可以写成
+
+$$
+Q=XW_Q,
+\qquad
+K=XW_K,
+\qquad
+V=XW_V,
+\qquad
+Y=\operatorname{Attention}(Q,K,V)W_O
+$$
+
+$W_Q$ 、 $W_K$ 与 $W_V$ 可以按输出维切分。每个 rank 只生成一部分 head，并在本地完成对应 head 的 score、Softmax 与 value 聚合。不同 head 在这段计算中互不依赖，不需要先交换完整的 Q、K、V。
 
 ![Transformer 中的 Tensor Parallelism](assets/slides/17-tensor-parallel-all.png)
 
-head 数必须能够合理分给 tensor-parallel group。Grouped Query Attention 中 Q head 与较少的 K/V head 比例还会约束切分方式。
+Output projection $W_O$ 再按输入维切分。每个 rank 用自己的 head 输出计算一份局部结果，所有局部结果相加才得到完整的 $Y$ ，因此末尾需要 AllReduce 或 ReduceScatter。这样 QKV projection 到 attention 主体之间不通信，代价集中在 output projection 之后。
+
+Head 数必须能够合理分给 tensor-parallel group。Multi-Query Attention 让所有 Q head 共用一组 K/V，Grouped Query Attention 则让若干 Q head 共用一组 K/V。K/V head 少于 rank 数时，不能再简单地让每个 rank 独占不同 head，通常要复制 K/V、缩小 tensor-parallel group，或沿 head 之外的维度继续切分。分片方案既要整除 shape，也要避免为了很小的 K/V Tensor 引入一次额外 collective。
 
 ## 序列与算子并行
 
@@ -106,7 +120,7 @@ Tensor parallel 常让 layer norm、dropout 等操作的 activation 在每个 ra
 
 它与 tensor parallel 通常使用同一组 rank。通信量未必减少，但每 rank activation 占用降低，适合长序列训练。
 
-### Ring Attention
+上面的 Sequence Parallelism 主要切分 layer norm、dropout 等逐元素操作，attention 仍可能需要重新收集序列。若希望 attention 本身也保持 sequence shard，可以让每个 rank 固定保存一段 query，再逐步取得其余位置的 key 与 value。
 
 标准 attention 需要构造长度为 $S$ 的 query 与 key 交互，计算量和 score matrix 都随 $S^2$ 增长。Ring Attention 沿 sequence 维切分 Q、K、V，每个 rank 保留一段 query，并让 K/V block 沿 ring 轮转。
 
@@ -128,8 +142,6 @@ Causal mask 允许跳过部分无效 block，但各 rank 的工作量可能因�
 - Expert Parallelism 在 Mixture-of-Experts 中切 experts，并通过 AllToAll 路由 token。
 
 总 world size 是各并行维度乘积。每个维度建立自己的 process group，collective 只能在对应 group 内执行。rank mapping 应让通信最频繁的 tensor parallel 尽量留在节点内，较能容忍延迟的数据并行再跨节点。
-
-### 通信瓶颈
 
 ![分布式训练中的通信瓶颈](assets/slides/17-bottleneck.png)
 

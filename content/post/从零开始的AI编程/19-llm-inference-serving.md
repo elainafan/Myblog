@@ -50,7 +50,7 @@ Decode 每轮矩阵的 token 维接近 $1$ ，要读取完整权重和不断增�
 
 两阶段对硬件资源的偏好不同。把长 prefill 与低延迟 decode 无条件塞进同一 batch，前者可能阻塞后者，造成 TPOT 抖动。
 
-## KV Cache
+## 生成状态
 
 ### KV Cache
 

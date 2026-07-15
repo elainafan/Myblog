@@ -104,8 +104,6 @@ $$
 
 若每个 rank 的 local batch size 不变，world size 增大后 global batch size 也会增大。学习率、warmup、正则化和训练步数可能都要调整。若保持 global batch 不变，则每个 rank 的计算量变小，通信更难被摊薄。
 
-### 梯度 Bucket
-
 Backward 从输出层向输入层逐步产生梯度。DistributedDataParallel 不必等所有梯度计算完再通信，而是把梯度按 bucket 组织；某个 bucket 中的梯度全部 ready 后，立即启动异步 AllReduce，与后续 backward 重叠。
 
 Bucket 太小会产生大量小 collective，太大则推迟第一轮通信。参数在 backward 中的 ready 顺序与 bucket 顺序不匹配时，也会形成等待。

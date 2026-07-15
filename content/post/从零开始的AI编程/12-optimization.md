@@ -38,8 +38,6 @@ $$
 
 真实模型的不同方向常有不同曲率。狭长谷底中，陡峭方向的梯度会频繁换符号，平缓方向的梯度却一直较小，普通梯度下降因此走出锯齿形路线。
 
-### Batch 与梯度累积
-
 全批量梯度下降每一步遍历整个训练集，方向稳定，但单步成本很高。随机梯度下降每次只用一个样本，更新便宜，噪声也很大。训练中更常使用 mini-batch
 
 $$
@@ -229,7 +227,7 @@ Q_{t+1}
 &=
 \left(I-\rho_t s_t y_t^\mathsf{T}\right)
 Q_t
-\left(I-\rho_t y_t s_t^\mathsf{T}\right)\\\\
+\left(I-\rho_t y_t s_t^\mathsf{T}\right)\\
 &\quad+
 \rho_t s_t s_t^\mathsf{T}
 \end{aligned}
@@ -280,8 +278,6 @@ Scheduler 的更新单位要与实现匹配。有的按 optimizer step 更新，
 
 ![学习率大小与收敛过程](assets/slides/12-learning-rate.png)
 
-### 权重衰减
-
 L2 regularization 在损失中加入
 
 $$
@@ -309,7 +305,7 @@ $$
 \begin{aligned}
 \theta_{\mathrm{sparse}}
 &=
-\left(0,\frac{3}{4},0\right),\\\\
+\left(0,\frac{3}{4},0\right),\\
 \theta_{\mathrm{spread}}
 &=
 \left(\frac{1}{4},\frac{1}{2},\frac{1}{4}\right)
@@ -322,11 +318,11 @@ $$
 \begin{aligned}
 \left\lVert\theta_{\mathrm{sparse}}\right\rVert_1
 &=\frac{3}{4}
-<1
-=\left\lVert\theta_{\mathrm{spread}}\right\rVert_1,\\\\
+\lt 1
+=\left\lVert\theta_{\mathrm{spread}}\right\rVert_1,\\
 \left\lVert\theta_{\mathrm{sparse}}\right\rVert_2^2
 &=\frac{9}{16}
->\frac{3}{8}
+\gt\frac{3}{8}
 =\left\lVert\theta_{\mathrm{spread}}\right\rVert_2^2
 \end{aligned}
 $$

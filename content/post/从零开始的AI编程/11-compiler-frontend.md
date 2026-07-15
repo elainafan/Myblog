@@ -38,8 +38,6 @@ XLA 在较高层使用 HLO 一类 Tensor IR 表达算子、shape 和数据依赖
 
 TVM 会把高层图表示继续降低到 Tensor 与循环层的 TIR。调度可以改变 tile、循环顺序、并行绑定和存储位置，而不必改写算子的数学定义。TorchInductor 也采用相近思路，把捕获到的 PyTorch 子图分成融合区域，再生成 Triton 或 C++ kernel。几套系统的 IR 名称不同，分层目的相同。高层保留语义，低层暴露硬件执行细节。
 
-### 类型系统与静态分析
-
 类型系统描述每个 value 能承载什么对象。对 Tensor 而言，类型至少包含 dtype、rank、shape、device 与 layout；tuple、标量、可选值和控制流结果也要有对应表示。类型检查先排除不合法程序，静态分析再沿图传播已知信息，为常量折叠、布局选择和内存规划提供条件。
 
 前端拿到 `x @ weight` 时，要先验证两个输入能否相乘。若
@@ -117,8 +115,6 @@ $$
 ![公共子表达式消除](assets/imported/50.png)
 
 ![死代码消除](assets/imported/52.png)
-
-### 算子融合
 
 GPU 执行 `add`、`relu`、`multiply` 三个独立 kernel 时，中间 Tensor 至少要写回和读出 global memory，三个 kernel 也各自承担 launch overhead。若每个输出元素的索引关系一致，可以让一个 thread 连续完成三步。
 

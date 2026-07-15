@@ -208,11 +208,57 @@ $$
 
 Transposed convolution 把 $W^\mathsf{T}$ 对应的数据流当作新的前向算子。Stride 大于 $1$ 时，一个输入元素会向更大的输出平面散射贡献，重叠位置需要累加。
 
-它常用于上采样，但不能恢复普通卷积已经丢掉的信息。名称中的 transposed 指线性变换矩阵的转置，不表示它是卷积的逆运算。
+![转置卷积的上采样过程](assets/slides/07-transposed-convolution.png)
+
+设输入高度为 $H_{\mathrm{in}}$ ，stride、padding、dilation、kernel size 与 output padding 分别为 $S_H$ 、 $P_H$ 、 $D_H$ 、 $K_H$ 与 $O_H$ ，输出高度为
+
+$$
+H_{\mathrm{out}} =
+\left(H_{\mathrm{in}}-1\right)S_H
+-2P_H
++D_H\left(K_H-1\right)
++O_H
++1
+$$
+
+普通卷积可能把不同大小的输入压到同一个输出尺寸，因此仅凭输出无法反推出原输入尺寸。`output_padding` 用来在这些候选尺寸中选定一个结果，只改变输出 shape，不会真的在结果边缘补上一圈数值。
+
+转置卷积常用于图像分割与生成模型中的上采样，但不能恢复普通卷积已经丢掉的信息。名称中的 transposed 指线性变换矩阵的转置，不表示它是卷积的逆运算。
 
 ## Pooling
 
-Pooling 在每个通道内独立聚合局部窗口。Max Pooling 取最大值，Average Pooling 取平均值。最常见的池化窗口大小为 $2\times2$ 且 stride 取 2，会把高宽各缩小一半。
+Pooling 在每个通道内独立聚合局部窗口，不混合通道，也没有需要训练的 kernel 权重。若 $\Omega_{p,q}$ 表示输出位置 $(p,q)$ 对应的窗口，Max Pooling 与 Average Pooling 分别计算
+
+$$
+\begin{aligned}
+Y^{\mathrm{max}}_{n,c,p,q}
+&=
+\max_{(i,j)\in\Omega_{p,q}}X_{n,c,i,j}
+\\
+Y^{\mathrm{avg}}_{n,c,p,q}
+&=
+\frac{1}{|\Omega_{p,q}|}
+\sum_{(i,j)\in\Omega_{p,q}}X_{n,c,i,j}
+\end{aligned}
+$$
+
+Max Pooling 保留窗口中最强的响应，Average Pooling 则把窗口整体压成均值。最常见的窗口大小为 $2\times2$ 且 stride 取 2，输入的 batch 与 channel 数保持不变，高宽各缩小一半。小范围内的响应位置发生偏移时，最大值可能仍然不变，但这不等于整张特征图已经获得平移不变性。
+
+![Max Pooling 的前向过程](assets/slides/07-pooling-forward.png)
+
+设高度方向的 kernel size、stride、padding 与 dilation 分别为 $K_H$ 、 $S_H$ 、 $P_H$ 与 $D_H$ ，默认向下取整时的输出高度为
+
+$$
+H_{\mathrm{out}} =
+\left\lfloor
+\frac{
+H+2P_H-D_H\left(K_H-1\right)-1
+}{S_H}
++1
+\right\rfloor
+$$
+
+宽度按同一方式计算。窗口通常互不重叠，但 stride 小于 kernel size 时也可以重叠；stride 大于 kernel size 时，部分输入位置不会进入任何窗口。
 
 ```python
 torch.nn.functional.max_pool2d(
@@ -226,15 +272,21 @@ torch.nn.functional.max_pool2d(
 )
 ```
 
-`stride` 默认等于 `kernel_size`。`ceil_mode=True` 允许窗口从最后一个有效位置开始，即使它不能完整落入输入。`return_indices=True` 会额外返回每个窗口最大元素的位置。
+输入采用 `[N, C, H, W]` 这一布局。`kernel_size`、`stride`、`padding` 与 `dilation` 都可以分别指定高、宽两个方向；`stride` 省略时默认等于 `kernel_size`。Max Pooling 的 padding 按负无穷处理，边界外的值不会压过一个全为负数的有效窗口。
 
-### 池化反向
+`ceil_mode=True` 使用向上取整，允许最后一个窗口从有效输入内开始，即使它的右侧或下侧越过边界。Average Pooling 还要决定边界窗口的除数，PyTorch 用 `count_include_pad` 控制 padding 是否参与计数。
 
-前向时除最大值外，还要保存 argmax。反向传播把上游梯度送回 argmax 指向的输入，窗口中其他位置得到零。
+前向 CUDA kernel 可以让一个 thread 负责一个输出元素。Thread 先由线性 index 解出 $(n,c,p,q)$ ，再扫描对应窗口。Max Pooling 同时写出最大值与 argmax，Average Pooling 只需累加并除以窗口中的计数。
+
+Max Pooling 的反向传播把上游梯度送回前向选中的 argmax，窗口中其他位置得到零。若窗口中有多个相同最大值，反向仍沿前向记录的那个位置传递，因此 value 与 index 必须使用同一次前向结果。
 
 ![Max Pooling 的反向传播](assets/slides/07-maxpool-backward.png)
 
-若窗口互相重叠，同一输入元素可能同时成为多个窗口的最大值，需要累加多份梯度。Max Unpooling 也使用这些索引把值放回较大的稀疏平面，但它无法补回被池化丢弃的非最大元素。
+Average Pooling 的梯度会平均分给窗口内的输入。若一个窗口包含 $k$ 个计入均值的元素，上游梯度 $g$ 对每个元素贡献 $g/k$ 。边界是否把 padding 纳入 $k$ ，必须与前向使用同一约定。
+
+窗口互相重叠时，同一输入元素可能接收多个输出窗口的梯度，这些贡献需要累加。按输出位置分配 thread 会自然形成 scatter，写回重叠输入时可能需要 atomic add；按输入位置分配 thread 则要反查覆盖它的所有窗口，改成 gather。
+
+`return_indices=True` 保存的 argmax 还可以交给 Max Unpooling，把池化结果放回较大的稀疏平面。它的数据流与 Max Pooling 的反向传播相似，但用途不同，也无法补回前向时丢弃的非最大元素。
 
 卷积与池化都属于 stencil。每个输出从规则邻域 gather 数据，邻域较大或窗口重叠较多时，可以用 shared memory tile 复用输入。
 
@@ -277,6 +329,8 @@ $$
 L=-\sum_i y_i\log p_i
 $$
 
+若正确类别为 $t$ ，one-hot 中只有 $y_t=1$ ，损失便是 $-\log p_t$ 。模型给正确类别的概率越低，惩罚越大；其余类别则通过 Softmax 的归一化共同影响梯度。
+
 ![Cross Entropy](assets/imported/4.png)
 
 Softmax 与 Cross Entropy 联合求导后，关于 logits 的梯度化为
@@ -284,6 +338,8 @@ Softmax 与 Cross Entropy 联合求导后，关于 logits 的梯度化为
 $$
 \frac{\partial L}{\partial z_i}=p_i-y_i
 $$
+
+正确类别对应的梯度为 $p_t-1$ ，会推动它的 logit 上升；其他类别的梯度为 $p_i$ ，会压低各自的 logit。一个 batch 中的样本还要按 `sum` 或 `mean` 等 reduction 规则合并，反向时必须保留相同的缩放。
 
 ![Softmax 与 Cross Entropy 的联合梯度](assets/imported/5.png)
 
