@@ -4,6 +4,8 @@ date: 2026-05-20
 categories: 
     - 建站
 updates:
+    - date: 2026-07-15
+      content: 移除文章末尾的详细更新记录，只在文章卡片显示最近更新时间。
     - date: 2026-07-10
       content: 收紧页脚的文章数量统计，排除隐藏子页和独立功能页。
     - date: 2026-06-23
@@ -462,10 +464,8 @@ if (img) {
 
 然后把 `layouts/_default/single.html`、`layouts/photo/single.html`、`layouts/page/bilibili.html` 里原本单独插入的 `article/components/photoswipe` 去掉，避免同一个页面生成多份 `.pswp`。这样不管是直接打开文章，还是通过 PJAX 从别的页面切进文章，PhotoSwipe 的 DOM 和脚本都已经存在，`window.Stack.init()` 重新扫描 `.article-content` 时就能正常给正文图片绑定预览事件。
 
-## 文章更新记录
-建站类文章经常会在发布后继续修补。比如这篇文章一开始只是整理 Stack 主题美化，后来又陆续补了静态图片放大、图库瀑布流、PJAX 下 PhotoSwipe 的处理。如果只改正文，读者很难知道哪些内容是后来补上的，笔者自己过一段时间也容易忘。
-
-所以这里加了一个很轻量的更新记录组件。文章 frontmatter 中可以写：
+## 文章更新时间
+建站类文章发布后还会继续修补，因此 frontmatter 中保留 `updates`，按时间倒序记录维护日期：
 
 ```yaml
 updates:
@@ -475,40 +475,7 @@ updates:
       content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ```
 
-真正的渲染逻辑放在 `layouts/partials/article/components/updates.html`。它会读取 `.Params.updates`，如果文章没有配置这个字段，就什么都不显示：
-
-```go-html-template
-{{- with .Params.updates -}}
-<section class="article-updates" aria-labelledby="article-updates-title">
-    <div class="article-updates__header">
-        {{ partial "helper/icon" "clock" }}
-        <h2 id="article-updates-title">更新记录</h2>
-    </div>
-    <ol class="article-updates__list">
-        {{- range . -}}
-            <li class="article-updates__item">
-                <time datetime="{{ .date }}">{{ time.Format "2006-01-02" (time .date) }}</time>
-                <div>{{ .content | markdownify }}</div>
-            </li>
-        {{- end -}}
-    </ol>
-</section>
-{{- end -}}
-```
-
-组件入口加在 `layouts/partials/article/article.html`，放在正文之后、系列导航之前：
-
-```go-html-template
-{{ partial "article/components/content" . }}
-
-{{ partial "article/components/updates" . }}
-
-{{ partial "article/components/series-navigation" . }}
-```
-
-这样读者读完正文后，就能直接看到这篇文章后续修过什么。对于普通随笔来说可以不写 `updates`，但教程、Lab、长期维护页面就很适合保留这类记录。
-
-同时，首页文章卡片也可以显示最近更新。本站的首页使用 `layouts/partials/article-list/default.html` 渲染文章卡片，因此可以在卡片的 `article-time` 中增加一项：
+普通文章页面不再渲染完整的更新列表，只在文章卡片上显示最近更新时间。本站的首页使用 `layouts/partials/article-list/default.html` 渲染文章卡片，可以从第一条更新记录中读取日期：
 
 ```go-html-template
 {{ with .Params.updates }}
@@ -523,10 +490,10 @@ updates:
 {{ end }}
 ```
 
-这样最近修过的文章会在首页卡片里显示一个“更新 YYYY-MM-DD”。它不会替代发布日期，只是告诉读者：这篇文章后来又被维护过。
+最近修过的文章会在卡片里显示“更新 YYYY-MM-DD”。发布日期仍然保留，更新说明则不再占用正文末尾的空间。
 
 ## 全站时间线和最近活动
-单篇文章的 `updates` 解决的是“这篇文章后来改过什么”，但博客本身还有很多别的动态：文章发布、Codeforces 复盘、友链朋友圈、Bangumi 收藏变化。这些东西分散在不同页面里，单独看都没问题，但如果想快速回顾最近整个站点发生了什么，就还需要一个更集中的入口。
+文章 frontmatter 中的 `updates` 还会参与全站时间线汇总。博客本身还有文章发布、Codeforces 复盘、友链朋友圈、Bangumi 收藏变化等动态，这些数据最终会整理到同一条时间线中。
 
 因此笔者又加了一个全站时间线。数据汇总逻辑放在 `layouts/partials/data/timeline-events.html`，它会把不同来源统一整理成一组 `events`，最后按时间倒序返回：
 
@@ -565,9 +532,7 @@ comments: false
 
 页面本身会展示文章发布、文章更新、比赛记录、友链动态和 Bangumi 收藏，并用不同颜色区分类型。这样需要完整回看时，可以直接打开 `/timeline/`；平时不需要它占据左侧导航。
 
-后来也试过做一个更轻量的“站点最近活动”组件，并把它放进独立的 `更新 | Updates` 页面。但实际用下来，这个页面承担的事情有点尴尬：单篇文章内部已经有 `updates`，完整动态又有 `/timeline/`，再额外给它一个页面和左侧入口，维护成本反而变高。
-
-因此现在的处理更克制：删掉独立的 Updates 页面，只保留两层能力。单篇文章的修改记录仍然写在 frontmatter `updates` 中，并渲染在文章末尾；跨文章、比赛、友链、Bangumi 的全站动态则继续由隐藏的 `/timeline/` 承担。这样左侧导航不会增加负担，也不会让“更新记录”变成一个必须单独维护的栏目。
+后来也试过把最近活动放进独立的 `更新 | Updates` 页面，但它和 `/timeline/` 的职责重复，左侧导航也会更拥挤。因此独立 Updates 页面和文章末尾的更新明细都被移除：普通页面只在文章卡片显示最近更新时间，完整站点动态仍由隐藏的 `/timeline/` 汇总。
 
 ## 系列文章导航
 像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。
