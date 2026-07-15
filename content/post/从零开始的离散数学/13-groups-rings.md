@@ -8,8 +8,6 @@ hidden: true
 seriesOrder: 13
 ---
 
-本章整理群、子群、配集、循环群、置换群、环与域。很多证明都围绕封闭性、逆元和单位元展开。
-
 ## 群的定义及性质
 
 设 $V=\langle S , \circ \rangle$ 是一个具有二元运算的代数系统，若 $\circ$ 满足结合律，则称 $V$ 为半群，若半群 $V=\langle S, \circ \rangle$ 关于 $\circ$ 有单位元 $e \in S,$ 那么称 $V$ 是幺半群，又称独异点。有时也将其记作 $V=\langle S,\circ,e \rangle$。

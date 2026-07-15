@@ -4,6 +4,9 @@ date: 2025-08-04
 categories:
     - 数学
 seriesExclude: true
+updates:
+    - date: 2026-07-15
+      content: 删除各章开头的总括句，并整理正文中的空泛过渡。
 ---
 
 ## 前言
