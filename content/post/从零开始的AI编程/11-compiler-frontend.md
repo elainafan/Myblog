@@ -140,9 +140,9 @@ Producer 直接嵌入 Consumer 的循环称为垂直融合。Element-wise 链最
 
 融合并非越多越好。一个很大的 kernel 会占用更多寄存器和 shared memory，降低同时驻留的 block 数；Producer 有多个 Consumer 时，内联还可能重复计算。前端先判断依赖和索引是否允许，后端的资源模型再判断这样做是否划算。
 
-## Layout 与内存规划
+## 布局与内存
 
-### Layout Transformation
+### 布局变换
 
 逻辑形状相同的 Tensor 可以采用不同物理布局。图像常见 NCHW 与 NHWC，矩阵还分 row-major、column-major 和分块布局。Tensor Core 对内部排列、对齐和维度倍数也有要求。
 
@@ -166,7 +166,7 @@ Tensor 的生命周期从 Producer 写完开始，到最后一个 Consumer 读�
 
 训练图还要保存 backward 所需的 activation。前端可以标记哪些值必须保留、哪些值能够重算，后端再据此安排显存。
 
-## Pass 管线与后端接口
+## Pass 管线
 
 一个 pass 只负责一种变换。常量折叠可能让条件恒定，随后死代码消除删掉未选择的分支；代数简化去掉无效节点后，原本隔开的两个 element-wise 算子又可以融合。优化 pipeline 因此会多轮执行部分 pass，直到图稳定或达到迭代上限。
 
@@ -181,8 +181,8 @@ Tensor 的生命周期从 Producer 写完开始，到最后一个 Consumer 读�
 
 顺序不是固定模板。布局选择会改变融合机会，融合也会改变内存需求；训练图与推理图的安全变换也不同。编译器需要在每次变换后继续验证 IR，而不能只看最终图能否运行。
 
-### 后端接口
-
-处理后的 IR 已经明确每个算子的语义、输入输出类型和设备归属。跨设备边会变成 `Send`、`Recv` 或 collective，能够并行的节点保留独立依赖。
+管线完成后，IR 已经明确每个算子的语义、输入输出类型和设备归属。跨设备边会变成 `Send`、`Recv` 或 collective，能够并行的节点保留独立依赖。这份 IR 是前端交给后端的接口。
 
 前端通常不会决定每个 CUDA block 有多少 thread，也不会直接选择 Tensor Core 指令。这些选择依赖具体 GPU、shape 和存储层次，属于后端调度。前端负责让程序变得清楚、合法并暴露优化机会，后端再把这些机会落实成实际机器代码。
+
+接口中还要保留动态维度、stride、alignment 和 alias 等约束。后端可以为已知 shape 生成专用 kernel，也可以为动态维度生成带边界判断的通用版本；若它改变 Tensor 布局或复用 buffer，则必须遵守前端记录的 view 与生命周期关系。缺少这些 metadata 时，机器代码即使单个算子结果正确，也可能在整图中读错内存。

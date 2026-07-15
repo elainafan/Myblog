@@ -63,7 +63,7 @@ Fuse 把多个循环轴压成一条线性轴，方便映射到 thread id。Unrol
 
 这些变换会互相影响。更大的 tile 能增加复用，也会占用更多 shared memory；融合减少中间写回，却可能生成一个寄存器需求很高的 kernel。后端要同时满足依赖关系与资源限制。
 
-## 调度表示与 GPU 映射
+## GPU 调度
 
 ### 调度树
 
@@ -83,7 +83,7 @@ root
 
 存在循环携带依赖时，变换还要保证顺序。例如前缀和的第 $i$ 项依赖第 $i-1$ 项，不能直接把这条轴上的所有迭代并行执行。Tensor 算子中的循环通常规则，依赖也比较清楚，因此适合做自动分析。
 
-### 矩阵乘法的 GPU 映射
+### 矩阵乘法
 
 GPU Schedule 会把外层 tile 绑定到 block，把 tile 内的工作分给 warp 与 thread。
 
@@ -112,7 +112,7 @@ GPU Schedule 会把外层 tile 绑定到 block，把 tile 内的工作分给 war
 
 Occupancy 表示一个 SM 上实际活跃 warp 相对硬件上限的比例。较高 occupancy 有助于隐藏访存延迟，但并不自动带来最高性能。计算密集 kernel 可能更需要 register 复用，强行降低寄存器用量反而会增加访存。
 
-## 算子选择与自动调优
+## 算子调优
 
 ### 整图代价
 
@@ -130,7 +130,7 @@ Arithmetic Intensity 较高的算子属于计算密集型，也就是 compute-bo
 
 训练图还要顾及 backward。Forward 某个输出改成低精度后，它可能成为 backward 保存的 activation，并影响梯度计算。混合精度 pass 因此不能只看前向节点的白名单，还要检查保存值、梯度累加和 loss scaling 的路径。
 
-### Auto-Tuning
+### 自动调优
 
 Tile size、循环顺序、unroll factor、thread binding 和 vector width 组合起来会形成很大的搜索空间。手写规则很难覆盖所有设备和 shape，Auto-Tuning 会生成候选 Schedule，并实际测量其中一部分。
 
@@ -152,7 +152,7 @@ AutoTVM 依赖人工编写的 Schedule template，再搜索 tile、unroll 和 th
 
 Polyhedral 方法把循环迭代看作满足仿射约束的整数点集合，再在保持依赖的条件下求解合法调度。它适合规则循环和仿射下标，面对数据相关分支、间接寻址和复杂库调用时，需要回退到其他分析或把区域留作黑盒。
 
-## 大模型训练的内存
+## 训练内存
 
 训练显存由模型参数、梯度、优化器状态、activation 和临时 workspace 组成。混合精度 Adam 常同时保存低精度模型参数、低精度梯度、FP32 master weight 以及 FP32 的一阶矩和二阶矩。只看模型文件大小会严重低估训练所需显存。
 
@@ -170,9 +170,9 @@ Polyhedral 方法把循环迭代看作满足仿射约束的整数点集合，再
 
 Gradient Checkpointing 每隔 $K$ 层保存一个边界，反向传播到该区间时重算内部前向。均匀分段时，activation 空间可以降到 $O(N/K+K)$ 这一数量级。令 $K$ 约为 $\sqrt{N}$ 时，空间降到 $O(\sqrt{N})$ 这一数量级，代价是额外前向计算和更复杂的执行计划。
 
-## 内存、执行与缓存
+## 执行与缓存
 
-### 内存与执行计划
+### 执行计划
 
 单算子 Schedule 决定局部数据放进 register、shared memory 还是 global memory。整图后端还要复用 Tensor 缓冲区、分配 workspace，并安排 device copy。
 

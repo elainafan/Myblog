@@ -93,7 +93,7 @@ $$
 
 每轮由 Map、Scan 与 Scatter 组成。稳定性保证低位已经排好的相对顺序不会被高位打乱。对固定字长整数，轮数由每次处理的 bit 数决定。工程实现常一次处理多个 bit，以更大的局部 histogram 换取更少轮次。
 
-## Stream 与异步流水线
+## Stream 流水线
 
 Stream 是一条有序的设备工作队列。Host 把 kernel、内存复制和 event 依次提交到 stream，同一 stream 中的工作按顺序执行。
 
@@ -156,7 +156,7 @@ for (int i = 0; i < stream_count; ++i) {
 
 Chunk 太小会让 launch 与调度开销占比过高，太大又会减少可重叠的阶段数。合适大小要结合传输带宽、kernel 时间和显存容量测量。
 
-### Pinned Memory
+### 页锁定内存
 
 Host-device 复制要与 kernel 稳定重叠，host 缓冲区应位于 pinned memory，也称 page-locked memory。操作系统不会把这部分物理页换出，GPU 的 DMA engine 因而可以直接访问稳定的物理地址。
 

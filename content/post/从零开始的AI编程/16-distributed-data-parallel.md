@@ -8,13 +8,13 @@ hidden: true
 seriesOrder: 16
 ---
 
-## 为什么需要分布式训练
+## 训练规模
 
 训练规模同时受计算量和内存限制。模型放得进一张卡，也可能要花数月才能完成训练；增加参数、上下文长度与 batch 后，权重、梯度、优化器状态和 activation 又可能直接超过单卡显存。多设备既能缩短同一任务的训练时间，也能容纳单机放不下的模型。
 
 分布式系统由多台通过网络连接的计算机共同完成任务。它提供了更多算力和内存，也带来了通信延迟、节点故障、时钟差异与状态一致性问题。训练框架需要把这些问题收进 process group、collective 和 checkpoint 等抽象中，模型代码才不必直接处理每一次网络收发。
 
-## 分布式训练环境
+## 运行环境
 
 训练扩展到多个 device 与节点后，每张 GPU 只能直接访问本地内存，节点之间还隔着带宽和延迟不同的互连。进程、rank 与通信拓扑共同组成实际执行环境。
 
@@ -61,7 +61,7 @@ $$
 
 $\alpha$ 是每次通信的固定启动延迟， $\beta$ 是每 byte 的传输成本， $n$ 是消息大小。小消息主要受 latency 限制，大消息主要受 bandwidth 限制。把许多小 Tensor 合并成 bucket，可以减少重复支付 $\alpha$ 的次数。
 
-### Collective Communication
+### 集合通信
 
 Collective 由一组 rank 共同参与。所有 rank 必须以一致的顺序进入相同 collective，否则程序会永久等待或直接报错。
 
@@ -78,11 +78,11 @@ Collective 由一组 rank 共同参与。所有 rank 必须以一致的顺序进
 
 Reduce 的运算可以是 sum、max、min 或其他满足要求的结合操作。浮点加法不严格满足结合律，通信树和 rank 数改变后，低位结果可能略有差异。
 
-### MapReduce 与迭代训练
-
 MapReduce 把数据处理拆成 Map、Shuffle 与 Reduce。Map 将输入记录变成键值对，Shuffle 把同 key 的值送到同一个 Reduce，Reduce 再完成聚合。
 
-它适合离线数据处理，却不直接等同于每个 step 都要低延迟同步的神经网络训练。训练借用了分片与归约思想，但需要更紧密的迭代状态和高频 collective。
+这种执行方式允许中间结果落盘，也容易在任务失败后单独重算某个 partition，因此很适合日志统计和离线数据处理。神经网络训练的参数却会在每个 step 后改变，下一步必须读取上一轮更新后的状态。若每次都经过落盘、Shuffle 和任务重新调度，通信延迟会远大于 GPU 计算时间。
+
+分布式训练借用了数据分片与归约的思想，但把它们放进常驻进程和内存中的 collective。Rank 在整个训练期间保持存活，梯度一旦 ready 就能直接进入 AllReduce，也可以与后续 backward 重叠。二者的区别不在于有没有 Map 和 Reduce，而在于迭代状态是否常驻，以及通信路径是否为高频同步优化。
 
 ## 数据并行
 
@@ -110,9 +110,9 @@ Backward 从输出层向输入层逐步产生梯度。DistributedDataParallel �
 
 Bucket 太小会产生大量小 collective，太大则推迟第一轮通信。参数在 backward 中的 ready 顺序与 bucket 顺序不匹配时，也会形成等待。
 
-## 参数同步架构
+## 参数同步
 
-### 同步与异步 SGD
+### 同步与异步
 
 Synchronous SGD 每一步等待所有 worker 完成梯度。参数版本一致，行为最接近单机大 batch；最慢 worker 会决定整步时间，straggler 因此很昂贵。
 
@@ -120,23 +120,23 @@ Asynchronous SGD 允许 worker 使用稍旧的参数计算并独立提交梯度�
 
 实践中的 GPU 大模型训练通常使用同步 collective，再通过数据预取、通信重叠和故障恢复降低等待成本。
 
-### Parameter Server
+### 参数服务器
 
 Parameter Server 架构把参数分片放在 server，worker 拉取参数、计算梯度并推送更新。
 
 ![Parameter Server](assets/slides/16-parameter-server.png)
 
-它可以支持同步、异步和 bounded-staleness 多种一致性模型，也方便处理超大稀疏参数。热点参数或 server 网卡可能成为瓶颈，需要进一步分片、复制或分层聚合。
+一次训练 step 中，worker 先从对应 shard 拉取参数，在本地完成 forward 与 backward，再把梯度推回 server。同步模式会等这一批 worker 全部提交后统一更新；异步模式则在梯度到达时立即更新。Bounded staleness 介于两者之间，允许 worker 落后有限个版本，超过范围后再等待。
+
+参数按 key 分片后，只有本批数据访问到的稀疏 embedding 才需要传输，因而 Parameter Server 很适合超大推荐模型。代价是热点 key 会集中访问少数 shard，server 的网卡、CPU 或锁竞争都可能成为瓶颈。系统通常还要复制热点参数、重新划分 shard，或先在节点内合并梯度再发往 server。
 
 AllReduce 则让 worker 直接协作完成聚合，不保留中心 server。稠密梯度训练中，它通常能更充分地利用集群互连。
 
-## AllReduce 拓扑与集合通信
+## AllReduce
 
-### Tree Reduction
+### Tree 与 Ring
 
 Tree 以 $O(\log P)$ 轮完成归约与广播，固定延迟较低，适合消息较小或层次化网络。树的上层链路需要承载更多聚合结果，拓扑不匹配时可能形成热点。
-
-### Ring AllReduce
 
 Ring AllReduce 分成 ReduceScatter 与 AllGather。每个 rank 把 Tensor 切成 $P$ 块，沿 ring 发送和聚合，之后再沿 ring 收集完整结果。
 
@@ -152,19 +152,19 @@ $$
 
 当消息很大时，ring 能接近链路带宽上限；它需要 $2(P-1)$ 个通信阶段，小消息则容易被阶段延迟拖慢。
 
-真实库会根据消息大小、rank 数和硬件拓扑在 ring、tree、CollNet 等算法间选择。多节点系统还可以先在节点内 ReduceScatter，再跨节点归约，最后回到节点内 AllGather。
+Tree 用更少的通信阶段换取不均匀的链路负载，Ring 则让每条链路持续传输大小接近的分片。前者更适合小消息，后者更容易在大消息上吃满带宽。真实库会根据消息大小、rank 数和硬件拓扑在 ring、tree、CollNet 等算法间选择。多节点系统还可以先在节点内 ReduceScatter，再跨节点归约，最后回到节点内 AllGather。
 
-### AllReduce 与 AllToAll
+### AllToAll
 
-数据并行以 AllReduce 为主，Mixture-of-Experts 的 token dispatch 则常使用 AllToAll。
+AllReduce 的每个 rank 最终得到相同结果，适合让所有数据并行副本保持一致。AllToAll 的目的不同：每个 rank 都把一块不同的数据发送给其他 rank，接收后得到按目标重新分组的分片。Mixture-of-Experts 的 token dispatch 就常使用 AllToAll，把 token 送到负责相应 expert 的设备。
 
 ![AllReduce 与 AllToAll](assets/slides/16-allreduce-alltoall.png)
 
-AllToAll 中每个 rank 都与其他 rank 交换不同分片，对网络双向带宽、路由和负载均衡要求更高。Expert 分配不均时，即使总 token 数相同，最拥挤的 rank 仍会决定整体速度。
+设每个 rank 持有 $N$ 个 token，路由器先按 expert 归属把它们整理成 $P$ 份，再分别发往对应 rank。通信前后 Tensor 的总元素数没有变化，数据的归属却完全重排。它比 AllReduce 更依赖网络双向带宽、路由和负载均衡。Expert 分配不均时，即使总 token 数相同，最拥挤的 rank 仍会决定整体速度，实际系统常用 capacity limit 或 auxiliary loss 避免少数 expert 被挤满。
 
 ## 性能与容错
 
-### 性能分析
+### 性能
 
 单步时间可以粗略拆成
 
@@ -185,7 +185,7 @@ $$
 
 分析时要对齐各 rank 的 timeline。单看某一张 GPU 图，很容易把等待其他 rank 的空白误判成自身 kernel 性能不足。
 
-### 容错与 Checkpoint
+### Checkpoint
 
 同步训练中任一 rank 失效都会中断 collective。训练系统需要定期保存模型、optimizer、scheduler、scaler 与数据位置。大规模任务还会使用 sharded checkpoint，避免由单一 rank 汇总全部状态。
 

@@ -69,23 +69,17 @@ GPU 具有较成熟的通用编程生态和较强的算子覆盖，适合训练�
 
 ## 节点内互连
 
-### PCIe
+PCIe 负责连接 CPU、GPU、网卡和存储设备，兼容性强，也承担 host 与 device 之间的大部分传输。它的物理拓扑并不是一条共享总线。两张 GPU 可能位于同一个 PCIe switch 下，也可能分别连接到不同 CPU socket；后一种路径需要跨 root complex 或 CPU 间互连，延迟更高，peer-to-peer 甚至可能不可用。
 
-PCIe 连接 CPU、GPU、网卡和存储设备，兼容性强，但多 GPU 通信可能经过 CPU root complex，带宽和延迟不如专用互连。拓扑会影响 peer-to-peer 是否可用，跨不同 PCIe switch 的传输也可能更慢。
+NVLink 为 GPU 之间提供比 PCIe 更高带宽的点对点连接。它同样不保证任意两张卡直接相连：数据可能经过另一张 GPU 转发，也可能退回 PCIe。程序看到的 GPU 编号不能说明实际距离，通信库会读取拓扑后再安排 ring 或 tree。
 
-### NVLink
-
-NVLink 为 GPU 间提供点对点高带宽连接。软件仍需知道实际拓扑：两个 GPU 之间可能直连，也可能经过另一颗 GPU 或 CPU。
-
-### NVSwitch
-
-NVSwitch 把多条 NVLink 接成交换网络，让节点内多 GPU 获得更接近全互连的带宽。
+NVSwitch 把多条 NVLink 接成交换网络，让节点内 GPU 获得更接近全互连的通信能力。这样 collective 不必依赖少数 GPU 充当中转点，多组传输也能同时占用不同交换路径。
 
 ![NVLink 与 NVSwitch](assets/slides/15-nvswitch.png)
 
-Collective library 会结合拓扑选择 ring、tree 或分层算法。节点内走 NVLink，节点间走 RDMA，是大型训练中常见的两级通信结构。
+Collective library 会结合消息大小和拓扑选择 ring、tree 或分层算法。节点内先沿 NVLink 或 PCIe 完成 ReduceScatter，节点间再走 RDMA，最后回到节点内 AllGather，是大型训练中常见的两级通信结构。若进程与 GPU、CPU NUMA node 和网卡绑定错误，即使每一层硬件都很快，数据也可能绕一段不必要的慢路。
 
-## 异构系统与集群
+## 系统与集群
 
 ### 异构计算
 
@@ -97,7 +91,7 @@ CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的
 
 任务图需要同时考虑计算成本和 transfer cost。把一个很小的算子单独送到 GPU 往往得不偿失；把相邻算子融合或把完整阶段下沉到 device，才能摊薄传输与 launch overhead。
 
-### AI Cluster
+### 集群
 
 单机显存与算力有限，大模型训练会扩展到由大量计算节点组成的集群。节点通常包含多 GPU、CPU、host memory、本地 SSD 与高速网卡。
 
@@ -121,7 +115,7 @@ CPU 擅长控制流、系统调用与不规则数据结构，GPU 擅长规则的
 
 训练网络强调高带宽、低延迟与可预测的 tail latency。存储网络更关心总吞吐和大对象读取。把全部流量混在同一网络中，checkpoint 或数据读取可能与梯度同步互相争抢。
 
-## 集群网络与软件栈
+## 集群软件
 
 ### RDMA 与 RoCE
 

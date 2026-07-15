@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 8
 ---
 
-## Python 与 C++ 的分工
+## Python 与 C++
 
 模型结构、训练循环和实验配置经常变化，使用 Python 编写更方便。卷积、矩阵乘法等算子执行次数多、性能要求高，通常由 C++ 或 CUDA 实现。
 
@@ -170,7 +170,7 @@ module.def(
 
 释放 GIL 后，其他 Python 线程可以运行。C++ 代码若需要创建 Python 对象、抛出依赖 Python 状态的异常或调用回调，必须重新获取 GIL。
 
-## PyTorch Extension
+## 扩展模块
 
 PyTorch C++ Extension 把 PyBind11、ATen Tensor API、C++ 编译器和 NVCC 接在同一构建流程中。一个小型算子通常分成三层。
 
@@ -332,7 +332,7 @@ if __name__ == "__main__":
 
 浮点结果使用 `torch.testing.assert_close`。容差要与 dtype 和归约长度相符。`float16` 的累计误差通常大于 `float32`，但把容差设得过宽会掩盖漏项和错误索引。
 
-### Fixture、覆盖率与 Mock
+### 测试工具
 
 `unittest.TestCase` 采用 xUnit 的组织方式。多项测试都要创建相同输入或初始化同一套扩展时，可以把这部分准备工作放进 `setUp`，把临时文件、环境变量和外部资源的清理放进 `tearDown`。它们会在每个 test method 前后各执行一次，前一项测试留下的状态不会直接流入后一项。
 
@@ -395,8 +395,12 @@ self.assertTrue(
 
 不可导点附近的数值梯度会不稳定。测试 ReLU 时应避免输入恰好为零，或明确约定该点采用哪一侧导数。
 
-### CUDA 错误定位
+### CUDA 调试
 
 Kernel launch 异步返回，测试若只构造输出而不读取它，越界访问可能到后续用例才报错。调试测试可以在自定义算子后调用 `torch.cuda.synchronize()`，把错误定位到当前用例。
+
+还可以临时设置 `CUDA_LAUNCH_BLOCKING=1`，让每次 CUDA 调用在返回前完成。这样 traceback 更接近真正出错的 kernel，代价是失去异步执行，不能用这种模式测性能。能够稳定复现越界或未初始化读取时，可再用 `compute-sanitizer` 检查 global memory、shared memory 与同步错误。
+
+一次非法访存可能让当前 CUDA context 进入错误状态，后面的测试即使代码正确也会继续失败。涉及故意触发设备错误的用例最好放进独立进程，主测试进程只检查子进程的退出状态与错误信息。这样错误不会污染整组用例，也能区分 kernel 失败和测试框架本身的问题。
 
 性能测试、显存泄漏检查和多 stream 并发测试不应与普通功能测试混在一起。它们运行时间长，环境依赖也更强，适合单独标记并在稳定硬件上执行。

@@ -26,7 +26,7 @@ FP16 的 exponent 较少，容易 overflow；bfloat16 保留与 FP32 相同数�
 
 ## 量化方法
 
-### K-means Quantization
+### 聚类量化
 
 K-means quantization 从权重中学习 $K$ 个中心，模型只保存 codebook 和每个权重的中心 index。
 
@@ -40,7 +40,7 @@ K-means quantization 从权重中学习 $K$ 个中心，模型只保存 codebook
 
 非均匀中心比统一间隔更贴合权重分布，但硬件实现和向量化更复杂。中心还可以在训练中继续更新，以减少聚类造成的损失。
 
-### Affine Quantization
+### 仿射量化
 
 Affine quantization 用 scale $s$ 与 zero point $z$ 在线性网格上建立实数和整数的映射。
 
@@ -90,13 +90,13 @@ $$
 
 这 $0.0039$ 就是网格取整带来的量化误差。区间越宽，同样 $256$ 个整数格子越稀，误差通常也越大。
 
-#### Symmetric Quantization
+#### 对称与非对称
 
-对称量化令 $z=0$ ，使用正负对称范围。它省去 zero point 修正，kernel 更简单，常用于近似零均值的权重。若 activation 明显只分布在一侧，对称范围会浪费一部分整数码值。
+对称量化令 $z = 0$ ，并用同一个绝对值界限覆盖正数和负数。若权重范围为 $[-a,a]$ ，INT8 通常用 $[-127,127]$ 表示，scale 为 $a/127$ 。权重往往近似以零为中心，此时正负两侧的码值都能得到利用。Zero point 消失后，矩阵乘法也不再需要处理权重一侧的 offset，kernel 更容易向量化。
 
-#### Asymmetric Quantization
+Activation 的分布不一定对称。ReLU 输出若落在 $[0,a]$ ，仍使用 signed INT8 的对称范围会让负数一侧完全空着，可用分辨率近似少了一半。非对称量化允许 $z \neq 0$ ，可以把整数网格平移到真实分布所在的位置，让 $[0,a]$ 使用更完整的码值范围。
 
-非对称量化允许 $z\neq0$ ，能更好利用偏移分布的整数范围。代价是矩阵乘法中要处理额外的 offset 项。
+这种平移会进入后续计算。将 $(Q_x-z_x)(Q_w-z_w)$ 展开后，除了整数矩阵乘法，还会出现与行和、列和及 $z_xz_w$ 有关的修正项。静态权重的部分修正可以预先计算，动态 activation 的修正往往要在运行时完成。因此权重常用对称量化，activation 是否采用非对称量化则要同时看精度收益和 kernel 支持。
 
 #### 范围校准
 
@@ -139,7 +139,7 @@ Bias 的 scale 通常取 $s_xs_w$ 并存为 INT32。若 weight 使用 per-channe
 
 ## PTQ 与 QAT
 
-### Post-Training Quantization
+### PTQ
 
 PTQ 在训练结束后执行，不需要完整反向传播。基本步骤为：
 
@@ -151,7 +151,7 @@ PTQ 在训练结束后执行，不需要完整反向传播。基本步骤为：
 
 PTQ 成本低，但极低 bit、outlier 明显或分布变化大的模型可能损失较多精度。
 
-### Quantization-Aware Training
+### QAT
 
 QAT 在训练图中插入 fake quantization。前向过程执行 round、clamp 和 dequantization，模拟部署时的误差；参数仍以浮点格式保存和更新。
 
@@ -161,15 +161,15 @@ Round 的导数几乎处处为零，直接求导会让权重无法更新。Strai
 
 Observer 或可学习参数负责更新 scale 与 zero point。训练后期常冻结统计量，避免量化范围继续抖动。BatchNorm 也可以提前 fold 到卷积权重和 bias 中，使训练图与部署图一致。
 
-## 混合精度与剪枝
+## 其他压缩
 
-### 混合精度量化
+### 混合精度
 
 不同层对量化误差的敏感性不同。输入层、输出层、LayerNorm、Softmax 或少数 outlier-heavy projection 可以保留 FP16，其余矩阵乘使用 INT8 或更低 bit。
 
 精度选择还要考虑转换边界。若相邻算子在 INT8 与 FP16 之间频繁切换，quantize/dequantize kernel 和中间写回可能吃掉算力收益。整段子图保持同一格式通常更高效。
 
-### Pruning
+### 剪枝
 
 Pruning 删除不重要的参数或结构。
 

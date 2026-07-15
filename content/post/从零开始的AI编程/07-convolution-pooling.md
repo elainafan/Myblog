@@ -68,7 +68,7 @@ $$
 
 宽度同理。对于 $3\times3$ kernel，stride、padding 与 dilation 分别取 1、1、1 时，空间尺寸保持不变。
 
-### Stride、Padding 与 Dilation
+### 步幅与填充
 
 Stride 决定窗口每次移动几格。Stride 为 $2$ 时，输出高宽大约减半，卷积同时完成特征提取与下采样。
 
@@ -176,7 +176,7 @@ Bias 对同一输出通道的所有 batch 与空间位置共享，因此 bias �
 
 ## 卷积变体
 
-### Grouped 与 Depthwise Convolution
+### 分组卷积
 
 `groups` 把输入、输出通道划分为互不连接的组。普通卷积使用 `groups=1`，每个输出通道读取全部输入通道。
 
@@ -190,7 +190,7 @@ Depthwise convolution 不混合不同通道，通常再接一个 $1\times1$ poin
 
 计算量减少后，算子可能从 compute-bound 变为 memory-bound。理论 FLOPs 很低并不保证实际延迟按同样比例下降，布局转换和 kernel launch 的占比会变大。
 
-### Transposed Convolution
+### 转置卷积
 
 普通卷积展平后可以写成线性变换
 
@@ -228,7 +228,7 @@ torch.nn.functional.max_pool2d(
 
 `stride` 默认等于 `kernel_size`。`ceil_mode=True` 允许窗口从最后一个有效位置开始，即使它不能完整落入输入。`return_indices=True` 会额外返回每个窗口最大元素的位置。
 
-### Max Pooling 的反向传播
+### 池化反向
 
 前向时除最大值外，还要保存 argmax。反向传播把上游梯度送回 argmax 指向的输入，窗口中其他位置得到零。
 

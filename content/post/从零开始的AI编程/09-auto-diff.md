@@ -14,7 +14,7 @@ seriesOrder: 9
 
 ![AI 框架的层次结构](assets/imported/17.png)
 
-## 符号、数值与自动微分
+## 微分方法
 
 符号微分把表达式当作代数对象，应用求导规则后生成一条新的表达式。它很适合处理规模不大的显式公式，例如 SymPy 可以直接计算导函数。
 
@@ -185,7 +185,7 @@ $$
 
 ![前向模式与反向模式的计算方向](assets/slides/09-forward-reverse.png)
 
-## 自动微分的框架实现
+## 框架实现
 
 动态图框架会在 Tensor 运算发生时创建图节点。输出 Tensor 保存生成它的操作、父节点，以及反向时要调用的函数。一个极简的乘法可以写成
 
@@ -219,7 +219,7 @@ class Tensor:
 
 In-place 操作会直接覆盖已有存储。如果被覆盖的值恰好是 backward 需要的输入，导数就无法正确计算。PyTorch 为 Tensor 维护 version counter，发现保存后的值被原地修改时会报错，而不是悄悄给出错误梯度。
 
-### PyTorch Autograd
+### Autograd
 
 ![PyTorch Autograd](assets/imported/22.png)
 
@@ -249,7 +249,7 @@ y.backward(torch.tensor([0.5, 3.0]))
 
 推理时不需要计算参数梯度，可以使用 `torch.no_grad()`。`torch.inference_mode()` 还会关闭一部分与 Autograd 相关的 metadata 更新，限制也更强，适合纯推理路径。
 
-## 梯度检查与高阶导数
+## 梯度检查
 
 自己实现 CUDA 算子时，forward 能跑通并不说明 backward 正确。可以用中心差分抽查少量元素
 
@@ -294,7 +294,7 @@ second, = torch.autograd.grad(first, x)
 
 完整 Hessian 有 $n^2$ 个元素，参数很多时无法直接保存。实际计算更常使用 Hessian-vector product，它只求 Hessian 作用在某个向量上的结果，可以由前向模式与反向模式组合完成。
 
-### Complex-step Differentiation
+### 复步长差分
 
 中心差分需要相减两个非常接近的浮点数，步长太小时会出现 subtraction cancellation。对能够扩展到复数域的解析函数，可以改用 Complex-step Finite Difference
 
@@ -311,11 +311,8 @@ $$
 自动微分还能反过来构造积分网络。AutoInt 先建立一个表示原函数的积分网络 $\Phi_\theta$ 并对它自动求导，得到 $\Psi_\theta^i$ 后拟合目标函数 $f$ 的取值。训练完成后，沿第 $i$ 个坐标的定积分可以直接由端点差计算
 
 $$
-\int_a^b
-\Psi_{\theta^*}^i(x)
-\,\mathrm{d}x_i
-=
-\Phi_{\theta^*}(b)-\Phi_{\theta^*}(a)
+\int_a^b \Psi_{\theta^*}^i(x)\,\mathrm{d}x_i
+= \Phi_{\theta^*}(b)-\Phi_{\theta^*}(a)
 $$
 
 体渲染原本要沿每条光线反复采样和累加，积分网络把这段数值积分改成两次网络求值。代价是要先训练一个导数与目标场一致的网络，适用性取决于函数表示误差和训练成本。

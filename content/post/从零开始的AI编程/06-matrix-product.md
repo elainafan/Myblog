@@ -103,7 +103,7 @@ matmul_naive<<<grid, block>>>(a, b, c, m, k, n);
 
 矩阵边长不是 block size 的整数倍时，边缘 block 会包含越界 thread。边界判断保证正确性，也意味着这些 block 的一部分计算资源处于空闲状态。
 
-### Shared Memory Tiling
+### 共享内存分块
 
 一个 $T\times T$ 的输出 tile 需要 $A$ 的 $T\times K$ 行片段和 $B$ 的 $K\times T$ 列片段。若每个 thread 都从 global memory 独立读取，那么 $A$ 与 $B$ 的同一元素会被同 block 的多个 thread 重复访问。
 

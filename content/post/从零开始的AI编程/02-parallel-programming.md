@@ -19,7 +19,7 @@ CPU 和 GPU 对性能的取舍不同。
 
 GPU 并不会让任意程序自动变快。一个任务需要能拆成许多规模相近的子任务，子任务之间的依赖不能太强，而且数据传输的开销要能被足够多的计算摊薄。逐元素激活、矩阵乘法和卷积符合这些条件，复杂的递归与频繁分支通常不适合直接搬到 GPU。
 
-## Host、Device 与显存
+## Host 与 Device
 
 CUDA 程序同时包含 CPU 和 GPU 上执行的代码。CPU 一侧称为 host，GPU 一侧称为 device。
 
@@ -109,7 +109,7 @@ nvcc -O2 -std=c++17 relu.cu -o relu
 
 频繁调用 `cudaMalloc` 和跨设备复制都很昂贵。深度学习框架会复用显存块，并让多个算子连续处理已经留在 GPU 上的数据。
 
-## Kernel 与线程组织
+## Kernel
 
 Kernel 是从 host 启动、在 device 上执行的函数。`__global__` 声明这种函数，返回类型必须为 `void`。一次 launch 会让许多 GPU 线程从同一个函数入口开始执行，每个线程通过自己的索引找到应处理的数据。
 
@@ -119,7 +119,7 @@ relu_kernel<<<blocks, threads>>>(d_input, d_output, n);
 
 尖括号中的第一个参数是 grid 包含的 block 数，第二个参数是每个 block 包含的 thread 数。函数圆括号里仍然是普通参数。上面的配置为每个 block 分配 $256$ 个线程。
 
-### Thread、Block 与 Grid
+### 线程层次
 
 CUDA 用三级结构组织线程。
 
@@ -176,7 +176,7 @@ int y = blockIdx.y * blockDim.y + threadIdx.y;
 
 逻辑维度只是编程模型。硬件不会因为写了二维 block 就自动理解图像，最终仍要把 `(y, x)` 转换为线性内存地址。
 
-### Grid-stride loop
+### 跨步循环
 
 线程总数不一定要与元素数完全相同。grid-stride loop 让一个线程每隔整个 grid 的线程数继续处理下一个元素。
 
@@ -232,7 +232,7 @@ if (run_error != cudaSuccess) {
 
 调试时可以在 kernel 后同步，尽快确定错误位置。性能版本只在 host 真正需要结果、跨 stream 建立依赖或计时时同步，否则 CPU 与 GPU 无法重叠工作。
 
-## Tensor 布局与访存
+## Tensor 访存
 
 Tensor 在逻辑上是多维数组，物理上通常对应一段线性内存。形状为 `[2, 3]` 的连续 Tensor 可以按行保存六个元素，stride 为 `[3, 1]`。
 

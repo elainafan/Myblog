@@ -107,7 +107,7 @@ atomicAdd(&histogram[bin], 1);
 
 所有线程直接更新 global histogram 时，热门 bin 会产生严重竞争。常见做法是每个 block 在 shared memory 中维护一份局部 histogram，完成后再合并到 global memory。Bin 数很大时，一份局部数组可能放不进 shared memory，需要按区间分批、按 warp 私有化，或者改用排序与 Reduce。
 
-#### Histogram Equalization
+#### 直方图均衡
 
 灰度图像的 histogram 记录每个亮度出现了多少次。若像素集中在很窄的亮度区间，图像对比度会偏低。Histogram Equalization 先对计数做前缀和，得到累计分布
 

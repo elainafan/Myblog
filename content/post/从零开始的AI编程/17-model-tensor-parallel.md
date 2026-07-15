@@ -8,7 +8,7 @@ hidden: true
 seriesOrder: 17
 ---
 
-## 参数与状态分片
+## 状态分片
 
 普通数据并行要求每个 rank 保存完整参数、梯度和 optimizer state。以混合精度 Adam 为例，一份参数可能同时对应低精度权重、FP32 master weight、梯度以及两份 moment，实际占用远大于模型文件本身。
 
@@ -26,6 +26,12 @@ Zero Redundancy Optimizer 逐步消除数据并行 rank 之间重复保存的状
 
 在 $P$ 个 rank 上，理想分片部分的单 rank 占用约降到原来的 $1/P$ 。通信量与通信时机则随 stage 改变。
 
+ZeRO-1 中，每个 rank 仍保存完整参数和梯度，但只负责一部分参数的 Adam moment 与更新。一次 optimizer step 后，各 rank 需要交换自己更新的参数分片，让下一轮 forward 重新看到同一份模型。它主要省下占用最大的 optimizer state，改动也相对温和。
+
+ZeRO-2 进一步让梯度在 ReduceScatter 后只留在负责该参数分片的 rank。这样既完成了跨 rank 求和，又避免每个 rank 都保存完整梯度。参数在 forward 时仍然完整，因此这一阶段没有解决模型权重本身放不进单卡的问题。
+
+ZeRO-3 连参数也只保留分片。某层计算开始前先 AllGather 所需参数，计算结束后再释放完整副本；backward 到达该层时还要重新 gather。显存下降得最多，通信也变得更频繁。若层太小，每次 gather 的启动延迟会很显眼；若一次 gather 太多层，临时完整参数又会抬高峰值显存。
+
 ### FSDP
 
 Fully Sharded Data Parallel 与 ZeRO-3 接近。每个 rank 平时只保存参数分片，执行某一层前 AllGather 出完整参数，计算结束后释放；backward 再次 gather 参数，并用 ReduceScatter 留下本 rank 的梯度分片。
@@ -38,7 +44,7 @@ Gather 太细会产生大量小通信，太粗又会让峰值显存升高。实�
 
 参数、梯度和 optimizer 分片还改变 checkpoint 格式。保存 full state dict 需要额外聚合内存；sharded state dict 更适合大模型，但恢复时必须知道原分片 metadata。
 
-## Pipeline Parallelism
+## 流水线并行
 
 Pipeline Parallelism 按连续层切分模型。Device 0 完成前几层后，把 activation 发送给 Device 1；反向传播则把 gradient 反向发送。
 
@@ -60,7 +66,7 @@ micro-batch 越多，bubble 比例越小，但 activation 数量、调度开销�
 
 GPipe 先完成全部 forward 再执行 backward，需要保存很多 activation。1F1B schedule 在 warmup 后交替执行 one-forward-one-backward，可以降低峰值 activation。若各 stage 计算量不均衡，最慢 stage 仍会限制吞吐，因此分区时要按实测时间而非层数平均。
 
-## Tensor Parallelism
+## 张量并行
 
 Tensor Parallelism 在单个算子内部切分权重和计算。Transformer 中计算量最大的部分是线性层和 attention projection，很适合沿矩阵行或列分片。
 
@@ -88,19 +94,15 @@ Q、K、V projection 可以按 attention head 划分，每个 rank 处理一部�
 
 head 数必须能够合理分给 tensor-parallel group。Grouped Query Attention 中 Q head 与较少的 K/V head 比例还会约束切分方式。
 
-## 序列维与算子级并行
+## 序列与算子并行
 
-### Inter-op 与 Intra-op
-
-Inter-op parallelism 把不同算子放到不同 device，典型形式是 pipeline。Intra-op parallelism 切分单个算子，典型形式是 tensor parallel。
+**Inter-op parallelism** 把不同算子放到不同 device，典型形式是 pipeline。**Intra-op parallelism** 切分单个算子，典型形式是 tensor parallel。
 
 ![Inter-op 与 Intra-op](assets/slides/17-intra-inter.png)
 
 计算图分区后，边上的 Tensor 可能从 replicated 变成 sharded，也可能沿另一维重新分片。编译器需要插入 AllGather、ReduceScatter、AllReduce 或 AllToAll 完成 reshard。两个局部最优分区之间若需要昂贵 reshard，整图性能仍可能很差。
 
-### Sequence Parallelism
-
-Tensor parallel 常让 layer norm、dropout 等操作的 activation 在每个 rank 重复保存。Sequence Parallelism 把这些操作沿 sequence 维切分，减少 activation memory，并在进入需要不同布局的算子前执行 AllGather 或 ReduceScatter。
+Tensor parallel 常让 layer norm、dropout 等操作的 activation 在每个 rank 重复保存。**Sequence Parallelism** 把这些操作沿 sequence 维切分，减少 activation memory，并在进入需要不同布局的算子前执行 AllGather 或 ReduceScatter。
 
 它与 tensor parallel 通常使用同一组 rank。通信量未必减少，但每 rank activation 占用降低，适合长序列训练。
 

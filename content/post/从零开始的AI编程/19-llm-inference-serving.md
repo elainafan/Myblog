@@ -8,9 +8,9 @@ hidden: true
 seriesOrder: 19
 ---
 
-## Serving 工作负载
+## 服务负载
 
-### Serving 指标
+### 指标
 
 在线 LLM 服务同时关心用户延迟与系统吞吐。只报告一轮完整生成耗时，很难看出瓶颈位于输入处理还是逐 token 解码。
 
@@ -24,7 +24,7 @@ seriesOrder: 19
 
 提高 batch size 往往提升 throughput，也会增加排队和单轮执行时间。服务系统通常以 TTFT、TPOT 的 Service Level Objective 为约束，在允许的延迟内尽量装入更多请求。
 
-### 请求处理路径
+### 请求路径
 
 用户提交 prompt 后，服务端先完成 tokenization，并检查输入长度、生成参数与可用显存。Scheduler 为请求分配 KV cache block，再把它放入等待队列。
 
@@ -50,7 +50,7 @@ Decode 每轮矩阵的 token 维接近 $1$ ，要读取完整权重和不断增�
 
 两阶段对硬件资源的偏好不同。把长 prefill 与低延迟 decode 无条件塞进同一 batch，前者可能阻塞后者，造成 TPOT 抖动。
 
-## KV Cache 与 Attention
+## KV Cache
 
 ### KV Cache
 
@@ -78,17 +78,15 @@ GQA 的 KV cache 大小按 $H_{kv}$ 缩放。当 $H_{kv}$ 远小于 Q head 数�
 
 ## Batching
 
-### Static Batching
+### 静态与动态 Batching
 
-Static batching 等待一批请求到齐，对 prompt padding 到共同长度，再一起生成。一个请求提前结束后，它的位置通常仍被保留到整个 batch 完成，造成计算浪费。
+Static batching 先等固定数量的请求到齐，再把 prompt padding 到共同长度并一起生成。假设四个请求分别生成 $20$ 、 $40$ 、 $80$ 和 $200$ 个 token，前三个请求结束后仍要占着 batch 中的位置，直到最长请求完成。实现中的 mask 可以避免读取无效 token，却不能自动省掉这些空位置对应的 kernel 工作。
 
-### Dynamic Batching
-
-Dynamic batching 在短时间窗口内收集请求，按长度或到达时间组成 batch。它减少等待完整固定 batch 的时间，但 batch 一旦开始，仍可能被最长请求拖住。
+Dynamic batching 不再要求凑满固定数量，而是在很短的时间窗口内收集请求，并按长度或到达时间组 batch。低流量时可以更快发车，高流量时又能形成较大的矩阵。它改善的是 batch 开始前的等待；一旦一组请求同时进入生成阶段，较短请求仍可能被最长请求拖住。
 
 ![Batch 大小与吞吐、延迟](assets/slides/19-batch-tradeoff.png)
 
-### Continuous Batching
+### 连续 Batching
 
 Continuous batching 以 iteration 为单位调度。某个序列生成 EOS 后立即退出，空位可由新请求在下一轮补入。
 
@@ -104,7 +102,7 @@ Continuous batching 还可以按执行方式细分：
 
 无论采用哪一种方式，scheduler 都要和 KV cache manager 一起工作。只看空闲 batch slot 而不检查可用 KV block，仍可能在长上下文请求进入后耗尽显存。
 
-### Prefill 与 Decode 的混合调度
+### 混合调度
 
 若长 prompt 整段 prefill 一次执行，decode 请求会等待很久。Chunked Prefill 把 prompt 切成若干 token chunk，与 decode token 一起进入迭代。
 
@@ -156,7 +154,7 @@ FlashAttention 按 block 遍历 Q、K、V，在 SRAM 中计算局部 score，并
 
 FlashAttention 的关键收益来自减少 HBM I/O，不是近似 attention。Backward 可以重算部分 score，以额外计算换取更少 activation memory。
 
-### Kernel Fusion 与 CUDA Graph
+### 融合与 Graph
 
 Decode 中单个 kernel 很短，RMSNorm、rotary embedding、bias、activation 和 residual add 等操作可以融合，减少中间读写与 launch 数量。
 
@@ -164,7 +162,7 @@ CUDA Graph 预先捕获一段稳定的 kernel launch 序列，后续整体重放
 
 ## 解码与容量规划
 
-### Speculative Decoding
+### 推测解码
 
 Speculative Decoding 使用较小的 draft model 一次提出多个候选 token，再由 target model 并行验证。
 

@@ -39,9 +39,9 @@ seriesOrder: 14
 
 Unified I/O 用统一 reader 接入本地文件、HDFS、S3 与内存对象。Python 接口便于组合数据算子，耗时较长的 reader、decode 和 batch 操作通常落在 C++、GPU 或独立服务中执行，避免 Python 调度成为瓶颈。
 
-## Dataset 与文件组织
+## 数据集与文件
 
-### Dataset 表达样本来源
+### 样本来源
 
 Map-style Dataset 实现 `__len__` 与 `__getitem__`。给定一个 index，它能定位并返回对应样本。
 
@@ -99,7 +99,7 @@ DataPipe 把数据源、shuffle、map、batch 与 prefetch 表示成可组合的
 
 Stateful DataLoader 在普通 DataLoader 接口上增加 `state_dict`。除了随机数状态，还要记录 sampler、当前 batch、worker 进度和流式 reader 位置，才能从 checkpoint 附近继续读取。若自定义 Dataset 内部还有不可见状态，仍需主动实现保存与恢复。
 
-### 文件组织与吞吐
+### 文件与吞吐
 
 数百万个小文件会产生大量目录查找与随机 I/O。每张图片本身很小，打开文件的成本却无法忽略。常见做法是把许多样本打包成较大的 shard，并在 shard 内保存索引。
 
@@ -113,7 +113,7 @@ Unirecord 一类记录格式把索引块与数据块放在同一文件中。索�
 
 JPEG decode、音频解码与 tokenization 常在 CPU 上进行。增加 worker 只在这些操作能够并行、且存储带宽尚未饱和时有效。瓶颈已经是网络或磁盘时，再开进程只会增加竞争。
 
-## Batch 的形成
+## Batch
 
 ### Shuffle
 
@@ -131,7 +131,7 @@ Map-style Dataset 可以在每个 epoch 生成完整 index permutation，获得�
 
 只保存一个全局 seed 还不够。精确恢复流式训练时，还要记住当前 shard、reader offset 和 shuffle buffer 状态。
 
-### Transform 与 Collate
+### 变换与组批
 
 Transform 把单个原始样本变成模型需要的表示。训练集可以随机裁剪、翻转或加入颜色扰动；验证集应保留确定性的 resize 与 normalize，不能沿用训练增强。
 
@@ -150,9 +150,9 @@ def collate_batch(samples):
 
 按长度分桶可以减少 padding。若把整个数据集彻底按长度排序，相邻 batch 会长期包含相似样本，随机性也随之下降。更稳妥的做法是先全局 shuffle，再在局部窗口内按长度组 batch。
 
-## DataLoader 并行
+## 并行加载
 
-### Worker 进程
+### Worker
 
 `DataLoader` 把 Dataset、Sampler、worker process、batching 与队列组合起来。
 
@@ -176,7 +176,7 @@ Linux 的 `fork` 与 Windows 的 `spawn` 创建进程方式不同。使用 `spaw
 
 `persistent_workers=True` 让 worker 跨 epoch 保留，省去反复启动进程与建立连接的成本。Dataset 状态若依赖 epoch，需要显式通知 worker 更新；长期增长的 worker cache 也会造成内存泄漏。
 
-### Prefetch 与设备传输
+### 预取与传输
 
 ![DataLoader Prefetch](assets/slides/14-prefetch.png)
 
@@ -197,7 +197,7 @@ for features, labels in loader:
 
 更完整的预取器会在 copy stream 中传输下一批数据，让 compute stream 继续处理当前 batch。使用下一批前，compute stream 等待对应 event 即可，不需要同步整张 GPU。
 
-### 顺序、队列与背压
+### 队列与背压
 
 不同样本的解码时间可能相差很大。多个 worker 并行时，后面的 batch 已经完成，前面的慢 batch 却仍未返回。若 DataLoader 严格遵守 Sampler 顺序，完成的后续 batch只能在队列里等待，这叫 head-of-line blocking。
 
@@ -226,9 +226,9 @@ NVIDIA DALI 把 JPEG decode、resize、crop 等操作放到 CPU 与 GPU 混合�
 
 数据规模超过单机后，可以先用 Spark 或 Dask 批量清洗并写回分布式文件系统，也可以使用独立的数据服务按训练节点分发样本。训练侧仍要约定 shard、epoch 和随机种子，否则多个节点可能重复读取同一批数据。
 
-## 分布式采样与恢复
+## 采样与恢复
 
-### 分布式采样
+### 采样
 
 数据并行中，每个 rank 都有一份模型副本，但必须取得不同样本。Distributed Sampler 先生成同一份全局随机排列，再按 rank 切成若干子序列。
 
@@ -236,7 +236,7 @@ NVIDIA DALI 把 JPEG decode、resize、crop 等操作放到 CPU 与 GPU 混合�
 
 Map-style Dataset 通常在每个 epoch 调用 `sampler.set_epoch(epoch)`，让所有 rank 使用共同的新随机排列。Iterable Dataset 则要在 reader 内同时考虑 rank 与 worker 的 shard 划分。
 
-### Checkpoint 与数据位置
+### Checkpoint
 
 训练恢复涉及模型参数、optimizer、scheduler、GradScaler、随机数状态、epoch 与 global step。
 
