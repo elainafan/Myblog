@@ -918,5 +918,35 @@
     "bvid": "BV1bf4y1978H",
     "page": 1,
     "sourceUrl": "https://www.bilibili.com/video/BV1bf4y1978H"
+  },
+  {
+    "name": "恋爱循环",
+    "artist": "花泽香菜",
+    "url": "/music/bilibili/BV1yj411e7FW/music.m4a",
+    "cover": "/music/bilibili/BV1yj411e7FW/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1yj411e7FW",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1yj411e7FW"
+  },
+  {
+    "name": "水槽のブランコ",
+    "artist": "Kitri",
+    "url": "/music/bilibili/BV1KE421P7eW/music.m4a",
+    "cover": "/music/bilibili/BV1KE421P7eW/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1KE421P7eW",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1KE421P7eW"
+  },
+  {
+    "name": "天使たちの歌",
+    "artist": "fhána",
+    "url": "/music/bilibili/BV1kb421n7nb/music.m4a",
+    "cover": "/music/bilibili/BV1kb421n7nb/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1kb421n7nb",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1kb421n7nb"
   }
 ]
