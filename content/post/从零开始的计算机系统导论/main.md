@@ -4,6 +4,8 @@ date: 2026-01-11
 categories:
     - 操作系统
 updates:
+    - date: 2026-07-15
+      content: 统一课程笔记的列表层级，并移除后四章开头的概览。
     - date: 2026-07-10
       content: 重整并扩充 CSAPP 第 2–12 章，调整课程与 Lab 顺序，并统一代码块格式。
 seriesExclude: true
