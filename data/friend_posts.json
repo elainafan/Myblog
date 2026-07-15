@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15T00:17:18.909094+00:00",
+  "generated_at": "2026-07-15T03:59:35.046983+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -265,7 +265,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文精读 | Memory OS of AI Agent",
-      "url": "https://equinox.wiki/post/paper-reading/agent-memory/memory-os-of-ai-agent%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/memory-os-of-ai-agent%E7%B2%BE%E8%AF%BB/",
       "summary": "论文精读 | Memory OS of AI Agent 作者：Equinox（shixy2003@gmail.com） 本文2026-07-13首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-13",
       "published": "2026-07-13T04:52:59+00:00",
       "published_text": "Mon, 13 Jul 2026 12:52:59 +0800"
@@ -287,7 +287,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文精读 | Belief Memory",
-      "url": "https://equinox.wiki/post/paper-reading/agent-memory/belief-memory%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/belief-memory%E7%B2%BE%E8%AF%BB/",
       "summary": "论文精读 | Belief Memory 作者：Equinox（shixy2003@gmail.com） 本文2026-07-09首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-09",
       "published": "2026-07-08T16:00:08+00:00",
       "published_text": "Thu, 09 Jul 2026 00:00:08 +0800"
@@ -320,7 +320,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文精读 | Delta Mem",
-      "url": "https://equinox.wiki/post/paper-reading/agent-memory/delta-mem%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/delta-mem%E7%B2%BE%E8%AF%BB/",
       "summary": "论文精读 | Delta Mem 作者：Equinox（shixy2003@gmail.com） 本文2026-07-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-03",
       "published": "2026-07-03T03:07:41+00:00",
       "published_text": "Fri, 03 Jul 2026 11:07:41 +0800"
@@ -331,7 +331,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Mem0框架解读",
-      "url": "https://equinox.wiki/post/agent/mem0/",
+      "url": "https://blog.equinox.wiki/post/agent/agent-memory-%E6%A1%86%E6%9E%B6/mem0/",
       "summary": "Mem0框架解读 作者：Equinox（shixy2003@gmail.com） 本文2026-07-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-03",
       "published": "2026-07-03T03:07:35+00:00",
       "published_text": "Fri, 03 Jul 2026 11:07:35 +0800"
@@ -342,7 +342,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文精读 | 斯坦福小镇",
-      "url": "https://equinox.wiki/post/paper-reading/agent-memory/%E6%96%AF%E5%9D%A6%E7%A6%8F%E5%B0%8F%E9%95%87/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/%E6%96%AF%E5%9D%A6%E7%A6%8F%E5%B0%8F%E9%95%87/",
       "summary": "论文精读 | 斯坦福小镇 作者：Equinox（shixy2003@gmail.com） 本文2026-07-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-01",
       "published": "2026-07-01T05:23:14+00:00",
       "published_text": "Wed, 01 Jul 2026 13:23:14 +0800"
@@ -353,7 +353,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "并行训练优化、MoE扩展与系统瓶颈",
-      "url": "https://equinox.wiki/post/cs336/%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96moe%E6%89%A9%E5%B1%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%93%B6%E9%A2%88/",
+      "url": "https://blog.equinox.wiki/post/cs336/%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96moe%E6%89%A9%E5%B1%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%93%B6%E9%A2%88/",
       "summary": "并行训练优化、MoE扩展与系统瓶颈 作者：Equinox（shixy2003@gmail.com） 本文2026-06-25首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-25",
       "published": "2026-06-25T12:58:05+00:00",
       "published_text": "Thu, 25 Jun 2026 20:58:05 +0800"
@@ -364,7 +364,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Self Consistency泛读",
-      "url": "https://equinox.wiki/post/paper-reading/cot/self-consistency%E6%B3%9B%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/cot/self-consistency%E6%B3%9B%E8%AF%BB/",
       "summary": "Self Consistency泛读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-23T12:58:41+00:00",
       "published_text": "Tue, 23 Jun 2026 20:58:41 +0800"
@@ -375,7 +375,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Auto CoT精读",
-      "url": "https://equinox.wiki/post/paper-reading/cot/auto-cot%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/cot/auto-cot%E7%B2%BE%E8%AF%BB/",
       "summary": "Auto CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-23T08:56:38+00:00",
       "published_text": "Tue, 23 Jun 2026 16:56:38 +0800"
@@ -386,7 +386,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Zero Shot CoT精读",
-      "url": "https://equinox.wiki/post/paper-reading/cot/zero_shot_cot%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/cot/zero_shot_cot%E7%B2%BE%E8%AF%BB/",
       "summary": "Zero Shot CoT精读 作者：Equinox（shixy2003@gmail.com） 本文2026-06-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-23",
       "published": "2026-06-22T16:36:28+00:00",
       "published_text": "Tue, 23 Jun 2026 00:36:28 +0800"
@@ -419,7 +419,7 @@
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "多GPU并行训练",
-      "url": "https://equinox.wiki/post/cs336/%E5%A4%9Agpu%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83/",
+      "url": "https://blog.equinox.wiki/post/cs336/%E5%A4%9Agpu%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83/",
       "summary": "多GPU并行训练 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
       "published": "2026-06-16T09:08:34+00:00",
       "published_text": "Tue, 16 Jun 2026 17:08:34 +0800"
