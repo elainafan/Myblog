@@ -8,8 +8,6 @@ hidden: true
 seriesOrder: 6
 ---
 
-Markov 和 Chebyshev 在较弱条件下给出尾界，Chernoff 和 Hoeffding 则利用独立性得到指数衰减。大数定律描述样本均值的收敛，中心极限定理进一步刻画标准化后的分布。
-
 ## 尾不等式的目标
 
 在 $n$ 重伯努利试验中，令 $n_A$ 为事件 $A$ 发生的次数，频率为

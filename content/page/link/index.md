@@ -76,6 +76,14 @@ links:
     description: 希言自然
     website: https://rhinospace.website
     image: https://www.rhinospace.website/friends/avatar
+  - title: dodola
+    description: 要是人生能像星露谷就好了。✨
+    website: https://dodolalorc.cn/
+    image: https://avatars.githubusercontent.com/u/114007020?v=4
+  - title: 深渊园丁
+    description: 这个网站是我送给互联网的一本手绘笔记。如果你在这里找到了什么让你停留的东西，那我们就已经是朋友了
+    website: https://www.minedensity.top/
+    image: https://www.minedensity.top/favicon.svg
   - title: Equinox
     description: I like it and I'm good at it.
     website: https://equinox.wiki/

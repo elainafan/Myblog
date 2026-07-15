@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15T09:35:24.139702+00:00",
+  "generated_at": "2026-07-15T10:38:33.049221+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -244,6 +244,32 @@
       "post_count": 0
     },
     {
+      "name": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "description": "要是人生能像星露谷就好了。✨",
+      "circle": true,
+      "circle_reason": "",
+      "timeout": null,
+      "retries": null,
+      "status": "ok",
+      "post_count": 24
+    },
+    {
+      "name": "深渊园丁",
+      "site": "https://www.minedensity.top/",
+      "feed": "",
+      "avatar": "https://www.minedensity.top/favicon.svg",
+      "description": "这个网站是我送给互联网的一本手绘笔记。如果你在这里找到了什么让你停留的东西，那我们就已经是朋友了",
+      "circle": false,
+      "circle_reason": "未发现 RSS/Atom",
+      "timeout": null,
+      "retries": null,
+      "status": "skipped",
+      "post_count": 0
+    },
+    {
       "name": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -335,6 +361,17 @@
       "summary": "Mem0框架解读 作者：Equinox（shixy2003@gmail.com） 本文2026-07-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-03",
       "published": "2026-07-03T03:07:35+00:00",
       "published_text": "Fri, 03 Jul 2026 11:07:35 +0800"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "Git 配置管理指南：多项目多身份实践",
+      "url": "https://dodolalorc.cn/blog/tech/tools/multi-identity-gitconfig/",
+      "summary": "Git 多项目多身份配置指南，整理配置层级、条件包含、路径匹配规则和常见排查方法。",
+      "published": "2026-07-02T06:17:01+00:00",
+      "published_text": "Thu, 02 Jul 2026 06:17:01 GMT"
     },
     {
       "friend": "Equinox",
@@ -590,6 +627,17 @@
       "published_text": "2026-05-25"
     },
     {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "中文字体加载优化：在博客里混合使用字体子集和完整字体",
+      "url": "https://dodolalorc.cn/blog/tech/tools/cn-font-perf/",
+      "summary": "中文字体加载优化记录，介绍在博客中为 UI 使用字体子集、正文保留稳定字体的混合方案。",
+      "published": "2026-05-24T18:28:58+00:00",
+      "published_text": "Sun, 24 May 2026 18:28:58 GMT"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -665,6 +713,28 @@
       "summary": "引 还记得我们曾经在lab1中用过一个$∇\\log𝑝(𝑋_𝑡)$来进行ODE吗，本文将详细介绍与之有关的知识。 在上一讲中我们已经推导出了vector field的公式，并且给出了flow matching的训练算法，现在我们将学习如何处理diffusion model 并且如何使用score matching来训练它。 Conditional and M...",
       "published": "2026-05-17T06:49:20+00:00",
       "published_text": "Sun, 17 May 2026 14:49:20 +0800"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "使用 Obsidian + GitHub Actions + GitHub Pages 搭建内容发布流",
+      "url": "https://dodolalorc.cn/blog/tech/tools/markdown-blog-workflow/",
+      "summary": "Obsidian、GitHub Actions 与 GitHub Pages 内容发布流笔记，整理多个仓库之间的同步与部署脚本。",
+      "published": "2026-05-14T12:05:30+00:00",
+      "published_text": "Thu, 14 May 2026 12:05:30 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "obsidian远程同步方案",
+      "url": "https://dodolalorc.cn/blog/tech/tools/ob-remote-save/",
+      "summary": "Obsidian 远程同步方案记录，整理 infiniCloud 与 Obsidian 的连接配置和进一步同步设置。",
+      "published": "2026-05-12T07:56:01+00:00",
+      "published_text": "Tue, 12 May 2026 07:56:01 GMT"
     },
     {
       "friend": "~zzz",
@@ -1360,6 +1430,61 @@
       "published_text": "Sat, 11 Oct 2025 03:56:13 GMT"
     },
     {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "DNS 查询简述",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/dns-query/",
+      "summary": "DNS 查询流程笔记，用电话簿类比解释本地缓存、递归解析、迭代查询、结果缓存和连接建立。",
+      "published": "2025-10-08T18:24:48+00:00",
+      "published_text": "Wed, 08 Oct 2025 18:24:48 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "关键渲染路径（CRP）的详细步骤",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/critical-rendering-path/",
+      "summary": "关键渲染路径笔记，梳理 DOM、CSSOM、渲染树、布局、绘制和合成的完整流程及优化方向。",
+      "published": "2025-10-08T18:17:10+00:00",
+      "published_text": "Wed, 08 Oct 2025 18:17:10 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "JavaScript 模块打包器 Rollup",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/js-rollup/",
+      "summary": "Rollup 模块打包器笔记，整理打包需求、核心特性、与 Vite 的关系以及和 Rspack、Webpack 的对比。",
+      "published": "2025-10-08T17:36:48+00:00",
+      "published_text": "Wed, 08 Oct 2025 17:36:48 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "JavaScript 垃圾回收机制简述",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/js-garbage-collection/",
+      "summary": "JavaScript 垃圾回收笔记，介绍标记清除算法、优化概念以及避免内存泄漏的常见做法。",
+      "published": "2025-10-08T14:52:14+00:00",
+      "published_text": "Wed, 08 Oct 2025 14:52:14 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "JavaScript 原型链简述",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/js-prototype-chain/",
+      "summary": "JavaScript 原型链笔记，通过示例梳理原型对象、继承关系和原型链结构。",
+      "published": "2025-10-08T14:49:23+00:00",
+      "published_text": "Wed, 08 Oct 2025 14:49:23 GMT"
+    },
+    {
       "friend": "Arthal's ink",
       "site": "https://arthals.ink/",
       "feed": "https://arthals.ink/rss.xml",
@@ -1369,6 +1494,28 @@
       "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 3",
       "published": "2025-10-05T02:41:24+00:00",
       "published_text": "Sun, 05 Oct 2025 02:41:24 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "Margin 折叠",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/margin-fold/",
+      "summary": "CSS Margin 折叠笔记，说明折叠产生原因、常见场景、负 margin 规则和阻止折叠的方法。",
+      "published": "2025-10-02T20:31:02+00:00",
+      "published_text": "Thu, 02 Oct 2025 20:31:02 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "CSS 选择器优先级和覆盖样式",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/css-style-level/",
+      "summary": "CSS 优先级笔记，整理选择器权重计算、比较规则以及 !important 和深度选择器的覆盖策略。",
+      "published": "2025-10-02T18:34:28+00:00",
+      "published_text": "Thu, 02 Oct 2025 18:34:28 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -1415,6 +1562,17 @@
       "published_text": "Sat, 20 Sep 2025 03:48:00 +0800"
     },
     {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "Intersection Observer API 监听是否进入了可视区域",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/intersection-observer-api/",
+      "summary": "Intersection Observer API 学习笔记，介绍观察器配置、回调机制、懒加载和元素入场动画等用法。",
+      "published": "2025-09-17T09:53:56+00:00",
+      "published_text": "Wed, 17 Sep 2025 09:53:56 GMT"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1457,6 +1615,28 @@
       "summary": "简单的测评与笔记，以作纪念",
       "published": "2025-08-28T00:00:00+00:00",
       "published_text": "Thu, 28 Aug 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "我的 oh-my-posh 上都有哪些配置",
+      "url": "https://dodolalorc.cn/blog/tech/tools/my-win-shell/",
+      "summary": "Windows 终端配置笔记，整理 PowerShell 模块命令、Oh My Posh 配置以及常用 Git 别名函数。",
+      "published": "2025-08-22T18:05:47+00:00",
+      "published_text": "Fri, 22 Aug 2025 18:05:47 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "🧩带图标的 Blog 跳转链接",
+      "url": "https://dodolalorc.cn/blog/projects/themes-plugins/favicon-link/",
+      "summary": "记录为博客跳转链接添加 favicon 图标的字段设计与实现思路，对比默认路径和 Google Favicon 服务。",
+      "published": "2025-08-20T17:31:51+00:00",
+      "published_text": "Wed, 20 Aug 2025 17:31:51 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -1503,6 +1683,17 @@
       "published_text": "Wed, 06 Aug 2025 12:36:02 +0800"
     },
     {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "mac 开荒手册",
+      "url": "https://dodolalorc.cn/blog/tech/tools/mac-start/",
+      "summary": "基础开发环境配置",
+      "published": "2025-08-05T00:00:00+00:00",
+      "published_text": "Tue, 05 Aug 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Zhaoyi Tian",
       "site": "https://zhaoyi-tian.cn",
       "feed": "https://zhaoyi-tian.cn/rss.xml",
@@ -1512,6 +1703,61 @@
       "summary": "我将在此记录一些我修过且觉得值得记录的课程。主要内容会包括一些xk的专业课以及'ai+心理认知'项目的课程",
       "published": "2025-08-03T00:00:00+00:00",
       "published_text": "Sun, 03 Aug 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "为最近笔记添加排序和筛选",
+      "url": "https://dodolalorc.cn/blog/projects/themes-plugins/use-filter-and-sort/",
+      "summary": "记录为最近笔记列表添加排序和筛选功能的配置方式与实现思路。",
+      "published": "2025-08-01T19:55:35+00:00",
+      "published_text": "Fri, 01 Aug 2025 19:55:35 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "🔑Git环境配置和SSH公钥设置",
+      "url": "https://dodolalorc.cn/blog/tech/tools/git-settings/",
+      "summary": "Git 环境配置笔记，整理 SSH 密钥生成、Git 全局配置、换行符策略、默认分支和别名设置。",
+      "published": "2025-08-01T17:31:10+00:00",
+      "published_text": "Fri, 01 Aug 2025 17:31:10 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "💻常用 xcode 使用命令",
+      "url": "https://dodolalorc.cn/blog/tech/tools/xcode-commands/",
+      "summary": "Xcode 常用命令笔记，整理安装多版本 Xcode、license、xcode-select 路径切换和验证命令。",
+      "published": "2025-08-01T16:20:02+00:00",
+      "published_text": "Fri, 01 Aug 2025 16:20:02 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "在 quartz 主题中给博客添加封面首图",
+      "url": "https://dodolalorc.cn/blog/projects/themes-plugins/add-featured-image/",
+      "summary": "记录在 Quartz 主题中为博客添加封面首图的实现步骤，涵盖插件结构和组件结构改造。",
+      "published": "2025-07-27T17:35:30+00:00",
+      "published_text": "Sun, 27 Jul 2025 17:35:30 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "🌐URL 重写规则和静态资源解析逻辑",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/url-rewrite-rule/",
+      "summary": "URL 重写与静态资源解析笔记，记录问题背景、原因分析和对应的规则修复方案。",
+      "published": "2025-07-14T00:00:00+00:00",
+      "published_text": "Mon, 14 Jul 2025 00:00:00 GMT"
     },
     {
       "friend": "Anfsity",
@@ -1624,6 +1870,17 @@
       "published_text": "Sat, 24 May 2025 22:31:23 +0800"
     },
     {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "Electron 构建记录 | 一条龙服务script",
+      "url": "https://dodolalorc.cn/blog/tech/electronjs/build-electron/",
+      "summary": "Electron 构建环境记录，整理 Chromium 开发工具、Electron build-tools 初始化和构建脚本流程。",
+      "published": "2025-04-25T05:27:50+00:00",
+      "published_text": "Fri, 25 Apr 2025 05:27:50 GMT"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -1699,6 +1956,39 @@
       "summary": "强化学习在 VLA 中的应用",
       "published": "2025-03-22T00:34:00+00:00",
       "published_text": "Sat, 22 Mar 2025 00:34:00 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "大文件上传和下载问题",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/large-file-upload/",
+      "summary": "大文件上传下载笔记，整理切片上传的基本术语、示例代码和优化方向。",
+      "published": "2025-03-17T05:17:45+00:00",
+      "published_text": "Mon, 17 Mar 2025 05:17:45 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "前端流量控制常用手段",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/flow-control/",
+      "summary": "前端流量控制笔记，整理防抖、节流、请求队列等常见手段的实现方式和注意事项。",
+      "published": "2025-03-17T03:40:19+00:00",
+      "published_text": "Mon, 17 Mar 2025 03:40:19 GMT"
+    },
+    {
+      "friend": "dodola",
+      "site": "https://dodolalorc.cn/",
+      "feed": "https://dodolalorc.cn/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/114007020?v=4",
+      "title": "JavaScript 链式调用设计模式 | Vue举例",
+      "url": "https://dodolalorc.cn/blog/tech/frontend/method-chaining/",
+      "summary": "JavaScript 链式调用设计笔记，以 Vue createApp 和 Promise 为例讲解链式 API 的实现方式。",
+      "published": "2025-03-17T01:26:02+00:00",
+      "published_text": "Mon, 17 Mar 2025 01:26:02 GMT"
     },
     {
       "friend": "Arthal's ink",
