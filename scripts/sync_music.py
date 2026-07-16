@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build the APlayer playlist from local music folders and, optionally, a Bilibili
+Build the site music playlist from local folders and, optionally, a Bilibili
 favorite list.
 
 Examples:
@@ -380,7 +380,7 @@ def sync_bilibili(args: argparse.Namespace) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Sync APlayer music playlist.")
+    parser = argparse.ArgumentParser(description="Sync the site music playlist.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("local", help="scan static/music and rebuild data/music/generated.json")
