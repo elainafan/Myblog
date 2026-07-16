@@ -1,74 +1,250 @@
 ---
-title: Bangumi 收藏墙
+title: 在博客中优雅地添加Bangumi追番页面
 date: 2026-03-13
 slug: bangumi-wall
 aliases:
     - /p/在博客中优雅地添加bangumi追番页面/
 hidden: true
 seriesOrder: 3
+updates:
+    - date: 2026-05-25
+      content: 补充看过列表的年份视图、随机推荐兜底池和番剧详情弹层。
+    - date: 2026-05-25
+      content: 将看过列表改为按个人评分排序，并加入 Bangumi 公共动画随机推荐。
+    - date: 2026-05-25
+      content: 精简番剧卡片默认信息，将短评、进度和排名收纳到悬停层。
+    - date: 2026-05-25
+      content: 增加状态切换导航和分组内 Load More 展开。
+    - date: 2026-05-24
+      content: 调整 Bangumi 页面头部样式。
+    - date: 2026-05-24
+      content: 将原 Bilibili 追番方案整体升级为 Bangumi 收藏墙。
 ---
+## 前言
+之前笔者在博客里做过一个 Bilibili 追番页面：构建时通过 `resources.GetRemote` 拉取 B 站公开追番 API，然后把结果渲染成一面番剧海报墙。这个方案胜在简单，但继续用下来会发现一个问题：Bilibili 更像播放平台，而不是作品数据库。很多番没有版权、下架、地区不可见，或者剧场版、OVA、续作分得不够稳定，用它来做“番剧收藏页”总觉得差一点。
 
-本站的 `/anime/` 最初读取 Bilibili 追番数据，后来整页换成了 Bangumi 收藏。Bilibili 更适合播放，版权、地区和下架状态都会影响条目；Bangumi 的作品信息与个人收藏状态更完整，拿来做长期动画记录更稳。
+因此这次把 `/anime/` 页面从 Bilibili 追番墙升级成 Bangumi 收藏墙。Bangumi 的优势在于条目更完整，作品标题、中文名、封面、放送日期、站内评分和排名都能直接拿到；更重要的是，它能保留自己的收藏状态、个人评分、观看进度和短评。这样页面就不只是一个平台列表，而更像一份真正属于自己的番剧记录。
 
-页面展示公开收藏，数据先同步到本地，再交给 Hugo 渲染。构建过程不请求收藏 API，Bangumi 暂时不可用时，线上已有页面不会变空。
+本文仍然以 Hugo 和 Stack 主题为例，整理一个静态博客可用的实现：先用脚本把 Bangumi 公开收藏同步到本地缓存，再通过 shortcode 渲染为分组卡片墙。这样页面加载不依赖前端请求，Vercel 构建时也不会被外部 API 卡住。
 
-## 同步收藏
-
-公开收藏接口按用户与条目类型查询：
+## 准备 Bangumi 收藏
+首先需要有一个公开可访问的 Bangumi 用户收藏页。比如笔者的用户 ID 是 `1020990`，那么动画收藏可以通过下面这个接口读取：
 
 ```text
 https://api.bgm.tv/v0/users/1020990/collections?subject_type=2&limit=100&offset=0
 ```
 
-`subject_type=2` 表示动画。接口会返回收藏状态、个人评分、观看进度、短评以及作品封面、放送日期、站内评分和排名。
+这里的 `subject_type=2` 表示动画，`limit` 和 `offset` 用来分页。返回结果里比较有用的字段包括：
 
-`scripts/sync_bangumi.py` 负责翻页，并把页面需要的字段写入 `data/bangumi/anime.json`：
+| 字段 | 含义 |
+| --- | --- |
+| `type` | 收藏状态，比如想看、看过、在看、搁置 |
+| `rate` | 自己给这部番的评分 |
+| `comment` | 自己写的短评 |
+| `ep_status` | 当前看到第几集 |
+| `subject.name_cn` | 中文标题 |
+| `subject.images.common` | 封面图 |
+| `subject.score` | Bangumi 站内均分 |
+| `subject.rank` | Bangumi 排名 |
+
+需要注意的是，Bangumi 账号不用一开始就维护得非常完整。只要有一部分看过、在看或者想看的条目，页面就已经能成型；后面每次在 Bangumi 上更新收藏，博客重新构建时也会跟着刷新。
+
+## 加一个本地缓存脚本
+直接在 Hugo 模板里请求远程 API 可以工作，但静态站点构建最怕外部接口偶尔抽风。为了避免某次 Vercel 构建时 Bangumi API 访问失败导致页面空掉，笔者先加了一个同步脚本，把公开收藏整理成 Hugo data 文件。
+
+在 `scripts/sync_bangumi.py` 中写入脚本，核心逻辑是分页请求 Bangumi 收藏接口，然后只保留页面需要的字段：
 
 ```python
 DEFAULT_USER = "1020990"
 DEFAULT_OUTPUT = Path("data/bangumi/anime.json")
+API_ROOT = "https://api.bgm.tv/v0"
+```
 
-def normalize_item(item):
-    subject = item.get("subject") or {}
-    return {
-        "subject_id": item.get("subject_id"),
-        "type": item.get("type"),
-        "rate": item.get("rate") or 0,
-        "ep_status": item.get("ep_status") or 0,
-        "comment": item.get("comment"),
-        "subject": {
-            "name": subject.get("name"),
-            "name_cn": subject.get("name_cn"),
-            "date": subject.get("date"),
-            "score": subject.get("score"),
-            "rank": subject.get("rank"),
-            "eps": subject.get("eps") or 0,
-            "images": subject.get("images") or {}
-        }
+每个条目会被规整成这样的结构：
+
+```json
+{
+  "subject_id": 262897,
+  "type": 3,
+  "rate": 9,
+  "ep_status": 0,
+  "comment": "尸体暖暖的",
+  "subject": {
+    "name": "ゆるキャン△ SEASON 2",
+    "name_cn": "摇曳露营△ 第二季",
+    "date": "2021-01-07",
+    "score": 8.3,
+    "rank": 89,
+    "eps": 13,
+    "images": {
+      "common": "https://lain.bgm.tv/r/400/pic/cover/l/0f/50/262897_d3555.jpg"
     }
+  }
+}
 ```
 
-同步当前用户时运行：
+然后在博客根目录运行：
 
-```powershell
-python scripts\sync_bangumi.py
+```bash
+python scripts/sync_bangumi.py
 ```
 
-也可以指定其他公开用户和输出位置：
+脚本会生成 `data/bangumi/anime.json`。这个文件可以提交到仓库里，作为 API 失败时的兜底缓存。因为里面只保存公开收藏和作品元数据，不涉及 Bangumi 登录态，也不需要把 token 或 cookie 放进仓库。
 
-```powershell
-python scripts\sync_bangumi.py --user 用户ID --output data/bangumi/anime.json
+## 编写 Bangumi Shortcode
+接下来改 `layouts/shortcodes/bangumi.html`。这个 shortcode 默认读取 `data/bangumi/anime.json`，也就是上一步同步得到的缓存文件。这样构建过程会更稳，不会因为 Bangumi API 临时变慢而让整站构建超时。
+
+```go-html-template
+{{- $user := .Get "user" | default (.Page.Params.bangumi.user | default (.Site.Params.bangumi.user | default "1020990")) -}}
+{{- $limit := .Get "limit" | default (.Page.Params.bangumi.limit | default (.Site.Params.bangumi.limit | default 100)) -}}
+{{- $live := .Get "live" | default (.Page.Params.bangumi.live | default (.Site.Params.bangumi.live | default false)) -}}
+{{- $bangumiData := .Site.Data.bangumi.anime | default dict -}}
+{{- $source := "cache" -}}
+{{- if $live -}}
+    {{- $apiURL := printf "https://api.bgm.tv/v0/users/%s/collections?subject_type=2&limit=%v&offset=0" $user $limit -}}
+    {{- $opts := dict "headers" (dict "Accept" "application/json" "User-Agent" "ElainafanBlog/1.0 (https://www.elainafan.one)") -}}
+    {{- $res := resources.GetRemote $apiURL $opts -}}
+    {{- if and $res (not $res.Err) -}}
+        {{- $bangumiData = $res.Content | transform.Unmarshal -}}
+        {{- $source = "live" -}}
+    {{- else -}}
+        {{- warnf "获取 Bangumi 收藏数据失败，使用本地缓存。" -}}
+    {{- end -}}
+{{- end -}}
 ```
 
-同步失败时脚本返回非零状态，但不会删除旧 JSON。部署前手动运行，或者在自己的 CI 中定时更新即可；Vercel 只负责读取提交到仓库的数据并构建页面。
+这里保留了一个可选的 `live` 开关。如果之后想在某个页面里强制构建期实时请求，可以写成 `{{</* bangumi live=true */>}}`；平时则让它读本地缓存，速度和稳定性都会更好。
 
-## 页面入口
+页面头部则单独做成一块卡片式 hero。这里不再把“缓存数据”做成一排小徽章，而是只保留用户真正关心的信息：标题、说明、收藏总数、最近更新时间，以及跳转到 Bangumi 主页的链接。
 
-番剧页面位于 `content/page/anime/index.md`：
+```go-html-template
+<header class="bangumi-hero">
+    <div>
+        <div class="bangumi-title" role="heading" aria-level="2">Bangumi 动画收藏</div>
+        <p class="bangumi-desc">记录最近在看、看过和想看的动画。</p>
+        <div class="bangumi-stats">
+            共 {{ len $items }} 条收藏
+            {{ with $bangumiData.fetched_at }}
+                · 最近更新：{{ time.Format "2006-01-02" . }}
+            {{ end }}
+        </div>
+    </div>
+    <a class="bangumi-home" href="https://bangumi.tv/user/{{ $user }}" target="_blank" rel="noopener noreferrer">查看 Bangumi 主页 ↝</a>
+</header>
+```
+
+这个头部看起来会更像一个独立功能页，而不是普通文章里临时塞进去的一段列表。副标题保留“记录最近在看、看过和想看的动画。”，也能让第一次点进来的访客立刻知道这个页面在做什么。
+
+然后按 Bangumi 收藏状态分组：
+
+```go-html-template
+{{- $groups := slice
+    (dict "type" 3 "label" "在看" "name" "watching" "initial" 0 "step" 8)
+    (dict "type" 2 "label" "看过" "name" "watched" "initial" 12 "step" 12)
+    (dict "type" 1 "label" "想看" "name" "wish" "initial" 8 "step" 8)
+    (dict "type" 4 "label" "搁置" "name" "on-hold" "initial" 8 "step" 8)
+    (dict "type" 5 "label" "抛弃" "name" "dropped" "initial" 8 "step" 8)
+-}}
+```
+
+这里的 `initial` 表示初始显示数量，`step` 表示每次点击 `Load More` 继续展开多少张。`在看` 通常数量很少，所以这里用 `initial: 0` 表示全部显示；`看过` 会比较长，因此默认只显示 12 张。
+
+状态导航不放“全部”，只保留具体状态。点击某个按钮时，页面只显示对应的状态面板：
+
+```go-html-template
+<nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
+    {{ range $groups }}
+        {{ $groupItems := where $items "type" .type }}
+        {{ if gt (len $groupItems) 0 }}
+            <button class="bangumi-tab" type="button" data-bangumi-tab="{{ .name }}">
+                {{ .label }}
+            </button>
+        {{ end }}
+    {{ end }}
+</nav>
+```
+
+其中 `看过` 这一组可以默认按自己的评分排序。这样页面打开时，最先看到的是笔者真正喜欢的作品，而不是单纯按照同步时间或作品年份排列：
+
+```go-html-template
+{{ if eq .name "watched" }}
+    {{ $groupItems = sort $groupItems "rate" "desc" }}
+{{ end }}
+```
+
+不过 `看过` 的条目一多，只按评分看也会丢掉时间感。因此页面里又加了一个小切换：`按评分` 和 `按年份`。评分视图用来看口味，年份视图用来看自己补番的轨迹；切换时不重新请求数据，只是在前端重新排列已有卡片，并在年份视图里插入年份分隔条。
+
+```html
+<button class="bangumi-view-button" type="button" data-bangumi-view="rating">按评分</button>
+<button class="bangumi-view-button" type="button" data-bangumi-view="year">按年份</button>
+```
+
+导航右侧还可以放一个随机推荐按钮。这个按钮不从自己的收藏里抽，而是从 Bangumi 公共动画条目里抽取候选：
+
+```ts
+const offset = Math.floor(Math.random() * 1800);
+const response = await fetch(
+    `https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`
+);
+```
+
+前端拿到结果后还会筛掉 2006 年以前的条目、评分低于 6 的作品、非日文原名，以及 OVA、OAD、ONA、剧场版、特典和总集篇。标题里带有欧美动画常见关键词的条目也不会进入候选池，避免随机结果里混进《蜘蛛侠》一类作品。
+
+页面打开后会先在后台预取一批候选，点击时优先从已有池子里抽，减少等待。远程请求超过 `1600ms` 或直接失败时，则退回带有封面和 Bangumi 链接的本地高分动画池，并在卡片上标注“本地兜底”。
+
+卡片本身默认只露出封面、标题、年份和评分。个人短评、观看进度和 Bangumi 排名虽然有用，但如果全部铺在卡片上，页面很快就会显得拥挤。因此这里把这些细节收纳到封面悬停层里：平时当作海报墙扫视，鼠标移上去时再看补充信息。
+
+```go-html-template
+{{ range $groupItems }}
+    {{ $subject := .subject }}
+    {{ $title := $subject.name_cn | default $subject.name | default "Untitled" }}
+    {{ $cover := $subject.images.common | default $subject.images.medium | default $subject.images.large }}
+    {{ $eps := $subject.eps | default 0 }}
+    {{ $epStatus := .ep_status | default 0 }}
+    {{ $siteScore := $subject.score | default 0 }}
+    {{ $rank := $subject.rank | default 0 }}
+    {{ $hasProgress := and (gt $eps 0) (gt $epStatus 0) }}
+    <a class="bangumi-card" href="https://bangumi.tv/subject/{{ .subject_id }}" target="_blank" rel="noopener noreferrer">
+        <div class="bangumi-cover">
+            <img src="{{ $cover }}" alt="{{ $title }}" loading="lazy" referrerpolicy="no-referrer">
+            {{ if gt .rate 0 }}
+                <span class="bangumi-score">{{ .rate }}</span>
+            {{ end }}
+            <div class="bangumi-extra">
+                {{ if gt $rank 0 }}
+                    <span class="bangumi-extra-line">Bangumi #{{ $rank }}</span>
+                {{ end }}
+                {{ if $hasProgress }}
+                    <span class="bangumi-extra-line">进度 {{ $epStatus }} / {{ $eps }}</span>
+                {{ end }}
+                {{ with .comment }}
+                    <span class="bangumi-extra-comment">{{ . }}</span>
+                {{ end }}
+            </div>
+        </div>
+        <div class="bangumi-info">
+            <div class="bangumi-name" role="heading" aria-level="4">{{ $title }}</div>
+            <div class="bangumi-meta">
+                {{ with $subject.date }}<span>{{ substr . 0 4 }}</span>{{ end }}
+                {{ if gt $siteScore 0 }}<span>Bangumi {{ $siteScore }}</span>{{ end }}
+            </div>
+        </div>
+    </a>
+{{ end }}
+```
+
+卡片点击时也不一定要立刻跳转到 Bangumi。现在的处理是：普通点击先打开一个轻量详情弹层，里面展示封面、标题、个人评分、Bangumi 分数、排名、进度和短评；如果确实想去 Bangumi 页面，再点弹层里的链接。为了不破坏浏览器习惯，`Ctrl` / `Command` 点击仍然保持直接新标签打开。
+
+完整样式可以按自己博客的气质调整。笔者这里选择继续沿用 Stack 的 `var(--card-background)`、`var(--shadow-l2)` 和文字颜色变量，这样亮色、暗色模式下都比较自然。
+
+## 创建番剧页面
+页面本身仍然放在 `content/page/anime/index.md`。因为主要渲染逻辑已经被 shortcode 接管，这里只需要写 frontmatter 和一行调用：
 
 ```yaml
 ---
 title: "番剧 | Anime"
+date: 2025-10-26
+readingTime: true
 layout: "anime"
 slug: "anime"
 url: "/anime/"
@@ -76,61 +252,31 @@ menu:
     main:
         weight: -50
         params:
-            icon: bilibili
+            icon: eye
+
+comments: true
 ---
 
 {{</* bangumi */>}}
 ```
 
-左侧菜单继续使用原来的 Bilibili 图标，页面内容已经完全由 Bangumi shortcode 生成。`layouts/page/anime.html` 沿用文章容器与评论区，真正的收藏墙在 `layouts/shortcodes/bangumi.html`。
+这里的 `layout: "anime"` 对应 `layouts/page/anime.html`。这个 layout 只负责套用 Stack 的文章外壳，真正的番剧数据展示交给 `{{</* bangumi */>}}`。
 
-shortcode 只读取本地数据：
+## 构建和更新方式
+之后的更新方式有两种。
+
+主要方式是手动刷新缓存：
+
+```bash
+python scripts/sync_bangumi.py
+```
+
+然后提交更新后的 `data/bangumi/anime.json`。这样 Vercel 构建时不需要再等 Bangumi API，页面也不会因为外部接口临时抽风而空掉。
+
+如果确实想让 Hugo 在构建时直接抓最新数据，也可以在 shortcode 中显式打开实时模式：
 
 ```go-html-template
-{{- $bangumiData := site.Data.bangumi.anime -}}
-{{- $items := $bangumiData.data | default (slice) -}}
+{{</* bangumi live=true */>}}
 ```
 
-头部显示收藏总数、最近同步日期和 Bangumi 主页链接。收藏按“在看、看过、想看、搁置、抛弃”拆成独立面板，只生成有内容的状态按钮，不放一个很长的“全部”列表。
-
-## 收藏卡片
-
-卡片默认只保留封面与标题。个人评分、站内评分、排名、观看进度和短评收在悬停层与详情弹窗中，列表不会因为每张卡片塞满文字而变得很长。
-
-面板带有自己的初始数量和展开步长：
-
-```go-html-template
-<section
-  data-bangumi-panel="{{ .name }}"
-  data-bangumi-initial="{{ .initial }}"
-  data-bangumi-step="{{ .step }}">
-```
-
-`assets/ts/main.ts` 读取这些属性。每次点击 `Load More` 只增加当前状态的显示数量；切换状态后，搜索与展开数量也跟着切到对应面板。
-
-“看过”默认按个人评分降序排列，还可以切到年份视图。年份视图重新排序卡片，并在相邻年份之间动态插入分隔条。没有个人评分的条目自然落在后面，不会和高分收藏混在一起。
-
-普通点击卡片会打开站内详情弹窗，方向键可以切换前后条目，`Esc` 关闭。按住 `Ctrl`、`Command` 或 `Shift` 点击时保留浏览器原行为，仍能直接在新标签页打开 Bangumi 条目。
-
-## 随机一部
-
-“随机一部”并不从个人收藏中抽取。前端向 Bangumi 公共条目接口随机取一段候选数据，再按规则筛选：
-
-```ts
-return Boolean(subject.id)
-    && year >= 2006
-    && (subject.rating?.score || 0) >= 6
-    && hasJapaneseKana
-    && !BANGUMI_NON_JP_KEYWORDS.test(title)
-    && !BANGUMI_SIDE_STORY_KEYWORDS.test(title);
-```
-
-这里要求作品从 2006 年开始、站内评分不低于 6、原名包含日文假名，同时排除欧美动画关键词以及 OVA、OAD、ONA、剧场版、特典、总集篇等旁支条目。筛选不是作品国别数据库，只是用公开字段做一层实用过滤，目的是尽量避免抽出蜘蛛侠或一串特典。
-
-页面加载后会提前请求一批候选项。点击按钮时优先从内存池抽取，剩余数量不足再后台补充。请求超过 `1600ms` 或接口失败时，改用本地兜底池；兜底条目同样带封面、年份、评分和可点击链接，因此网络慢时不会只剩一张无图空卡。
-
-## 样式与 PJAX
-
-收藏墙样式随 shortcode 一起输出，作用域限制在 `.bangumi-page`，不会覆盖普通文章卡片。桌面端使用多列封面墙，窄屏逐步减少列数；头部、导航和卡片宽度都由同一个内容容器控制，避免出现头部向里缩、列表却贴边的错位。
-
-交互初始化集中在 `setupBangumiCollection()`，并由 `window.Stack.init()` 调用。直接打开 `/anime/` 和通过 PJAX 切入页面走的是同一套初始化逻辑；根节点用 `data-bangumi-enhanced` 防止重复绑定事件。
+不过笔者更建议把“同步数据”和“构建博客”分开。前者失败了可以稍后再跑一次，后者则应该尽量稳定。
