@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16T04:00:16.353184+00:00",
+  "generated_at": "2026-07-16T06:45:38.399370+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -290,8 +290,19 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "论文精读 | RGMem",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/rgmem/",
+      "summary": "论文精读 | RGMem 作者：Equinox（shixy2003@gmail.com） 本文2026-07-14首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-14",
+      "published": "2026-07-14T02:47:55+00:00",
+      "published_text": "Tue, 14 Jul 2026 10:47:55 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文精读 | Memory OS of AI Agent",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/memory-os-of-ai-agent%E7%B2%BE%E8%AF%BB/",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/memory-os-of-ai-agent/",
       "summary": "论文精读 | Memory OS of AI Agent 作者：Equinox（shixy2003@gmail.com） 本文2026-07-13首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-13",
       "published": "2026-07-13T04:52:59+00:00",
       "published_text": "Mon, 13 Jul 2026 12:52:59 +0800"
@@ -449,17 +460,6 @@
       "summary": "Hardware Synchronization Solution: Atomic read/write 即 Read & write in single instruction. No other access permitted between read and write.一般都涉及到共享内存。 Common implementation: Atom...",
       "published": "2026-06-18T12:05:36+00:00",
       "published_text": "Thu, 18 Jun 2026 20:05:36 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "多GPU并行训练",
-      "url": "https://blog.equinox.wiki/post/cs336/%E5%A4%9Agpu%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83/",
-      "summary": "多GPU并行训练 作者：Equinox（shixy2003@gmail.com） 本文2026-06-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-06-16",
-      "published": "2026-06-16T09:08:34+00:00",
-      "published_text": "Tue, 16 Jun 2026 17:08:34 +0800"
     },
     {
       "friend": "~zzz",
