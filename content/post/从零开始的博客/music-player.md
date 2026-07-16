@@ -7,20 +7,21 @@ aliases:
 hidden: true
 seriesOrder: 2
 updates:
+    - date: 2026-07-16
+      content: 按当前播放器、歌单同步与 PJAX 实现整理文章结构。
     - date: 2026-07-11
       content: 将操作系统、程序设计实习和数算课程笔记排除在算法文章自动切歌规则之外。
     - date: 2026-06-24
       content: 为算法分类文章接入进入页面时的随机曲目联动。
 ---
-## 前言
-给博客加音乐播放器这件事，乍一看似乎非常简单：引入一个播放器库，填几首歌，然后固定在页面底部就好了。
 
-但是实际做下来会发现一个很致命的问题：只要点击站内链接，浏览器就会重新加载整个页面，底部播放器自然也会被销毁。也就是说，歌还没听几句，点进下一篇文章就断了，体验非常割裂。
+播放器固定在页面右下角，使用浏览器原生 `Audio` 和自定义界面。PJAX 只替换正文与侧栏，播放器节点留在页面中继续播放；页面切换结束后，Stack、KaTeX、Giscus、搜索与图片灯箱会重新初始化。
 
-因此，音乐播放器和 PJAX 其实是绑在一起的。播放器负责播放音乐，PJAX 负责让站内跳转时只替换正文区域，而不是刷新整个页面。为了让页面切换时有反馈，又加了一个顶部假进度条。最后，因为页面内容是局部替换的，评论、公式、搜索、图片灯箱等脚本还要在 PJAX 完成后重新初始化。
+## 播放器
 
-## 引入音乐播放器
-最早的版本使用 APlayer，后来为了缩小控件、收紧视觉层级，也方便自己控制播放模式，改成了浏览器原生 `Audio` 加一套自定义界面。Hugo 仍然负责把 `data/music/generated.json` 交给前端，入口放在 `layouts/partials/footer/custom.html`：
+### 控件
+
+Hugo 把 `data/music/generated.json` 写入前端，入口位于 `layouts/partials/footer/custom.html`：
 
 ```go-html-template
 <script>
@@ -56,22 +57,24 @@ document.body.append(root);
 
 明暗模式共用同一套结构，颜色则继续取 Stack 的卡片、正文和强调色变量，不会在暗色页面里突然出现一块白色控件。
 
-## 生成播放器歌单
+### 歌单
+
 播放器真正读取的是 `data/music/generated.json`，这个文件由 `scripts/sync_music.py` 生成。完整脚本可以参考 [sync_music.py](https://github.com/elainafan/Myblog/blob/main/scripts/sync_music.py)。
 
-最朴素的本地音乐目录可以长这样：每首歌一个目录，例如音频放在 `static/music/歌曲名/music.mp3`，封面放在 `static/music/歌曲名/cover.jpg`。
+每首本地歌曲使用一个目录，例如音频放在 `static/music/歌曲名/music.mp3`，封面放在 `static/music/歌曲名/cover.jpg`。
 
 脚本会扫描 `static/music`，找到每个目录里的 `music.mp3`、`music.m4a`、`music.ogg`、`music.flac` 或 `music.wav`，再配上 `cover.jpg`、`cover.png` 等封面，最后生成播放器读取的数组。
 
-如果只是整理本地已有音乐，可以在站点根目录运行：
+在站点根目录运行：
 
 ```powershell
 python scripts\sync_music.py local
 ```
 
-不过只靠本地手动放歌还是麻烦。笔者的歌单本来存在 Bilibili 收藏夹里，如果每次都自己下载音频、裁封面、改 JSON，那和手写歌单数组也没有本质区别。因此后面又加了一层 Bilibili 收藏夹同步。
+本地目录与 Bilibili 收藏夹使用同一个脚本整理，生成的数据结构一致。
 
-## 接入 Bilibili 收藏夹
+### Bilibili 同步
+
 Bilibili 收藏夹地址放在 `data/music/sources.json`：
 
 ```json
@@ -88,9 +91,7 @@ Bilibili 收藏夹地址放在 `data/music/sources.json`：
 python scripts\sync_music.py bilibili
 ```
 
-脚本大致做四件事。
-
-第一，通过 Bilibili 收藏夹 API 读取当前收藏夹里的视频列表。这里使用的是 `fid`，脚本会从收藏夹 URL 中解析出它。
+脚本通过 Bilibili 收藏夹 API 读取视频列表，并从收藏夹 URL 中解析 `fid`。
 
 如果不想把完整收藏夹链接写进配置里，也可以只在命令行传 `media_id`：
 
@@ -98,11 +99,11 @@ python scripts\sync_music.py bilibili
 python scripts\sync_music.py bilibili --media-id <收藏夹ID>
 ```
 
-第二，对每个视频再请求一次视频详情，检查它是不是分 P 视频。普通视频会保存到 `static/music/bilibili/<BV号>/`，分 P 视频则会拆成 `static/music/bilibili/<BV号>/p01/`、`static/music/bilibili/<BV号>/p02/` 这样的目录。
+每个视频依次完成三项处理：
 
-第三，调用 `yt-dlp` 下载音频。Bilibili 上拿到的通常是 `music.m4a`，这里没有强制转成 `mp3`，因此不需要额外依赖 `ffmpeg`。
-
-第四，每个音频目录都会写入一个 `info.json`，里面保存曲名、歌手、来源 BV 号、分 P 页码和原链接。最后脚本重新扫描 `static/music`，生成 `data/music/generated.json`。
+- 读取视频详情。普通视频保存到 `static/music/bilibili/<BV号>/`，分 P 视频拆到 `p01`、`p02` 等子目录。
+- 调用 `yt-dlp` 下载音频。Bilibili 音频通常保存为 `music.m4a`，不需要额外依赖 `ffmpeg` 转码。
+- 在音频目录中写入 `info.json`，保存曲名、歌手、BV 号、分 P 页码与来源链接，再扫描 `static/music` 生成 `data/music/generated.json`。
 
 如果收藏夹不是公开的，也可以额外传 Cookie：
 
@@ -112,21 +113,21 @@ python scripts\sync_music.py bilibili --cookie-file bilibili.cookie.txt
 
 这个 `bilibili.cookie.txt` 不应该提交到仓库里，只适合放在本地使用。
 
-## 拆分分 P 视频
-分 P 是这里最容易漏掉的地方。
+### 分 P
 
-比如 K-ON 歌曲合集不是一首歌，而是一个包含很多 P 的视频。如果只下载 BV 主视频，就只能拿到其中一个音频，播放器里也只会出现一个“大合集”。这显然不适合作为歌单。
+K-ON 歌曲合集包含多个分 P，播放器需要把每一 P 视为独立歌曲。
 
-因此脚本里会用 `https://api.bilibili.com/x/web-interface/view` 读取视频的 `pages` 字段。只要 `pages` 数量大于 1，就把每一 P 当成一首独立歌曲处理。比如第一 P 会保存到 `static/music/bilibili/BV1chikYJEMZ/p01/`，第二 P 会保存到 `static/music/bilibili/BV1chikYJEMZ/p02/`，每个目录里分别放自己的 `music.m4a`、`cover.jpg` 和 `info.json`。
+脚本从 `https://api.bilibili.com/x/web-interface/view` 读取视频的 `pages` 字段。`pages` 数量大于 1 时，每一 P 都保存为独立歌曲。第一 P 位于 `static/music/bilibili/BV1chikYJEMZ/p01/`，第二 P 位于 `p02/`，每个目录分别保存 `music.m4a`、`cover.jpg` 与 `info.json`。
 
-这样春物 ED 三部曲在播放器里就会变成 `Hello Alone`、`Everyday World`、`ダイヤモンドの純度` 三首，而不是一个笼统的“春物 ED 三部曲”。
+春物 ED 三部曲在播放器中分别显示为 `Hello Alone`、`Everyday World` 与 `ダイヤモンドの純度`。
 
-同理，K-ON 合集也会拆成 `Cagayake! GIRLS`、`Don't Say Lazy`、`ふわふわ時間`、`U&I` 等独立条目。播放器的体验会更像真正的歌单，而不是一堆视频标题。
+K-ON 合集也会拆成 `Cagayake! GIRLS`、`Don't Say Lazy`、`ふわふわ時間`、`U&I` 等独立条目。
 
-## 整理歌名和歌手
-Bilibili 视频标题通常很长，UP 主也不一定是歌曲原唱。如果直接把视频标题和 UP 主塞进播放器，最后就会变成“顶级品质试听……”“中日字幕完整版……”这种不太适合听歌的显示效果。
+### 歌名和歌手
 
-所以笔者又加了 `data/music/local.json`，专门用来覆盖自动抓取到的元数据：
+Bilibili 视频标题常带有“顶级品质试听”“中日字幕完整版”等附加信息，UP 主也未必是歌曲原唱，因此播放器使用单独的曲名与歌手元数据。
+
+`data/music/local.json` 用来覆盖自动抓取的元数据：
 
 ```json
 {
@@ -136,18 +137,19 @@ Bilibili 视频标题通常很长，UP 主也不一定是歌曲原唱。如果�
 }
 ```
 
-这里的 `folder` 对应 `static/music` 下的相对目录。同步脚本写 `info.json` 时，会优先读取 `data/music/local.json` 里的 `name` 和 `artist`。这样即使以后重新同步收藏夹，已经整理过的歌名也不会被 Bilibili 视频标题覆盖。
+`folder` 对应 `static/music` 下的相对目录。同步脚本写 `info.json` 时优先读取 `data/music/local.json` 中的 `name` 与 `artist`，重新同步收藏夹不会覆盖已经整理过的曲名。
 
-命名上笔者采用的规则大致是：
+歌名与歌手按下面的规则整理：
 
 - 原本就是英文名的歌曲保留英文，例如 `Hacking to the Gate`、`God Knows...`。
 - 有日文正式名的歌曲尽量保留日文，例如 `不可思議のカルテ`、`君色シグナル`。
 - 如果标题全是假名、读起来不太直观，则使用中文翻译，例如 `想做朋友`、`明天再见`。
 - 钢琴版、角色版这类特殊版本，会在歌名里标出来，例如 `Everyday World（钢琴版）`。
 
-最后还有一个清理问题：收藏夹里删掉的视频，本地不能一直残留。脚本在 Bilibili 同步结束后会根据当前收藏夹重新计算应该存在的目录，把已经不在收藏夹里的旧音轨从 `static/music/bilibili` 里移除，再生成新的 `data/music/generated.json`。
+同步结束后，脚本会根据当前收藏夹重新计算需要保留的目录，删除 `static/music/bilibili` 中已经移出收藏夹的音轨，再生成新的 `data/music/generated.json`。
 
-## 保存播放状态
+### 播放状态
+
 整页刷新后，原生 `Audio` 也会重新创建，因此脚本用 `localStorage` 保存歌曲下标、播放时间、暂停状态、音量、面板展开状态和播放模式：
 
 ```js
@@ -166,7 +168,7 @@ function saveState() {
 }
 ```
 
-初始化时先读出保存的数据，把播放进度暂存在 `pendingSeek`。音频元数据加载完成后才能知道总时长，因此恢复进度不再依赖固定的延时，而是放到 `loadedmetadata` 事件里：
+初始化时读出保存的数据，并把播放进度暂存在 `pendingSeek`。音频元数据加载完成后才能取得总时长，`loadedmetadata` 事件负责恢复进度：
 
 ```js
 audio.addEventListener("loadedmetadata", () => {
@@ -180,10 +182,11 @@ audio.addEventListener("loadedmetadata", () => {
 
 播放、暂停、切歌、调节音量和关闭页面时都会更新这份状态。它负责整页刷新后的恢复；站内跳转不断歌仍然要交给 PJAX。
 
-## 按文章类型切换曲目
-播放器常驻之后，就可以顺手做一点和文章内容相关的联动。比如笔者希望进入算法分类文章时，播放器从 `Magia` 和 `Everyday World` 里随机挑一首播放；但《从零开始的操作系统》《从零开始的程序设计实习》和《从零开始的数算》都属于课程笔记，不适合被这条规则影响。
+### 文章联动
 
-这里没有逐篇文章写配置，而是在 `layouts/partials/article/article.html` 渲染文章时判断源文件路径和分类：如果文章属于算法分类，或者位于 Codeforces、AtCoder、XCPC、题目难度归档、随机算法这些长期更新目录下，并且不在上述三个课程笔记目录中，就给 `<article>` 加上 `data-entry-music="algorithm-random"`。
+算法分类文章会从 `Magia` 与 `Everyday World` 中随机选择一首。《从零开始的操作系统》《从零开始的程序设计实习》和《从零开始的数算》属于课程笔记，不参与这条规则。
+
+`layouts/partials/article/article.html` 根据源文件路径与分类决定是否写入 `data-entry-music="algorithm-random"`。算法分类，以及 Codeforces、AtCoder、XCPC、题目难度归档与随机算法目录会获得该标记；三个课程笔记目录会被排除。
 
 前端逻辑写在 `assets/js/music-player.js`。播放器初始化后会在歌单里找这两首歌：
 
@@ -194,20 +197,23 @@ const algorithmTrackIndexes = playlist
     .filter(index => index >= 0);
 ```
 
-页面初次加载和 PJAX 跳转完成后，脚本都会检查当前文章有没有这个标记。如果当前已经在播放 `Magia` 或 `Everyday World`，脚本不做任何操作；否则才随机切到其中一首。浏览器可能会拦截完全无用户交互的自动播放，但播放器被用户点开后，后续站内切页就能自然接上。
+页面初次加载与 PJAX 跳转完成后，脚本都会检查当前文章的标记。当前曲目已经是 `Magia` 或 `Everyday World` 时不执行任何操作，其他曲目才会触发随机选择。浏览器可能拦截没有用户交互的自动播放；用户操作过播放器后，站内切页可以继续执行曲目联动。
 
-## 为什么需要 PJAX
+## PJAX
+
+### 页面切换
+
 普通网页跳转时，浏览器会重新请求 HTML，重新解析 head 和 body，重新执行脚本。对于播放器来说，这意味着旧的 `Audio` 对象和控件都会消失，新页面只能重新创建一套。
 
-PJAX 的思路是：拦截站内链接点击，通过 Ajax 请求新页面，然后只替换页面中的某些区域。这样整个浏览器页面没有真正刷新，底部播放器所在的部分也就不会被销毁。
+PJAX 拦截站内链接，通过 Ajax 请求新页面，只替换指定区域。浏览器不会整页刷新，位于替换区域外的播放器可以继续播放。
 
-在这个博客里，PJAX 代码仍然放在 `layouts/partials/footer/custom.html`。首先引入库：
+PJAX 代码位于 `layouts/partials/footer/custom.html`。库通过 Hugo Pipes 引入：
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 ```
 
-然后创建实例：
+实例配置如下：
 
 ```js
 var pjax = new Pjax({
@@ -218,18 +224,18 @@ var pjax = new Pjax({
 })
 ```
 
-这里的 `selectors` 决定了 PJAX 切换页面时要替换哪些 DOM。
+`selectors` 指定 PJAX 切换页面时替换的 DOM。
 
-`.main-container` 是 Stack 主题的主体布局容器，包含正文、左右侧栏等主要内容。页面切换时，最核心的就是替换它。
+`.main-container` 是 Stack 的主体布局容器，包含正文与左右侧栏，也是页面切换时的主要替换区域。
 
 `.js-Pjax` 主要用于评论脚本相关区域。因为评论是外部脚本生成的，如果不把它纳入 PJAX 的更新范围，页面切换后评论区很容易残留旧状态。
 
 `.Timer` 和运行时间区域有关。页面里使用的是 `<div class="Timer">`，因此选择器前面的点不能省略；写成 `Timer` 会被当成自定义标签名，切页后这部分便不会正确替换。
 
-## 处理 body class
+### body class
 Stack 主题的不同页面会给 `body` 设置不同 class，例如文章页和搜索页的 class 不完全相同。如果 PJAX 只替换 `.main-container`，而不更新 `body.className`，那么页面样式可能会串。
 
-因此代码里覆写了 PJAX 的 `handleResponse`：
+代码通过 `handleResponse` 同步新页面的 `body.className`：
 
 ```js
 pjax._handleResponse = pjax.handleResponse;
@@ -248,14 +254,14 @@ pjax.handleResponse = function (responseText, request, href, options) {
 }
 ```
 
-这段代码先把新页面的 HTML 字符串解析成 DOM，再取出新页面的 `body.className`，同步回当前页面。最后再把响应交还给 PJAX 原来的处理逻辑。
+新页面的 HTML 会先被解析成 DOM，读取其中的 `body.className` 并同步到当前页面，再交还给 PJAX 处理响应。
 
-这样做之后，搜索页、文章页、普通页面之间切换时，页面级样式就不会错乱。
+同步 `body.className` 后，搜索页、文章页与普通页面之间切换时仍会使用各自的页面样式。
 
-## 顶部假进度条
-PJAX 切换页面虽然不刷新整个浏览器，但如果没有任何反馈，用户会不知道页面到底有没有在加载。因此这里又加入了一个顶部进度条。
+### 顶部进度条
+顶部进度条负责显示 PJAX 请求状态。
 
-进度条脚本放在 `assets/js/topbar.min.js`，通过 Hugo Pipes 在 `footer/custom.html` 里引入：
+进度条脚本位于 `assets/js/topbar.min.js`，通过 Hugo Pipes 在 `footer/custom.html` 中引入：
 
 ```go-html-template
 {{ with resources.Get "js/topbar.min.js" }}
@@ -263,7 +269,7 @@ PJAX 切换页面虽然不刷新整个浏览器，但如果没有任何反馈，
 {{ end }}
 ```
 
-然后监听 PJAX 事件：
+脚本监听 PJAX 事件：
 
 ```js
 document.addEventListener('pjax:send', () => {
@@ -275,16 +281,15 @@ document.addEventListener('pjax:complete', () => {
 })
 ```
 
-所谓“假进度条”，意思是它并不真的知道资源加载到了百分之几，只是在页面请求开始时显示，请求完成时隐藏。虽然不精确，但对于博客这种轻量站点已经足够了。
+进度条不计算真实加载百分比，只在请求开始时显示、完成时隐藏，用于反馈 PJAX 页面切换状态。
 
-有了它以后，点击链接时页面顶部会出现一条加载线，用户就知道“网页正在切换”。这个小反馈对 PJAX 很重要，否则页面不刷新反而会让人怀疑是不是点了没反应。
+### 组件初始化
 
-## PJAX重新初始化
-PJAX 最大的问题是：新页面的 HTML 被替换进来了，但很多脚本不会自动重新执行。
+PJAX 只替换 HTML，不会自动重跑页面初始化脚本。
 
 普通刷新时，浏览器会重新加载整个页面，`window.onload`、`DOMContentLoaded` 和主题初始化逻辑都会自然执行。但 PJAX 只是把一段 DOM 替换掉，原先那些“页面加载时执行一次”的逻辑不会自动再跑。
 
-所以在 `pjax:complete` 中，需要手动补上：
+`pjax:complete` 中统一处理这些组件：
 
 ```js
 function cleanPjaxTimestamp(rawUrl) {
@@ -315,17 +320,12 @@ document.addEventListener('pjax:complete', () => {
 })
 ```
 
-这里处理了四件事。
+`cleanPjaxTimestamp()` 删除普通查询参数以及误挂在锚点后的 `?t=...`，避免文章内链接留下 `/p/example/#section?t=...`。`renderKaTeX()` 渲染新文章中的公式，`window.Stack.init()` 重新绑定菜单、图片灯箱、平滑滚动、目录 scrollspy、搜索与代码块按钮。`playArticleEntryMusic()` 处理文章曲目联动，全部完成后再隐藏顶部进度条。
 
-第一，删除 URL 里的 `t` 参数。除了普通查询参数，`cleanPjaxTimestamp()` 还会处理误挂在锚点后的 `?t=...`，避免文章内链接切页后留下 `/p/example/#section?t=...` 这样的地址。
+## 组件重载
 
-第二，重新渲染 KaTeX。因为新文章可能包含公式，而公式渲染脚本不会因为 PJAX 自动执行，所以需要调用 `renderKaTeX()`。
+### KaTeX
 
-第三，重新执行 `window.Stack.init()`。Stack 主题的初始化包含菜单、图片灯箱、平滑滚动、目录 scrollspy、搜索初始化、代码块复制按钮等逻辑。PJAX 后如果不重新跑，很多交互会在第二个页面开始失效。
-
-第四，执行 `playArticleEntryMusic()`，让前面那条文章音乐联动在站内切页后继续生效。顶部进度条则在这些初始化完成后隐藏。
-
-## 修复Katex渲染
 KaTeX 的原始 partial 在 `layouts/partials/article/components/math.html`。里面会引入 KaTeX，并在页面加载时执行：
 
 ```js
@@ -340,13 +340,13 @@ renderMathInElement(document.body, {
 });
 ```
 
-为了让 PJAX 后也能判断当前页面是否需要公式渲染，笔者在模板里加了一个标记：
+模板通过一个标记告诉 PJAX 当前页面是否需要公式渲染：
 
 ```html
 <div class="math-katex"></div>
 ```
 
-然后在 `footer/custom.html` 中写了 `renderKaTeX`：
+`footer/custom.html` 中的 `renderKaTeX` 负责执行渲染：
 
 ```js
 async function renderKaTeX() {
@@ -371,12 +371,11 @@ async function renderKaTeX() {
 }
 ```
 
-这里的 `while` 是为了等待 KaTeX 脚本加载完成。否则 PJAX 切换到一篇带公式的文章时，可能 `renderMathInElement` 还不存在，直接调用就会报错。
+`while` 等待 KaTeX 脚本加载完成，避免 `renderMathInElement` 尚未定义时直接调用。
 
-## 修复搜索初始化
-搜索逻辑在 `assets/ts/search.tsx`。原本 Stack 主题的搜索脚本通常会在页面加载时初始化，但 PJAX 下这不够用。
+### 搜索
 
-于是笔者把搜索初始化改成一个函数：
+搜索逻辑位于 `assets/ts/search.tsx`，初始化函数可以由 `Stack.init()` 重复调用：
 
 ```ts
 function searchInit() {
@@ -402,7 +401,7 @@ export {
 }
 ```
 
-然后在 `assets/ts/main.ts` 中导入并调用：
+`assets/ts/main.ts` 导入并调用该函数：
 
 ```ts
 import { searchInit } from "ts/search";
@@ -416,12 +415,13 @@ let Stack = {
 }
 ```
 
-这样 `window.Stack.init()` 每执行一次，搜索页就有机会重新绑定搜索框事件。普通文章页没有 `.search-result`，函数会直接返回，不会影响别的页面。
+每次执行 `window.Stack.init()` 都会重新检查搜索框。普通文章页没有 `.search-result`，函数会直接返回。
 
-## 修复评论注入
-评论区也是 PJAX 的重灾区。Giscus 依赖外部脚本 `https://giscus.app/client.js`，如果页面只是局部替换，脚本不会自动重新执行。
+### 评论
 
-首先在 `layouts/partials/comments/include.html` 中加一个标记：
+Giscus 依赖外部脚本 `https://giscus.app/client.js`，PJAX 局部替换页面时需要重新注入。
+
+`layouts/partials/comments/include.html` 提供页面标记：
 
 ```go-html-template
 {{ if .Site.Params.comments.enabled }}
@@ -430,7 +430,7 @@ let Stack = {
 {{ end }}
 ```
 
-然后在 `footer/custom.html` 中先跳过搜索页，再检测是否存在 `.comment`：
+`footer/custom.html` 跳过搜索页，再检测 `.comment`：
 
 ```js
 function shouldSkipGiscus() {
@@ -447,9 +447,9 @@ if (!comment) {
 }
 ```
 
-这里额外跳过搜索页，是因为搜索页主要用来展示结果和背景，不需要评论区占据页面空间。
+搜索页不注入评论区。
 
-如果存在，就动态创建 Giscus 脚本。这里还要根据当前主题选择 Giscus 主题，否则暗色模式下通过 PJAX 进入文章时，评论区可能仍然按亮色主题加载：
+存在评论容器时，脚本根据当前明暗模式创建 Giscus：
 
 ```js
 function getGiscusTheme() {
@@ -468,7 +468,7 @@ script.setAttribute('data-theme', getGiscusTheme());
 script.async = true;
 ```
 
-最后在初次加载和 PJAX 完成后都执行：
+初次加载与 PJAX 完成后都执行：
 
 ```js
 injectGiscusScript();
@@ -478,10 +478,11 @@ document.addEventListener('pjax:complete', function () {
 });
 ```
 
-这样切换到新文章时，评论区会重新加载当前页面对应的 Giscus discussion。
+切换文章后，评论区会加载当前页面对应的 Giscus discussion。
 
-## 修复运行时间和访问量
-运行时间也需要考虑 PJAX。因为页面切换时 footer 不一定完全刷新，所以 `updateRunningDays()` 需要在初次加载和 `pjax:complete` 后都执行：
+### 页脚统计
+
+页面切换时 footer 不一定完整刷新，因此 `updateRunningDays()` 在初次加载和 `pjax:complete` 后都会执行：
 
 ```js
 updateRunningDays();
@@ -508,26 +509,12 @@ document.addEventListener('pjax:complete', function () {
 </div>
 ```
 
-这里还有一个 `showHideView()`，用于在非文章页隐藏浏览量。这个函数同样属于“局部更新后要检查当前页面状态”的逻辑，只不过它比较轻量。
+`showHideView()` 会在非文章页隐藏浏览量，并在 PJAX 完成后重新检查当前页面类型。
 
-## 需要注意的问题
-实际运行顺序是：
+## 初始化约束
 
-1. `scripts/sync_music.py` 从 Bilibili 收藏夹和本地 `static/music` 整理音乐文件。
-2. 分 P 视频会拆成多首歌，并保存到 `static/music/bilibili/<BV号>/pXX/`。
-3. `data/music/local.json` 负责覆盖视频标题和 UP 主名，把它们整理成真正的歌名和歌手。
-4. 脚本生成 `data/music/generated.json`，Hugo 把播放列表写入 `window.__ELAINA_MUSIC_PLAYLIST__`。
-5. `assets/js/music-player.js` 创建的播放器常驻在 `body` 下，不随着 `.main-container` 被替换。
-6. 点击站内链接时，PJAX 拦截跳转，只请求新页面并替换指定区域。
-7. `topbar.show()` 显示顶部进度条，给用户加载反馈。
-8. PJAX 完成后，同步 `body.className`，清理 URL 参数，隐藏进度条。
-9. 手动调用 `window.Stack.init()` 和 `renderKaTeX()`。
-10. Giscus、搜索、代码复制、图片灯箱、目录滚动等功能重新获得初始化机会。
+代码块在第一次处理后写入 `data-enhanced="true"`，播放器通过固定 ID 和 `window.ElainaMusicPlayer` 避免重复创建。所有由 `Stack.init()` 重载的组件都需要类似的幂等标记，否则多次切页后会出现重复按钮或重复事件。
 
-这里最容易踩坑的是重复初始化。代码块现在会在第一次处理后写入 `data-enhanced="true"`，播放器也会通过固定 ID 和 `window.ElainaMusicPlayer` 避免重复创建。后来接入的新组件也要各自保留这类标记，否则 `Stack.init()` 多跑几次后就可能出现重复按钮或重复事件。
+`topbar`、`Pjax`、`renderMathInElement` 与 `window.Stack` 必须在调用前完成加载。相关脚本集中放在 footer，需要异步加载的函数会等待依赖出现。
 
-另一个问题是脚本顺序。`topbar`、`Pjax`、`renderMathInElement`、`window.Stack` 都必须在使用前已经加载。这里通过把相关脚本放在 footer，并在必要处等待函数存在，基本能避免大多数时序问题。
-
-歌单同步则要注意另一类问题：Bilibili 收藏夹是外部数据源，视频标题不一定适合作为歌名，UP 主也不一定是歌手。因此 `data/music/local.json` 最好保留下来，作为人工整理过的元数据表。这样下次重新同步收藏夹时，脚本负责抓取和下载，人工只需要维护少量歌名修正。
-
-最后，PJAX 不是越多越好。如果某些页面包含非常特殊的第三方脚本，局部替换可能会比普通刷新更难维护。个人博客里使用 PJAX 的最大理由，还是为了让音乐播放器不断播。为了这个目标，多处理一点后遗症还是值得的。
+`data/music/local.json` 保存人工校正的曲名与歌手。Bilibili 同步负责抓取和下载，不会覆盖已经整理过的元数据。

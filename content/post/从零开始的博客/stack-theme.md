@@ -7,6 +7,8 @@ aliases:
 hidden: true
 seriesOrder: 1
 updates:
+    - date: 2026-07-16
+      content: 按当前站点实现整理主题样式、文章交互与功能页说明。
     - date: 2026-07-15
       content: 移除文章末尾的详细更新记录，只在文章卡片显示最近更新时间。
     - date: 2026-07-10
@@ -32,17 +34,14 @@ updates:
     - date: 2026-05-24
       content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ---
-## 前言
-之前写过一篇[在博客中添加 Bangumi 追番页面]({{< ref "bangumi.md" >}})的文章，主要整理 `layouts/page/anime.html` 和 `layouts/shortcodes/bangumi.html` 如何拼出一面 Bangumi 收藏墙。
 
-这一篇则整理博客里更零散、更基础的美化工作。笔者现在用的是 Hugo `v0.131.0` 和 Stack 主题 `v3.26.0`，为了弄清楚每个地方到底改了什么，这次把原版 Hugo 和 Stack 主题源码也放到了本地，再对比 `Blog/elainafan` 里的覆盖文件来看。
+本站使用 Hugo `v0.131.0` 与 Stack `v3.26.0`。`themes/hugo-theme-stack` 保持原样，站点根目录中的 `layouts`、`assets` 与 `static` 负责覆盖同名主题文件；例如 `layouts/partials/footer/footer.html` 会优先于主题中的 footer partial。主题升级时只需要检查这些覆盖文件的兼容性。
 
-Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在 `themes/hugo-theme-stack`，而站点根目录下的 `layouts`、`assets`、`static` 会优先于主题生效。也就是说，如果在博客根目录里放一个 `layouts/partials/footer/footer.html`，它就会覆盖 Stack 主题里同名的 footer partial。
+## 页面外观
 
-这些改动都放在博客目录的覆盖文件里，没有直接修改主题源码。以后升级主题时，只需要重点检查这部分文件。
+### 卡片圆角
 
-## 全局卡片圆角
-先看 `assets/scss/custom/_base.scss` 里的全局变量。Stack 主题大量使用 CSS 变量控制卡片圆角、间距、字号和颜色，因此很多效果不需要到处改类名，只要重写变量即可：
+`assets/scss/custom/_base.scss` 中的 CSS 变量控制卡片圆角、区块间距、字号和颜色：
 
 ```scss
 :root {
@@ -61,14 +60,14 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-这里最明显的是 `--card-border-radius` 和 `--section-separation`。前者决定卡片圆角，后者决定页面块之间的距离。Stack 主题本身是卡片式布局，所以这两个变量一改，全站气质就会跟着变。
+`--card-border-radius` 决定卡片圆角，`--section-separation` 决定页面区块之间的距离。这两个变量会同时影响全站的卡片布局。
 
-同一组变量里还调整了行内代码的背景色和前景色。写 CS、算法和建站笔记时，行内代码会非常多，如果默认样式太淡，阅读起来会有点糊；如果太亮，又会抢正文。所以这里给亮色和暗色分别配置了更稳定的行内代码颜色。
+行内代码的前景色与背景色也在这组变量中设置。亮色和暗色模式分别使用独立配色，避免行内代码与正文混在一起或过分抢眼。
 
-## 友链归档双栏
-首页、友链和归档页的卡片是 Stack 主题最显眼的部分。相关基础样式放在 `assets/scss/custom/_base.scss`。
+### 友链与归档
+首页、友链与归档页的卡片样式位于 `assets/scss/custom/_base.scss`。
 
-在桌面端把紧凑文章列表改成两列：
+桌面端的紧凑文章列表使用两列布局：
 
 ```scss
 @media (min-width: 1024px) {
@@ -91,10 +90,11 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-原来的紧凑列表是一列到底，比较稳，但是内容多了以后会显得很长。改成两列后，归档页的信息密度会高一些。友链和链接页面使用的也是这一类 compact 列表结构，因此这个样式同样会让友链卡片变成多列显示。需要注意的是，`.article-list--compact` 原本自己带背景和阴影，如果直接改成 grid，会出现一个大背景包着小卡片的感觉，所以这里把外层背景去掉，再给每个 `article` 单独加回卡片样式。
+`.article-list--compact` 在桌面端使用两列网格，归档、友链和链接页面共用这套 compact 列表结构。外层容器不保留背景和阴影，每个 `article` 单独使用卡片样式，避免出现大卡片包住多个小卡片的层级。
 
-## 封面与分类页比例
-然后是封面图高度。相关代码放在 `assets/scss/custom/_layout.scss`：
+### 封面与分类页
+
+文章封面高度由 `assets/scss/custom/_layout.scss` 控制：
 
 ```scss
 .article-list article .article-image img {
@@ -112,11 +112,11 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-这里用 `object-fit: cover` 保证封面图不会被压扁。高度则根据屏幕尺寸逐步增加，使宽屏下的文章卡片更舒展。
+`object-fit: cover` 保持封面比例，卡片高度随屏幕尺寸逐步增加。
 
-分类页还有一个容易被忽略的地方：Stack 主题的分类页顶部会用 `.section-card` 显示分类封面、文章数量、分类名和描述。默认样式在桌面端还算正常，但到了手机端，如果封面图和文字仍然挤在同一行，就很容易出现文字被压成竖排、图片比例也不舒服的问题。
+分类页顶部的 `.section-card` 显示分类封面、文章数量、分类名和描述。手机端使用上下结构并将图片固定为 `16:9`，桌面端恢复左右结构：
 
-因此笔者把分类页头图在手机端改成上下结构，图片固定为 `16:9`；到了桌面端再恢复成左右结构，让图片占据更大的横向空间。这部分放在 `assets/scss/custom/_archives-home.scss`：
+相关样式位于 `assets/scss/custom/_archives-home.scss`：
 
 ```scss
 .section-card {
@@ -179,7 +179,7 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-同一类问题还会出现在归档页、分类页的子分类横卡上。原版 Stack 的 tile 卡片更偏固定尺寸，手机端容易溢出或需要横向滚动。这里把 `.subsection-list` 里的 tile 改成响应式网格：手机端一列，平板以上两列，宽屏三列。相关代码同样放在 `assets/scss/custom/_archives-home.scss`：
+`.subsection-list` 中的子分类横卡使用响应式网格：手机端一列，平板以上两列，宽屏三列。相关代码同样位于 `assets/scss/custom/_archives-home.scss`：
 
 ```scss
 .subsection-list {
@@ -217,10 +217,11 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-这样处理以后，首页文章封面、分类页头图和子分类横卡各自有自己的比例：普通文章列表按高度控制，分类头图按 `16:9` 控制，子分类横卡则在手机端优先保证完整横图，桌面端再提高信息密度。
+普通文章列表按高度控制封面，分类头图使用 `16:9`，子分类横卡在手机端优先显示完整横图，桌面端使用多列提高信息密度。
 
-## 卡片悬浮动画
-接下来是卡片悬浮动画，样式放在 `assets/scss/custom/_archives-home.scss`：
+### 悬浮反馈
+
+卡片悬浮样式位于 `assets/scss/custom/_archives-home.scss`：
 
 ```scss
 .article-list article {
@@ -232,14 +233,14 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-归档页的 tile 卡片和 compact 卡片也分别加了缩放和右移动画。这个改动本质上只是给卡片一点反馈，不涉及 Hugo 模板。动画幅度不宜过大，不然鼠标扫过页面时会显得很晃。
+归档页的 tile 卡片与 compact 卡片分别使用轻微缩放和右移动画，模板结构不需要改动。
 
 ![归档与列表卡片效果](stack-2.png)
 
-## 首页三栏布局
-三栏布局的宽度调整在 `assets/scss/custom/_layout.scss` 中。Stack 的主体容器是 `.container.main-container`，它里面有左侧栏、右侧栏和正文区域。
+### 三栏布局
+三栏宽度由 `assets/scss/custom/_layout.scss` 控制。`.container.main-container` 包含左侧栏、右侧栏与正文区域。
 
-相关代码如下：
+布局参数如下：
 
 ```scss
 .container {
@@ -265,10 +266,10 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-这部分主要解决的是宽屏下正文和侧边栏的比例。默认 Stack 的布局已经够用，但如果文章里有比较多代码块、公式或表格，正文区域太窄就会很痛苦。因此这里稍微放宽了整体容器，并重新分配左右侧栏宽度。
+整体容器在宽屏下适当放宽，并重新分配左右侧栏宽度，为代码块、公式与表格留出正文空间。
 
-## 菜单卡片化
-菜单栏也做了圆角和阴影处理，这段同样放在 `assets/scss/custom/_layout.scss`：
+### 菜单
+菜单的圆角与阴影位于 `assets/scss/custom/_layout.scss`：
 
 ```scss
 .menu {
@@ -279,14 +280,14 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-移动端展开菜单时，这个样式会让菜单更像一个独立卡片，而不是一块硬邦邦的列表。到了桌面端，主题会恢复透明背景和正常布局。
+移动端菜单使用独立卡片背景，桌面端恢复透明背景与常规布局。
 
 ![首页与卡片整体效果](stack-1.png)
 
-## 自定义背景图
-背景图参考的是 [Hugo Stack 主题装修笔记](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-background/) 里的做法：把图片作为 Hugo 的资源读取出来，再给 `body` 设置背景。笔者这里稍微改了一下，没有在模板里写死具体文件名，而是读取 `assets/background/` 下的第一张图片。这样之后想换背景时，只需要替换这个目录里的图片，不需要再改模板。
+### 背景图
+背景图通过 Hugo 资源读取并设置到 `body`，实现参考了 [Hugo Stack 主题装修笔记](https://letere-gzj.github.io/hugo-stack/p/hugo/custom-background/)。模板读取 `assets/background/` 中的第一张图片，不写死文件名；替换该目录中的资源即可更换背景。
 
-这段加在 `layouts/partials/footer/custom.html` 中：
+`layouts/partials/footer/custom.html` 中写入：
 
 ```go-html-template
 {{ $backgroundImages := resources.Match "background/*.{jpg,jpeg,png,webp,avif}" }}
@@ -313,12 +314,12 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 {{ end }}
 ```
 
-这里的 `background-size: cover` 用来让背景铺满屏幕，`background-attachment: fixed` 则让背景在页面滚动时保持固定。前面的 `linear-gradient` 是一层遮罩：亮色模式下用偏白的遮罩压低背景存在感，暗色模式下用偏黑的遮罩降低亮部干扰。因为博客主体区域本身还有卡片背景，所以背景图主要出现在页面两侧和卡片之间的空隙里，不会直接压到正文阅读。
+`background-size: cover` 让背景铺满屏幕，`background-attachment: fixed` 在滚动时固定背景。`linear-gradient` 作为遮罩：亮色模式使用偏白遮罩，暗色模式使用偏黑遮罩。正文仍由卡片背景承载，图片主要出现在页面两侧与卡片空隙中。
 
 ![自定义背景图效果](stack-8.png)
 
-## 头像旋转
-头像旋转是一个很简单的小动画，这段放在 `assets/scss/custom/_base.scss`：
+### 头像
+头像旋转样式位于 `assets/scss/custom/_base.scss`：
 
 ```scss
 .sidebar header .site-avatar .site-logo {
@@ -332,8 +333,8 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 
 它没有什么技术难度，但非常适合个人博客。鼠标挪上去时头像转一圈，属于那种“平时没用，但是看到了会有点开心”的小装饰。
 
-## 正文图片圆角
-文章图片则统一加了圆角，这段同样放在 `assets/scss/custom/_base.scss`：
+### 正文图片
+正文图片的圆角样式同样位于 `assets/scss/custom/_base.scss`：
 
 ```scss
 .article-page .main-article .article-content {
@@ -345,14 +346,13 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 }
 ```
 
-这里的 `max-width: 96%` 是为了让图片不要完全贴满正文宽度，尤其是带阴影或圆角时，留一点余地会舒服很多。
+`max-width: 96%` 在图片与正文边缘之间留出空隙，圆角和阴影不会贴住卡片边界。
 
-## 静态图片放大查看
-这里还遇到过一个比较隐蔽的问题：普通文章里的图片一般和 Markdown 文件放在同一个 Page Bundle 下，比如 `content/post/某篇文章/1.png`。这种图片会被 Hugo 的 Markdown image render hook 识别为页面资源，于是自动拿到宽高，并加上 `gallery-image`，最后交给 Stack 主题的 PhotoSwipe 处理。
+## 图片预览
 
-但有些拆成多个子页面的长期更新文章，比如 `content/post/二次元修炼日记！/cf-1072.md`，图片不一定适合继续放在原来的文章目录里。笔者把共用图片放到了 `static/images/anime-diary/`，然后在文章中用 `![](/images/anime-diary/4.png)` 引用。这样图片能显示，但一开始不会像普通文章图片那样进入图库，也就不能居中和点击放大。
+Markdown 图片可能来自 Page Bundle，也可能来自 `static`。`content/post/某篇文章/1.png` 可以通过 `.Page.Resources.GetMatch` 取得宽高；`![](/images/anime-diary/4.png)` 则直接指向 `static/images/anime-diary/4.png`。`layouts/_default/_markup/render-image.html` 会把这两类本地位图都纳入 PhotoSwipe，外链、协议相对地址与 SVG 保持普通图片行为。
 
-原因在 `layouts/_default/_markup/render-image.html`。原来的逻辑只有在 `.Page.Resources.GetMatch` 找到图片资源时，才会设置 `gallery-image`。所以需要把以 `/` 开头、不是外链、不是 SVG 的本地静态图片也纳入图库：
+静态本地图的判断如下：
 
 ```go-html-template
 {{- $notSVG := ne (lower (path.Ext .Destination)) ".svg" -}}
@@ -361,7 +361,7 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 {{- $isStaticImage := and (strings.HasPrefix .Destination "/") (not $isExternal) (not $isProtocolRelative) $notSVG -}}
 ```
 
-接着在同一个文件里保留原来的 Page Bundle 处理逻辑，并给静态本地图补上 `gallery-image`：
+Page Bundle 资源直接读取 Hugo 提供的尺寸，静态本地图则补上 `gallery-image`：
 
 ```go-html-template
 {{- if $image -}}
@@ -377,7 +377,7 @@ Hugo 的主题覆盖机制其实很适合个人博客装修：主题文件放在
 {{- end -}}
 ```
 
-不过这样还不够。Page Bundle 图片有 Hugo 提前写好的 `width` 和 `height`，但 `static` 里的图片没有。PhotoSwipe 打开图片时需要宽高，如果直接读空值，就容易出现缩放不正常的问题。因此还要改 `assets/ts/gallery.ts`，给图片尺寸加一个兜底：
+`static` 图片没有 Hugo 生成的 `width` 与 `height`。`assets/ts/gallery.ts` 依次读取标签尺寸、`naturalWidth` / `naturalHeight` 和当前布局尺寸，并在都不可用时使用兜底值：
 
 ```ts
 private static imageDimensions(img: HTMLImageElement) {
@@ -392,7 +392,7 @@ private static imageDimensions(img: HTMLImageElement) {
 }
 ```
 
-然后在点击图片打开 PhotoSwipe 前，再用当前图片重新刷新一次尺寸：
+点击图片时再根据当前节点刷新尺寸与原图地址：
 
 ```ts
 const img = item.el.querySelector('img');
@@ -406,19 +406,7 @@ if (img) {
 }
 ```
 
-这样处理后，`/images/anime-diary/4.png` 这种从 `static` 目录来的图片，也能和普通文章图片一样被包进 `figure.gallery-image`，在正文中居中显示，并且点击后进入 PhotoSwipe 放大查看。
-
-后来接入 PJAX 之后，这里又遇到过一次类似但原因不同的问题：直接打开文章时图片可以放大，但从首页或归档页无刷新切进文章后，正文图片只会像普通链接一样跳转，PhotoSwipe 预览没有生效。
-
-这时 `render-image.html` 其实已经正常工作了，生成出来的图片也有 `gallery-image`、`width` 和 `height`。真正的问题在于 PhotoSwipe 的根节点和外部脚本原本放在文章页面的 `main` 区域里，例如 `layouts/_default/single.html` 末尾：
-
-```go-html-template
-{{ partialCached "article/components/photoswipe" . }}
-```
-
-但 PJAX 只替换页面中的 `.main-container`、`.js-Pjax` 和 `.Timer`。新页面里的普通 HTML 会被换进来，脚本标签却不会像整页刷新那样重新执行。于是图片本身进入了图库结构，但 PhotoSwipe 依赖和根节点在 PJAX 切页场景下不够稳定。
-
-解决办法是把 PhotoSwipe 挪到全站 footer，让它和播放器、PJAX 初始化一样，成为页面常驻部分。也就是在 `layouts/partials/footer/include.html` 中加入：
+PJAX 只替换 `.main-container`、`.js-Pjax` 与 `.Timer`，PhotoSwipe 的根节点和脚本因此放在全站 footer 中常驻。`layouts/partials/footer/include.html` 包含：
 
 ```go-html-template
 {{ partialCached "footer/components/script.html" . }}
@@ -427,20 +415,21 @@ if (img) {
 {{ partial "footer/custom.html" . }}
 ```
 
-然后把 `layouts/_default/single.html`、`layouts/photo/single.html`、`layouts/page/anime.html` 里原本单独插入的 `article/components/photoswipe` 去掉，避免同一个页面生成多份 `.pswp`。这样不管是直接打开文章，还是通过 PJAX 从别的页面切进文章，PhotoSwipe 的 DOM 和脚本都已经存在，`window.Stack.init()` 重新扫描 `.article-content` 时就能正常给正文图片绑定预览事件。
+PhotoSwipe 只由全站 footer 插入，页面中始终只有一份 `.pswp`。直接打开文章或通过 PJAX 进入文章时，`window.Stack.init()` 都会重新扫描 `.article-content` 并绑定图片预览。
 
-## 文章更新时间
-建站类文章发布后还会继续修补，因此 frontmatter 中保留 `updates`，按时间倒序记录维护日期：
+## 内容组织
+
+### 更新时间
+
+需要持续维护的文章在 frontmatter 中使用 `updates`，最新记录放在第一项：
 
 ```yaml
 updates:
-    - date: 2026-05-24
-      content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
-    - date: 2026-05-24
-      content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
+    - date: 2026-07-16
+      content: 校正文档中的模板路径与当前实现。
 ```
 
-普通文章页面不再渲染完整的更新列表，只在文章卡片上显示最近更新时间。本站的首页使用 `layouts/partials/article-list/default.html` 渲染文章卡片，可以从第一条更新记录中读取日期：
+文章正文不渲染更新明细，文章卡片只读取第一项并显示最近更新时间。首页的 `layouts/partials/article-list/default.html` 使用：
 
 ```go-html-template
 {{ with .Params.updates }}
@@ -455,12 +444,13 @@ updates:
 {{ end }}
 ```
 
-最近修过的文章会在卡片里显示“更新 YYYY-MM-DD”。发布日期仍然保留，更新说明则不再占用正文末尾的空间。
+卡片同时保留发布日期与“更新 YYYY-MM-DD”，更新说明只存在于 frontmatter 中。
 
-## 全站时间线和最近活动
+### 时间线
+
 文章 frontmatter 中的 `updates` 还会参与全站时间线汇总。博客本身还有文章发布、Codeforces 复盘、友链朋友圈、Bangumi 收藏变化等动态，这些数据最终会整理到同一条时间线中。
 
-因此笔者又加了一个全站时间线。数据汇总逻辑放在 `layouts/partials/data/timeline-events.html`，它会把不同来源统一整理成一组 `events`，最后按时间倒序返回：
+数据汇总逻辑位于 `layouts/partials/data/timeline-events.html`。不同来源会被整理成统一的 `events`，再按时间倒序返回：
 
 ```go-html-template
 {{- $events := slice -}}
@@ -483,9 +473,9 @@ updates:
 {{- return (sort $events "date" "desc") -}}
 ```
 
-这里最重要的仍然是过滤：普通文章只取 `mainSections` 中的公开页面，并且跳过 `hidden: true` 和 `encrypt: true`。这样隐藏子页、加密文章不会因为时间线而被额外摊开。至于 Codeforces、友链和 Bangumi，本来就是公开数据文件里的内容，时间线只负责把它们和文章事件放到同一条流里。
+普通文章只取 `mainSections` 中的公开页面，并跳过 `hidden: true` 与 `encrypt: true`，因此隐藏子页和加密文章不会出现在时间线中。Codeforces、友链和 Bangumi 来自公开数据文件，与文章事件合并后使用同一套排序。
 
-完整页面放在 `content/page/timeline/index.md` 和 `layouts/page/timeline.html`。不过左侧菜单已经比较拥挤，所以这个页面只作为隐藏入口存在：
+时间线页面位于 `content/page/timeline/index.md` 与 `layouts/page/timeline.html`，使用隐藏入口：
 
 ```yaml
 title: "时间线 | Timeline"
@@ -495,20 +485,19 @@ hidden: true
 comments: false
 ```
 
-页面本身会展示文章发布、文章更新、比赛记录、友链动态和 Bangumi 收藏，并用不同颜色区分类型。这样需要完整回看时，可以直接打开 `/timeline/`；平时不需要它占据左侧导航。
+`/timeline/` 展示文章发布、文章更新、比赛记录、友链动态与 Bangumi 收藏，并用不同颜色区分事件类型。页面不进入左侧菜单。
 
-后来也试过把最近活动放进独立的 `更新 | Updates` 页面，但它和 `/timeline/` 的职责重复，左侧导航也会更拥挤。因此独立 Updates 页面和文章末尾的更新明细都被移除：普通页面只在文章卡片显示最近更新时间，完整站点动态仍由隐藏的 `/timeline/` 汇总。
+### 系列导航
 
-## 系列文章导航
-像 `看番与加睡的小猪日常`、`二次元修炼日记！` 这种长期更新的文章，主页面负责做目录，具体内容则拆成多个 `hidden: true` 的子页面。这样归档页不会被一堆子页面刷屏，但读者点进某个子页面之后，如果只能靠浏览器返回键切换上下篇，就会有点割裂。
+`看番与加睡的小猪日常`、`二次元修炼日记！` 等长期系列由一个目录主页与多个 `hidden: true` 子页组成。隐藏子页不进入归档，正文底部显示“上一篇 / 返回系列 / 下一篇”。
 
-因此笔者给隐藏子页面加了一个自动系列导航：只要当前文章是 `hidden: true`，并且同目录下还有其他隐藏文章，就在正文下方生成“上一篇 / 返回系列 / 下一篇”。模板入口加在 `layouts/partials/article/article.html` 中：
+模板入口位于 `layouts/partials/article/article.html`：
 
 ```go-html-template
 {{ partial "article/components/series-navigation" . }}
 ```
 
-真正的导航逻辑放在 `layouts/partials/article/components/series-navigation.html`。它会遍历 `.Site.RegularPages`，找出和当前页面 `.File.Dir` 相同的页面；其中 `main.md` 被当作系列主页，`hidden: true` 的页面被当作系列子页面：
+`layouts/partials/article/components/series-navigation.html` 遍历 `.Site.RegularPages`，筛出与当前页面 `.File.Dir` 相同的文件；`main.md` 作为系列主页，`hidden: true` 页面作为系列子页：
 
 ```go-html-template
 {{- range .Site.RegularPages -}}
@@ -523,19 +512,19 @@ comments: false
 {{- end -}}
 ```
 
-这里没有直接按文件名排序，而是给子页面补了一个 `seriesOrder` 字段。比如 `content/post/二次元修炼日记！/cf-1072.md` 的 frontmatter 中会有：
+子页通过 frontmatter 中的 `seriesOrder` 排序。例如 `content/post/二次元修炼日记！/cf-1072.md` 写入：
 
 ```yaml
 seriesOrder: 1
 ```
 
-这样做的好处是顺序由文章自己控制。`1400.md`、`1500.md` 这种文件名本来就好排，但 Codeforces 复盘里会混入 `edu-187.md`，如果只按文件名排序，就会和主页面里的整理顺序不一致。补上 `seriesOrder` 后，模板只需要：
+`seriesOrder` 不依赖文件名，`edu-187.md` 与普通 Round 复盘也能按照目录顺序排列：
 
 ```go-html-template
 {{- $siblings = sort $siblings "Params.seriesOrder" "asc" -}}
 ```
 
-最后是样式，放在 `assets/scss/custom/_article-extras.scss` 中。移动端显示为一列，桌面端显示为三列：
+样式位于 `assets/scss/custom/_article-extras.scss`，移动端一列，桌面端三列：
 
 ```scss
 .series-navigation {
@@ -550,7 +539,7 @@ seriesOrder: 1
 }
 ```
 
-为了让导航看起来像正文的一部分，而不是突兀地插入三个普通链接，单个按钮使用了卡片背景、阴影和轻微上浮效果：
+单个导航项使用卡片背景、阴影和轻微上浮效果：
 
 ```scss
 .series-nav-card {
@@ -566,19 +555,11 @@ seriesOrder: 1
 }
 ```
 
-这样拆分后的长期文章就比较顺手了：主页面仍然负责汇总，子页面保持隐藏，读者进入某篇复盘或某个难度段后，也可以直接在系列内部前后跳转。
+归档页承担全站浏览入口，长期内容通过系列主页、隐藏子页与文章底部导航连接。`/series/codeforces/`、`/series/atcoder/` 和 `/series/xcpc/` 保留为比赛专题页。加密文章仍按 `hidden`、`encrypt` 与目录关系处理，搜索索引和 RSS 不会泄露正文。
 
-## 系列入口收束和样式拆分
-后来也尝试过做一个独立的 `/series/` 总览页，把课程笔记、Lab 记录、建站日志和长期复盘整理成系列卡片。这个页面本身能用，但和 `归档 | Archives`、文章分类、右侧年份归档放在一起后，左侧入口会显得越来越满。实际使用下来，笔者还是更倾向于保留朴素的归档页，让长期系列回到文章内部和具体面板里。
+## 样式文件
 
-因此现在删掉了独立的 `content/page/series/index.md`、`layouts/page/series.html` 和 `data/series.yaml`。保留下来的有两类东西：
-
-- 文章内部的系列导航，也就是进入某个长期目录后，底部仍然可以前后跳转；
-- 具体的比赛面板，比如 `/series/codeforces/`、`/series/atcoder/` 和 `/series/xcpc/`，它们仍然作为专题工具页存在。
-
-这个调整不会影响加密文章：文章内系列导航仍然按页面本身的 `hidden`、`encrypt` 和目录关系工作；搜索索引和 RSS 里对加密文章的保护也继续保留。换句话说，被删掉的只是“所有系列的总览入口”，不是各个系列本身。
-
-顺手也把 `assets/scss/custom.scss` 拆了一下。之前所有自定义样式都堆在一个接近两千行的文件里，改的时候很容易在滚动中迷路。现在 `custom.scss` 只保留入口：
+`assets/scss/custom.scss` 只保留样式入口：
 
 ```scss
 @import "music-player.scss";
@@ -592,10 +573,13 @@ seriesOrder: 1
 @import "custom/timeline-contests";
 ```
 
-真正的样式分别放到 `assets/scss/custom/_base.scss`、`_layout.scss`、`_code.scss`、`_friend-circle.scss` 这些 partial 里。这个拆分不改变页面外观，只是把“全局基础样式”“文章增强”“友链朋友圈”“时间线和比赛面板”分开，后面想改某一块时不用再翻完整个 `custom.scss`。
+具体规则分别位于 `assets/scss/custom/_base.scss`、`_layout.scss`、`_code.scss` 与 `_friend-circle.scss` 等 partial，按全局基础样式、文章增强、友链朋友圈、时间线和比赛面板分开维护。
 
-## 引用块和长链接换行
-引用块也改了样式，这段放在 `assets/scss/custom/_base.scss`：
+## 正文阅读
+
+### 引用与长链接
+
+引用块样式位于 `assets/scss/custom/_base.scss`：
 
 ```scss
 .article-content {
@@ -606,9 +590,9 @@ seriesOrder: 1
 }
 ```
 
-原主题的引用块比较克制，这里稍微加了一点背景色，让引用和正文更容易区分。因为博客里有不少“注意”“声明”“提示”一类内容，这个改动还是比较常用的。
+引用块增加浅色背景，与正文保持清楚的层级。
 
-同一类正文阅读体验里还处理了长链接和行内代码换行。它们容易撑破移动端，所以在 `assets/scss/custom/_base.scss` 中加了：
+长链接与行内代码也在 `assets/scss/custom/_base.scss` 中设置换行：
 
 ```scss
 a {
@@ -620,12 +604,12 @@ code {
 }
 ```
 
-这个属于不显眼但很救命的改动。写建站教程和 Lab 笔记时，经常会出现很长的 URL、路径或命令，如果不处理，手机端会直接横向溢出。
+建站教程和 Lab 笔记中的长 URL、路径与命令会在移动端正常换行，避免撑破正文宽度。
 
 ![文章正文样式](stack-3.png)
 
-## 代码块容器样式
-代码块的基础样式放在 `assets/scss/custom/_base.scss` 中。先改 `.highlight`：
+### 代码块
+代码块基础样式位于 `assets/scss/custom/_base.scss`，`.highlight` 设置如下：
 
 ```scss
 .highlight {
@@ -640,9 +624,9 @@ code {
 }
 ```
 
-这里调整了宽度、圆角、阴影和左右边距。因为代码块经常比普通段落更需要横向空间，所以稍微让它往两边伸一点。
+宽度、圆角、阴影与左右边距让代码块略宽于普通段落。
 
-然后是亮色模式下的配色：
+亮色模式使用单独配色：
 
 ```scss
 [data-scheme="light"] .article-content .highlight {
@@ -655,10 +639,10 @@ code {
 }
 ```
 
-这会让亮色模式下的代码块偏暖一点，不至于和正文卡片完全糊在一起。
+偏暖的代码背景与正文卡片保持区分。
 
-## macOS 风格代码块
-拟 macOS 顶栏放在 `assets/scss/custom/_code.scss`：
+### macOS 顶栏
+拟 macOS 顶栏位于 `assets/scss/custom/_code.scss`：
 
 ```scss
 .article-content {
@@ -676,10 +660,11 @@ code {
 }
 ```
 
-这里用到的图标文件是 `static/code-header.svg`。Hugo 会把 `static` 下的文件原样复制到站点根目录，所以 CSS 里可以直接写 `url(/code-header.svg)`。
+顶栏图标位于 `static/code-header.svg`。Hugo 会把 `static` 中的文件复制到站点根目录，因此 CSS 可以直接使用 `url(/code-header.svg)`。
 
-## 代码块复制按钮
-复制按钮则不是 SCSS 完成的，而是在 `assets/ts/main.ts` 中给每个代码块动态追加按钮。这段加在 `assets/ts/main.ts` 中：
+### 复制按钮
+
+`assets/ts/main.ts` 为每个代码块动态追加复制按钮：
 
 ```ts
 const highlights = document.querySelectorAll('.article-content div.highlight');
@@ -707,14 +692,15 @@ highlights.forEach(highlight => {
 });
 ```
 
-它的思路很直接：页面加载后找到代码块，插入按钮，点击后把代码内容写入剪贴板。按钮的显示隐藏则由 `.highlight:hover .copyCodeButton` 控制。
+页面初始化时扫描代码块并插入按钮，点击后把代码写入剪贴板。`.highlight:hover .copyCodeButton` 控制按钮的显示与隐藏。
 
 ![代码块样式](stack-4.png)
 
-## 长代码块折叠
-后来写 Lab 和建站教程时，代码块经常会一下子占掉很长一段页面。完整代码当然需要保留，但如果默认全部展开，读者其实很难快速扫到后面的解释。
+### 长代码块
 
-因此笔者把代码块增强逻辑整理到了 `assets/ts/main.ts` 的 `setupCodeBlocks()` 中：复制按钮和长代码块折叠都在这里处理。为了避免 PJAX 后重复插入按钮，每个代码块初始化后会打上 `data-enhanced` 标记：
+超过 80 行的代码块默认折叠，完整源码仍保留在页面中。
+
+复制按钮与折叠逻辑集中在 `assets/ts/main.ts` 的 `setupCodeBlocks()`。每个代码块初始化后写入 `data-enhanced`，避免 PJAX 切页时重复插入控件：
 
 ```ts
 const LONG_CODE_LINE_THRESHOLD = 80;
@@ -737,7 +723,7 @@ function setupCodeBlocks() {
 }
 ```
 
-这里优先通过 Chroma 生成的 `.lnt` 行号来统计行数。如果没有行号，就退回到按换行符计算。超过 80 行的代码块默认折叠，并在底部加一个按钮：
+行数优先从 Chroma 生成的 `.lnt` 统计；没有行号时按换行符计算。超过 80 行的代码块默认折叠，并在底部加入按钮：
 
 ```ts
 const expandButton = document.createElement('button');
@@ -752,7 +738,7 @@ expandButton.addEventListener('click', () => {
 });
 ```
 
-样式上则给折叠状态设置一个最大高度，并在底部加一层渐变遮罩。这段放在 `assets/scss/custom/_code.scss`：
+折叠状态使用最大高度与底部渐变遮罩，样式位于 `assets/scss/custom/_code.scss`：
 
 ```scss
 .article-content {
@@ -773,10 +759,11 @@ expandButton.addEventListener('click', () => {
 }
 ```
 
-这样短代码块仍然保持原样，长代码块则先露出开头和结构，读者需要时再展开。对 Lab 文章和长脚本教程会友好很多。
+短代码块保持完整显示，长代码块先露出开头，点击按钮后展开全部内容。
 
-## 文章阅读进度条
-阅读进度条也是在 `assets/ts/main.ts` 中处理。它不需要写进模板里，而是由脚本在文章页动态创建：
+### 阅读进度
+
+`assets/ts/main.ts` 在文章页动态创建阅读进度条：
 
 ```ts
 function setupReadingProgress() {
@@ -798,9 +785,9 @@ function setupReadingProgress() {
 }
 ```
 
-注意这里要处理非文章页：如果从文章页通过 PJAX 切到首页或搜索页，就把进度条移除，并解绑滚动监听。否则顶部会残留一条已经没有意义的进度条。
+通过 PJAX 离开文章页时，脚本会移除进度条并解绑滚动监听，避免它残留在首页或搜索页。
 
-真正计算进度时，参考的是 `.article-content` 的位置和高度：
+阅读进度根据 `.article-content` 的位置与高度计算：
 
 ```ts
 function updateReadingProgress() {
@@ -818,7 +805,7 @@ function updateReadingProgress() {
 }
 ```
 
-样式则很轻，只是一条固定在顶部的细线：
+进度条是一条固定在顶部的细线：
 
 ```scss
 .reading-progress {
@@ -835,12 +822,15 @@ function updateReadingProgress() {
 }
 ```
 
-这个功能不改变文章结构，但读长文时会比较有方向感。尤其是 CS Lab、建站教程和算法长文，读者能直观看到自己大概读到哪里了。
+进度条适用于 CS Lab、建站教程和算法长文，不会改动正文结构。
 
-## 记录博客运行时间
-页脚覆盖文件是 `layouts/partials/footer/footer.html`。这里主要加了两类信息：博客运行时间，以及文章数量和总字数。
+## 页脚与文章信息
 
-运行时间的 HTML 结构加在 `layouts/partials/footer/footer.html` 中：
+### 运行时间
+
+页脚覆盖文件 `layouts/partials/footer/footer.html` 显示博客运行时间、文章数量与总字数。
+
+运行时间的 HTML 结构如下：
 
 ```html
 <section class="running-time">
@@ -849,7 +839,7 @@ function updateReadingProgress() {
 </section>
 ```
 
-真正计算时间的脚本不在 footer 模板里，而是在 `layouts/partials/footer/custom.html` 中。脚本设置起始日期为 `2025-6-23`，然后用当前时间减去起始时间，算出天、小时和分钟。这段加在 `layouts/partials/footer/custom.html` 中：
+`layouts/partials/footer/custom.html` 以 `2025-6-23` 为起始日期，用当前时间计算天、小时和分钟：
 
 ```js
 function updateRunningDays() {
@@ -868,8 +858,9 @@ function updateRunningDays() {
 }
 ```
 
-## 记录文章数量和总字数
-总字数统计则完全由 Hugo 模板完成，这段加在 `layouts/partials/footer/footer.html` 中：
+### 文章数与字数
+
+文章数与总字数由 `layouts/partials/footer/footer.html` 中的 Hugo 模板计算：
 
 ```go-html-template
 {{ $publishedArticles := where .Site.RegularPages "Section" "post" }}
@@ -882,14 +873,15 @@ function updateRunningDays() {
 总计{{ div ($scratch.Get "total") 1000.0 | lang.FormatNumber 2 }}k字
 ```
 
-这里先从 `.Site.RegularPages` 中取出 `post` 分区，再排除带有 `hidden: true` 的系列子页。About、Anime 等独立功能页位于 `page` 分区，同样不会进入 `$publishedArticles`。总字数仍保留原来的全部内容页口径，因此只会修正“发表了多少篇文章”这一项。
+`$publishedArticles` 只统计 `.Site.RegularPages` 中公开的 `post` 页面，并排除 `hidden: true` 的系列子页。About、Anime 等独立功能页位于 `page` 分区，不进入文章数量。总字数使用全部内容页的字数总和。
 
 对应样式在 `assets/scss/partials/footer.scss` 中，额外给 `.totalcount` 和 `.running-time` 做了颜色、字号和间距调整。
 
 ![页脚统计效果](stack-5.png)
 
-## 记录文章访问量
-访问量显示改在 `layouts/partials/article/components/details.html`。文章日期和阅读时间后面，额外插入这段：
+### 访问量
+
+`layouts/partials/article/components/details.html` 在文章日期与阅读时间后显示访问量：
 
 ```html
 <div id="viewCount">
@@ -900,16 +892,17 @@ function updateRunningDays() {
 </div>
 ```
 
-这里用到了 `assets/icons/eye.svg`，统计脚本则在 `layouts/partials/footer/custom.html` 中引入：
+模板使用 `assets/icons/eye.svg`，统计脚本由 `layouts/partials/footer/custom.html` 引入：
 
 ```html
 <script defer src="https://cn.vercount.one/js"></script>
 ```
 
-因为首页和列表页也会复用文章卡片结构，所以脚本里还写了一个 `showHideView`，当当前页面不是文章页时，就把浏览量隐藏。
+首页与列表页也会复用文章卡片结构，`showHideView` 会在非文章页隐藏浏览量。
 
-## 文章加密功能
-文章加密改在 `layouts/partials/article/components/content.html`。如果 frontmatter 中设置 `encrypt: true`，就先显示一个加密入口卡片，并把正文放在隐藏的 `#post-content` 中。这段加在 `layouts/partials/article/components/content.html` 中：
+### 文章加密
+
+`layouts/partials/article/components/content.html` 检查 frontmatter 中的 `encrypt: true`，显示加密入口卡片，并把正文放在隐藏的 `#post-content` 中：
 
 ```go-html-template
 {{ if .Params.encrypt }}
@@ -934,7 +927,7 @@ function updateRunningDays() {
 {{ end }}
 ```
 
-对应的 `unlockEncryptedPost` 函数在 `layouts/partials/footer/custom.html`。早期版本是直接用明文密码比较，这样源码里能看到密码，不太优雅。现在改成通过 Web Crypto 的 PBKDF2 派生摘要，再和预先写好的摘要比较；匹配成功后隐藏输入框并显示正文，失败时只在卡片内提示“哼，暗号不对哦……再认真试一次啦！”，不再弹出浏览器原生弹窗。另外脚本常驻 footer，这样 PJAX 跳到加密文章时也能正常工作。
+`layouts/partials/footer/custom.html` 中的 `unlockEncryptedPost` 使用 Web Crypto 的 PBKDF2 派生摘要，并与预先写好的摘要比较。匹配成功后显示正文，失败时在卡片内提示“哼，暗号不对哦……再认真试一次啦！”。脚本常驻 footer，PJAX 进入加密文章时也能正常执行。
 
 ```js
 async function derivePostPassword(password) {
@@ -982,23 +975,23 @@ document.addEventListener("keydown", e => {
 });
 ```
 
-解锁卡片、英梨梨贴纸背景和错误抖动动画放在 `assets/scss/custom/_article-extras.scss`，贴纸图片放在 `static/images/eriri-lock.png`。需要注意的是，这仍然更接近静态站里的阅读门禁，而不是构建产物级别的正文密文。这里已经通过 RSS 和搜索模板避免加密文章正文被索引，同时不再把明文密码直接写进脚本；如果之后希望连生成后的 HTML 中也不出现正文，就需要在 Hugo 构建前增加一层内容加密脚本，把正文预先转成密文再交给前端解开。
+解锁卡片、英梨梨贴纸背景与错误抖动动画位于 `assets/scss/custom/_article-extras.scss`，贴纸图片位于 `static/images/eriri-lock.png`。这套方案属于静态站阅读门禁，生成的 HTML 仍包含正文；RSS 与搜索模板会过滤加密内容，脚本中只保存 PBKDF2 摘要，不保存明文密码。
 
-## 表格横向滚动
-表格滚动也是在 `layouts/partials/article/components/content.html` 中处理的，这段加在同一个文件里：
+### 表格
+`layouts/partials/article/components/content.html` 为表格增加滚动容器：
 
 ```go-html-template
 {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML }}
 ```
 
-这段会把文章里的 `<table>` 自动包进 `.table-wrapper`，方便在窄屏幕上横向滚动。对于 Codeforces 日志、课程表格、评分记录这类内容来说，这个改动非常实用。
+文章中的 `<table>` 会自动包进 `.table-wrapper`，Codeforces 日志、课程表格与评分记录可以在窄屏幕上横向滚动。
 
 ![文章信息与加密效果](stack-6.png)
 
-## 搜索隐藏页过滤
+### 搜索过滤
 搜索页面的模板是 `layouts/page/search.html`，搜索数据由 `layouts/page/search.json` 生成。
 
-`layouts/page/search.json` 里有一个很关键的过滤，这段加在 `layouts/page/search.json` 中：
+`layouts/page/search.json` 使用下面的页面过滤：
 
 ```go-html-template
 {{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
@@ -1006,12 +999,13 @@ document.addEventListener("keydown", e => {
 {{- $filtered := ($pages | intersect $notHidden) -}}
 ```
 
-也就是说，只有 `post` 主分区里的文章会进入搜索，而且 `hidden: true` 的页面会被过滤掉。这样像 `1400.md`、`1600.md` 这类长期记录的隐藏子页面，就不会在搜索结果里单独刷屏。
+搜索只收录 `post` 主分区中的公开文章，并过滤 `hidden: true` 页面。`1400.md`、`1600.md` 等长期系列子页不会单独出现在结果中。
 
-前端搜索逻辑在 `assets/ts/search.tsx`。它会读取搜索 JSON，把标题和正文转成纯文本，然后根据关键词生成带 `<mark>` 的预览片段。这个功能原本就是 Stack 主题的一部分，笔者这里主要是为了配合 PJAX，把初始化函数改成可被 `Stack.init()` 调用的形式。详细部分会放到播放器与 PJAX 那篇里讲。
+前端搜索逻辑位于 `assets/ts/search.tsx`。脚本读取搜索 JSON，把标题和正文转成纯文本，再根据关键词生成带 `<mark>` 的预览片段；初始化函数由 `Stack.init()` 调用，以适配 PJAX 页面切换。
 
-## 外链新窗口打开
-外链新窗口打开则在 `layouts/_default/_markup/render-link.html` 中完成，这段加在这个文件里：
+### 外链
+
+`layouts/_default/_markup/render-link.html` 控制外链打开方式：
 
 ```go-html-template
 <a class="link" href="{{ .Destination | safeURL }}" {{ with .Title}} title="{{ . }}"
@@ -1019,12 +1013,12 @@ document.addEventListener("keydown", e => {
     {{ end }}>{{ .Text | safeHTML }}</a>
 ```
 
-核心是判断 `.Destination` 是否以 `http` 开头。如果是外链，就加上 `target="_blank"` 和 `rel="noopener"`。这样读文章时点外部资料，不会直接离开当前博客页面。
+`.Destination` 以 `http` 开头时，链接会获得 `target="_blank"` 与 `rel="noopener"`，并在新标签页打开。
 
-## 自定义图标
-自定义图标放在 `assets/icons` 下，例如 `assets/icons/bilibili.svg`、`assets/icons/photo.svg`、`assets/icons/eye.svg`、`assets/icons/left.svg`、`assets/icons/right.svg`。Stack 主题本身通过 `partial "helper/icon"` 读取图标，因此只要放进这个目录，就能在菜单或模板里使用。
+### 图标
+自定义图标位于 `assets/icons`，例如 `bilibili.svg`、`photo.svg`、`eye.svg`、`left.svg` 与 `right.svg`。Stack 通过 `partial "helper/icon"` 读取该目录中的图标。
 
-例如图库页 `content/page/photo/index.md` 中写了这段 frontmatter，这段写在 `content/page/photo/index.md` 中：
+图库页 `content/page/photo/index.md` 的 frontmatter 使用：
 
 ```yaml
 menu:
@@ -1034,16 +1028,19 @@ menu:
             icon: photo
 ```
 
-Hugo 渲染菜单时就会去找 `assets/icons/photo.svg`。
+Hugo 渲染菜单时会读取 `assets/icons/photo.svg`。
 
-## 图库入口和瀑布流
-图库页使用的是 `layouts/photo/single.html`。图片资源放在 `assets/waifus`，模板里通过这段收集图片，这段加在 `layouts/photo/single.html` 中：
+## 图库
+
+### 缩略图
+
+图库页使用 `layouts/photo/single.html`，图片资源位于 `assets/waifus`。模板通过下面的表达式收集图片：
 
 ```go-html-template
 {{- $imgs := resources.Match "waifus/*.{jpg,jpeg,png,webp}" -}}
 ```
 
-和最早的轮播写法不同，后来的版本没有再把图片写进 `data-images` 交给前端预加载，而是直接在模板里生成瀑布流。每张图用 Hugo 的 `Fit` 生成缩略图，`a` 标签仍然指向原图，这段加在 `layouts/photo/single.html` 中：
+模板直接生成瀑布流。每张图使用 Hugo 的 `Fit` 生成缩略图，`a` 标签指向原图：
 
 ```go-html-template
 {{- range $i, $img := $imgs -}}
@@ -1062,7 +1059,7 @@ Hugo 渲染菜单时就会去找 `assets/icons/photo.svg`。
 {{- end -}}
 ```
 
-这样页面首屏加载的是缩略图，点击时 PhotoSwipe 打开的是原图，既保留欣赏大图的体验，也不会让页面一开始就把所有原图压上来。为了让 PhotoSwipe 读取 `a` 标签里的原图地址，`assets/ts/gallery.ts` 中点击前刷新图片信息时也改成优先读取链接：
+首屏只加载缩略图，PhotoSwipe 点击后读取原图。`assets/ts/gallery.ts` 在打开图片前优先读取链接地址：
 
 ```ts
 const link = item.el.querySelector('a');
@@ -1070,7 +1067,7 @@ item.src = link?.href || img.src;
 item.msrc = img.getAttribute('data-thumb') || img.src;
 ```
 
-瀑布流样式直接写在 `layouts/photo/single.html` 里。桌面端三列，窄一点时两列，手机端一列；图片保持原比例，不强行裁切：
+瀑布流样式位于 `layouts/photo/single.html`。桌面端三列，中等宽度两列，手机端一列，图片保持原比例：
 
 ```css
 .photo-gallery-content .gallery.photo-masonry {
@@ -1092,9 +1089,13 @@ item.msrc = img.getAttribute('data-thumb') || img.src;
 }
 ```
 
-图片导入也没有再手动一张张改文件名。笔者加了 `scripts/import_photos.py`，先从公开 SFW 图源拉候选图，再做尺寸、比例、格式、重复图过滤，最后统一转成 WebP 放入 `assets/waifus`。正式页面只读取本地目录，不在前端运行时请求 API，因此图库质量可以通过本地筛选控制，构建时也更稳定。
+### 图片导入
 
-为了让图库不像普通列表那样很快见底，后面又在 `layouts/photo/single.html` 里加了一段前端循环逻辑。它不是重新请求图片，也不是一次性复制很多节点，而是把首屏已有的图片节点当成模板，快滚到底时再小批量补一段：
+`scripts/import_photos.py` 从公开 SFW 图源取得候选图，依次检查尺寸、比例、格式与重复项，再统一转成 WebP 放入 `assets/waifus`。页面只读取本地资源，前端不会请求图源 API。
+
+### 循环加载
+
+`layouts/photo/single.html` 把首屏图片节点作为模板，接近页面底部时按小批次追加克隆节点：
 
 ```js
 for (let i = originalFigures.length - 1; i > 0; i--) {
@@ -1121,8 +1122,6 @@ function appendLoopBatch() {
 }
 ```
 
-开头的 Fisher-Yates shuffle 会先把原始图片顺序打乱，因此每次打开图库页时，首屏看到的图片都不一样。后面的 `17` 和当前图库数量互质，所以补出来的顺序也会错开，不会变成“最后一张后面马上又接第一张”的硬拼接。性能上也要注意：克隆图点击放大时不重新扫描整条瀑布流，而是通过 `data-original-index` 映射回原始图片列表。这样滚动时只增加少量 DOM，PhotoSwipe 仍然只维护原始图库的数据，页面会轻很多。
-
-这部分其实已经有点接近单独功能页了。它和追番页一样，都是通过“自定义 layout + 页面 frontmatter”实现的，只不过追番页的数据来自 Bangumi API 和本地缓存，图库页的数据来自本地 `assets/waifus`。
+Fisher-Yates shuffle 打乱首屏顺序。步长 `17` 与当前图库数量互质，循环追加时不会紧接着重复同一段顺序。克隆节点通过 `data-original-index` 映射回原始图片列表，PhotoSwipe 只维护原始图库数据，不会在每次追加后重新扫描整条瀑布流。
 
 ![图库页面效果](stack-7.png)
