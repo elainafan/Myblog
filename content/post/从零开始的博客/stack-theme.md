@@ -418,47 +418,6 @@ updates:
 
 卡片同时保留发布日期与“更新 YYYY-MM-DD”，更新说明只存在于 frontmatter 中。
 
-### 时间线
-
-文章 frontmatter 中的 `updates` 可以参与全站时间线汇总。
-
-数据汇总逻辑位于 `layouts/partials/data/timeline-events.html`。不同来源会被整理成统一的 `events`，再按时间倒序返回：
-
-```go-html-template
-{{- $events := slice -}}
-{{- $mainSections := $site.Params.mainSections | default (slice "post") -}}
-{{- $publicPosts := where $site.RegularPages "Type" "in" $mainSections -}}
-{{- $publicPosts = where $publicPosts "Params.hidden" "!=" true -}}
-
-{{- range $page := $publicPosts -}}
-    {{- if not ($page.Params.encrypt | default false) -}}
-        {{- $events = $events | append (dict
-            "date" $page.Date
-            "type" "article"
-            "label" "文章"
-            "title" $page.Title
-            "url" $page.RelPermalink
-        ) -}}
-    {{- end -}}
-{{- end -}}
-
-{{- return (sort $events "date" "desc") -}}
-```
-
-普通文章只取 `mainSections` 中的公开页面，并跳过 `hidden: true` 与 `encrypt: true`。其他公开数据源也可以整理成相同的事件结构，再合并排序。
-
-时间线页面位于 `content/page/timeline/index.md` 与 `layouts/page/timeline.html`，使用隐藏入口：
-
-```yaml
-title: "时间线 | Timeline"
-layout: "timeline"
-url: "/timeline/"
-hidden: true
-comments: false
-```
-
-`/timeline/` 按事件类型显示不同颜色，页面不进入左侧菜单。
-
 ### 系列导航
 
 长期系列由一个目录主页与多个 `hidden: true` 子页组成。隐藏子页不进入归档，正文底部显示“上一篇 / 返回系列 / 下一篇”。
@@ -531,7 +490,7 @@ seriesOrder: 1
 
 ## 样式文件
 
-`assets/scss/custom.scss` 只保留样式入口：
+通用样式按功能拆成多个 partial，再由 `assets/scss/custom.scss` 统一引入：
 
 ```scss
 @import "music-player.scss";
@@ -542,10 +501,9 @@ seriesOrder: 1
 @import "custom/code";
 @import "custom/article-extras";
 @import "custom/friend-circle";
-@import "custom/timeline-contests";
 ```
 
-具体规则分别位于 `assets/scss/custom/_base.scss`、`_layout.scss`、`_code.scss` 与 `_friend-circle.scss` 等 partial，按全局基础样式、文章增强、友链朋友圈、时间线和比赛面板分开维护。
+具体规则分别位于 `assets/scss/custom/_base.scss`、`_layout.scss`、`_code.scss` 与 `_friend-circle.scss` 等 partial，按全局基础样式、布局、代码块、文章增强和友链朋友圈分开维护。
 
 ## 正文阅读
 
@@ -1000,8 +958,6 @@ menu:
 Hugo 渲染菜单时会读取 `assets/icons/photo.svg`。
 
 ## 图库
-
-### 缩略图
 
 图库页使用 `layouts/photo/single.html`，图片资源位于 `assets/waifus`。模板通过下面的表达式收集图片：
 

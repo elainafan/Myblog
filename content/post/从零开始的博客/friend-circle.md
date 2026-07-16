@@ -105,9 +105,9 @@ comments: false
 
 ### Stack 友链页
 
-本站把 `Friend Circle` 放在普通友链卡片下方。
+已有 Stack 友链页时，可以把 `Friend Circle` 放在普通友链卡片下方。
 
-<https://www.elainafan.one/friends/>
+实际效果可参考 <https://www.elainafan.one/friends/>。
 
 ![友链页整体效果，普通友链卡片下方接入 Friend Circle](friend-circle-1.png)
 

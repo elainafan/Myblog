@@ -210,7 +210,9 @@ python scripts/sync_bangumi.py
 
 样式沿用 Stack 的 `var(--card-background)`、`var(--shadow-l2)` 和文字颜色变量，亮色与暗色模式共用同一套结构。
 
-## 页面入口
+## 接入与更新
+
+### 页面入口
 
 页面位于 `content/page/anime/index.md`，正文只有 frontmatter 与 shortcode：
 
@@ -236,9 +238,9 @@ comments: true
 
 `layout: "anime"` 对应 `layouts/page/anime.html`，负责套用 Stack 的文章外壳；番剧数据由 `{{</* bangumi */>}}` 渲染。
 
-## 更新
+### 数据同步
 
-本站使用本地缓存方式更新：
+使用本地缓存时运行：
 
 ```bash
 python scripts/sync_bangumi.py
