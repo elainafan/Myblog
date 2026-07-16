@@ -9,10 +9,6 @@ seriesOrder: 2
 updates:
     - date: 2026-07-16
       content: 按当前播放器、歌单同步与 PJAX 实现整理文章结构。
-    - date: 2026-07-11
-      content: 将操作系统、程序设计实习和数算课程笔记排除在算法文章自动切歌规则之外。
-    - date: 2026-06-24
-      content: 为算法分类文章接入进入页面时的随机曲目联动。
 ---
 
 ## 播放器
@@ -44,6 +40,8 @@ document.body.append(root);
 ```
 
 模式按钮会在列表循环、随机播放和单曲循环之间切换。歌单面板平时收起，点击封面或列表按钮后再展开，站内页面切换时播放器节点不会进入 PJAX 的替换区域。
+
+![悬浮播放器与展开后的歌单](music-player-1.png)
 
 `{{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }}` 会把数据文件转成前端可用的数组。重新生成歌单后，不需要再到播放器脚本里逐首修改 `name`、`artist`、`url` 和 `cover`。
 
@@ -99,9 +97,9 @@ python scripts\sync_music.py bilibili --media-id <收藏夹ID>
 
 每个视频依次完成三项处理：
 
-- 读取视频详情。普通视频保存到 `static/music/bilibili/<BV号>/`，分 P 视频拆到 `p01`、`p02` 等子目录。
+- 读取视频详情，并按 BV 号建立本地目录。
 - 调用 `yt-dlp` 下载音频。Bilibili 音频通常保存为 `music.m4a`，不需要额外依赖 `ffmpeg` 转码。
-- 在音频目录中写入 `info.json`，保存曲名、歌手、BV 号、分 P 页码与来源链接，再扫描 `static/music` 生成 `data/music/generated.json`。
+- 在音频目录中写入 `info.json`，保存播放器需要的元数据，再扫描 `static/music` 生成 `data/music/generated.json`。
 
 非公开收藏夹需要传入 Cookie：
 
@@ -110,41 +108,6 @@ python scripts\sync_music.py bilibili --cookie-file bilibili.cookie.txt
 ```
 
 `bilibili.cookie.txt` 只保存在本地，不提交到仓库。
-
-### 分 P
-
-K-ON 歌曲合集包含多个分 P，播放器需要把每一 P 视为独立歌曲。
-
-脚本从 `https://api.bilibili.com/x/web-interface/view` 读取视频的 `pages` 字段。`pages` 数量大于 1 时，每一 P 都保存为独立歌曲。第一 P 位于 `static/music/bilibili/BV1chikYJEMZ/p01/`，第二 P 位于 `p02/`，每个目录分别保存 `music.m4a`、`cover.jpg` 与 `info.json`。
-
-春物 ED 三部曲在播放器中分别显示为 `Hello Alone`、`Everyday World` 与 `ダイヤモンドの純度`。
-
-K-ON 合集也会拆成 `Cagayake! GIRLS`、`Don't Say Lazy`、`ふわふわ時間`、`U&I` 等独立条目。
-
-### 歌名和歌手
-
-Bilibili 视频标题常带有“顶级品质试听”“中日字幕完整版”等附加信息，UP 主也未必是歌曲原唱，因此播放器使用单独的曲名与歌手元数据。
-
-`data/music/local.json` 覆盖自动抓取的元数据：
-
-```json
-{
-  "folder": "bilibili/BV1Q2421M7pf/p01",
-  "name": "Hello Alone",
-  "artist": "雪之下雪乃、由比滨结衣"
-}
-```
-
-`folder` 对应 `static/music` 下的相对目录。同步脚本写 `info.json` 时优先读取 `data/music/local.json` 中的 `name` 与 `artist`，重新同步收藏夹不会覆盖已经整理过的曲名。
-
-歌名与歌手按下面的规则整理：
-
-- 原本就是英文名的歌曲保留英文，例如 `Hacking to the Gate`、`God Knows...`。
-- 有日文正式名的歌曲尽量保留日文，例如 `不可思議のカルテ`、`君色シグナル`。
-- 如果标题全是假名、读起来不太直观，则使用中文翻译，例如 `想做朋友`、`明天再见`。
-- 钢琴版、角色版这类特殊版本，会在歌名里标出来，例如 `Everyday World（钢琴版）`。
-
-同步结束后，脚本会根据当前收藏夹重新计算需要保留的目录，删除 `static/music/bilibili` 中已经移出收藏夹的音轨，再生成新的 `data/music/generated.json`。
 
 ### 播放状态
 
@@ -179,23 +142,6 @@ audio.addEventListener("loadedmetadata", () => {
 ```
 
 播放、暂停、切歌、调节音量和关闭页面时都会更新这份状态。`localStorage` 处理整页刷新，PJAX 处理站内跳转。
-
-### 文章联动
-
-算法分类文章会从 `Magia` 与 `Everyday World` 中随机选择一首。《从零开始的操作系统》《从零开始的程序设计实习》和《从零开始的数算》属于课程笔记，不参与这条规则。
-
-`layouts/partials/article/article.html` 根据源文件路径与分类决定是否写入 `data-entry-music="algorithm-random"`。算法分类，以及 Codeforces、AtCoder、XCPC、题目难度归档与随机算法目录会获得该标记；三个课程笔记目录会被排除。
-
-前端逻辑写在 `assets/js/music-player.js`。播放器初始化后会在歌单里找这两首歌：
-
-```js
-const ALGORITHM_ENTRY_TRACK_NAMES = ["Magia", "Everyday World"];
-const algorithmTrackIndexes = playlist
-    .map((song, index) => ALGORITHM_ENTRY_TRACK_NAMES.includes(song.name) ? index : -1)
-    .filter(index => index >= 0);
-```
-
-页面初次加载与 PJAX 跳转完成后，脚本都会检查当前文章的标记。当前曲目已经是 `Magia` 或 `Everyday World` 时不执行任何操作，其他曲目才会触发随机选择。浏览器可能拦截没有用户交互的自动播放；用户操作过播放器后，站内切页可以继续执行曲目联动。
 
 ## PJAX
 
@@ -312,11 +258,10 @@ document.addEventListener('pjax:complete', () => {
     renderKaTeX();
     window.Stack.init();
     topbar.hide();
-    playArticleEntryMusic();
 })
 ```
 
-`cleanPjaxTimestamp()` 删除普通查询参数以及误挂在锚点后的 `?t=...`，避免文章内链接留下 `/p/example/#section?t=...`。`renderKaTeX()` 渲染新文章中的公式，`window.Stack.init()` 重新绑定菜单、图片灯箱、平滑滚动、目录 scrollspy、搜索与代码块按钮。`playArticleEntryMusic()` 处理文章曲目联动，全部完成后再隐藏顶部进度条。
+`cleanPjaxTimestamp()` 删除普通查询参数以及误挂在锚点后的 `?t=...`，避免文章内链接留下 `/p/example/#section?t=...`。`renderKaTeX()` 渲染新文章中的公式，`window.Stack.init()` 重新绑定菜单、图片灯箱、平滑滚动、目录 scrollspy、搜索与代码块按钮，全部完成后再隐藏顶部进度条。
 
 ## 组件重载
 
@@ -512,5 +457,3 @@ document.addEventListener('pjax:complete', function () {
 代码块在第一次处理后写入 `data-enhanced="true"`，播放器通过固定 ID 和 `window.ElainaMusicPlayer` 避免重复创建。所有由 `Stack.init()` 重载的组件都需要类似的幂等标记，否则多次切页后会出现重复按钮或重复事件。
 
 `topbar`、`Pjax`、`renderMathInElement` 与 `window.Stack` 必须在调用前完成加载。相关脚本集中放在 footer，需要异步加载的函数会等待依赖出现。
-
-`data/music/local.json` 保存人工校正的曲名与歌手。Bilibili 同步负责抓取和下载，不会覆盖已经整理过的元数据。

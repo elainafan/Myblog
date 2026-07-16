@@ -9,8 +9,6 @@ seriesOrder: 4
 updates:
     - date: 2026-07-16
       content: 按当前抓取流程整理配置、失效站点处理与友链页接入方式。
-    - date: 2026-05-24
-      content: 补充 Friend Circle 效果图，并整理 Stack 主题友链页接入说明。
 ---
 
 ## 数据抓取
@@ -29,11 +27,9 @@ updates:
 
 ```yaml
 settings:
-  max_posts: 240
-  max_posts_per_friend: 24
-  max_days: 180
-  since: 2024-01-01
-  timeout: 8
+  max_posts: 100
+  max_posts_per_friend: 10
+  timeout: 10
   retries: 2
 
 friends:
@@ -88,15 +84,6 @@ python scripts\fetch_feeds.py
 ```
 
 脚本会生成或更新 `data/friend_posts.json`。这个文件里包含朋友名称、头像、文章标题、文章链接、发布时间、来源站点，以及抓取失败时的 warning。
-
-抓取起始日期由 `since` 控制：
-
-```yaml
-settings:
-  since: 2024-01-01
-```
-
-`since: 2024-01-01` 会保留 2024 年以来的文章，再由 `max_posts` 与 `max_posts_per_friend` 控制最终数量。
 
 ## 页面接入
 
@@ -162,7 +149,7 @@ name: update friend circle
 
 on:
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: "0 0 * * *"
   workflow_dispatch:
   push:
     paths:
@@ -189,7 +176,7 @@ jobs:
           file_pattern: data/friend_posts.json
 ```
 
-本站由 Vercel 部署。GitHub Actions 提交新 JSON 后，Vercel 会根据仓库更新重新部署站点。
+部署平台监听仓库更新时，GitHub Actions 提交新 JSON 后会触发一次重新部署。
 
 ## 抓取边界
 

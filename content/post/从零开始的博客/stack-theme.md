@@ -9,30 +9,6 @@ seriesOrder: 1
 updates:
     - date: 2026-07-16
       content: 按当前站点实现整理主题样式、文章交互与功能页说明。
-    - date: 2026-07-15
-      content: 移除文章末尾的详细更新记录，只在文章卡片显示最近更新时间。
-    - date: 2026-07-10
-      content: 收紧页脚的文章数量统计，排除隐藏子页和独立功能页。
-    - date: 2026-06-23
-      content: 将文章加密的密码校验改为 PBKDF2 派生摘要，并调整加密入口与错误提示样式。
-    - date: 2026-06-22
-      content: 删除独立系列总览页，保留归档与文章内系列导航，并将自定义样式拆分为多个 SCSS partial。
-    - date: 2026-06-22
-      content: 删除独立 Updates 页面，保留文章内部 updates 记录和隐藏时间线入口。
-    - date: 2026-05-27
-      content: 增加全站时间线，作为隐藏入口保留完整站点动态。
-    - date: 2026-05-26
-      content: 补充文章系列总览页的目录面板交互，并整理长系列的展示方式。
-    - date: 2026-05-25
-      content: 增加文章系列总览页，并调整系列卡片分色样式。
-    - date: 2026-05-24
-      content: 将追番页相关描述同步为 Bangumi 收藏墙。
-    - date: 2026-05-24
-      content: 增加长代码块折叠和文章阅读进度条。
-    - date: 2026-05-24
-      content: 增加文章更新记录组件，并在首页卡片显示最近更新日期。
-    - date: 2026-05-24
-      content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ---
 
 ## 页面外观
@@ -444,7 +420,7 @@ updates:
 
 ### 时间线
 
-文章 frontmatter 中的 `updates` 还会参与全站时间线汇总。博客本身还有文章发布、Codeforces 复盘、友链朋友圈、Bangumi 收藏变化等动态，这些数据最终会整理到同一条时间线中。
+文章 frontmatter 中的 `updates` 可以参与全站时间线汇总。
 
 数据汇总逻辑位于 `layouts/partials/data/timeline-events.html`。不同来源会被整理成统一的 `events`，再按时间倒序返回：
 
@@ -469,7 +445,7 @@ updates:
 {{- return (sort $events "date" "desc") -}}
 ```
 
-普通文章只取 `mainSections` 中的公开页面，并跳过 `hidden: true` 与 `encrypt: true`，因此隐藏子页和加密文章不会出现在时间线中。Codeforces、友链和 Bangumi 来自公开数据文件，与文章事件合并后使用同一套排序。
+普通文章只取 `mainSections` 中的公开页面，并跳过 `hidden: true` 与 `encrypt: true`。其他公开数据源也可以整理成相同的事件结构，再合并排序。
 
 时间线页面位于 `content/page/timeline/index.md` 与 `layouts/page/timeline.html`，使用隐藏入口：
 
@@ -481,11 +457,11 @@ hidden: true
 comments: false
 ```
 
-`/timeline/` 展示文章发布、文章更新、比赛记录、友链动态与 Bangumi 收藏，并用不同颜色区分事件类型。页面不进入左侧菜单。
+`/timeline/` 按事件类型显示不同颜色，页面不进入左侧菜单。
 
 ### 系列导航
 
-`看番与加睡的小猪日常`、`二次元修炼日记！` 等长期系列由一个目录主页与多个 `hidden: true` 子页组成。隐藏子页不进入归档，正文底部显示“上一篇 / 返回系列 / 下一篇”。
+长期系列由一个目录主页与多个 `hidden: true` 子页组成。隐藏子页不进入归档，正文底部显示“上一篇 / 返回系列 / 下一篇”。
 
 模板入口位于 `layouts/partials/article/article.html`：
 
@@ -508,13 +484,13 @@ comments: false
 {{- end -}}
 ```
 
-子页通过 frontmatter 中的 `seriesOrder` 排序。例如 `content/post/二次元修炼日记！/cf-1072.md` 写入：
+子页通过 frontmatter 中的 `seriesOrder` 排序：
 
 ```yaml
 seriesOrder: 1
 ```
 
-`seriesOrder` 不依赖文件名，`edu-187.md` 与普通 Round 复盘也能按照目录顺序排列：
+`seriesOrder` 不依赖文件名：
 
 ```go-html-template
 {{- $siblings = sort $siblings "Params.seriesOrder" "asc" -}}
@@ -551,7 +527,7 @@ seriesOrder: 1
 }
 ```
 
-归档页承担全站浏览入口，长期内容通过系列主页、隐藏子页与文章底部导航连接。`/series/codeforces/`、`/series/atcoder/` 和 `/series/xcpc/` 保留为比赛专题页。加密文章仍按 `hidden`、`encrypt` 与目录关系处理，搜索索引和 RSS 不会泄露正文。
+归档页承担全站浏览入口，长期内容通过系列主页、隐藏子页与文章底部导航连接。加密文章仍按 `hidden`、`encrypt` 与目录关系处理，搜索索引和 RSS 不会泄露正文。
 
 ## 样式文件
 
@@ -833,11 +809,11 @@ function updateReadingProgress() {
 </section>
 ```
 
-`layouts/partials/footer/custom.html` 以 `2025-6-23` 为起始日期，用当前时间计算天、小时和分钟：
+`layouts/partials/footer/custom.html` 使用配置的起始日期计算天、小时和分钟：
 
 ```js
 function updateRunningDays() {
-    let s1 = '2025-6-23';
+    let s1 = '2025-01-01';
     s1 = new Date(s1.replace(/-/g, "/"));
     let s2 = new Date();
     let timeDifference = s2.getTime() - s1.getTime();
@@ -867,7 +843,7 @@ function updateRunningDays() {
 总计{{ div ($scratch.Get "total") 1000.0 | lang.FormatNumber 2 }}k字
 ```
 
-`$publishedArticles` 只统计 `.Site.RegularPages` 中公开的 `post` 页面，并排除 `hidden: true` 的系列子页。About、Anime 等独立功能页位于 `page` 分区，不进入文章数量。总字数使用全部内容页的字数总和。
+`$publishedArticles` 只统计 `.Site.RegularPages` 中公开的 `post` 页面，并排除 `hidden: true` 的系列子页。独立功能页位于 `page` 分区，不进入文章数量。总字数使用全部内容页的字数总和。
 
 对应样式在 `assets/scss/partials/footer.scss` 中，额外给 `.totalcount` 和 `.running-time` 做了颜色、字号和间距调整。
 
@@ -902,12 +878,11 @@ function updateRunningDays() {
 {{ if .Params.encrypt }}
 <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
     <div class="encrypt-box__body">
-        <p class="encrypt-box__eyebrow">SECRET NOTE</p>
-        <h2>才、才不是谁都能看的笔记呢！</h2>
-        <p class="encrypt-box__hint">输入暗号的话……也不是不能让你看一下。</p>
+        <h2>加密文章</h2>
+        <p class="encrypt-box__hint">请输入访问密码。</p>
         <div class="encrypt-box__form">
-            <input type="password" id="pwd" aria-label="输入暗号">
-            <button type="button" onclick="unlockEncryptedPost()" aria-label="确认暗号">♡</button>
+            <input type="password" id="pwd" aria-label="访问密码">
+            <button type="button" onclick="unlockEncryptedPost()">解锁</button>
         </div>
         <p id="encrypt-message" class="encrypt-box__message" role="status"></p>
     </div>
@@ -921,7 +896,7 @@ function updateRunningDays() {
 {{ end }}
 ```
 
-`layouts/partials/footer/custom.html` 中的 `unlockEncryptedPost` 使用 Web Crypto 的 PBKDF2 派生摘要，并与预先写好的摘要比较。匹配成功后显示正文，失败时在卡片内提示“哼，暗号不对哦……再认真试一次啦！”。脚本常驻 footer，PJAX 进入加密文章时也能正常执行。
+`layouts/partials/footer/custom.html` 中的 `unlockEncryptedPost` 使用 Web Crypto 的 PBKDF2 派生摘要，并与预先写好的摘要比较。匹配成功后显示正文，失败时在卡片内显示错误状态。脚本常驻 footer，PJAX 进入加密文章时也能正常执行。
 
 ```js
 async function derivePostPassword(password) {
@@ -969,7 +944,7 @@ document.addEventListener("keydown", e => {
 });
 ```
 
-解锁卡片、英梨梨贴纸背景与错误抖动动画位于 `assets/scss/custom/_article-extras.scss`，贴纸图片位于 `static/images/eriri-lock.png`。这套方案属于静态站阅读门禁，生成的 HTML 仍包含正文；RSS 与搜索模板会过滤加密内容，脚本中只保存 PBKDF2 摘要，不保存明文密码。
+解锁卡片与错误状态样式位于 `assets/scss/custom/_article-extras.scss`。这套方案属于静态站阅读门禁，生成的 HTML 仍包含正文；RSS 与搜索模板会过滤加密内容，脚本中只保存 PBKDF2 摘要，不保存明文密码。
 
 ### 表格
 `layouts/partials/article/components/content.html` 为表格增加滚动容器：
@@ -978,7 +953,7 @@ document.addEventListener("keydown", e => {
 {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML }}
 ```
 
-文章中的 `<table>` 会自动包进 `.table-wrapper`，Codeforces 日志、课程表格与评分记录可以在窄屏幕上横向滚动。
+文章中的 `<table>` 会自动包进 `.table-wrapper`，宽表格可以在窄屏幕上横向滚动。
 
 ![文章信息与加密效果](stack-6.png)
 
@@ -1036,6 +1011,8 @@ Hugo 渲染菜单时会读取 `assets/icons/photo.svg`。
 
 `photo-toolbar` 显示图片数量，下面是三列瀑布流。每张图使用 Hugo 的 `Fit` 生成缩略图，`a` 标签指向原图：
 
+![图库瀑布流效果](stack-7.png)
+
 ```go-html-template
 {{- range $i, $img := $imgs -}}
     {{- $thumb := $img.Fit "640x900 q82" -}}
@@ -1082,38 +1059,3 @@ item.msrc = img.getAttribute('data-thumb') || img.src;
     }
 }
 ```
-
-### 图片导入
-
-`scripts/import_photos.py` 从公开 SFW 图源取得候选图，依次检查尺寸、比例、格式与重复项，再统一转成 WebP 放入 `assets/waifus`。页面只读取本地资源，前端不会请求图源 API。
-
-### 循环加载
-
-`layouts/photo/single.html` 把首屏图片节点作为模板，接近页面底部时按小批次追加克隆节点：
-
-```js
-for (let i = originalFigures.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [originalFigures[i], originalFigures[j]] = [originalFigures[j], originalFigures[i]];
-}
-
-const batchSize = Math.min(24, total);
-const threshold = Math.max(1400, window.innerHeight * 1.25);
-let cursor = 17;
-
-function appendLoopBatch() {
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < batchSize; i++) {
-        const index = cursor % total;
-        const clone = originals[index].cloneNode(true);
-        clone.dataset.originalIndex = String(index);
-        fragment.appendChild(clone);
-        cursor += 17;
-    }
-
-    gallery.appendChild(fragment);
-}
-```
-
-Fisher-Yates shuffle 打乱首屏顺序。步长 `17` 与当前图库数量互质，循环追加时不会紧接着重复同一段顺序。克隆节点通过 `data-original-index` 映射回原始图片列表，PhotoSwipe 只维护原始图库数据，不会在每次追加后重新扫描整条瀑布流。

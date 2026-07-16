@@ -9,28 +9,16 @@ seriesOrder: 3
 updates:
     - date: 2026-07-16
       content: 按当前 Bangumi 收藏墙实现整理数据同步、筛选与交互说明。
-    - date: 2026-05-25
-      content: 补充看过列表的年份视图、随机推荐兜底池和番剧详情弹层。
-    - date: 2026-05-25
-      content: 将看过列表改为按个人评分排序，并加入 Bangumi 公共动画随机推荐。
-    - date: 2026-05-25
-      content: 精简番剧卡片默认信息，将短评、进度和排名收纳到悬停层。
-    - date: 2026-05-25
-      content: 增加状态切换导航和分组内 Load More 展开。
-    - date: 2026-05-24
-      content: 调整 Bangumi 页面头部样式。
-    - date: 2026-05-24
-      content: 将原 Bilibili 追番方案整体升级为 Bangumi 收藏墙。
 ---
 
 ## 数据
 
 ### 收藏接口
 
-Bangumi 用户收藏需要公开可访问。笔者的用户 ID 是 `1020990`，动画收藏从下面的接口读取：
+Bangumi 用户收藏需要公开可访问。动画收藏接口为：
 
 ```text
-https://api.bgm.tv/v0/users/1020990/collections?subject_type=2&limit=100&offset=0
+https://api.bgm.tv/v0/users/<user-id>/collections?subject_type=2&limit=100&offset=0
 ```
 
 `subject_type=2` 表示动画，`limit` 与 `offset` 用于分页。页面使用以下字段：
@@ -38,8 +26,8 @@ https://api.bgm.tv/v0/users/1020990/collections?subject_type=2&limit=100&offset=
 | 字段 | 含义 |
 | --- | --- |
 | `type` | 收藏状态，比如想看、看过、在看、搁置 |
-| `rate` | 自己给这部番的评分 |
-| `comment` | 自己写的短评 |
+| `rate` | 用户评分 |
+| `comment` | 用户短评 |
 | `ep_status` | 当前看到第几集 |
 | `subject.name_cn` | 中文标题 |
 | `subject.images.common` | 封面图 |
@@ -55,7 +43,7 @@ Bangumi 收藏变化后重新运行同步脚本，页面便会使用新数据。
 脚本分页请求收藏接口，只保留页面使用的字段：
 
 ```python
-DEFAULT_USER = "1020990"
+DEFAULT_USER = "your-user-id"
 DEFAULT_OUTPUT = Path("data/bangumi/anime.json")
 API_ROOT = "https://api.bgm.tv/v0"
 ```
@@ -64,20 +52,20 @@ API_ROOT = "https://api.bgm.tv/v0"
 
 ```json
 {
-  "subject_id": 262897,
+  "subject_id": 123456,
   "type": 3,
-  "rate": 9,
+  "rate": 0,
   "ep_status": 0,
-  "comment": "尸体暖暖的",
+  "comment": "",
   "subject": {
-    "name": "ゆるキャン△ SEASON 2",
-    "name_cn": "摇曳露营△ 第二季",
-    "date": "2021-01-07",
-    "score": 8.3,
-    "rank": 89,
-    "eps": 13,
+    "name": "Example Title",
+    "name_cn": "示例标题",
+    "date": "2026-01-01",
+    "score": 8.0,
+    "rank": 100,
+    "eps": 12,
     "images": {
-      "common": "https://lain.bgm.tv/r/400/pic/cover/l/0f/50/262897_d3555.jpg"
+      "common": "https://example.com/cover.jpg"
     }
   }
 }
@@ -98,14 +86,14 @@ python scripts/sync_bangumi.py
 `layouts/shortcodes/bangumi.html` 默认读取 `data/bangumi/anime.json`。只有显式打开 `live` 时，构建过程才会请求 Bangumi API：
 
 ```go-html-template
-{{- $user := .Get "user" | default (.Page.Params.bangumi.user | default (.Site.Params.bangumi.user | default "1020990")) -}}
+{{- $user := .Get "user" | default (.Page.Params.bangumi.user | default (.Site.Params.bangumi.user | default "your-user-id")) -}}
 {{- $limit := .Get "limit" | default (.Page.Params.bangumi.limit | default (.Site.Params.bangumi.limit | default 100)) -}}
 {{- $live := .Get "live" | default (.Page.Params.bangumi.live | default (.Site.Params.bangumi.live | default false)) -}}
 {{- $bangumiData := .Site.Data.bangumi.anime | default dict -}}
 {{- $source := "cache" -}}
 {{- if $live -}}
     {{- $apiURL := printf "https://api.bgm.tv/v0/users/%s/collections?subject_type=2&limit=%v&offset=0" $user $limit -}}
-    {{- $opts := dict "headers" (dict "Accept" "application/json" "User-Agent" "ElainafanBlog/1.0 (https://www.elainafan.one)") -}}
+    {{- $opts := dict "headers" (dict "Accept" "application/json" "User-Agent" "HugoBlog/1.0 (https://example.com)") -}}
     {{- $res := resources.GetRemote $apiURL $opts -}}
     {{- if and $res (not $res.Err) -}}
         {{- $bangumiData = $res.Content | transform.Unmarshal -}}
@@ -138,23 +126,23 @@ python scripts/sync_bangumi.py
 </header>
 ```
 
-### 状态与排序
+![Bangumi 动画收藏页面](bangumi-1.png)
+
+### 状态分组
 
 收藏按 Bangumi 状态分组：
 
 ```go-html-template
 {{- $groups := slice
-    (dict "type" 3 "label" "在看" "name" "watching" "initial" 0 "step" 8)
-    (dict "type" 2 "label" "看过" "name" "watched" "initial" 12 "step" 12)
-    (dict "type" 1 "label" "想看" "name" "wish" "initial" 8 "step" 8)
-    (dict "type" 4 "label" "搁置" "name" "on-hold" "initial" 8 "step" 8)
-    (dict "type" 5 "label" "抛弃" "name" "dropped" "initial" 8 "step" 8)
+    (dict "type" 3 "label" "在看" "name" "watching")
+    (dict "type" 2 "label" "看过" "name" "watched")
+    (dict "type" 1 "label" "想看" "name" "wish")
+    (dict "type" 4 "label" "搁置" "name" "on-hold")
+    (dict "type" 5 "label" "抛弃" "name" "dropped")
 -}}
 ```
 
-`initial` 表示初始显示数量，`step` 表示每次点击 `Load More` 展开的数量。`在看` 使用 `initial: 0` 全部显示，`看过` 初始显示 12 张。
-
-状态导航不放“全部”，只保留具体状态。点击某个按钮时，页面只显示对应的状态面板：
+状态导航遍历有内容的分组，点击按钮时显示对应面板：
 
 ```go-html-template
 <nav class="bangumi-tabs" aria-label="Bangumi 收藏状态">
@@ -169,35 +157,9 @@ python scripts/sync_bangumi.py
 </nav>
 ```
 
-`看过` 默认按个人评分降序排列：
+较长的分组按批次显示，`Load More` 继续展开当前分组；“看过”分组还可以在评分顺序与年份视图之间切换。
 
-```go-html-template
-{{ if eq .name "watched" }}
-    {{ $groupItems = sort $groupItems "rate" "desc" }}
-{{ end }}
-```
-
-`看过` 面板有 `按评分` 与 `按年份` 两种视图。切换视图只重新排列现有卡片，年份视图会插入年份分隔条。
-
-```html
-<button class="bangumi-view-button" type="button" data-bangumi-view="rating">按评分</button>
-<button class="bangumi-view-button" type="button" data-bangumi-view="year">按年份</button>
-```
-
-### 随机推荐
-
-导航右侧的随机按钮从 Bangumi 公共动画条目中抽取候选，不使用个人收藏：
-
-```ts
-const offset = Math.floor(Math.random() * 1800);
-const response = await fetch(
-    `https://api.bgm.tv/v0/subjects?type=2&sort=rank&limit=20&offset=${offset}`
-);
-```
-
-候选池过滤 2006 年以前的条目、评分低于 6 的作品、非日文原名，以及 OVA、OAD、ONA、剧场版、特典和总集篇。标题中的欧美动画关键词用于排除《蜘蛛侠》一类作品。
-
-页面打开后预取一批候选。远程请求超过 `1600ms` 或失败时，改用带封面和 Bangumi 链接的本地高分动画池，并在卡片上标注“本地兜底”。
+“随机一部”从 Bangumi 公共动画条目中取得候选，不局限于用户收藏。远程请求失败或超时时改用本地候选池，结果仍保留封面、评分和 Bangumi 条目链接。
 
 ### 卡片与详情
 
@@ -243,6 +205,8 @@ const response = await fetch(
 ```
 
 普通点击先打开轻量详情弹层，展示封面、标题、个人评分、Bangumi 分数、排名、进度和短评。弹层内提供 Bangumi 条目链接，`Ctrl` / `Command` 点击卡片则直接在新标签页打开。
+
+![Bangumi 收藏详情弹层](bangumi-2.png)
 
 样式沿用 Stack 的 `var(--card-background)`、`var(--shadow-l2)` 和文字颜色变量，亮色与暗色模式共用同一套结构。
 
