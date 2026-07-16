@@ -15,8 +15,6 @@ updates:
       content: 为算法分类文章接入进入页面时的随机曲目联动。
 ---
 
-播放器固定在页面右下角，使用浏览器原生 `Audio` 和自定义界面。PJAX 只替换正文与侧栏，播放器节点留在页面中继续播放；页面切换结束后，Stack、KaTeX、Giscus、搜索与图片灯箱会重新初始化。
-
 ## 播放器
 
 ### 控件
@@ -59,7 +57,7 @@ document.body.append(root);
 
 ### 歌单
 
-播放器真正读取的是 `data/music/generated.json`，这个文件由 `scripts/sync_music.py` 生成。完整脚本可以参考 [sync_music.py](https://github.com/elainafan/Myblog/blob/main/scripts/sync_music.py)。
+歌单保存在 `data/music/generated.json`，由 [`scripts/sync_music.py`](https://github.com/elainafan/Myblog/blob/main/scripts/sync_music.py) 生成。
 
 每首本地歌曲使用一个目录，例如音频放在 `static/music/歌曲名/music.mp3`，封面放在 `static/music/歌曲名/cover.jpg`。
 
@@ -85,7 +83,7 @@ Bilibili 收藏夹地址放在 `data/music/sources.json`：
 }
 ```
 
-同步时直接运行：
+运行同步命令：
 
 ```powershell
 python scripts\sync_music.py bilibili
@@ -93,7 +91,7 @@ python scripts\sync_music.py bilibili
 
 脚本通过 Bilibili 收藏夹 API 读取视频列表，并从收藏夹 URL 中解析 `fid`。
 
-如果不想把完整收藏夹链接写进配置里，也可以只在命令行传 `media_id`：
+命令行也可以只传 `media_id`：
 
 ```powershell
 python scripts\sync_music.py bilibili --media-id <收藏夹ID>
@@ -105,13 +103,13 @@ python scripts\sync_music.py bilibili --media-id <收藏夹ID>
 - 调用 `yt-dlp` 下载音频。Bilibili 音频通常保存为 `music.m4a`，不需要额外依赖 `ffmpeg` 转码。
 - 在音频目录中写入 `info.json`，保存曲名、歌手、BV 号、分 P 页码与来源链接，再扫描 `static/music` 生成 `data/music/generated.json`。
 
-如果收藏夹不是公开的，也可以额外传 Cookie：
+非公开收藏夹需要传入 Cookie：
 
 ```powershell
 python scripts\sync_music.py bilibili --cookie-file bilibili.cookie.txt
 ```
 
-这个 `bilibili.cookie.txt` 不应该提交到仓库里，只适合放在本地使用。
+`bilibili.cookie.txt` 只保存在本地，不提交到仓库。
 
 ### 分 P
 
@@ -127,7 +125,7 @@ K-ON 合集也会拆成 `Cagayake! GIRLS`、`Don't Say Lazy`、`ふわふわ時�
 
 Bilibili 视频标题常带有“顶级品质试听”“中日字幕完整版”等附加信息，UP 主也未必是歌曲原唱，因此播放器使用单独的曲名与歌手元数据。
 
-`data/music/local.json` 用来覆盖自动抓取的元数据：
+`data/music/local.json` 覆盖自动抓取的元数据：
 
 ```json
 {
@@ -180,7 +178,7 @@ audio.addEventListener("loadedmetadata", () => {
 });
 ```
 
-播放、暂停、切歌、调节音量和关闭页面时都会更新这份状态。它负责整页刷新后的恢复；站内跳转不断歌仍然要交给 PJAX。
+播放、暂停、切歌、调节音量和关闭页面时都会更新这份状态。`localStorage` 处理整页刷新，PJAX 处理站内跳转。
 
 ### 文章联动
 
@@ -285,9 +283,7 @@ document.addEventListener('pjax:complete', () => {
 
 ### 组件初始化
 
-PJAX 只替换 HTML，不会自动重跑页面初始化脚本。
-
-普通刷新时，浏览器会重新加载整个页面，`window.onload`、`DOMContentLoaded` 和主题初始化逻辑都会自然执行。但 PJAX 只是把一段 DOM 替换掉，原先那些“页面加载时执行一次”的逻辑不会自动再跑。
+PJAX 只替换 HTML，不会触发 `window.onload`、`DOMContentLoaded` 与主题的一次性初始化逻辑。
 
 `pjax:complete` 中统一处理这些组件：
 

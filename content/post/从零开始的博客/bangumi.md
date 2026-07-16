@@ -23,8 +23,6 @@ updates:
       content: 将原 Bilibili 追番方案整体升级为 Bangumi 收藏墙。
 ---
 
-`/anime/` 是一面由 Bangumi 公开收藏生成的动画墙。页面保留收藏状态、个人评分、观看进度和短评，同时显示作品中文名、封面、放送日期、站内评分与排名。同步脚本先把数据写入本地缓存，Hugo 再通过 shortcode 渲染，页面加载和 Vercel 构建都不依赖即时 API 请求。
-
 ## 数据
 
 ### 收藏接口
@@ -118,7 +116,7 @@ python scripts/sync_bangumi.py
 {{- end -}}
 ```
 
-需要构建期实时请求时，可以写成 `{{</* bangumi live=true */>}}`；未设置时始终读取本地缓存。
+`{{</* bangumi live=true */>}}` 打开构建期实时请求；未设置时读取本地缓存。
 
 ### 页面头部
 
@@ -179,7 +177,7 @@ python scripts/sync_bangumi.py
 {{ end }}
 ```
 
-`看过` 面板提供 `按评分` 与 `按年份` 两种视图。切换时不会重新请求数据，前端只重新排列现有卡片，并在年份视图中插入年份分隔条。
+`看过` 面板有 `按评分` 与 `按年份` 两种视图。切换视图只重新排列现有卡片，年份视图会插入年份分隔条。
 
 ```html
 <button class="bangumi-view-button" type="button" data-bangumi-view="rating">按评分</button>
@@ -197,9 +195,9 @@ const response = await fetch(
 );
 ```
 
-前端拿到结果后还会筛掉 2006 年以前的条目、评分低于 6 的作品、非日文原名，以及 OVA、OAD、ONA、剧场版、特典和总集篇。标题里带有欧美动画常见关键词的条目也不会进入候选池，避免随机结果里混进《蜘蛛侠》一类作品。
+候选池过滤 2006 年以前的条目、评分低于 6 的作品、非日文原名，以及 OVA、OAD、ONA、剧场版、特典和总集篇。标题中的欧美动画关键词用于排除《蜘蛛侠》一类作品。
 
-页面打开后会先在后台预取一批候选，点击时优先从已有池子里抽，减少等待。远程请求超过 `1600ms` 或直接失败时，则退回带有封面和 Bangumi 链接的本地高分动画池，并在卡片上标注“本地兜底”。
+页面打开后预取一批候选。远程请求超过 `1600ms` 或失败时，改用带封面和 Bangumi 链接的本地高分动画池，并在卡片上标注“本地兜底”。
 
 ### 卡片与详情
 
@@ -250,7 +248,7 @@ const response = await fetch(
 
 ## 页面入口
 
-页面位于 `content/page/anime/index.md`。渲染逻辑由 shortcode 负责，正文只需要 frontmatter 和一行调用：
+页面位于 `content/page/anime/index.md`，正文只有 frontmatter 与 shortcode：
 
 ```yaml
 ---
@@ -284,7 +282,7 @@ python scripts/sync_bangumi.py
 
 运行后提交更新的 `data/bangumi/anime.json`。Vercel 构建直接读取该文件，无需等待 Bangumi API。
 
-需要让 Hugo 在构建时请求最新数据时，可以显式打开实时模式：
+构建期实时请求使用：
 
 ```go-html-template
 {{</* bangumi live=true */>}}

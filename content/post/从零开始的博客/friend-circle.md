@@ -13,25 +13,11 @@ updates:
       content: 补充 Friend Circle 效果图，并整理 Stack 主题友链页接入说明。
 ---
 
-本站在友链卡片下方渲染 `Friend Circle`，显示朋友们最近更新的文章。示例页面：
-
-<https://www.elainafan.one/friends/>
-
-开源仓库：
-
-<https://github.com/elainafan/hugo-friend-circle>
-
-数据来自 RSS / Atom，缺少 feed 时再尝试 HTML 解析。GitHub Actions 定时更新生成文件，页面本身不需要后端或数据库。
-
-![友链页整体效果，普通友链卡片下方接入 Friend Circle](friend-circle-1.png)
-
 ## 数据抓取
-
-`data/friends.yaml` 保存站点信息，`scripts/fetch_feeds.py` 抓取文章并生成 `data/friend_posts.json`，Hugo 在构建时读取 JSON。抓取与页面渲染彼此独立，外部站点暂时不可用时仍可使用上一次生成的数据。
 
 ### 配置
 
-从项目中复制这些文件到 Hugo 站点根目录：
+项目文件放在 [hugo-friend-circle](https://github.com/elainafan/hugo-friend-circle)。接入 Hugo 时复制：
 
 - `scripts/fetch_feeds.py`
 - `data/friends.yaml`
@@ -63,13 +49,13 @@ friends:
     description: No RSS exposed; fallback will try dated links on homepage and archives.
 ```
 
-`feed` 可以省略。脚本会先在站点首页寻找 RSS / Atom 的 `<link rel="alternate">`；未找到时，再解析首页、`/archives/`、`/posts/` 与 `/post/` 中的文章链接。
+省略 `feed` 时，脚本先在站点首页寻找 RSS / Atom 的 `<link rel="alternate">`；未找到时，再解析首页、`/archives/`、`/posts/` 与 `/post/` 中的文章链接。
 
 HTML 兜底适合归档页中带有明确日期和文章标题的站点，无法覆盖所有博客主题。结构特殊的站点仍应显式填写 RSS 或 Atom feed。
 
 ### 慢站点与失效站点
 
-网络较慢的站点可以单独调大 `timeout` 与 `retries`：
+网络较慢的站点单独调大 `timeout` 与 `retries`：
 
 ```yaml
   - name: Slow Friend
@@ -80,7 +66,7 @@ HTML 兜底适合归档页中带有明确日期和文章标题的站点，无法
     retries: 3
 ```
 
-域名过期、站点关闭或没有可解析 feed 时，可以保留友链卡片并关闭朋友圈抓取：
+域名过期、站点关闭或没有可解析 feed 时，保留友链卡片并关闭朋友圈抓取：
 
 ```yaml
   - name: Offline Friend
@@ -116,7 +102,7 @@ settings:
 
 ### 独立页面
 
-独立页面可以放在 `content/friends-circle/index.md`：
+独立页面放在 `content/friends-circle/index.md`：
 
 ```yaml
 ---
@@ -133,6 +119,10 @@ comments: false
 ### Stack 友链页
 
 本站把 `Friend Circle` 放在普通友链卡片下方。
+
+<https://www.elainafan.one/friends/>
+
+![友链页整体效果，普通友链卡片下方接入 Friend Circle](friend-circle-1.png)
 
 友链卡片由 `layouts/partials/article/components/links.html` 渲染。partial 末尾调用 Friend Circle：
 
@@ -155,8 +145,6 @@ comments: false
 
 ![Friend Circle 卡片样式，显示头像、文章标题和日期](friend-circle-2.png)
 
-前端提供三个交互：
-
 - 搜索文章或朋友。
 - 按朋友筛选。
 - 默认只展示前几条，点击 `Load More` 后继续展开。
@@ -167,7 +155,7 @@ comments: false
 
 GitHub Actions 定时运行脚本，并把生成的 `data/friend_posts.json` 提交回仓库。
 
-可以在自己的博客仓库里写一个 workflow：
+博客仓库中的 workflow 如下：
 
 ```yaml
 name: update friend circle

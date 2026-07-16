@@ -35,8 +35,6 @@ updates:
       content: 补充 PJAX 场景下 PhotoSwipe 需要常驻 footer 的处理。
 ---
 
-本站使用 Hugo `v0.131.0` 与 Stack `v3.26.0`。`themes/hugo-theme-stack` 保持原样，站点根目录中的 `layouts`、`assets` 与 `static` 负责覆盖同名主题文件；例如 `layouts/partials/footer/footer.html` 会优先于主题中的 footer partial。主题升级时只需要检查这些覆盖文件的兼容性。
-
 ## 页面外观
 
 ### 卡片圆角
@@ -330,8 +328,6 @@ updates:
   transform: rotate(360deg);
 }
 ```
-
-它没有什么技术难度，但非常适合个人博客。鼠标挪上去时头像转一圈，属于那种“平时没用，但是看到了会有点开心”的小装饰。
 
 ### 正文图片
 正文图片的圆角样式同样位于 `assets/scss/custom/_base.scss`：
@@ -822,8 +818,6 @@ function updateReadingProgress() {
 }
 ```
 
-进度条适用于 CS Lab、建站教程和算法长文，不会改动正文结构。
-
 ## 页脚与文章信息
 
 ### 运行时间
@@ -1040,7 +1034,7 @@ Hugo 渲染菜单时会读取 `assets/icons/photo.svg`。
 {{- $imgs := resources.Match "waifus/*.{jpg,jpeg,png,webp}" -}}
 ```
 
-模板直接生成瀑布流。每张图使用 Hugo 的 `Fit` 生成缩略图，`a` 标签指向原图：
+`photo-toolbar` 显示图片数量，下面是三列瀑布流。每张图使用 Hugo 的 `Fit` 生成缩略图，`a` 标签指向原图：
 
 ```go-html-template
 {{- range $i, $img := $imgs -}}
@@ -1123,5 +1117,3 @@ function appendLoopBatch() {
 ```
 
 Fisher-Yates shuffle 打乱首屏顺序。步长 `17` 与当前图库数量互质，循环追加时不会紧接着重复同一段顺序。克隆节点通过 `data-original-index` 映射回原始图片列表，PhotoSwipe 只维护原始图库数据，不会在每次追加后重新扫描整条瀑布流。
-
-![图库页面效果](stack-7.png)
