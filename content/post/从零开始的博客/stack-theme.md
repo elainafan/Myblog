@@ -7,6 +7,8 @@ aliases:
 hidden: true
 seriesOrder: 1
 updates:
+    - date: 2026-07-17
+      content: 删除已停用的系列子页底部导航说明。
     - date: 2026-07-16
       content: 按当前站点实现整理主题样式、文章交互与功能页说明。
 ---
@@ -389,9 +391,7 @@ PJAX 只替换 `.main-container`、`.js-Pjax` 与 `.Timer`，PhotoSwipe 的根�
 
 PhotoSwipe 只由全站 footer 插入，页面中始终只有一份 `.pswp`。直接打开文章或通过 PJAX 进入文章时，`window.Stack.init()` 都会重新扫描 `.article-content` 并绑定图片预览。
 
-## 内容组织
-
-### 更新时间
+## 更新时间
 
 需要持续维护的文章在 frontmatter 中使用 `updates`，最新记录放在第一项：
 
@@ -417,76 +417,6 @@ updates:
 ```
 
 卡片同时保留发布日期与“更新 YYYY-MM-DD”，更新说明只存在于 frontmatter 中。
-
-### 系列导航
-
-长期系列由一个目录主页与多个 `hidden: true` 子页组成。隐藏子页不进入归档，正文底部显示“上一篇 / 返回系列 / 下一篇”。
-
-模板入口位于 `layouts/partials/article/article.html`：
-
-```go-html-template
-{{ partial "article/components/series-navigation" . }}
-```
-
-`layouts/partials/article/components/series-navigation.html` 遍历 `.Site.RegularPages`，筛出与当前页面 `.File.Dir` 相同的文件；`main.md` 作为系列主页，`hidden: true` 页面作为系列子页：
-
-```go-html-template
-{{- range .Site.RegularPages -}}
-    {{- if and .File (eq .File.Dir $current.File.Dir) -}}
-        {{- if eq .File.BaseFileName "main" -}}
-            {{- $indexPage = . -}}
-        {{- end -}}
-        {{- if .Params.hidden -}}
-            {{- $siblings = $siblings | append . -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-```
-
-子页通过 frontmatter 中的 `seriesOrder` 排序：
-
-```yaml
-seriesOrder: 1
-```
-
-`seriesOrder` 不依赖文件名：
-
-```go-html-template
-{{- $siblings = sort $siblings "Params.seriesOrder" "asc" -}}
-```
-
-样式位于 `assets/scss/custom/_article-extras.scss`，移动端一列，桌面端三列：
-
-```scss
-.series-navigation {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin: 28px 0 8px;
-
-  @include respond(md) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-```
-
-单个导航项使用卡片背景、阴影和轻微上浮效果：
-
-```scss
-.series-nav-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 88px;
-  padding: 16px 18px;
-  border-radius: 18px;
-  background: var(--card-background);
-  box-shadow: var(--shadow-l1);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-```
-
-归档页承担全站浏览入口，长期内容通过系列主页、隐藏子页与文章底部导航连接。加密文章仍按 `hidden`、`encrypt` 与目录关系处理，搜索索引和 RSS 不会泄露正文。
 
 ## 样式文件
 
