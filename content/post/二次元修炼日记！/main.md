@@ -7,7 +7,7 @@ categories:
     - 算法
 updates:
     - date: 2026-07-17
-      content: 合并 Codeforces、AtCoder、XCPC 与题目难度归档，移除比赛统计表。
+      content: 合并 Codeforces、AtCoder、XCPC、题目难度与新算法归档，移除比赛统计表。
 seriesExclude: true
 ---
 
@@ -24,6 +24,10 @@ Codeforces 的题目很考验临场思维，在目前所在的分段里，还得
 希望在未来一年里 Rating 能有所进步，加油加油！
 
 - By Elainafan，2025.11.29，写于发烧之时
+
+## 新算法
+
+- [欧拉反演与莫比乌斯反演]({{< ref "euler-mobius-inversion.md" >}})
 
 ## Codeforces
 

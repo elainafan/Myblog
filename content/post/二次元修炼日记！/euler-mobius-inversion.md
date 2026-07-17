@@ -2,8 +2,7 @@
 title: 欧拉反演与莫比乌斯反演
 date: 2026-05-07
 encrypt: true
-categories:
-    - 算法
+hidden: true
 ---
 
 ## 前言
