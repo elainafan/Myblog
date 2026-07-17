@@ -130,15 +130,19 @@
 
 .encrypt-box__portrait {
   position: absolute;
-  inset: 8px 0 45px;
+  inset: 8px 0;
   pointer-events: none;
+}
+
+.article-page .main-article .article-content .encrypt-box__character {
+  max-width: 100% !important;
+  height: 100% !important;
 }
 
 .encrypt-box__character {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 100%;
   object-fit: contain;
   object-position: center bottom;
   opacity: 0;
@@ -151,23 +155,6 @@
     opacity: 1;
     transform: translateX(0) scale(1);
   }
-}
-
-.encrypt-box__cast-name {
-  position: absolute;
-  right: 24px;
-  bottom: 18px;
-  left: 24px;
-  z-index: 3;
-  overflow: hidden;
-  color: var(--encrypt-accent);
-  font-size: 1.24rem;
-  font-weight: 800;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: 0 1px 10px rgba(255, 255, 255, .82);
-  transition: color .28s ease;
 }
 
 .encrypt-box[data-lock-state="checking"] {
@@ -206,10 +193,6 @@
 
   .encrypt-box__character {
     filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .34));
-  }
-
-  .encrypt-box__cast-name {
-    text-shadow: 0 1px 11px rgba(0, 0, 0, .72);
   }
 }
 
@@ -270,9 +253,8 @@
   }
 
   .encrypt-box__portrait {
-    inset: 0 0 42px;
+    inset: 0;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

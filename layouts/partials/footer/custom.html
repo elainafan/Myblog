@@ -239,25 +239,21 @@
                     window.__ELAINA_ENCRYPT_CHARACTERS__ = [
                         {
                             id: "eriri",
-                            name: "英梨梨",
                             accent: "#e85f91",
                             rgb: "232, 95, 145"
                         },
                         {
                             id: "mikoto",
-                            name: "御坂美琴",
                             accent: "#378fc5",
                             rgb: "55, 143, 197"
                         },
                         {
                             id: "taiga",
-                            name: "逢坂大河",
                             accent: "#d65d64",
                             rgb: "214, 93, 100"
                         },
                         {
                             id: "kurisu",
-                            name: "牧濑红莉栖",
                             accent: "#a95970",
                             rgb: "169, 89, 112"
                         }
@@ -270,8 +266,7 @@
                         const characters = window.__ELAINA_ENCRYPT_CHARACTERS__;
                         const cast = box.querySelector("[data-encrypt-cast]");
                         const image = box.querySelector("[data-encrypt-character]");
-                        const name = box.querySelector("[data-encrypt-character-name]");
-                        if (!characters.length || !cast || !image || !name) return;
+                        if (!characters.length || !cast || !image) return;
 
                         const character = characters[Math.floor(Math.random() * characters.length)];
                         const imageSource = cast.dataset[`${character.id}Src`];
@@ -280,7 +275,6 @@
                         box.dataset.encryptCharacter = character.id;
                         box.style.setProperty("--encrypt-accent", character.accent);
                         box.style.setProperty("--encrypt-accent-rgb", character.rgb);
-                        name.textContent = character.name;
                         image.src = imageSource;
                         image.classList.add("is-active");
                         box.dataset.castReady = "true";
