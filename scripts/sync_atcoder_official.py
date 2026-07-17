@@ -20,7 +20,6 @@ DEFAULT_CP_ROOT = BLOG_ROOT.parents[1] / "CP" / "Atcoder"
 DEFAULT_HANDLE = "Shiro_neko"
 SERIES_TITLE = "放学后喝茶日记！"
 SERIES_DIR = BLOG_ROOT / "content" / "post" / SERIES_TITLE
-DATA_PATH = BLOG_ROOT / "data" / "atcoder.yaml"
 DEFAULT_IMAGE = "/images/anime-diary/5.png"
 CHECK = "√"
 MISS_PERF_THRESHOLD = 100
@@ -82,12 +81,6 @@ def fetch_history(handle: str) -> list[dict[str, Any]]:
     url = f"https://atcoder.jp/users/{handle}/history/json"
     payload = run_curl(url, "application/json,text/plain,*/*")
     return json.loads(payload)
-
-
-def yaml_value(value: Any) -> str:
-    if isinstance(value, int):
-        return str(value)
-    return json.dumps("" if value is None else str(value), ensure_ascii=False)
 
 
 def label_sort_key(label: str) -> tuple[str, int]:
@@ -351,41 +344,6 @@ def clean_code(path: Path) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
-def write_yaml(path: Path, contests: list[Contest]) -> None:
-    lines = ['generated_by: "scripts/sync_atcoder_official.py"', "contests:"]
-    for contest in contests:
-        lines.extend(
-            [
-                f"  - date: {yaml_value(contest.date)}",
-                f"    round: {yaml_value(contest.round)}",
-                f"    title: {yaml_value(contest.title)}",
-                f"    div: {yaml_value(contest.div)}",
-                f"    group: {yaml_value(contest.group)}",
-                f"    contest: {yaml_value(contest.contest)}",
-                f"    url: {yaml_value(contest.url)}",
-                f"    solved: {contest.solved}",
-                f"    rank: {yaml_value(contest.rank)}",
-                f"    perf: {yaml_value(contest.perf)}",
-            ]
-        )
-        if contest.rating:
-            lines.append(f"    rating: {yaml_value(contest.rating)}")
-        lines.append(f"    ref: {yaml_value(contest.ref)}")
-        status_summary = " ".join(f"{task.label}{task.status or '-'}" for task in contest.tasks)
-        lines.append(f"    status: {yaml_value(status_summary)}")
-        lines.append("    tasks:")
-        for task in contest.tasks:
-            lines.extend(
-                [
-                    f"      - label: {yaml_value(task.label)}",
-                    f"        problem: {yaml_value(task.problem_id)}",
-                    f"        status: {yaml_value(task.status)}",
-                    f"        url: {yaml_value(task.url)}",
-                ]
-            )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
 def write_main(path: Path, contests: list[Contest]) -> None:
     labels = sorted({task.label for contest in contests for task in contest.tasks}, key=label_sort_key)
     lines = [
@@ -397,6 +355,8 @@ def write_main(path: Path, contests: list[Contest]) -> None:
         "categories:",
         "    - 算法",
         "updates:",
+        "    - date: 2026-07-17",
+        "      content: 移除已停用的独立比赛页入口。",
         "    - date: 2026-06-25",
         "      content: 同步 Shiro_neko 的 AtCoder 官方记录，按官方过题数区分赛时通过与赛后补题。",
         "    - date: 2026-05-28",
@@ -405,8 +365,6 @@ def write_main(path: Path, contests: list[Contest]) -> None:
         "---",
         "## 前言",
         "这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。",
-        "",
-        '{{< secret-entry href="/series/atcoder/" label="打开 AtCoder 页面" caption="解锁之后再进总览页，ABC、ARC 和复盘入口会集中在那里。" >}}',
         "",
         "## 比赛记录",
         "| Date | Round | div | id | sol | rk | perf | " + " | ".join(labels) + " |",
@@ -521,7 +479,6 @@ def sync(cp_root: Path, handle: str) -> None:
     contests = sorted(contests_by_id.values(), key=lambda contest: (contest.date, contest.contest))
     visible_contests = [contest for contest in contests if not contest.missed]
 
-    write_yaml(DATA_PATH, visible_contests)
     write_main(SERIES_DIR / "main.md", visible_contests)
     created = write_child_pages(SERIES_DIR, visible_contests)
 

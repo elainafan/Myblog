@@ -115,67 +115,6 @@ def epoch_seconds(dt: datetime | None) -> int | None:
     return int(dt.timestamp())
 
 
-def yaml_value(value: Any) -> str:
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    if isinstance(value, int):
-        return str(value)
-    return json.dumps("" if value is None else str(value), ensure_ascii=False)
-
-
-def write_yaml(path: Path, contests: list[Contest], generated_by: str) -> None:
-    lines = [
-        f"generated_by: {yaml_value(generated_by)}",
-        "contests:",
-    ]
-    for contest in contests:
-        lines.extend(
-            [
-                f"  - date: {yaml_value(contest.date)}",
-                f"    round: {yaml_value(contest.round)}",
-                f"    title: {yaml_value(contest.title)}",
-                f"    div: {yaml_value(contest.div)}",
-                f"    group: {yaml_value(contest.group)}",
-                f"    contest: {yaml_value(contest.contest)}",
-                f"    url: {yaml_value(contest.url)}",
-                f"    solved: {yaml_value(contest.solved)}",
-                f"    rank: {yaml_value(contest.rank)}",
-            ]
-        )
-        if contest.perf:
-            lines.append(f"    perf: {yaml_value(contest.perf)}")
-        if contest.penalty:
-            lines.append(f"    penalty: {yaml_value(contest.penalty)}")
-        if contest.team:
-            lines.append(f"    team: {yaml_value(contest.team)}")
-        if contest.rating:
-            lines.append(f"    rating: {yaml_value(contest.rating)}")
-        lines.append(f"    ref: {yaml_value(contest.ref)}")
-        if contest.penalty:
-            lines.append(f"    problems: {yaml_value(problem_text(contest.tasks))}")
-        else:
-            lines.append(f"    status: {yaml_value(status_text(contest.tasks))}")
-        lines.append("    tasks:")
-        for task in contest.tasks:
-            lines.extend(
-                [
-                    f"      - label: {yaml_value(task.label)}",
-                    f"        problem: {yaml_value(task.problem_id)}",
-                    f"        status: {yaml_value(task.status)}",
-                    f"        url: {yaml_value(task.url)}",
-                ]
-            )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def status_text(tasks: list[Task]) -> str:
-    return " ".join(f"{task.label}{task.status or '-'}" for task in tasks)
-
-
-def problem_text(tasks: list[Task]) -> str:
-    return " / ".join(task.label for task in tasks)
-
-
 def label_sort_key(label: str) -> tuple[str, int]:
     match = re.fullmatch(r"([A-Z]+)(\d*)", label)
     if not match:
@@ -533,6 +472,8 @@ def write_main_article(path: Path, title: str, date: str, intro: str, contests: 
             date,
             [
                 "updates:",
+                "    - date: 2026-07-17",
+                "      content: 移除已停用的独立比赛页入口。",
                 "    - date: 2026-05-28",
                 f"      content: {update}",
                 "seriesExclude: true",
@@ -646,63 +587,11 @@ def write_child_pages(base_dir: Path, contests: list[Contest]) -> None:
         (base_dir / contest.ref).write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
-def write_page(path: Path, title: str, layout: str, url: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    content = f"""---
-title: "{title}"
-date: 2026-05-28
-layout: "{layout}"
-slug: "{layout}"
-url: "{url}"
-comments: false
----
-"""
-    path.write_text(content, encoding="utf-8")
-
-
-def ensure_series_entries(path: Path) -> None:
-    text = path.read_text(encoding="utf-8")
-    blocks = []
-    if "AtCoder 复盘" not in text:
-        blocks.append(
-            """
-- title: AtCoder 复盘
-  badge: ATC
-  color: "#59a8ff"
-  directory: post/AtCoder修炼日记！/
-  home: post/AtCoder修炼日记！/main.md
-  includeHidden: true
-  dashboard: /series/atcoder/
-  description: 长期更新的 AtCoder 比赛复盘，自动同步官方排名、Performance 与赛时/补题状态。
-  preview: 5
-"""
-        )
-    if "XCPC VP 记录" not in text:
-        blocks.append(
-            """
-- title: XCPC VP 记录
-  badge: XCPC
-  color: "#f2c86b"
-  directory: post/XCPC修炼日记！/
-  home: post/XCPC修炼日记！/main.md
-  includeHidden: true
-  dashboard: /series/xcpc/
-  description: 省赛、区域赛和训练赛的 VP 复盘入口，用同一套题解骨架记录补题过程。
-  preview: 5
-"""
-        )
-    if blocks:
-        path.write_text(text.rstrip() + "\n\n" + "\n".join(block.strip() for block in blocks) + "\n", encoding="utf-8")
-
-
 def sync(contests_root: Path, handle: str) -> None:
     atcoder = discover_atcoder(contests_root)
     sync_atcoder_official(atcoder, handle)
     xcpc = discover_xcpc(contests_root)
     sync_xcpc_official(xcpc)
-
-    write_yaml(BLOG_ROOT / "data" / "atcoder.yaml", sorted(atcoder, key=lambda item: item.date), "scripts/sync_contest_diaries.py")
-    write_yaml(BLOG_ROOT / "data" / "xcpc.yaml", sorted(xcpc, key=lambda item: item.date), "scripts/sync_contest_diaries.py")
 
     write_main_article(
         BLOG_ROOT / "content" / "post" / ATCODER_SERIES_DIR / "main.md",
@@ -722,9 +611,6 @@ def sync(contests_root: Path, handle: str) -> None:
     )
     write_child_pages(BLOG_ROOT / "content" / "post" / ATCODER_SERIES_DIR, atcoder)
     write_child_pages(BLOG_ROOT / "content" / "post" / XCPC_SERIES_DIR, xcpc)
-    write_page(BLOG_ROOT / "content" / "page" / "atcoder" / "index.md", "AtCoder", "atcoder", "/series/atcoder/")
-    write_page(BLOG_ROOT / "content" / "page" / "xcpc" / "index.md", "XCPC", "xcpc", "/series/xcpc/")
-    ensure_series_entries(BLOG_ROOT / "data" / "series.yaml")
 
 
 def main() -> int:

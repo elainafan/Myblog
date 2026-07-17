@@ -6,6 +6,8 @@ image: "/images/anime-diary/5.png"
 categories: 
     - 算法
 updates:
+    - date: 2026-07-17
+      content: 移除已停用的独立比赛页入口。
     - date: 2026-06-25
       content: 同步 PaperMemory 与 Kuro_neko 的官方参赛记录，补充 Unrated / VP 状态和近期场次入口。
     - date: 2026-05-28
@@ -36,8 +38,6 @@ seriesExclude: true
 希望在未来一年里Rating能有所进步，加油加油！
 
 - By Elainafan，2025.11.29，写于发烧之时
-
-{{< secret-entry href="/series/codeforces/" label="打开 Codeforces 页面" caption="解锁之后再进总览页，比赛表、复盘入口和近期记录都放在那里。" >}}
 
 ## 看番日记
 | Date | Round | div | id | sol | rk | perf | A | B | C | D | E | F | G | H | I |

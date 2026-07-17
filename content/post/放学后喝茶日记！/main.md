@@ -6,6 +6,8 @@ image: "/images/anime-diary/6.jpg"
 categories:
     - 算法
 updates:
+    - date: 2026-07-17
+      content: 移除已停用的独立比赛页入口。
     - date: 2026-06-25
       content: 同步 Shiro_neko 的 AtCoder 官方记录，按官方过题数区分赛时通过与赛后补题。
     - date: 2026-05-28
@@ -14,8 +16,6 @@ seriesExclude: true
 ---
 ## 前言
 这一篇用来放 AtCoder 的长期复盘。ABC 的 A、B、C 也会标记为赛时通过，只是题解页里仍然只保留真正需要回看的题目；表格中的 `√` 表示赛时通过，`B` 表示赛后补题。
-
-{{< secret-entry href="/series/atcoder/" label="打开 AtCoder 页面" caption="解锁之后再进总览页，ABC、ARC 和复盘入口会集中在那里。" >}}
 
 ## 比赛记录
 | Date | Round | div | id | sol | rk | perf | A | B | C | D | E | F | G |

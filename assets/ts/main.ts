@@ -364,46 +364,6 @@ function setupBangumiCollection() {
     });
 }
 
-function setupCodeforcesDashboard() {
-    const root = document.querySelector('[data-cf-dashboard]') as HTMLElement;
-    if (!root || root.dataset.cfEnhanced === 'true') return;
-    root.dataset.cfEnhanced = 'true';
-
-    const searchInput = root.querySelector('[data-cf-search]') as HTMLInputElement;
-    const divSelect = root.querySelector('[data-cf-div]') as HTMLSelectElement;
-    const statusSelect = root.querySelector('[data-cf-status]') as HTMLSelectElement;
-    const perfSelect = root.querySelector('[data-cf-perf]') as HTMLSelectElement;
-    const cards = Array.from(root.querySelectorAll('[data-cf-card]')) as HTMLElement[];
-    const empty = root.querySelector('[data-cf-empty]') as HTMLElement;
-
-    const applyFilters = () => {
-        const query = (searchInput?.value || '').trim().toLowerCase();
-        const div = divSelect?.value || 'all';
-        const status = statusSelect?.value || 'all';
-        const perf = perfSelect?.value || 'all';
-        let visible = 0;
-
-        cards.forEach(card => {
-            const matchQuery = !query || (card.dataset.search || '').includes(query);
-            const matchDiv = div === 'all' || card.dataset.div === div;
-            const matchStatus = status === 'all' || card.dataset.status === status;
-            const matchPerf = perf === 'all' || card.dataset.perf === perf;
-            const hidden = !(matchQuery && matchDiv && matchStatus && matchPerf);
-
-            card.classList.toggle('is-hidden', hidden);
-            if (!hidden) visible++;
-        });
-
-        if (empty) empty.classList.toggle('is-hidden', visible > 0);
-    };
-
-    searchInput?.addEventListener('input', applyFilters);
-    divSelect?.addEventListener('change', applyFilters);
-    statusSelect?.addEventListener('change', applyFilters);
-    perfSelect?.addEventListener('change', applyFilters);
-    applyFilters();
-}
-
 function sortBangumiCards(cards: HTMLElement[], mode: string) {
     return [...cards].sort((left, right) => {
         if (mode === 'year') {
@@ -637,7 +597,6 @@ let Stack = {
         setupReadingProgress();
         setupRandomWalk();
         setupBangumiCollection();
-        setupCodeforcesDashboard();
 
         /**
          * Add linear gradient background to tile style article
