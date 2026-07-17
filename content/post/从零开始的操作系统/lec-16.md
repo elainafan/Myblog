@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 16: Memory 4 - Page Replacement, Clock, and Thrashing
-
-## 导读
-
-- Demand paging 把磁盘当作内存的后备存储；本讲追问 page fault 发生时，OS 应该替换哪一页。
-- Replacement policy 的错误代价很高，因为一次 miss 可能意味着访问 disk/backing store，而不是普通 cache miss。
-- `MIN` 给出理论下界，`LRU` 利用 locality 近似未来，`Clock` 用硬件 use bit 做低成本近似。
-- 当工作集放不进物理内存时，系统会从偶发 page fault 走向 `thrashing`。
-
-## 本讲地图
-
-| 主题 | 要解决的问题 | 关键词 |
-| --- | --- | --- |
-| Replacement policies | page fault 时踢掉哪一页 | `FIFO`, `RANDOM`, `MIN`, `LRU` |
-| Stack property | 增加 frame 是否一定减少 faults | `Belady's anomaly` |
-| Clock algorithm | 精确 LRU 太贵，如何近似 | `use bit`, second chance |
-| Clock variations | dirty page 和硬件 bit 怎么处理 | N-th chance, modified/use bit emulation |
-| Allocation and thrashing | frame 怎么分给进程，何时崩溃 | PFF, working set, thrashing |
-
-## 正文
-
-Page replacement 的核心不是某个算法名字，而是系统如何用有限 frame 留住下一段时间还会被用到的页面。
-
-### Page Replacement
+## Page Replacement
 
 ![Replacement policy motivation](assets/lecture-16/slide-006-replacement-policies.png)
 
@@ -49,7 +26,7 @@ Demand paging 可以看成一种缓存：virtual page 是缓存块，physical fr
 
 `MIN` 的价值不是实用，而是给出“最多能好到哪里”的基准。`LRU` 的价值在于相信程序访问具有 temporal locality：过去很久没用的页，未来短时间内也较不可能用到。
 
-### Stack Property
+## Stack Property
 
 ![Belady anomaly](assets/lecture-16/slide-017-belady-anomaly.png)
 
@@ -61,7 +38,7 @@ FIFO 不满足 stack property，因此可能出现加内存反而 page faults �
 
 这件事的要点不是“FIFO 总是差”，而是 FIFO 的状态不具有包含关系。更多 frames 会改变进入队列和离开队列的相对历史，从而产生反直觉结果。
 
-### Clock Algorithm
+## Clock Algorithm
 
 ![Clock algorithm](assets/lecture-16/slide-018-clock-algorithm.png)
 
@@ -89,7 +66,7 @@ page fault:
 
 Clock hand 的速度也能反映系统状态。hand 移动慢通常说明 page faults 不多，系统比较健康；hand 转得很快则说明频繁缺页，可能已经接近内存压力或 thrashing。
 
-### N-th Chance
+## N-th Chance
 
 ![Nth chance clock](assets/lecture-16/slide-032-nth-chance-clock.png)
 
@@ -105,7 +82,7 @@ Dirty page 通常值得额外考虑，因为替换 dirty page 需要写回 disk�
 
 这类模拟本质上是把硬件状态转化为额外 page faults。它让 OS 在较弱硬件上也能实现近似算法，但代价就是 trap 路径变长，体现的是硬件支持与软件开销之间的取舍。
 
-### Second-Chance List
+## Second-Chance List
 
 VAX/VMS 风格的 second-chance list 把内存分成 active list 和 second-chance list。active list 中的页可以正常访问；被挤出的页进入 second-chance list，并被标为 invalid。如果进程再次访问它，触发 fault 后可以快速移回 active list。
 
@@ -115,7 +92,7 @@ OS 还会维护 free frame list。后台 pageout daemon 可以提前扫描、清
 
 替换 frame 时还有一个容易被忽略的问题：OS 必须知道哪些 PTE 指向这个 physical frame。shared memory、`fork`、`mmap` 都可能让多个页表项引用同一 frame，所以系统需要 reverse mapping/coremap 之类的数据结构快速找到并失效相关 PTE。
 
-### Frame Allocation
+## Frame Allocation
 
 Replacement 可以是 `global replacement`，也可以是 `local replacement`。Global replacement 允许一个进程从全系统 frame 中选 victim，整体利用率可能更高，但进程之间会互相影响；local replacement 只在本进程 frame 内替换，隔离更强，但可能让空闲内存和高压力进程并存。
 
@@ -130,7 +107,7 @@ Frame 分配策略也有不同口味：
 
 Page-Fault Frequency 的核心是用反馈控制内存：fault rate 高于上阈值，说明进程 frame 不够；fault rate 低于下阈值，说明可能分配过多。
 
-### Thrashing
+## Thrashing
 
 ![Working set model](assets/lecture-16/slide-045-working-set.png)
 

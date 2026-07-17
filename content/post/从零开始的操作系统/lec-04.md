@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 04: IPC, Pipes and Sockets
-
-## 导读
-
-Pipe 可以理解为内核维护的有限字节队列，适合同机相关进程之间做临时、流式通信。读到 EOF 或写出 `SIGPIPE` 并不是某一个 fd 自己决定的，而是所有继承出来的读端、写端引用共同决定的，所以 fork 后必须主动关闭不用的一端。
-
-Socket 把跨主机通信也抽象成 file descriptor 上的读写端点。写 server 时尤其要区分 listening socket 和 connection socket：前者负责接连接，后者才对应某个 client 的请求读写。
-
-## 本讲地图
-
-| 主题 | 解决的问题 | 关键结论 |
-| --- | --- | --- |
-| IPC 动机 | 隔离进程如何协作 | IPC 是受控共享通道 |
-| Pipe | 如何做同机临时字节流 | 内核队列，单向，有限缓冲，空读/满写会阻塞 |
-| EOF/SIGPIPE | 管道何时结束 | 最后一个写端关闭后读 EOF，最后一个读端关闭后写 SIGPIPE/EPIPE |
-| Protocol | 有通道后如何解释字节 | 需要约定语法、语义和状态转移 |
-| Socket | 如何跨网络通信 | 通信端点，TCP 是可靠有序字节流但无消息边界 |
-| Concurrent server | 如何同时服务多个 client | 多进程、多线程、事件驱动或线程池各有取舍 |
-
-## 正文
-
-IPC 可以看成隔离之后的通信问题。pipe 先解决同机流式通信，socket 再把类似的读写接口推到网络上。
-
-### IPC
+## IPC
 
 进程抽象的设计初衷是隔离：独立地址空间防止一个程序随意读写另一个程序。但现实应用常常需要协作，例如 shell pipeline、父子进程传数据、服务器把连接交给 worker。于是 OS 要提供受控的 inter-process communication。
 
@@ -38,7 +15,7 @@ IPC 可以看成隔离之后的通信问题。pipe 先解决同机流式通信�
 
 更自然的办法是让内核维护一段 in-memory queue，只能通过系统调用访问。写入的数据暂存在内核队列，读者按顺序取走。这样没有磁盘 I/O，权限和生命周期也能由内核控制。
 
-### Pipe
+## Pipe
 
 ![Pipe queue](assets/lecture-04/slide-014-pipe-queue.png)
 
@@ -82,7 +59,7 @@ if (pid == 0) {
 
 关键不是只会 `read/write`，而是关闭不用的一端。fork 后父子都会持有读端和写端副本；如果不用的一端不关，引用计数就不符合协议预期，读者可能迟迟看不到 EOF，写者也可能迟迟收不到 `SIGPIPE`。
 
-### fd 生命周期
+## fd 生命周期
 
 Pipe 的结束条件看所有引用，而不是看某个局部变量还在不在：
 
@@ -93,7 +70,7 @@ Pipe 的结束条件看所有引用，而不是看某个局部变量还在不在
 
 Pipe 轻量、接口简单、适合临时流式通信；但普通匿名 pipe 缺少路径名，通常依赖父子继承传递 fd。它也通常是单向的。如果需要跨无亲缘关系进程、跨机器或双向通信，就要换其他 IPC 机制，socket 是其中最重要的一类。
 
-### 协议
+## 协议
 
 一旦有通信通道，双方还需要约定如何解释字节。只写 `read/write` 不是协议；真正的协议要说明消息格式、消息顺序，以及每一步对双方状态的影响。
 
@@ -104,7 +81,7 @@ Pipe 轻量、接口简单、适合临时流式通信；但普通匿名 pipe 缺
 
 状态机和消息事务图常用于描述协议。跨网络通信时还要处理不同机器的数据表示、编码和错误模型；RPC 工具把远程调用包装得像本地函数，但底层仍然绕不开协议、序列化、超时和失败处理。
 
-### Socket
+## Socket
 
 ![Socket abstraction](assets/lecture-04/slide-028-socket-abstraction.png)
 
@@ -149,7 +126,7 @@ while (1) {
 
 `server_socket` 是 listening socket，用于接收连接请求，不能直接读写某个 client 的业务数据。`accept` 返回的 `conn_socket` 才对应一条具体 TCP connection。
 
-### 连接身份
+## 连接身份
 
 网络寻址要分层看：hostname/DNS 找到主机，IP 找到网络接口，port 找到主机上的服务端点。Client 通常让内核自动分配 ephemeral port；Server 必须绑定固定端口，否则 client 不知道连接哪里。
 
@@ -163,7 +140,7 @@ while (1) {
 
 这就是为什么同一个 server port 可以同时服务多个 client：每条连接的 client IP/port 不同，五元组不同。
 
-### 并发服务器
+## 并发服务器
 
 ![Thread pool](assets/lecture-04/slide-050-thread-pool.png)
 

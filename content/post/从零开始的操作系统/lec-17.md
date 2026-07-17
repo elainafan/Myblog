@@ -7,31 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 17: Memory 5 - Memory Management in Modern Computer Systems
-
-## 导读
-
-- 这讲把“内存抽象”从单机虚拟内存扩展到数据中心、LLM serving、远程内存和 GPU sharing。
-- 六个系统的共同问题是：当本地 DRAM 或 GPU memory 不够、太贵或利用率太低时，能否把更远、更共享的资源包装成“像内存一样可用”。
-- 阅读时不妨少盯论文名，而要看它在哪一层做虚拟化：RDMA 硬件、OS paging、userspace runtime、深度学习 runtime，还是容器/OS 层。
-- 每个设计都在透明性、性能、隔离性、可编程性之间换东西。
-
-## 本讲地图
-
-| 系统 | 场景 | 核心问题 | 关键机制 |
-| --- | --- | --- | --- |
-| FaRM | RDMA 数据中心 | 跨机器 RPC/消息访问太慢 | shared address space, RDMA, transactions |
-| vLLM / PagedAttention | LLM inference | KV cache 动态增长导致显存碎片 | KV blocks, block table, COW sharing |
-| InfiniSwap | Remote paging | 集群有空闲内存，本机 swap 到磁盘太慢 | RDMA block device, slabs, power of two choices |
-| AIFM | Far memory runtime | OS paging 不懂对象语义且 kernel 开销高 | remoteable data structures, userspace runtime |
-| PipeSwitch | GPU 训练/推理共享 | DL context switch 可达秒级 | pipelined model transmission, layer grouping |
-| TGS | 容器云 GPU sharing | GPU 静态分配导致利用率低 | adaptive rate control, CUDA unified memory |
-
-## 正文
-
-可以把这组系统看成虚拟内存思想的延伸：对象不再只是磁盘 page，也可能是远端 DRAM、KV cache、far memory 或 GPU memory。
-
-### 主线
+## 内存虚拟化的扩展
 
 传统虚拟内存把磁盘伪装成比 DRAM 更大的地址空间。本讲里的系统反复复用这个思想，但目标资源变了：
 
@@ -45,7 +21,7 @@ hidden: true
 
 这种抽象的好处是统一、弹性和更高利用率；代价是额外 indirection、调度复杂度、故障处理和隔离问题。
 
-### FaRM
+## FaRM
 
 ![FaRM shared address space](assets/lecture-17/slide-012-farm-shared-address-space.png)
 
@@ -59,7 +35,7 @@ FaRM 的背景是数据中心硬件趋势：单机 DRAM 变大，网络延迟降
 
 因此 FaRM 的正确表述不是“用了 RDMA 所以快”，而是：RDMA 提供低延迟 data plane，但系统仍要在上层处理 consistency、transactions、failure 和 locality。硬件把远程读写变便宜了，系统设计并没有因此消失。
 
-### PagedAttention
+## PagedAttention
 
 ![PagedAttention](assets/lecture-17/slide-030-pagedattention.png)
 
@@ -85,7 +61,7 @@ PagedAttention 的做法很像虚拟内存：
 
 KV block 不够时，vLLM 可以 preempt 请求。恢复方式有两类：`swap` 把 KV cache 换到 CPU/host memory，再换回来；`recompute` 丢弃 KV cache，恢复时重新计算。对 prompt KV 来说，recompute 有时很快，因为可并行重算；小块 swap 则可能受传输开销影响。
 
-### InfiniSwap
+## InfiniSwap
 
 ![InfiniSwap system overview](assets/lecture-17/slide-069-infiniswap-system.png)
 
@@ -111,7 +87,7 @@ Application
 
 它的优点是透明、不改硬件、不改应用，性能明显好于磁盘 swap。局限也来自同一个选择：OS paging 粒度较粗，不懂对象语义；容错、隔离、本地备份磁盘瓶颈仍要处理。
 
-### AIFM
+## AIFM
 
 ![AIFM design overview](assets/lecture-17/slide-107-aifm-design.png)
 
@@ -127,7 +103,7 @@ AIFM 的折中是牺牲完全透明性，换取应用语义和用户态控制。
 
 和 InfiniSwap 对比，AIFM 不透明，但粒度更贴近应用对象；InfiniSwap 部署更容易，但受 page 粒度和 kernel 路径限制。
 
-### PipeSwitch
+## PipeSwitch
 
 ![PipeSwitch execution overview](assets/lecture-17/slide-137-pipeswitch-execution.png)
 
@@ -152,7 +128,7 @@ PipeSwitch 的目标是 fine-grained time-sharing 多个 DL apps，并把 contex
 
 因此 PipeSwitch 的一句话是：利用模型层次结构和流水线，把“传模型”和“跑模型”重叠起来，再用统一内存管理和 standby worker 隐藏切换杂项开销。
 
-### TGS
+## TGS
 
 ![TGS architecture](assets/lecture-17/slide-172-tgs-architecture.png)
 
@@ -170,7 +146,7 @@ Memory sharing 使用 CUDA unified memory。多个训练任务总显存需求超
 
 TGS 的设计目标是四个同时成立：transparency、high GPU utilization、performance isolation、fault isolation。它把 GPU sharing 从应用框架层下沉到 OS/容器附近，但仍借助 CUDA unified memory 这样的底层机制。
 
-### 横向比较
+## 系统层次对比
 
 这讲最值得记住的不是每篇论文的数字，而是层次选择：
 
@@ -180,4 +156,4 @@ TGS 的设计目标是四个同时成立：transparency、high GPU utilization�
 | KV cache | 传统连续预分配：kernel 简单 | PagedAttention：block table + COW，管理复杂但省显存 |
 | GPU sharing | MPS/MIG：系统或硬件支持 | AntMan/TGS/PipeSwitch：更贴近 DL workload 行为 |
 
-分析这些系统时，经常要解释“为什么旧方法浪费”。看到动态增长、碎片、共享 prefix、换出、远端资源、低利用率，就应该想到：这是不是又一个 paging/indirection/virtualization 问题。
+动态增长、碎片、共享 prefix、换出、远端资源和低利用率，都可以重新表述为 paging、indirection 或 virtualization 问题。

@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 05: Synchronization 1: Concurrency
-
-## 导读
-
-OS 提供并发的第一步，是把进程和线程表示成可排队、可保存、可恢复的控制块。Context switch 也不是简单“跳到另一个线程”，而是先保存旧上下文，再恢复新上下文，让两个线程都能以为自己只是暂停了一下。
-
-定时器中断让调度器能从不主动让出的线程手里夺回 CPU；同步机制则负责让共享可变状态在所有 interleaving 下都保持正确。后半讲用 tail latency 场景提醒我们：调度开销、队列不均衡和长请求阻塞短请求，都会被尾部延迟放大。
-
-## 本讲地图
-
-| 主题 | 解决的问题 | 关键结论 |
-| --- | --- | --- |
-| PCB/TCB | OS 如何表示可运行实体 | PCB 偏资源，TCB 偏执行上下文 |
-| 生命周期 | 线程为什么在队列间移动 | ready/running/blocked 由调度、I/O、等待、抢占驱动 |
-| Dispatch loop | 调度器如何推进系统 | run、choose、save、load 形成最小循环 |
-| Context switch | 如何暂停并恢复线程 | 保存 PC/SP/寄存器，恢复新线程状态 |
-| Timer interrupt | 线程不主动 yield 怎么办 | 外部中断强制回到内核调度路径 |
-| Shared state | 为什么同步不可省 | 线程交错导致非确定性，需要锁、条件、信号量等约束 |
-
-## 正文
-
-线程真正跑起来之后，OS 要维护控制块、调度队列和切换路径。理解这些结构之后，context switch、抢占和 tail latency 就不是孤立概念了。
-
-### 控制块
+## 控制块
 
 线程和进程没有运行时，并不是“消失”了。它们必须以某种形式留在内核里，等待下一次被调度、被唤醒或被终止。OS 提供并发的底层工作，就是维护这些实体的状态，并在合适时机把它们装回 CPU。
 
@@ -45,7 +22,7 @@ OS 提供并发的第一步，是把进程和线程表示成可排队、可保�
 
 同一进程中的多个线程共享 PCB 指向的地址空间和全局资源，但每个线程必须有自己的 TCB 和 stack，否则它们无法独立暂停和恢复。
 
-### 生命周期
+## 生命周期
 
 ![Thread lifecycle](assets/lecture-05/slide-012-thread-lifecycle.png)
 
@@ -77,7 +54,7 @@ OS 提供并发的第一步，是把进程和线程表示成可排队、可保�
 
 把这些迁移画清楚，后面分析同步、调度、I/O 阻塞和 server 并发模型都会更稳。
 
-### Dispatch loop
+## Dispatch loop
 
 ![Context switch](assets/lecture-05/slide-023-context-switch.png)
 
@@ -98,7 +75,7 @@ Loop {
 
 线程切换通常比进程切换轻，因为同一进程内的线程共享地址空间，不需要切换完整内存映射。但它仍有成本：保存恢复寄存器、切换栈、进入退出内核路径、破坏缓存局部性，甚至影响 TLB。
 
-### Context switch
+## Context switch
 
 Context switch 的代码骨架很朴素：
 
@@ -123,7 +100,7 @@ Switch(tCur, tNew) {
 
 Context switch 不是普通函数调用。它要保存旧线程寄存器、PC、栈指针等状态，再恢复新线程；旧线程会在未来某个时刻从保存点继续。
 
-### 抢占控制
+## 抢占控制
 
 线程把控制权交回内核有两类路径：
 
@@ -136,13 +113,13 @@ Context switch 不是普通函数调用。它要保存旧线程寄存器、PC、
 
 新线程启动也需要预先布置 TCB 和栈：栈指针指向新栈顶，PC 或 return address 指向启动桩 `ThreadRoot`，参数寄存器放入用户函数指针和参数。`ThreadRoot` 做启动 bookkeeping，切到用户态，调用用户函数，结束后执行 `ThreadFinish` 唤醒 join 等待者并释放资源。
 
-### 多核与 SMT
+## 多核与 SMT
 
 单核上并发来自时间复用，同一时刻只有一个线程的指令在执行。多核上多个线程可以真正并行运行。SMT / Hyperthreading 则在一个物理核心上暴露多个逻辑线程，让不同线程的指令填充执行单元空隙。
 
 多核并行提升吞吐，但共享缓存、内存带宽和锁竞争会让加速不是线性的。SMT 的收益也不是线性，因为逻辑线程共享同一个物理核心的执行资源。OS 调度器把逻辑线程当成可调度 CPU，但性能判断必须记住底层资源仍然共享。
 
-### Tail latency
+## Tail latency
 
 ![Shinjuku](assets/lecture-05/slide-049-shinjuku.png)
 
@@ -154,7 +131,7 @@ Shinjuku 展示了微秒级 tail latency 场景下快速抢占和专用调度的
 
 Shinjuku 的方向是把快速抢占带回微秒级服务：专用 scheduling/queue core、硬件虚拟化支持快速抢占、用户态快速 context switch，并根据任务时长分布选择调度策略。它展示的不是“所有系统都该这么写”，而是尾延迟目标极端时，调度路径本身也要成为设计对象。
 
-### 走向同步
+## 共享状态与同步
 
 ![Bank server](assets/lecture-05/slide-054-bank-server.png)
 

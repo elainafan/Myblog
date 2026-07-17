@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 03: Files and I/O
-
-## 导读
-
-POSIX 文件本体可以先看成字节序列，字节里的语义由上层程序解释。围绕这个抽象，C 标准库提供 `FILE *` 这样的高层 stream，内核系统调用则使用 fd 这个低层整数句柄。
-
-本讲最值得反复对齐的是状态到底存在哪里：open file description 保存 offset 等内核状态，`dup`、`dup2`、`fork` 会让多个 fd 共享它；而高低层 I/O 混用的风险，本质来自用户态 buffer 与内核 offset 状态不同步。
-
-## 本讲地图
-
-| 主题 | 解决的问题 | 关键结论 |
-| --- | --- | --- |
-| POSIX 文件抽象 | 文件、目录、路径是什么 | 文件是命名字节序列，目录是名字到对象的组织 |
-| I/O 分层 | 应用如何到达设备 | `FILE *`、fd、syscall、file system、driver 层层包装 |
-| 高层 stream | 为什么需要 `fopen/fread/fwrite` | 用户态缓冲与格式化接口让普通文件处理更方便 |
-| 低层 fd | 为什么需要 `open/read/write` | 精确控制阻塞、offset、pipe/socket、fork/exec |
-| Kernel state | fd 到底指向什么 | fd 表项指向 open file description，后者记录 offset 和对象 |
-| Aliasing | 为什么 `dup/fork` 后读写互相影响 | 多个 fd 可共享同一个 open file description |
-
-## 正文
-
-文件接口可以一路向下拆：上层看到字节序列和 `FILE *`，内核看到 fd、open file description 和设备对象。状态到底存在哪里，是读懂这一讲的关键。
-
-### 文件抽象
+## 文件抽象
 
 程序需要用统一方式处理磁盘文件、终端、设备、pipe、socket 等 I/O 对象。Unix/POSIX 的选择是把它们尽量放进同一套 open/read/write/close 风格里，也就是常说的 “everything is a file”。
 
@@ -40,7 +17,7 @@ POSIX 文件可以先理解为“文件系统中用名字引用的一组字节�
 
 “万物皆文件”强调统一接口，不代表所有对象语义完全相同。普通文件通常支持 seek，socket 和 pipe 是顺序流；终端、设备、网络连接的阻塞、flush、错误和控制语义也不同。`ioctl` 这类接口的存在，正说明有些设备专用控制不适合塞进标准 read/write。
 
-### I/O 分层
+## I/O 分层
 
 ![IO layers](assets/lecture-03/slide-007-io-layers.png)
 
@@ -64,7 +41,7 @@ I/O 分层说明了 `FILE *`、fd、syscall、文件系统和驱动各处在什�
 
 内核低层接口小而稳定，便于统一各种对象；标准库高层接口好用，但隐藏了 buffer 与 flush 时机。系统程序员要知道两层各自维护什么状态，尤其不能把 `FILE *` 当作“文件本身”。
 
-### `FILE *`
+## `FILE *`
 
 ![File buffering](assets/lecture-03/slide-028-file-buffering.png)
 
@@ -98,7 +75,7 @@ fread(&x, sizeof(char), 1, f2);
 
 `FILE *` 和 fd 的差别不只是接口名字：前者是用户态库对象，会带 buffer；后者是内核对象表的下标，更靠近 system call。混用两层 API 时，要先想清楚数据可能停在哪一层 buffer 里。
 
-### fd
+## fd
 
 低层接口以 fd 为中心：
 
@@ -122,7 +99,7 @@ close(fd);
 
 常见 flags 包括 `O_RDONLY`、`O_WRONLY`、`O_RDWR`、`O_CREAT`、`O_TRUNC`、`O_APPEND`、`O_EXCL`。`O_CREAT` 创建文件时需要第三个 `mode` 参数；`creat(filename, mode)` 可理解为 `open(filename, O_CREAT | O_WRONLY | O_TRUNC, mode)` 的简化形式。
 
-### fd 表
+## fd 表
 
 ![FD open description](assets/lecture-03/slide-039-fd-open-description.png)
 
@@ -163,7 +140,7 @@ printf("hello\n");
 
 `printf` 仍写 stdout，但 stdout 底层 fd 1 已经指向 `out.txt`。
 
-### fork 与 offset
+## fork 与 offset
 
 `fork()` 后 child 得到父进程 fd 表的副本，但表项通常指向同一批 open file description。因此父子进程可能共享 offset。若 fork 前 `fd` 的 offset 是 100，父子各读 100 字节，谁先读由调度决定；但它们不会都从 100 开始读，第二个读者会看到已经推进后的 offset。
 

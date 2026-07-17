@@ -7,37 +7,13 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 18: I/O - General I/O, Disk, and SSD
-
-## 导读
-
-- 本讲从操作系统为什么需要 I/O 子系统开始，解释 CPU、bus、controller、driver、DMA、interrupt/polling 如何协作。
-- 应用只想调用 `read()`/`write()`，但真实设备在速度、粒度、访问模式和失败方式上差异巨大。
-- HDD 的随机访问慢在机械定位，SSD 的复杂性则来自 erase-before-write、FTL、GC 和 wear leveling。
-- 读这讲要抓住一条链路：用户请求如何穿过 kernel，到设备，再回到用户线程。
-
-## 本讲地图
-
-| 层次 | 核心问题 | 关键词 |
-| --- | --- | --- |
-| I/O abstraction | 如何统一千差万别的设备 | block, character, network device |
-| Hardware connection | CPU 如何和设备通信 | bus, controller, register, MMIO |
-| Data transfer | 数据如何进出内存 | programmed I/O, DMA |
-| Notification | OS 如何知道设备完成 | interrupt, polling |
-| Driver path | 驱动如何分工 | top half, bottom half, `ioctl()` |
-| Storage media | HDD/SSD 为什么性能差异大 | seek, rotation, FTL, GC |
-
-## 正文
-
-I/O 路径可以从设备一路看回 OS：bus 负责连接，controller 暴露寄存器，DMA 搬数据，interrupt 或 polling 把完成事件送回来。
-
-### I/O Subsystem
+## I/O Subsystem
 
 没有 I/O，计算机不能和外界、存储、网络交互。OS 面对的难点不是“有没有设备”，而是设备差异太大。同样叫 I/O，速度可以从极慢输入设备跨到高速网络/存储；数据粒度可能是 byte、block，也可能是 packet；访问模式可能是 sequential、random，也可能只支持特定顺序。再加上设备会失败，完成时间也未必可预测，内核就必须在统一接口和设备特性之间做一层翻译。
 
 OS 的目标是给用户提供稳定接口，同时在快设备上不产生过高 per-byte overhead，在慢设备上不让 CPU 白等。
 
-### Bus / PCIe
+## Bus / PCIe
 
 `bus` 是硬件设备之间通信的一组 wires 加 protocol。它包含 control lines、address lines、data lines，还需要仲裁、寻址和握手协议。好处是多个设备可以共享一套连接；代价是同一时刻通常只有一个 transaction，其他设备必须等待。
 
@@ -47,7 +23,7 @@ CPU 通常不直接理解设备细节，而是和 `device controller` 交互。c
 
 MMIO 不是“真的内存”。写这些地址会触发设备行为，所以必须由内核控制映射和权限。
 
-### PIO 与 DMA
+## PIO 与 DMA
 
 ![I/O controllers](assets/lecture-18/slide-005-io-controllers.png)
 
@@ -75,7 +51,7 @@ OS:
 
 DMA 不是不需要 CPU，而是让 CPU 不再逐字节搬运；CPU 仍要配置 controller、处理完成事件，并保证内存一致性和权限安全。
 
-### Interrupt / Polling
+## Interrupt / Polling
 
 OS 需要知道 I/O operation 何时完成、是否出错。`Interrupt` 让设备主动打断 CPU，适合不可预测、低频事件；缺点是 interrupt overhead 高。`Polling` 让 OS 定期读取 status register，单次检查开销低，适合高频或短时间内连续事件；但事件稀疏时会浪费 CPU cycles。
 
@@ -88,7 +64,7 @@ OS 需要知道 I/O operation 何时完成、是否出错。`Interrupt` 让设�
 | 设备很快且马上完成 | polling | 等 interrupt 可能更贵 |
 | 高频完成队列 | polling 或混合 | 降低 interrupt storm |
 
-### Device Driver
+## Device Driver
 
 ![I/O request lifecycle](assets/lecture-18/slide-023-io-request-lifecycle.png)
 
@@ -114,13 +90,13 @@ User program
 
 `ioctl()` 用于设备特有配置，但不能替代通用 read/write 接口。OS 仍需要 block device、character device、network device 等标准接口来隐藏设备差异。
 
-### Timing 接口
+## Timing 接口
 
 I/O timing 对用户程序有三种常见表现。`Blocking` 接口让调用者等待，直到数据 ready 或设备 ready；`Non-blocking` 接口会立即返回，告诉用户完成了多少，也可能只是说明暂时没有数据；`Asynchronous` 接口同样立即返回，但之后由 kernel 完成传输并通知用户。
 
 这三类接口的本质差异在于等待发生在哪里：用户线程里、用户事件循环里，还是 kernel 后台路径里。理解这一点后，`read()` 看起来就不只是“读数据”，而是一次关于等待位置的 API 选择。
 
-### HDD
+## HDD
 
 ![Magnetic disk structure](assets/lecture-18/slide-029-magnetic-disk.png)
 
@@ -150,7 +126,7 @@ transfer time = block size / transfer rate
 
 HDD controller 还会隐藏很多复杂性：ECC 修复小错误，sector sparing 把坏扇区透明映射到备用扇区，slip sparing 尽量保留顺序性，track skewing 让换 track 后不必等一整圈。
 
-### SSD
+## SSD
 
 ![FTL and copy-on-write](assets/lecture-18/slide-043-ftl-cow.png)
 

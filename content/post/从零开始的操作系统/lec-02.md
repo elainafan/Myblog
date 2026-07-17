@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 02: Threads and Processes
-
-## 导读
-
-线程解决的是 MTAO：系统和应用都要同时处理多个任务流。并发并不等于并行，单核机器也需要线程，因为一个任务等待 I/O 时，另一个任务仍然可以继续推进。
-
-本讲的主线是把“多个执行流”拆清楚：线程共享进程资源，但有独立 PC、寄存器和栈；`pthread_create`、`fork`、`exec` 则分别对应进程内并发、复制进程、替换程序映像。
-
-## 本讲地图
-
-| 主题 | 解决的问题 | 关键结论 |
-| --- | --- | --- |
-| MTAO | 为什么需要多个执行流 | 线程把“多个事情”表达成多个可调度任务 |
-| Concurrency vs. Parallelism | 单核和多核差在哪里 | 并发是组织方式，并行是物理同时执行 |
-| pthread | 如何在进程内创建线程 | 新线程从入口函数开始，共享地址空间 |
-| 栈与共享状态 | 多线程共享什么、私有什么 | code/data/heap/files 共享，stack/registers 私有 |
-| Interleaving | 为什么结果会不确定 | 调度器可在任意点切换线程 |
-| Process API | 为什么进程用 `fork + exec` | 创建进程状态和装载新程序被拆成两步 |
-
-## 正文
-
-多个执行流并不是为了把程序写复杂，而是为了让等待、计算和交互能被拆开推进。沿着线程状态、栈和 interleaving 往下看，process 的资源边界也会自然浮出来。
-
-### MTAO
+## MTAO
 
 ![Concurrency parallelism](assets/lecture-02/slide-009-concurrency-parallelism.png)
 
@@ -52,7 +29,7 @@ hidden: true
 | Multiprogramming | 系统中有多个 job/process | 目标是提高利用率和吞吐 |
 | Multithreading | 一个或多个进程中有多个 thread | 程序员看到多个执行流 |
 
-### 线程状态
+## 线程状态
 
 ![IO latency](assets/lecture-02/slide-013-io-latency.png)
 
@@ -68,7 +45,7 @@ hidden: true
 
 一个 UI 程序如果只有一个线程，读取大文件时界面可能完全不响应。把读取文件和渲染界面拆成两个线程后，读文件线程阻塞等待磁盘时，界面线程仍能继续处理输入。这里并没有增加硬件并行度，但改善了响应性。
 
-### pthread
+## pthread
 
 `pthread_create` 创建同一进程内的新线程：
 
@@ -92,7 +69,7 @@ pthread_join(tid, &ret);
 | 私有 | PC、registers、stack、TCB 状态 | 上下文切换主要保存/恢复这些状态 |
 | 容易混淆 | stack 私有，但 stack 上的指针可指向 heap/global object | 判断 race 要看实际对象是否共享 |
 
-### 线程栈
+## 线程栈
 
 ![Fork join](assets/lecture-02/slide-020-fork-join.png)
 
@@ -104,7 +81,7 @@ fork-join 是多线程程序最常见的控制结构之一。
 
 在 fork-join 模式中，main thread 创建多个 worker thread，把参数传给它们；worker 分别执行任务，结束时返回结果；main 再依次 join。main 的 join 顺序只说明 main 等待的顺序，不代表 worker 的实际完成顺序。除非有 lock、condition variable、semaphore、join 等同步关系，否则打印顺序和完成顺序都不稳定。
 
-### Interleaving
+## Interleaving
 
 ![Interleavings](assets/lecture-02/slide-042-interleavings.png)
 
@@ -116,7 +93,7 @@ fork-join 是多线程程序最常见的控制结构之一。
 
 锁负责 mutual exclusion：同一时间最多一个线程进入受保护的 critical section。Semaphore 是更泛化的同步对象，初值为 1 时可当 mutex，初值为 0 时常用于事件通知，例如 worker 完成后 signal，main 再继续。
 
-### Process
+## Process
 
 ![Two thread memory](assets/lecture-02/slide-038-two-thread-memory.png)
 

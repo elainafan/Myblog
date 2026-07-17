@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 06: Synchronization 2 - Semaphores and Bounded Buffer
-
-## 导读
-
-本讲从原子操作和临界区继续往同步抽象推进。只要共享状态的更新可能被 interleaving 打断，程序就不能再靠“看起来顺序执行”来保证正确性，而需要把哪些动作必须一起完成说清楚。
-
-贯穿全讲的例子是 bounded buffer：满时 producer 要等，空时 consumer 要等，真正修改队列结构时又必须互斥。Semaphore 的价值正在这里体现出来，它把“资源数量”和“等待唤醒”放进同一个抽象里；但 `P/V` 顺序一旦写错，也会很快把程序带进死锁。最后的 Too Much Milk 则提醒我们，只靠普通 load/store 手写同步协议既脆弱，也很难让人放心。
-
-## 本讲地图
-
-| 主题 | 解决的问题 |
-| --- | --- |
-| 原子性与 critical section | 找出哪些共享状态更新不能被 interleaving 打断 |
-| Circular buffer | 把 producer/consumer 的同步约束具象化 |
-| Semaphore 解法 | 用 `emptySlots/fullSlots/mutex` 同时表达资源计数和互斥 |
-| `P/V` 顺序 | 避免持有互斥锁时等待资源导致死锁 |
-| Too Much Milk | 说明普通读写无法自然构造可靠互斥 |
-| 同步抽象分层 | 从硬件原语走向 lock、semaphore、monitor |
-
-## 正文
-
-同步问题的起点是原子性：哪些状态必须一起改变，哪些等待关系必须被显式表达。Bounded buffer 和 Too Much Milk 都是在逼我们把这件事说清楚。
-
-### 原子性
+## 原子性
 
 原子操作的意思是执行过程中不会被其他线程观察到中间状态。很多机器上单个内存 load/store 可以近似看作原子，但这不代表一句高级语言语句也是原子的。`x = x + 1` 至少包含读、算、写三步，只要中间发生 context switch，两个线程就可能读到同一个旧值并覆盖彼此的更新。
 
@@ -38,7 +15,7 @@ hidden: true
 
 锁的使用边界也很重要。进入临界区前 `acquire`，离开后 `release`；真正不访问共享状态的慢计算不应该被塞进锁里，否则虽然安全，整个系统的并发度会被白白压低。
 
-### Bounded Buffer
+## Bounded Buffer
 
 ![Circular buffer](assets/lecture-06/slide-011-circular-buffer.png)
 
@@ -83,7 +60,7 @@ Consumer() {
 
 读这段代码时，可以把 producer 理解成“先消耗一个空槽，再产生一个满槽”，consumer 则是“先消耗一个满槽，再释放一个空槽”。`mutex` 只保护真正修改队列结构的那一小段，所以等待资源和修改队列不会混在一起。
 
-### P/V 顺序
+## P/V 顺序
 
 ![PV order](assets/lecture-06/slide-018-pv-order.png)
 
@@ -95,7 +72,7 @@ Consumer() {
 
 多个 producer 或多个 consumer 不需要新协议，只要所有线程共享同一组 `emptySlots/fullSlots/mutex`，并且所有队列修改都在 `mutex` 内完成。
 
-### Too Much Milk
+## Too Much Milk
 
 ![Too much milk](assets/lecture-06/slide-029-too-much-milk.png)
 
@@ -109,7 +86,7 @@ Too Much Milk 的故事是两个室友看到冰箱没牛奶，都可能出门买
 
 Too Much Milk 的价值不是背生活化算法，而是说明普通读写很难可靠表达“检查后行动”的原子性，因此需要硬件 atomic primitive 和更高层同步抽象。
 
-### 同步抽象
+## 同步抽象
 
 ![Synchronization layers](assets/lecture-06/slide-019-sync-layers.png)
 

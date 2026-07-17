@@ -7,38 +7,15 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 11: Scheduling & Deadlock
+## 前向进展
 
-## 导读
-
-本讲把“前向进展”从调度公平推进到死锁。starvation、priority inversion 和 deadlock 都会让线程停住，但它们卡住的原因并不相同：有的是长期得不到 CPU，有的是被持锁线程间接压住，有的则是资源依赖形成了真正的循环等待。
-
-死锁分析可以沿着一条很清楚的线读下去：先看四个必要条件，再用资源分配图描述依赖，随后用检测算法判断当前状态是否已经无法推进，最后讨论 prevention、recovery、avoidance 和 denial 这些工程路线。需要注意的是，`unsafe state` 不是“已经死锁”，而是系统再往前走可能被某个请求序列带进死锁；Banker 算法的价值就在于每次批准请求前先做一次试分配，确认仍然存在 safe sequence。
-
-## 本讲地图
-
-| 主题 | 解决的问题 |
-| --- | --- |
-| starvation 与 deadlock | 区分“长期无进展”和“循环等待导致永久停滞” |
-| priority inversion | 解释高优先级任务为什么会被低优先级持锁任务间接阻塞 |
-| 资源分配图 | 用 request edge 和 assignment edge 表达线程与资源依赖 |
-| 死锁检测算法 | 在当前请求已经存在时，判断哪些线程无法完成 |
-| deadlock prevention / recovery / avoidance / denial | 比较工程上处理死锁的四类路线 |
-| Banker 算法 | 在批准请求前保持系统处于 safe state |
-
-## 正文
-
-Forward progress 往下走就会遇到 starvation、priority inversion 和 deadlock。它们都会让线程停住，但卡住的结构完全不同。
-
-### 前向进展
-
-#### 问题
+### 问题
 
 starvation 是线程长期没有进展，deadlock 是一种更强的 starvation：线程之间形成循环等待，并且在没有外部干预时无法自行解除。严格优先级、LCFS、SRTF/MLFQ 的某些负载形态都可能让低优先级或长任务饥饿；RR 通常在等待时间上更公平，但不一定优化吞吐或平均完成时间。
 
 priority inversion 则是另一类前向进展问题。低优先级线程持有锁，高优先级线程等待这个锁，中优先级线程又不断抢占低优先级线程，最后的效果是高优先级线程反而被间接压住。常见修复是 priority donation / inheritance：让持锁的低优先级线程临时继承高优先级线程的优先级，尽快跑完临界区并释放资源。
 
-#### 机制
+### 机制
 
 分析死锁时，第一步不是急着套算法，而是说清楚“谁持有什么资源、又在等谁释放”。例如单行桥上，每辆车所在路段是已经占有的资源，下一段路是正在请求的资源；如果两边车辆都进入桥上，就可能互相等待。哲学家/律师吃饭问题也是同一结构：每个人拿到一根筷子，同时等待另一根筷子，系统中没有人能继续完成。
 
@@ -51,7 +28,7 @@ Thread B: y.Acquire(); x.Acquire(); ... x.Release(); y.Release();
 
 这段代码不保证每次死锁。如果 A 连续拿到 `x` 和 `y`，它可以顺利释放；但如果 A 先拿到 `x`，B 先拿到 `y`，随后 A 等 `y`、B 等 `x`，等待环就出现了。因此分析这类题时要写出会卡住的 interleaving，而不是只看单线程顺序。
 
-### 四个条件
+## 四个条件
 
 ![Lock wait cycle](assets/lecture-11/slide-015-lock-cycle.png)
 
@@ -68,7 +45,7 @@ Thread B: y.Acquire(); x.Acquire(); ... x.Release(); y.Release();
 
 因此，预防死锁的基本思想就是破坏其中一个条件。例如一次性申请所有资源可以破坏 hold-and-wait，但会降低并发度并要求线程提前知道未来需求；全局锁顺序可以破坏 circular wait，例如所有线程都先拿 `x` 再拿 `y`。
 
-### 资源图
+## 资源图
 
 ![Single-lane bridge](assets/lecture-11/slide-013-bridge.png)
 
@@ -78,7 +55,7 @@ Thread B: y.Acquire(); x.Acquire(); ... x.Release(); y.Release();
 
 资源分配图是从直觉例子过渡到形式化检测的关键表示。
 
-#### 机制
+### 机制
 
 Resource Allocation Graph 把前面的直觉画成图。图里有两类节点：线程节点 `T_i` 和资源类型节点 `R_j`。`T_i -> R_j` 是 request edge，表示线程正在请求资源；`R_j -> T_i` 是 assignment edge，表示某个资源实例已经分配给线程。
 
@@ -86,17 +63,17 @@ Resource Allocation Graph 把前面的直觉画成图。图里有两类节点：
 
 如果某种资源有多个实例，cycle 只是危险信号，不一定已经死锁。原因是环外线程或同类资源的其他实例可能先完成并释放资源，让环中的某个请求得到满足。多实例场景需要进一步使用向量化的检测算法。
 
-#### 例子
+### 例子
 
 Dining Lawyers 可以有两种建模方式。若把 5 根筷子看成同类资源 `[5]`，当 5 个 lawyer 各持有 1 根且各请求 1 根时，`Available = [0]`，没有人的请求能被满足，所有人都留在未完成集合里。若把 5 根筷子看成不同资源 `[1,1,1,1,1]`，每个人持有左边筷子并请求右边筷子，资源分配图中形成明确循环，向量检测同样无法推进。
 
-### 检测算法
+## 检测算法
 
 ![Deadlock detection algorithm](assets/lecture-11/slide-025-detection-algorithm.png)
 
 检测算法把“谁还能完成”转化成 `Available/Request/Allocation` 的迭代消元。
 
-#### 机制
+### 机制
 
 检测算法回答的是：在当前状态下，不再发新请求，只看已经存在的请求，系统能否找到一个顺序让所有线程完成？
 
@@ -118,15 +95,15 @@ UNFINISHED = 所有线程
 停止后仍在 UNFINISHED 中的线程就是死锁相关线程。
 ```
 
-#### 例子
+### 例子
 
 哲学家吃饭的单类资源版中，`Available = [0]`，每个哲学家的 `Allocation_i = [1]`，`Request_i = [1]`。因为所有请求都大于当前可用资源，没有任何线程能先完成，检测算法判定死锁。
 
 有环但不死锁的情形也很重要。假设资源类型 `R` 有多个实例，图里可能有 `T1 -> R -> T2 -> R -> T1` 这样的环；如果环外还有线程将释放一个 `R` 实例，系统仍可继续推进。图上的 cycle 只是提醒我们进入向量检测。
 
-### 处理策略
+## 处理策略
 
-#### 机制
+### 机制
 
 Deadlock prevention 是在设计上让四条件之一永远不成立。常见做法包括一次性原子申请多个资源、规定全局资源获取顺序、或用虚拟化制造“近似无限”的资源视图。它的代价也很直接：并发度下降、资源估计困难，或系统复杂度上升。
 
@@ -136,17 +113,17 @@ Deadlock avoidance 介于二者之间：系统不要求从设计上彻底消灭�
 
 Deadlock denial，也叫 Ostrich Algorithm，是低概率场景下选择忽略，出问题时重启应用或系统。它不是理论上优雅的方案，但在某些工程场景中确实可能是成本最低的选择。
 
-### Banker 算法
+## Banker 算法
 
 ![Banker's algorithm](assets/lecture-11/slide-039-bankers.png)
 
 Banker 算法用最大需求 `Max` 和当前分配 `Allocation` 推出 `Need`，提前拒绝会进入 unsafe state 的请求。
 
-#### 问题
+### 问题
 
 检测算法是事后问“现在是否已经死锁”。Banker 算法是事前问“如果现在批准这个请求，系统是否仍然安全”。它依赖一个强前提：每个线程必须提前声明最大资源需求。
 
-#### 机制
+### 机制
 
 Banker 算法维护的状态比检测算法多一层最大需求：
 
@@ -174,12 +151,12 @@ Need_i = Need_i - Request_i
 
 随后运行安全性检查：能否反复找到某个 `Need_i <= Available` 的线程，让它完成并释放 `Allocation_i`。如果这个过程能覆盖所有线程，请求被批准；否则回滚试分配并让线程等待。
 
-#### 例子 / 推导
+### 例子 / 推导
 
 Dining Lawyers 中，如果 5 根筷子是同类资源，每个 lawyer 最大需求是 2 根。当 4 个 lawyer 各拿 1 根，系统还剩 1 根时，状态仍然安全，因为可以让某个已持有 1 根的人再拿 1 根，吃完后释放 2 根，资源继续流动。
 
 但如果批准第 5 个 lawyer 拿最后 1 根，系统会变成 5 个人都 `Allocation = [1]`、`Need = [1]`、`Available = [0]`。此时没有任何人能完成，系统进入 unsafe state。注意它还不一定已经 deadlock，但已经没有可证明安全的完成顺序，所以 Banker 必须拒绝这次请求。
 
-#### 取舍
+### 取舍
 
 Banker 的价值在于提前拦截危险请求，但它也保守：为了避免 unsafe state，可能拒绝一些实际运行中未必会导致死锁的请求。它还要求最大需求可预知，这在通用 OS 中很难，在数据库或受控资源管理器中更可行。

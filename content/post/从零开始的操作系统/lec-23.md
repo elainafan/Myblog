@@ -7,35 +7,13 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 23: Storage and File Systems in Modern Computer Systems
-
-## 导读
-
-这一讲不是单一文件系统，而是用五篇系统论文观察现代存储系统：dedup、software-defined storage、distributed file system、cluster cache 和 P2P lookup。阅读重点不是背论文名，而是识别每个系统面对的 workload、failure model 或 performance bottleneck。
-
-这五个系统都在重写经典文件系统思想：locality、metadata placement、control/data plane separation、replication、indexing。可以用一句话串起来：现代存储系统仍在管理 bytes 和 names，但规模、故障率、共享程度和延迟目标都变了。
-
-## 本讲地图
-
-| 系统 | 核心问题 | 关键机制 | 一句话 |
-| --- | --- | --- | --- |
-| Data Domain Deduplication | 备份数据重复多，但 fingerprint index 太大 | summary vector、stream-informed layout、LPC | 用内存过滤和局部性缓存避免 disk index bottleneck |
-| IOFlow | 多层虚拟化 storage path 中难执行端到端 SLA | controller、IO Header、programmable queues、cost model | 把 storage control plane 和 data plane 分离 |
-| GFS | 大文件、追加写、节点频繁失败 | single master、chunkserver、operation log、lease | metadata/control 走 master，file data 直连 chunkservers |
-| EC-Cache | 分布式内存缓存有热点和 tail latency | within-object EC、read `k+Delta` use first `k` | 用 any-k property 做负载均衡和延迟控制 |
-| Chord | 无中心服务器时如何定位 key | consistent hashing、successor、finger table | key 放 successor，finger table 把 lookup 降到 `O(log N)` |
-
-## 正文
-
-这几篇存储系统论文可以放在同一条线上读：规模变大之后，重复数据、SLA、metadata、热点和 lookup 都会成为新的瓶颈。
-
-### Data Domain
+## Data Domain
 
 ![Dedup pipeline](assets/lecture-23/slide-012-dedup-pipeline.png)
 
 Data Domain 的三件套共同目标是减少 fingerprint lookup 的磁盘访问。
 
-#### 问题
+### 问题
 
 Deduplication 是一种 global compression。普通 gzip/zip 一类 local compression 通常只在一个文件的小 sliding window 内找重复，课件给的量级大约是 `2-3x` 压缩；deduplication 跨很多文件和备份流找重复 segment，备份场景中可能达到 `10-50x`。
 
@@ -49,7 +27,7 @@ Deduplication 是一种 global compression。普通 gzip/zip 一类 local compre
 
 如果每个 fingerprint lookup 都随机读磁盘，dedup 的吞吐会被磁盘 I/O 限死。
 
-#### 机制
+### 机制
 
 Data Domain 的三个技术都服务于同一个目标：避免 fingerprint index 成为 disk bottleneck。
 
@@ -59,23 +37,23 @@ Data Domain 的三个技术都服务于同一个目标：避免 fingerprint inde
 
 `Locality Preserved Caching (LPC)` 不随机缓存单个 fingerprint。Disk Index 保存所有 `<fingerprint, containerID>`；Index Cache 只缓存部分映射。cache miss 时，系统查 disk index 找到 containerID，然后把整个 container 的 metadata 载入 cache。因为 layout 保留了 duplicate locality，后续 fingerprints 很可能命中同一 container metadata。
 
-#### 取舍
+### 取舍
 
 Summary Vector 的 false positive 会带来额外 lookup，但不影响正确性；stream locality 对备份 workload 很有效，但假设未来重复流与历史流有相近顺序；LPC 牺牲一点缓存粒度，换取成批加载带来的局部性。
 
-### IOFlow
+## IOFlow
 
 ![IOFlow architecture](assets/lecture-23/slide-024-ioflow-architecture.png)
 
 IOFlow 用 controller 管 policy，用 data-plane queues 执行 enforcement。
 
-#### 问题
+### 问题
 
 企业数据中心里，应用跑在多个 VMs 上，VM-to-VM traffic 和 VM-to-storage traffic 走不同网络，storage stack 又跨 SMB、hypervisor、block layer、storage server 等很多层。用户想要的是 SLA，例如某租户获得 bandwidth `B`，某类 I/O 有更高 priority，或某些 I/O 绕过 malware scanner。
 
 传统路径难点在于：各层独立配置，缺少统一 storage control plane；不同层看到的对象名字也不同，高层 SLA 很难变成路径上每个 enforcement point 的动作。
 
-#### 机制
+### 机制
 
 IOFlow 的思路类似 storage 版 SDN：
 
@@ -101,17 +79,17 @@ Flow name resolution 是 IOFlow 的核心细节。一个 SLA 可能写成 `<VM4,
 
 只看 bytes 或 IOPS 并不足以做好限流。8KB read 和 8KB write 的设备成本可能不同；8KB write 和 64KB read 都是一条 I/O，但成本也不同；RAM、SSD、disk 的 cost model 更不一样。IOFlow 因此用 empirical cost model，把 token bucket 限在“成本”上，而不是只限 payload bytes。这样 policy 才能贴近真实设备瓶颈。
 
-#### 取舍
+### 取舍
 
 centralized controller 有全局视角，能做 max-min fair sharing，让 aggregate SLA 在多个 VMs 之间 work-conserving 地动态分配。代价是 controller 要收集 demand、下发规则，并控制 data-plane queue 数和排队次数，避免 overhead 把收益吃掉。
 
-### GFS
+## GFS
 
 ![GFS architecture](assets/lecture-23/slide-057-gfs-architecture.png)
 
 GFS 的 single master 管 metadata，clients 直接访问 chunkservers 传输数据。
 
-#### 问题
+### 问题
 
 GFS 的假设不是 POSIX 小文件 workload，而是 Google 早期数据处理场景：
 
@@ -123,7 +101,7 @@ GFS 的假设不是 POSIX 小文件 workload，而是 Google 早期数据处理�
 
 这些假设解释了 single master、64MB chunk、record append、lease 等设计。换句话说，GFS 从一开始就不是为了让每个小操作最低延迟，而是为了让大规模顺序数据处理在故障常态下继续跑。
 
-#### 架构
+### 架构
 
 GFS 提供 `create`、`delete`、`open`、`close`、`read`、`write`，还提供 `snapshot` 和 `record append`。它的核心架构是 single master + chunkservers。master 管 namespace、ACL、file-to-chunk mapping、chunk locations、chunk leases、garbage collection 和 load balancing；chunkservers 把 chunks 存成 local Linux files。
 
@@ -135,7 +113,7 @@ GFS 提供 `create`、`delete`、`open`、`close`、`read`、`write`，还提供
 
 Master 的 operation log 是 metadata 的唯一持久记录，也定义并发 metadata operations 的 serialized order。master crash 后 replay log 恢复状态；为了减少启动时间，会周期性 checkpoint。
 
-#### Chunks and leases
+### Chunks and leases
 
 GFS chunk 是固定大小，默认 64MB，每个 chunk 有 immutable、globally unique 的 64-bit chunk handle，默认复制 3 份。大 chunk 的优点是减少 client-master 交互、降低 master metadata 量、便于 persistent TCP connection；缺点是 internal fragmentation，小文件可能只有少数 chunks，容易 hot spot。
 
@@ -152,19 +130,19 @@ GFS chunk 是固定大小，默认 64MB，每个 chunk 有 immutable、globally 
 
 如果 primary 成功但某些 secondaries 失败，就可能出现 inconsistent replica state，client 可重试。lease 过期机制避免两个 primary 同时排序同一 chunk。
 
-### EC-Cache
+## EC-Cache
 
 ![EC-Cache read](assets/lecture-23/slide-080-ec-cache-read.png)
 
 EC-Cache 读取 `k+Delta` 个 units，只等待最先返回的 `k` 个。
 
-#### 问题
+### 问题
 
 Data-intensive clusters 依赖 distributed in-memory caching；从内存读通常比从 disk/SSD 快很多。Alluxio/Tachyon 这类系统的问题是 imbalance 很常见：object popularity skew、background network imbalance、failures/unavailabilities 都会让某些 cache servers 过载，带来 high read latency 和 tail latency。
 
 传统方案是 selective replication：热门对象多放几份副本。它直观有效，但 memory overhead 只能整数倍增长，热点预测不总准确，对 tail latency 的控制也有限。
 
-#### 机制
+### 机制
 
 EC-Cache 把对象 split 成 `k` 个 data units，再 encode 生成 `r` 个 parity units。只要拿到任意 `k` 个 units，就能 decode 原对象：
 
@@ -188,17 +166,17 @@ any k out of k+r units can reconstruct the object
 
 `Delta=1` 很重要。没有 additional reads 时，object splitting 的 parallel reads 可能降低 median latency，但 straggler 会拉高 tail latency；多读一个 unit 后，慢节点不一定拖住整个 request。
 
-#### 取舍
+### 取舍
 
 EC-Cache 使用 erasure coding 的目的不是传统 storage 的 space-efficient fault tolerance，而是 caching layer 的 load balancing 和 read latency。within-object coding 让 data 和 parity 都能参与分散负载；backend caching servers 不需要知道 EC，逻辑主要在 client library 中。代价是 encode/decode overhead 和额外 read bandwidth。
 
-### Chord
+## Chord
 
 ![Chord consistent hashing](assets/lecture-23/slide-104-chord-consistent-hashing.png)
 
 Chord 把 key 和 node 都映射到环上，key 由顺时针 successor 负责。
 
-#### 问题
+### 问题
 
 Chord 解决的是 P2P 系统的 lookup：
 
@@ -208,7 +186,7 @@ Lookup(key) -> IP address
 
 Chord 本身不存数据，它提供 peer-to-peer hash lookup service。中心化方案如 Napster lookup 简单，但 server 需要 `O(M)` state，且是 single point of failure。naive flooding 没有中心点，但 worst-case 是 `O(N)` messages per lookup。
 
-#### 机制
+### 机制
 
 Chord 使用 `m-bit identifier space`，把 key 和 node 都 hash 到同一个环：
 
@@ -234,7 +212,7 @@ finger i points to successor of n + 2^i
 
 查找时每一步尽量向目标 key 前进一大段，因此 lookup 是 `O(log N)` messages，state per node 也是 `O(log N)`。
 
-#### Membership
+### Membership
 
 node join 的标准三步是：
 
@@ -244,7 +222,7 @@ node join 的标准三步是：
 
 更 lazy 的做法是先初始化 successor，然后周期性检查 successor/predecessor，周期性 refresh finger table entries。Chord 的假设是没有 malicious participants；membership 变化很频繁时，routing table maintenance 是持续成本。
 
-### 横向比较
+## 系统方案对比
 
 | 系统 | 面对的瓶颈 | 朴素方案的问题 | 核心机制 | 代价 / 限制 |
 | --- | --- | --- | --- | --- |
@@ -254,10 +232,10 @@ node join 的标准三步是：
 | EC-Cache | cache load imbalance 和 tail latency | selective replication 粒度粗 | within-object EC、read `k+Delta` | 有编码开销和额外 reads |
 | Chord | P2P key lookup 可扩展性 | 中心化单点；flooding `O(N)` | consistent hashing、successor、finger table | 需要维护 routing state，假设非恶意节点 |
 
-### 贯穿线索
+## 控制平面、局部性与元数据
 
 `Control plane vs data plane` 在 IOFlow 和 GFS 中最明显。IOFlow 的 controller 算 SLA policy，queues 执行；GFS 的 master 管 metadata 和 lease，clients 直接和 chunkservers 传输 data。Chord 没有集中控制平面，而是每个节点维护局部 routing state。
 
 `Locality` 在不同系统中含义不同。Data Domain 利用 duplicate locality，把相邻重复 segments 的 metadata 放近；GFS 用大 chunk 和 persistent connection 利用大文件顺序访问；EC-Cache 则故意打散对象，用 any-k decode 把负载分散；Chord 的 locality 是 ID ring 上“顺时针更接近目标”。
 
-`Metadata scale` 是每个系统都绕不开的主题。Data Domain 的 fingerprint index 太大，必须过滤和缓存；GFS 把 metadata 放 master 内存，所以 chunk 要大；Chord 控制每节点 routing metadata 为 `O(log N)`；IOFlow 则要把跨层名字解析成可执行的 IO Header。把这几条线索合在一起看，不难发现现代存储系统的设计重点已经从“单机上怎么放 block”扩展到了“在大规模系统里如何放置、查找、调度和恢复数据”。
+`Metadata scale` 是每个系统都绕不开的主题。Data Domain 的 fingerprint index 太大，必须过滤和缓存；GFS 把 metadata 放 master 内存，所以 chunk 要大；Chord 控制每节点 routing metadata 为 `O(log N)`；IOFlow 则要把跨层名字解析成可执行的 IO Header。现代存储系统的设计重点已经从“单机上怎么放 block”扩展到了“在大规模系统里如何放置、查找、调度和恢复数据”。

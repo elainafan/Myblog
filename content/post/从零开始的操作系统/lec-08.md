@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 08: Synchronization 4 - Readers/Writers and Language-Level Support
-
-## 导读
-
-本讲继续沿着 monitor 和 condition variable 往前走，把它们放进 readers/writers lock 这个更有结构的同步问题里。这里的目标不是简单互斥，而是在“多个 reader 可以并行”和“writer 必须独占”之间找到一个可维护的协议。
-
-读写锁的 monitor 解法会同时维护 active/waiting reader/writer 的状态，并用不同 condition variables 管理等待队列。公平性策略也会直接改变饥饿风险：读优先可能让 writer 长期等不到，写优先又可能让 reader 被连续 writer 挡住。后半讲把视角抬高到语言级同步和 Chubby 一类分布式锁，讨论同一个问题在更高层如何处理释放、唤醒和故障语义。
-
-## 本讲地图
-
-| 主题 | 解决的问题 |
-| --- | --- |
-| Readers/Writers 约束 | 多读并行与写者独占如何同时成立 |
-| Monitor 状态变量 | 用 `AR/WR/AW/WW` 描述当前系统状态 |
-| 唤醒策略 | 在 `signal`、`broadcast` 和公平性之间取舍 |
-| CV vs Semaphore | 区分“历史计数”和“无历史等待队列” |
-| 语言级同步 | 用 RAII、`with`、`synchronized` 降低漏释放概率 |
-| Chubby | 把锁语义扩展到分布式系统的故障模型 |
-
-## 正文
-
-Readers/Writers lock 是 monitor 和 condition variable 的一个很好的压力测试。互斥、公平、饥饿和唤醒策略都会在这个例子里同时出现。
-
-### Readers/Writers
+## Readers/Writers
 
 ![Readers writers problem](assets/lecture-08/slide-009-readers-writers-problem.png)
 
@@ -40,7 +17,7 @@ Readers/Writers lock 解决的是读多写少场景中的并发控制。多个 r
 
 这比普通 mutex 多了一个目标：不要因为写者需要独占，就把所有 reader 也串行化。真正的设计空间在吞吐、公平和实现复杂度之间。Reader-priority 可以让读吞吐很好，但连续 reader 到来时 writer 可能饥饿；writer-priority 能减少 writer starvation，但 writer 持续到来时 reader 也可能长期进不去。换句话说，读写锁不是“更高级的 mutex”，而是把互斥条件拆成了更细的状态机。
 
-### Monitor 状态
+## Monitor 状态
 
 ![Reader code](assets/lecture-08/slide-012-reader-code.png)
 
@@ -77,7 +54,7 @@ release(&lock);
 
 `cond_wait(&cv, &lock)` 会原子地释放 `lock` 并睡眠，被唤醒返回前重新拿回 `lock`。Mesa 语义下，醒来只表示条件可能成立，所以必须回到 `while` 重新检查。
 
-### 入场协议
+## 入场协议
 
 ![Writer code](assets/lecture-08/slide-013-writer-code.png)
 
@@ -133,7 +110,7 @@ Writer() {
 
 Reader 退场处的 `AR == 0 && WW > 0` 不是装饰。只有最后一个 reader 离开时，writer 的入场条件才可能满足；只有确实有 writer 等待时，signal 才有意义。过早唤醒通常会造成无意义上下文切换，甚至让该推进的线程没有被及时叫醒。
 
-### signal / broadcast
+## signal / broadcast
 
 `signal` 更精准，开销更低；`broadcast` 更稳健，但会把很多醒来后又睡回去的线程一起叫醒。Readers/Writers 里对 writer 用 `signal` 是自然的，因为同一时刻最多只能有一个 writer 进入。对 reader 用 `broadcast` 则合理，因为多个 reader 可以一起读，唤醒一批 reader 能利用并行性。
 
@@ -141,7 +118,7 @@ Reader 退场处的 `AR == 0 && WW > 0` 不是装饰。只有最后一个 reader
 
 公平性没有免费午餐。Writer-priority 降低 writer 饥饿，却可能让 reader 在 writer 持续到来时饥饿；reader-priority 则相反。系统到底偏向吞吐、延迟还是公平，要看 workload 和业务目标。
 
-### CV vs Semaphore
+## CV vs Semaphore
 
 ![Monitor from semaphore](assets/lecture-08/slide-058-monitor-from-semaphore.png)
 
@@ -151,7 +128,7 @@ Semaphore 有计数历史：先发生的 `V` 会留下许可，未来的 `P` 可
 
 这解释了为什么不能把 `P/V` 直接替换成 `wait/signal`。`cond_wait` 需要原子地“释放 lock + 睡眠 + 醒来后重新拿 lock”；单独 `P` 一个 semaphore 不具备这种 monitor 语义。反过来，试图通过观察 semaphore 等待队列来模拟 CV，也会在释放锁和真正睡眠之间重新制造 lost wakeup 窗口。
 
-### 语言级同步
+## 语言级同步
 
 当代码里有多个锁、多个错误返回、异常或 non-local exit 时，最常见的工程事故是漏释放锁。C 语言里常用 `goto cleanup` 把释放路径集中到一个出口，减少每个 `if (error)` 分支都手写释放的重复。
 
@@ -170,7 +147,7 @@ void safe_increment() {
 
 Python 的 `with lock:` 是同类上下文管理；Java 的 `synchronized` 方法或代码块会在进入时获得对象 monitor lock，退出时自动释放。Java 的 `wait()`、`notify()`、`notifyAll()` 也必须在对应对象的 synchronized 区域内使用。语言级支持不能替你选择正确的公平策略，但能显著降低“异常路径把锁带走”的概率。
 
-### Chubby
+## Chubby
 
 ![Chubby lock service](assets/lecture-08/slide-069-chubby-lock-service.png)
 

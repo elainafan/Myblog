@@ -7,37 +7,13 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 07: Synchronization 3 - Lock Implementation, Atomic Instructions, Monitors
-
-## 导读
-
-上一讲把 semaphore 当作可用抽象来写 producer/consumer，本讲则往下一层追问：如果 lock 本身也有共享状态，那么 lock 又该怎么实现？这个问题会把我们带到关中断、硬件原子指令，以及等待队列和 scheduler 的交界处。
-
-可以把全讲看成在不断缩小“必须原子”的内部窗口。关中断适合单核内核里的短路径，test-and-set、swap、CAS 让多处理器也能安全竞争同一内存位置；而 guard + wait queue 进一步把长时间等待从 busy-wait 改成 sleep。需要注意的是，只要涉及睡眠和唤醒，lost wakeup 就会成为核心风险。Monitor 和 condition variable 则是在更高层把锁、共享状态和等待队列重新封装起来，减少直接手写 `P/V` 的误用。
-
-## 本讲地图
-
-| 主题 | 解决的问题 |
-| --- | --- |
-| Lock 语义 | 定义 `acquire/release` 必须保证什么 |
-| Disable interrupts | 在单处理器内核短路径保护 lock 元数据 |
-| Lost wakeup | 解释睡眠和唤醒为什么必须与状态更新原子衔接 |
-| Atomic read-modify-write | 用 test-and-set、swap、CAS 支持多处理器锁 |
-| Guard + wait queue | 把长时间等待从 busy-wait 改成 sleep |
-| Monitor / CV | 用共享状态加条件队列表达等待条件 |
-| Mesa vs Hoare | 解释为什么 Mesa monitor 中等待必须写 `while` |
-
-## 正文
-
-Lock 自己也是一段并发程序。关中断、Test-and-Set、sleep/wakeup 和 monitor 其实都在回答同一个问题：等待者如何安全地睡下，又如何不漏掉唤醒。
-
-### Lock
+## Lock
 
 Lock 的接口看起来很小：进入临界区前 `acquire`，离开临界区后 `release`。它真正承诺的是同一时刻至多一个线程持有锁。如果锁已经被别人拿着，当前线程要等待；如果等待时间可能很长，理想行为是睡眠，而不是一直占着 CPU 空转。
 
 实现 lock 时要区分两层 critical section。用户真正想保护的是银行账户、队列、数据库等业务共享状态；lock 实现内部也有自己的共享状态，例如 `value`、wait queue、ready queue。底层机制只应该短暂保护这些元数据，不能把用户任意长的临界区都放进“关中断”或“自旋”里。
 
-### 关中断
+## 关中断
 
 ![Disable interrupts lock](assets/lecture-07/slide-015-disable-interrupts-lock.png)
 
@@ -77,7 +53,7 @@ Release() {
 
 这段代码的重点是：关中断保护的是 `value` 与等待队列，而不是保护用户代码本身。多处理器上，关闭当前 CPU 的中断并不能阻止其他 CPU 同时访问同一内存位置，所以还需要硬件原子读改写指令。
 
-### Lost Wakeup
+## Lost Wakeup
 
 ![Lost wakeup](assets/lecture-07/slide-022-lost-wakeup.png)
 
@@ -89,7 +65,7 @@ Lost wakeup 的窗口通常藏在“准备睡”和“真正睡着”之间。
 
 因此，“加入等待队列、标记 sleeping、释放内部保护、切换到其他线程”必须在 sleep/scheduler 路径中原子衔接。Lost wakeup 不是某个 API 名字的问题，而是所有阻塞同步都要避免的时序漏洞。
 
-### Test-and-Set
+## Test-and-Set
 
 ![Test and set lock](assets/lecture-07/slide-032-test-and-set-lock.png)
 
@@ -131,7 +107,7 @@ Release() {
 
 这些指令只解决锁变量本身的竞争，不自动解决等待效率、优先级反转或 cache ping-pong。
 
-### Guard + Wait Queue
+## Guard + Wait Queue
 
 ![Guard wait queue](assets/lecture-07/slide-038-guard-wait-queue.png)
 
@@ -174,7 +150,7 @@ Release() {
 
 `guard` 不是用户看到的锁，而是保护 `value` 和 wait queue 的短锁。`go to sleep and set guard = 0` 必须作为一条受控调度路径理解：线程已经入队并准备睡眠，同时保证后继线程能看到 `guard` 被释放。`Release` 发现有人等待时通常直接唤醒等待者，而不是把 `value` 改成 `FREE`，这样可以避免第三个线程趁空插队并造成两个线程都以为自己拥有锁。
 
-### Monitor 与 Condition Variable
+## Monitor 与 Condition Variable
 
 ![Condition buffer](assets/lecture-07/slide-043-condition-buffer.png)
 
@@ -205,7 +181,7 @@ Condition variable 不是布尔变量，也不是计数器；真正的条件在�
 
 这也是 CV 与 semaphore 的根本差异。Semaphore 的 `V` 会积累许可，未来的 `P` 可以消耗；condition variable 的 signal 只对当前等待者有效。因此不能简单把 `semaP` 当作 `cond_wait`，也不能把 `semaV` 当作 `cond_signal`。
 
-### Mesa vs Hoare
+## Mesa vs Hoare
 
 Hoare monitor 的语义是 signal 后 waiter 立即获得锁并运行，因此被唤醒时条件在语义上成立。但这种实现需要强制上下文切换，成本高，也复杂。
 

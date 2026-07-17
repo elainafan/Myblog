@@ -7,30 +7,7 @@ encrypt: false
 hidden: true
 ---
 
-# Lecture 01: 操作系统的四个基本概念
-
-## 导读
-
-操作系统不是单个神秘程序，而是夹在应用与硬件之间的特权软件层。本讲先用 Referee、Illusionist、Glue 三个角色解释 OS 为什么存在，再把 thread、address space、process、dual mode 这四个基本概念放到同一张系统剖面里看。
-
-这些概念会在后续调度、同步、内存和文件系统里反复出现。需要先抓住的是：`syscall`、interrupt、exception 都会把控制流带进内核，但它们的触发原因与同步性并不相同。
-
-## 本讲地图
-
-| 主题 | 解决的问题 | 关键结论 |
-| --- | --- | --- |
-| OS 的角色 | 应用如何安全、方便地使用复杂硬件 | OS 同时做资源裁判、抽象提供者和公共服务胶水 |
-| Thread | 程序“执行到哪里” | 线程是 PC、寄存器、栈等执行上下文 |
-| Address space | 程序“能看到哪些地址” | 地址翻译把程序地址与物理内存分开 |
-| Process | 一个运行实例“拥有哪些资源” | 进程是地址空间、线程和系统资源的组合 |
-| Dual mode | 谁能执行危险操作 | 用户态必须通过受控入口进入内核态 |
-| Base & Bound | 最小可行的内存保护 | 检查越界后把逻辑地址加上 base 得到物理地址 |
-
-## 正文
-
-可以先从 OS 的三重角色看起。Referee、Illusionist 和 Glue 解释了操作系统为什么存在；thread、address space、process 和 dual mode 则解释了程序为什么能被安全地跑起来。
-
-### 受控抽象
+## 受控抽象
 
 ![OS roles](assets/lecture-01/slide-016-os-roles.png)
 
@@ -48,7 +25,7 @@ Computer system 是更大的整体，包含硬件、OS、应用和用户；syste
 
 OS 的抽象越强，应用越好写；但抽象必须有边界。分布式系统、网络系统、数据库、存储系统常常建立在 OS 提供的进程、文件、网络、同步机制之上；当它们也开始做命名、隔离、调度、容错和资源管理时，思想上会和 OS 重叠。
 
-### 四个基本概念
+## 四个基本概念
 
 ![Four OS concepts](assets/lecture-01/slide-011-four-concepts.png)
 
@@ -69,7 +46,7 @@ Thread 是执行抽象。只有当线程上下文被装入处理器寄存器时�
 
 多线程进程里，多个线程共享同一个地址空间、堆、全局变量和打开文件；每个线程有自己的 PC、寄存器和栈。这样通信便宜、创建销毁开销低，但共享可写状态也会带来同步问题。多进程隔离更强，但通信通常需要 IPC，切换和创建成本也更高。
 
-### 并发与虚拟化
+## 并发与虚拟化
 
 真实硬件常常只有有限的 CPU、DRAM 和 I/O 设备，但系统要同时运行多个程序。早期多道程序设计关注提高硬件利用率，现代系统还要同时照顾吞吐、延迟、公平和隔离。
 
@@ -79,7 +56,7 @@ OS 用时间复用制造多个 virtual CPU 的错觉：单核上一次只能执�
 
 虚拟化带来可组合性，但共享硬件意味着冲突不可避免。调度策略决定谁先运行，地址翻译决定谁能访问哪些内存，系统调用决定用户程序能以什么方式请求内核服务。
 
-### 受控入口
+## 受控入口
 
 ![User kernel mode](assets/lecture-01/slide-029-user-kernel-mode.png)
 
@@ -103,7 +80,7 @@ OS 用时间复用制造多个 virtual CPU 的错觉：单核上一次只能执�
 
 返回用户态也必须走受控路径，例如 `return-from-interrupt` 一类指令会恢复 PC 和处理器状态，并重新设置 mode bit。
 
-### Base & Bound
+## Base & Bound
 
 ![Base bound translation](assets/lecture-01/slide-033-base-bound-translation.png)
 
