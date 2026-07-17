@@ -7,7 +7,9 @@ encrypt: false
 hidden: true
 ---
 
-## Adaptive Scheduling
+## 反馈与份额
+
+### Adaptive Scheduling
 
 SJF/SRTF 的问题是需要知道未来 job length 或 CPU burst length。现实系统不知道未来，只能利用过去行为做估计。一个常见形式是指数平滑：
 
@@ -17,13 +19,11 @@ tau_(n+1) = alpha * t_n + (1 - alpha) * tau_n
 
 其中 `t_n` 是刚观察到的 burst，`tau_n` 是旧估计。直觉是程序行为通常有一定稳定性：过去经常 I/O block 的任务，将来也可能继续短 burst；过去持续计算的任务，将来也更像 CPU-bound。如果程序行为完全随机，反馈调度就没有信息可用。
 
-现代调度器的很多机制都建立在这个折中上：不追求知道未来，而是把历史行为变成优先级、时间片或 CPU 份额。换句话说，adaptive scheduling 不是预言未来，而是在“过去大概率会延续一点点”这个假设上做工程近似。
+现代调度器不可能知道未来，只能把历史行为转换成优先级、时间片或 CPU 份额。Adaptive scheduling 依赖程序行为在短时间内具有一定延续性。
 
-## Lottery Scheduling
+### Lottery Scheduling
 
 ![Lottery scheduling](assets/lecture-10/slide-007-lottery.png)
-
-Lottery scheduling 把 CPU 份额变成抽票概率，而不是固定优先级边界。
 
 Lottery scheduling 给每个任务一些 tickets。每个时间片抽一张中奖票，持有该票的任务运行。长期平均看，任务获得的 CPU 份额约等于：
 
@@ -35,11 +35,9 @@ job_tickets / total_tickets
 
 相比固定优先级，Lottery 的一个优点是负载变化更平滑。新增或删除任务会按比例影响所有任务，而不是突然跨过某个优先级边界。它适合表达 proportional share，但不适合需要严格 deadline 保证的场景。
 
-## MLFQ
+### MLFQ
 
 ![MLFQ](assets/lecture-10/slide-009-mlfq.png)
-
-MLFQ 用多级队列和反馈规则近似“短任务/交互任务优先”。
 
 Multi-Level Feedback Queue 使用多个优先级队列，每个队列可以有自己的时间片和内部策略。任务通常从最高优先级开始；如果用完整个时间片，说明更像 CPU-bound，就降低优先级；如果经常提前阻塞、睡眠或等待 I/O，说明更像交互任务，就留在高优先级或被提升。
 
@@ -49,7 +47,9 @@ MLFQ 的风险是 gaming。程序可以故意在时间片快用完前 `yield`、
 
 “短 burst = 交互任务”只是经验规则。同一应用可能先睡很久再大量计算，也可能是必须周期运行的后台任务。调度器只能在交互、吞吐和可预测性之间不断校准。
 
-## 多核调度
+## 多核与实时
+
+### 多核调度
 
 多核调度在策略层和单核类似，工程层却多了不少成本。Cache affinity 是其中一个核心词：线程最好回到上次运行的 CPU，复用 warm cache，减少跨核迁移和 cache coherence 成本。Per-core run queue 能降低全局队列锁竞争，但会带来负载均衡问题；某个 core 空闲时，可能需要从其他 core 偷任务。
 
@@ -57,29 +57,25 @@ MLFQ 的风险是 gaming。程序可以故意在时间片快用完前 `yield`、
 
 并行程序还需要协同调度。Gang scheduling 尽量让相关线程一起运行，避免某个线程 spin-wait 等待一个已经被 OS 挂起的伙伴。Scheduler activations 则让 OS 告知应用当前可用核心数，应用据此调整并行度。这里调度的不只是“线程还是进程”，还包括空间共享、缓存局部性和同步等待的总成本。
 
-## Real-Time
+### Real-Time
 
 ![EDF feasibility](assets/lecture-10/slide-021-edf-feasibility.png)
 
-实时调度中，deadline 可行性比平均响应更重要。
-
 实时系统的目标是性能可预测，尤其是最坏情况响应时间。Hard real-time 用在安全关键系统中，deadline 必须满足，通常需要 admission control：只有系统能提前判断任务可完成，才允许任务进入。Soft real-time 常见于多媒体场景，目标是高概率满足 deadline。
 
-典型算法包括 EDF、RMS 和 DM。EDF, Earliest Deadline First, 每次选择 absolute deadline 最近的 active task。课程模型中常见可行性测试是：
+典型算法包括 EDF、RMS 和 DM。EDF, Earliest Deadline First, 每次选择 absolute deadline 最近的 active task。周期任务的一种可行性测试是：
 
 ```text
 sum(C_i / D_i) <= 1
 ```
 
-其中 `C_i` 是任务每次释放需要的 CPU 计算时间，`D_i` 是相对 deadline。直觉是所有周期任务要求的 CPU 利用率总和不能超过 100%。这个公式不是现实世界所有实时任务的万能判定；在课程语境中，通常默认任务独立、可抢占，并满足题设里的 period/deadline 条件。
+其中 `C_i` 是任务每次释放需要的 CPU 计算时间，`D_i` 是相对 deadline。所有周期任务要求的 CPU 利用率总和不能超过 100%。这个公式只适用于任务独立、可抢占并满足相应 period/deadline 条件的模型。
 
 实时调度和普通吞吐调度的差别在目标函数。普通系统可以先运行再观察平均表现；实时系统需要在运行前证明或高度确信 deadline 能满足。
 
-## Forward Progress
+## 前向进展
 
 ![Priority donation](assets/lecture-10/slide-032-priority-donation.png)
-
-Priority donation 用临时提升持锁者优先级来缓解 priority inversion。
 
 Forward progress 关心系统是否真的在推进。Starvation、deadlock 和 priority inversion 很容易混在一起，但它们不同：
 
@@ -91,9 +87,11 @@ Forward progress 关心系统是否真的在推进。Starvation、deadlock 和 p
 
 Strict priority、LCFS、SRTF/MLFQ 下短任务不断到来，都可能造成 starvation。Deadlock 的关键是资源循环等待。Priority inversion 的经典场景是低优先级 L 持锁，高优先级 H 等锁，中优先级 M 不需要锁却不断抢占 L，导致 H 间接停住。
 
-Priority donation 或 inheritance 的目标是让持锁的低优先级线程临时继承高优先级，尽快释放锁。代价是实现复杂、调度行为更难预测。它提醒我们：调度策略和锁策略不能分开看，否则系统可能“看起来有线程在运行”，但关键任务没有推进。
+Priority donation 或 inheritance 让持锁的低优先级线程临时继承高优先级，尽快释放锁。代价是实现复杂，调度行为也更难预测。调度策略必须与锁策略配合，否则系统仍在运行，关键任务却可能没有进展。
 
-## O(1) Scheduler
+## Linux 调度器
+
+### O(1) Scheduler
 
 Linux O(1) scheduler 的名字来自选择下一个任务的时间与 runnable task 数量无关。它维护 140 个优先级队列，并用 bitmap 快速找到当前最高优先级的非空队列。优先级数字越小越高：`0-99` 是实时/内核范围，`100-139` 是普通用户任务范围。
 
@@ -101,11 +99,9 @@ Linux O(1) scheduler 的名字来自选择下一个任务的时间与 runnable t
 
 O(1) scheduler 也使用大量 heuristic：`sleep_avg`、interactive credit、I/O-bound 奖励、starvation 保护。睡得久、经常等待 I/O 的任务更像交互任务，会得到优先级奖励；跑得久的 CPU-bound 任务则可能被压低。它很工程化，也因此规则多、调参多。
 
-## CFS
+### CFS
 
 ![CFS](assets/lecture-10/slide-047-cfs.png)
-
-CFS 用 `vruntime` 和权重把公平调度落到数据结构上。
 
 Completely Fair Scheduler 试图少猜“谁是交互任务”，转而直接记录每个 runnable task 已经用了多少 CPU。核心变量是 `vruntime`，可以理解成按权重归一化后的已用 CPU 时间。实际运行越多，`vruntime` 越大；权重越高，同样实际运行时间增加的 `vruntime` 越慢。
 
@@ -125,8 +121,8 @@ Q_i = (w_i / sum(w_p)) * Target Latency
 
 nice 在 CFS 中主要映射为权重：nice 越低，权重越大，获得的 CPU 份额越高。它不是简单的固定优先级，而是 proportional share。
 
-## 评估调度器
+## 调度评估
 
 评估调度算法可以用确定性建模、排队模型或真实实现。确定性建模给定 workload，手算各策略指标；排队模型用数学分布分析随机 workload；真实实现则在实际系统和实际数据上测量。
 
-调度策略在资源不紧张时差别可能不明显，一旦利用率接近饱和，响应时间会在 knee 附近急剧变坏。真正的系统设计不等到 100% 利用率才关心调度，而是在接近饱和前就要考虑公平、延迟、吞吐和可预测性的折中。
+资源不紧张时，各种调度策略的差别可能不明显；利用率接近饱和后，响应时间会在 knee 附近急剧变坏。因此系统要在饱和前预留余量，并权衡公平、延迟、吞吐和可预测性。

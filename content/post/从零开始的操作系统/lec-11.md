@@ -17,7 +17,7 @@ priority inversion 则是另一类前向进展问题。低优先级线程持有�
 
 ### 机制
 
-分析死锁时，第一步不是急着套算法，而是说清楚“谁持有什么资源、又在等谁释放”。例如单行桥上，每辆车所在路段是已经占有的资源，下一段路是正在请求的资源；如果两边车辆都进入桥上，就可能互相等待。哲学家/律师吃饭问题也是同一结构：每个人拿到一根筷子，同时等待另一根筷子，系统中没有人能继续完成。
+分析死锁时，要先列清线程已经持有的资源和仍在等待的资源。例如单行桥上，每辆车所在路段是已经占有的资源，下一段路是正在请求的资源；如果两边车辆都进入桥上，就可能互相等待。哲学家/律师吃饭问题也是同一结构：每个人拿到一根筷子，同时等待另一根筷子，系统中没有人能继续完成。
 
 双锁代码的经典例子是：
 
@@ -26,15 +26,13 @@ Thread A: x.Acquire(); y.Acquire(); ... y.Release(); x.Release();
 Thread B: y.Acquire(); x.Acquire(); ... x.Release(); y.Release();
 ```
 
-这段代码不保证每次死锁。如果 A 连续拿到 `x` 和 `y`，它可以顺利释放；但如果 A 先拿到 `x`，B 先拿到 `y`，随后 A 等 `y`、B 等 `x`，等待环就出现了。因此分析这类题时要写出会卡住的 interleaving，而不是只看单线程顺序。
+这段代码不会在每次运行时死锁。如果 A 连续拿到 `x` 和 `y`，它可以顺利释放；但如果 A 先拿到 `x`，B 先拿到 `y`，随后 A 等 `y`、B 等 `x`，等待环就出现了。分析这类代码时需要写出会卡住的 interleaving，单看各线程内部顺序无法判断结果。
 
 ## 四个条件
 
 ![Lock wait cycle](assets/lecture-11/slide-015-lock-cycle.png)
 
-双锁交叉获取展示了代码本身不一定每次死锁，但某个 interleaving 会形成等待环。
-
-死锁发生需要四个必要条件同时成立。它们不是四种死锁，而是同一个等待局面里的四个侧面：
+死锁发生需要四个必要条件同时成立：
 
 | 条件 | 含义 |
 | --- | --- |
@@ -49,11 +47,7 @@ Thread B: y.Acquire(); x.Acquire(); ... x.Release(); y.Release();
 
 ![Single-lane bridge](assets/lecture-11/slide-013-bridge.png)
 
-单行桥把“每一段路都是资源”的直觉讲得很清楚，是后面循环等待和恢复策略的入口。
-
 ![Resource allocation graph](assets/lecture-11/slide-024-resource-graph.png)
-
-资源分配图是从直觉例子过渡到形式化检测的关键表示。
 
 ### 机制
 
@@ -70,8 +64,6 @@ Dining Lawyers 可以有两种建模方式。若把 5 根筷子看成同类资�
 ## 检测算法
 
 ![Deadlock detection algorithm](assets/lecture-11/slide-025-detection-algorithm.png)
-
-检测算法把“谁还能完成”转化成 `Available/Request/Allocation` 的迭代消元。
 
 ### 机制
 
@@ -99,11 +91,9 @@ UNFINISHED = 所有线程
 
 哲学家吃饭的单类资源版中，`Available = [0]`，每个哲学家的 `Allocation_i = [1]`，`Request_i = [1]`。因为所有请求都大于当前可用资源，没有任何线程能先完成，检测算法判定死锁。
 
-有环但不死锁的情形也很重要。假设资源类型 `R` 有多个实例，图里可能有 `T1 -> R -> T2 -> R -> T1` 这样的环；如果环外还有线程将释放一个 `R` 实例，系统仍可继续推进。图上的 cycle 只是提醒我们进入向量检测。
+若资源类型 `R` 有多个实例，图里可能出现 `T1 -> R -> T2 -> R -> T1` 这样的环；如果环外还有线程将释放一个 `R` 实例，系统仍可继续推进。因此多实例资源图中的 cycle 还需要向量检测确认。
 
 ## 处理策略
-
-### 机制
 
 Deadlock prevention 是在设计上让四条件之一永远不成立。常见做法包括一次性原子申请多个资源、规定全局资源获取顺序、或用虚拟化制造“近似无限”的资源视图。它的代价也很直接：并发度下降、资源估计困难，或系统复杂度上升。
 
@@ -116,8 +106,6 @@ Deadlock denial，也叫 Ostrich Algorithm，是低概率场景下选择忽略�
 ## Banker 算法
 
 ![Banker's algorithm](assets/lecture-11/slide-039-bankers.png)
-
-Banker 算法用最大需求 `Max` 和当前分配 `Allocation` 推出 `Need`，提前拒绝会进入 unsafe state 的请求。
 
 ### 问题
 

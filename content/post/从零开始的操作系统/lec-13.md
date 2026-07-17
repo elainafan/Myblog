@@ -11,8 +11,6 @@ hidden: true
 
 ![Process address space](assets/lecture-13/slide-005-address-space.png)
 
-进程虚拟地址空间说明“地址集合”不是物理内存本身，而是程序可见的命名空间。
-
 ### 问题
 
 物理现实中，不同进程和线程共享同一套硬件内存。如果所有程序都直接使用物理地址，一个 bug 就可能写坏别的进程或 OS。操作系统需要在不让每次 load/store 都陷入内核的前提下，同时提供保护、重定位和受控共享。
@@ -23,13 +21,11 @@ hidden: true
 
 32-bit 地址空间大小是 `2^32` bytes，约 4GB；如果一个 32-bit integer 占 4 bytes，则可容纳 `2^30` 个整数。地址位数题默认按 byte-addressable 理解：`k` bit 地址能指向 `2^k` 个 byte，而不是 `2^k` 个 word。
 
-虚拟地址空间不是“已经占用了这么多物理内存”。它是进程可见的完整地址命名空间；真正驻留多少页由映射和 residency 决定。访问某个地址也不一定只是普通内存读写，可能是 memory-mapped I/O、segfault/abort，或触发 OS 介入。
+虚拟地址空间是进程可见的完整地址命名空间，并不表示同等大小的物理内存已经驻留。实际驻留页数由映射和 residency 决定。访问某个地址还可能对应 memory-mapped I/O、segfault/abort，或触发 OS 介入。
 
 ## 三个目标
 
-### 机制
-
-内存复用不是简单地把内存切成几块，还要同时满足三件事：
+内存复用需要同时满足三项目标：
 
 | 目标 | 含义 |
 | --- | --- |
@@ -42,8 +38,6 @@ OS 对 I/O 可以通过 syscall 介入，对 CPU 可以通过 interrupt/preempti
 ## Base and Bound
 
 ![Base and bound translation](assets/lecture-13/slide-013-base-bound.png)
-
-`base + program address` 和 bounds check 是理解后续所有 translation 机制的最小模型。
 
 ### 问题
 
@@ -67,13 +61,11 @@ bound = 进程允许访问的范围
 
 ### 取舍
 
-base and bound 很简单，但表达力有限。不同进程大小不同，长期运行会产生 external fragmentation；一个进程的 code/data/heap/stack 可能很稀疏，单个连续区间不够灵活；进程间共享 code segment 或 shared memory 也不自然。后面的 segmentation 和 paging，基本都是在修补这些限制。
+base and bound 很简单，但表达力有限。不同进程大小不同，长期运行会产生 external fragmentation；一个进程的 code/data/heap/stack 可能很稀疏，单个连续区间不够灵活；进程间共享 code segment 或 shared memory 也不自然。Segmentation 和 paging 分别从逻辑分段与固定大小映射入手解决这些限制。
 
 ## Segmentation
 
 ![Segmentation example](assets/lecture-13/slide-017-segmentation-example.png)
-
-四段示例把 `segment # + offset -> base + offset` 的翻译流程具体化。
 
 ### 机制
 
@@ -98,7 +90,7 @@ Virtual Address = segment number | offset
 5. Physical Address = base + offset。
 ```
 
-如果 `offset >= limit`，或权限不匹配，就触发 fault。可以把每个段理解成一个小号 base and bound，因此 code/data/stack 可以分别放到物理内存不同位置。
+如果 `offset >= limit`，或权限不匹配，就触发 fault。每个段都有独立的 base and bound，因此 code/data/stack 可以分别放到物理内存不同位置。
 
 ### 取舍
 
@@ -108,11 +100,9 @@ segmentation 支持稀疏地址空间和共享段，也能自然表达 code 只�
 
 ![Simple paging example](assets/lecture-13/slide-028-simple-paging.png)
 
-简单分页例子展示 `VPN -> PPN`，offset 在翻译中保持不变。
-
 ### 问题
 
-segmentation 仍然要把变长段塞进物理内存。即使总空闲空间够，也可能因为没有足够大的连续空洞而放不下某个段。paging 的核心动机，就是消除这种 external fragmentation。
+segmentation 仍然要把变长段放进物理内存。即使总空闲空间足够，也可能因为没有足够大的连续空洞而放不下某个段。Paging 用固定大小的 page 和 frame 消除这种 external fragmentation。
 
 ### 机制
 
@@ -172,8 +162,6 @@ PA = PPN | offset
 
 ![Page sharing](assets/lecture-13/slide-029-page-sharing.png)
 
-共享页图说明两个进程可以通过不同页表项指向同一物理页。
-
 不同虚拟页可以映射到同一个物理页，这就是 paging 支持受控共享的关键。典型用途包括：
 
 | 场景 | 共享方式 |
@@ -185,4 +173,4 @@ PA = PPN | offset
 
 共享不是复制物理页，而是多个 PTE 指向同一个 `PPN`。权限可以不同，例如同一个物理页在一个进程中只读，在另一个进程中可执行。若 shared memory 中直接存指针，最好把共享页映射到各进程地址空间的同一虚拟位置，否则指针值在另一个进程中可能没有相同含义。
 
-simple page table 的规模问题也由这里埋下伏笔：虚拟地址空间有多少 virtual page，线性页表就要有多少 PTE；稀疏地址空间中大量 PTE 可能是 invalid/null。因此下一讲会用 multi-level page table 压缩空洞。
+Simple page table 的 PTE 数量由 virtual page 总数决定，稀疏地址空间中会留下大量 invalid/null PTE。Multi-level page table 只为实际使用的地址范围分配下层页表，从而压缩这些空洞。

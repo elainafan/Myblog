@@ -11,7 +11,7 @@ hidden: true
 
 ### 问题
 
-文件系统创建一个文件可能要做很多块更新：allocate data block、write data block、allocate inode、write inode block、update bitmap、update directory、update directory modify time。crash 可以发生在任意一步，问题不是“能不能避免 crash”，而是 crash 后磁盘上留下的状态能不能被识别、清理或完成。
+文件系统创建一个文件可能要做很多块更新：allocate data block、write data block、allocate inode、write inode block、update bitmap、update directory、update directory modify time。crash 可以发生在任意一步，因此恢复机制必须能够识别、清理或完成磁盘上残留的中间状态。
 
 一个经典判断题是：如果要保存一块 data 和一个指向它的 directory entry / pointer，且每次写都是 atomic，应该先写 data 还是 pointer？
 
@@ -27,11 +27,9 @@ careful ordering 把多块更新排成安全顺序，让每个中间状态都更
 
 ![Copy on write](assets/lecture-22/slide-006-copy-on-write.png)
 
-COW 不覆盖旧结构，而是写出新版本，最后切换入口。
-
 ### 问题
 
-careful ordering 仍然要在原地修改旧结构，所以 recovery 需要理解很多中间状态。copy-on-write 换一种思路：不要 overwrite existing data blocks 或 index structure。旧版本在新版本完成前一直保持完整。
+careful ordering 仍然会原地修改旧结构，所以 recovery 需要理解很多中间状态。Copy-on-write 不覆盖 existing data blocks 或 index structure，旧版本在新版本完成前一直保持完整。
 
 ### 机制
 
@@ -72,11 +70,7 @@ commit record 是 recovery 的分界线。
 
 ![Journaling](assets/lecture-22/slide-016-journaling.png)
 
-journaling 先把意图写入非易失 log，再把修改应用到真实文件系统结构。
-
 ![Discard partial transaction](assets/lecture-22/slide-020-discard-partial.png)
-
-recovery 扫描 log 时，没有 commit record 的 transaction 必须丢弃。
 
 ### 机制
 
@@ -122,9 +116,9 @@ log-structured filesystem 和 journaled filesystem 不同。前者的数据最�
 
 ### 为什么分布式
 
-分布式系统把多台 physically separate computers 组合起来完成任务。它的承诺很诱人：便宜机器可横向扩展，机器坏了可由其他机器接手，多处存储能提高 durability，用户也能控制部分组件。
+分布式系统把多台 physically separate computers 组合起来完成任务。便宜机器可以横向扩展，节点故障后可由其他机器接手，多处存储也能提高 durability。
 
-现实会更难。更多机器和网络依赖可能降低 availability；任一节点 crash 都可能影响 shared state；攻击面也更大。本来在单机里用 lock 或 test-and-set 能解决的问题，到了分布式系统里会变成 message protocol 和 durable decision 问题。
+更多机器和网络依赖也可能降低 availability；任一节点 crash 都可能影响 shared state，攻击面也随之扩大。单机内由 lock 或 test-and-set 解决的问题，跨机器后会变成 message protocol 和 durable decision 问题。
 
 `transparency` 是把复杂性藏在简单接口后面。常见目标包括 location transparency、migration transparency、replication transparency、concurrency transparency、parallelism transparency 和 fault tolerance transparency。
 
@@ -138,17 +132,13 @@ protocol 是通信约定，至少包括两层含义：`syntax` 规定消息格�
 
 consensus problem 要求所有 nodes propose a value，一些 nodes 可能 crash and stop responding，最终所有 remaining nodes decide 同一个 proposed value。在存储系统里，这个 value 常是 `commit` 或 `abort`。
 
-Two Generals' Paradox 说明：在不可靠网络上，两个将军无法通过可能丢失的 messenger 保证“同时行动且双方都确定对方也确定”。即使消息最终都到了，也无法确认最后一个 ack 是否到达。这个悖论提醒我们，分布式系统不能依赖 perfect simultaneity；它们需要更可执行的问题定义和 durable decision。
+Two Generals' Paradox 说明：在不可靠网络上，两个将军无法通过可能丢失的 messenger 保证“同时行动且双方都确定对方也确定”。即使消息最终都到了，也无法确认最后一个 ack 是否到达。因此分布式协议不能依赖 perfect simultaneity，而要记录可恢复的 durable decision。
 
 ## 2PC
 
 ![2PC flow](assets/lecture-22/slide-043-2pc-flow.png)
 
-上图用时间线画出 2PC 的两轮消息。
-
 ![2PC blocking](assets/lecture-22/slide-050-2pc-blocking.png)
-
-这张时序图展示了 coordinator failure 如何把 prepared worker 卡在等待状态。
 
 ### 问题
 
@@ -209,7 +199,7 @@ coordinator 的主要状态是 `INIT`、`WAIT`、`ABORT`、`COMMIT`。在 `WAIT`
 
 worker 的主要状态是 `INIT`、`READY`、`ABORT`、`COMMIT`。在 `INIT` 中还没有承诺，可以 timeout abort；在 `READY` 中已经写 log 并 vote commit，不能自行 abort，因为 coordinator 可能已经决定 commit，只是消息还没送达。
 
-因此恢复规则可以压缩为下面这张表：
+恢复规则如下：
 
 | 节点 | log/state | 恢复动作 |
 | --- | --- | --- |

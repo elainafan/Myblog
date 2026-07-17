@@ -11,15 +11,13 @@ hidden: true
 
 ![Dedup pipeline](assets/lecture-23/slide-012-dedup-pipeline.png)
 
-Data Domain 的三件套共同目标是减少 fingerprint lookup 的磁盘访问。
-
 ### 问题
 
-Deduplication 是一种 global compression。普通 gzip/zip 一类 local compression 通常只在一个文件的小 sliding window 内找重复，课件给的量级大约是 `2-3x` 压缩；deduplication 跨很多文件和备份流找重复 segment，备份场景中可能达到 `10-50x`。
+Deduplication 是一种 global compression。普通 gzip/zip 一类 local compression 通常只在一个文件的小 sliding window 内找重复，压缩量级约为 `2-3x`；deduplication 跨很多文件和备份流找重复 segment，备份场景中可能达到 `10-50x`。
 
 典型 workload 是 backup storage。第一次 full backup 之后，incremental backup 和下一次 full backup 会包含大量旧数据。系统把输入 data stream 切成 segments，计算 fingerprint，再查全局 fingerprint index：见过的 segment 不再写 data，只记录引用；没见过的 segment 才写入 container。
 
-朴素方案会被 index 打爆。课件给了一个关键数量级：
+朴素方案的 index 很快会超过内存容量。例如：
 
 ```text
 80TB / 8KB segments * 20B fingerprint = 200GB index
@@ -45,8 +43,6 @@ Summary Vector 的 false positive 会带来额外 lookup，但不影响正确性
 
 ![IOFlow architecture](assets/lecture-23/slide-024-ioflow-architecture.png)
 
-IOFlow 用 controller 管 policy，用 data-plane queues 执行 enforcement。
-
 ### 问题
 
 企业数据中心里，应用跑在多个 VMs 上，VM-to-VM traffic 和 VM-to-storage traffic 走不同网络，storage stack 又跨 SMB、hypervisor、block layer、storage server 等很多层。用户想要的是 SLA，例如某租户获得 bandwidth `B`，某类 I/O 有更高 priority，或某些 I/O 绕过 malware scanner。
@@ -67,7 +63,7 @@ Storage flow 定义为：
 <{VMs}, {File Operations}, {Files}, {Shares}>  ---> SLA
 ```
 
-它不是单个 TCP connection，而是所有满足某个 SLA 的 storage requests。IOFlow API 的三个动作是：
+Storage flow 表示所有满足某个 SLA 的 storage requests，并不对应单个 TCP connection。IOFlow API 包含三个动作：
 
 | API 动作 | 形式 | 作用 |
 | --- | --- | --- |
@@ -75,7 +71,7 @@ Storage flow 定义为：
 | Queue servicing | `Queue -> <token rate, priority, queue size>` | 控制速率、优先级和排队 |
 | Routing | `Queue -> Next-hop` | 决定下一跳路径 |
 
-Flow name resolution 是 IOFlow 的核心细节。一个 SLA 可能写成 `<VM4, *, *, \\share\dataset> -> Bandwidth B`，但 VM 层、SMB client、hypervisor、block layer、storage server 看到的名字都不同。controller 必须把高层 flow 翻译成每层能识别的 IO Header 和 queue rule。
+Flow name resolution 负责跨层转换名称。一个 SLA 可能写成 `<VM4, *, *, \\share\dataset> -> Bandwidth B`，但 VM 层、SMB client、hypervisor、block layer、storage server 看到的名字都不同。controller 必须把高层 flow 翻译成每层能识别的 IO Header 和 queue rule。
 
 只看 bytes 或 IOPS 并不足以做好限流。8KB read 和 8KB write 的设备成本可能不同；8KB write 和 64KB read 都是一条 I/O，但成本也不同；RAM、SSD、disk 的 cost model 更不一样。IOFlow 因此用 empirical cost model，把 token bucket 限在“成本”上，而不是只限 payload bytes。这样 policy 才能贴近真实设备瓶颈。
 
@@ -87,11 +83,9 @@ centralized controller 有全局视角，能做 max-min fair sharing，让 aggre
 
 ![GFS architecture](assets/lecture-23/slide-057-gfs-architecture.png)
 
-GFS 的 single master 管 metadata，clients 直接访问 chunkservers 传输数据。
-
 ### 问题
 
-GFS 的假设不是 POSIX 小文件 workload，而是 Google 早期数据处理场景：
+GFS 面向 Google 早期的大规模数据处理场景，其 workload 具有以下特征：
 
 - 节点频繁失败。
 - 文件巨大，常见 multi-GB。
@@ -99,13 +93,13 @@ GFS 的假设不是 POSIX 小文件 workload，而是 Google 早期数据处理�
 - 高 sustained bandwidth 比 low latency 更重要。
 - 多个 clients 可能并发 append 到同一个文件。
 
-这些假设解释了 single master、64MB chunk、record append、lease 等设计。换句话说，GFS 从一开始就不是为了让每个小操作最低延迟，而是为了让大规模顺序数据处理在故障常态下继续跑。
+这些假设促成了 single master、64MB chunk、record append 和 lease 等设计。GFS 优先保证大规模顺序数据处理能在频繁故障下继续运行，而不追求每个小操作的最低延迟。
 
 ### 架构
 
 GFS 提供 `create`、`delete`、`open`、`close`、`read`、`write`，还提供 `snapshot` 和 `record append`。它的核心架构是 single master + chunkservers。master 管 namespace、ACL、file-to-chunk mapping、chunk locations、chunk leases、garbage collection 和 load balancing；chunkservers 把 chunks 存成 local Linux files。
 
-最重要的原则是 control flow 和 data flow 解耦：
+Control flow 与 data flow 相互分离：
 
 1. Client 向 master 请求 metadata，例如 chunk handle 和 replica locations。
 2. Client 直接和 chunkservers 读写 file data。
@@ -133,8 +127,6 @@ GFS chunk 是固定大小，默认 64MB，每个 chunk 有 immutable、globally 
 ## EC-Cache
 
 ![EC-Cache read](assets/lecture-23/slide-080-ec-cache-read.png)
-
-EC-Cache 读取 `k+Delta` 个 units，只等待最先返回的 `k` 个。
 
 ### 问题
 
@@ -164,17 +156,15 @@ any k out of k+r units can reconstruct the object
 3. decode 得到 data units。
 4. combine 得到原对象。
 
-`Delta=1` 很重要。没有 additional reads 时，object splitting 的 parallel reads 可能降低 median latency，但 straggler 会拉高 tail latency；多读一个 unit 后，慢节点不一定拖住整个 request。
+当 `Delta=1` 时，client 会额外读取一个 unit。没有 additional reads 时，object splitting 的 parallel reads 可能降低 median latency，但 straggler 会拉高 tail latency；多读一个 unit 后，慢节点不一定拖住整个 request。
 
 ### 取舍
 
-EC-Cache 使用 erasure coding 的目的不是传统 storage 的 space-efficient fault tolerance，而是 caching layer 的 load balancing 和 read latency。within-object coding 让 data 和 parity 都能参与分散负载；backend caching servers 不需要知道 EC，逻辑主要在 client library 中。代价是 encode/decode overhead 和额外 read bandwidth。
+EC-Cache 用 erasure coding 改善 caching layer 的 load balancing 和 read latency。within-object coding 让 data 和 parity 都能参与分散负载；backend caching servers 不需要知道 EC，逻辑主要在 client library 中。代价是 encode/decode overhead 和额外 read bandwidth。
 
 ## Chord
 
 ![Chord consistent hashing](assets/lecture-23/slide-104-chord-consistent-hashing.png)
-
-Chord 把 key 和 node 都映射到环上，key 由顺时针 successor 负责。
 
 ### 问题
 

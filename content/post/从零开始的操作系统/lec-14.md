@@ -27,7 +27,7 @@ page table size = 2^20 * 4 = 4MB
 
 ### 机制
 
-关键观察是：大部分进程地址空间是 sparse 的。code、heap、stack 和 mmap 区域之间存在大量洞，许多 virtual page 根本没有映射。page table 本质上只是一个 map：
+大部分进程地址空间是 sparse 的。code、heap、stack 和 mmap 区域之间存在大量空洞，许多 virtual page 根本没有映射。page table 本质上是一个 map：
 
 ```text
 VPN -> PPN + flags
@@ -38,8 +38,6 @@ VPN -> PPN + flags
 ## Multi-Level Page Table
 
 ![Two-level page table](assets/lecture-14/slide-009-two-level-page-table.png)
-
-二级页表把 32-bit VA 拆成 `10 | 10 | 12`，说明稀疏地址空间如何节省页表页。
 
 ### 机制
 
@@ -53,19 +51,15 @@ Virtual Address = 10-bit L1 index | 10-bit L2 index | 12-bit offset
 
 ### 取舍
 
-multi-level page table 的好处是页表总大小接近实际使用的地址空间，而不是整个 virtual address space。它天然适合 sparse address space，且底层页表页本身也用固定大小 frame 分配。
+multi-level page table 的总大小接近实际使用的地址空间，而不再覆盖整个 virtual address space。它适合 sparse address space，底层页表页本身也可以用固定大小 frame 分配。
 
-代价是 TLB miss 后 page table walk 需要多次内存引用。也就是说，multi-level page table 主要节省空间，不是让 TLB hit 更快；在没有 TLB 命中的情况下，它反而让一次翻译更贵。
+代价是 TLB miss 后 page table walk 需要多次内存引用。Multi-level page table 主要节省空间，不会缩短 TLB hit 路径；没有 TLB 命中时，一次翻译反而更贵。
 
 ## x86-64 页表
 
 ![x86-64 page table](assets/lecture-14/slide-017-x86-64-page-table.png)
 
-x86-64 四级页表展示 `9 x 4 + 12 = 48` 的真实位宽来源。
-
 ![Address translation comparison](assets/lecture-14/slide-024-translation-comparison.png)
-
-对比表把 segmentation、single-level paging、multi-level paging 和 inverted page table 的取舍放在一起。
 
 ### 机制
 
@@ -127,8 +121,6 @@ zero-fill-on-demand 防止新分配页泄露旧进程数据。OS 可先不给实
 
 ![TLB](assets/lecture-14/slide-033-tlb.png)
 
-TLB 图强调它缓存的是地址翻译结果，不是普通数据。
-
 ### 问题
 
 MMU 在 CPU 和内存之间做地址翻译。每次 instruction fetch、load、store 都需要翻译地址；如果每次都走多级页表，访存成本会被 page table walk 放大到难以接受。
@@ -155,13 +147,11 @@ CPU 产生 VA
    -> PTE invalid: page fault，进入 OS
 ```
 
-需要注意的是，TLB 缓存的是地址翻译，不是数据本身。它通常在 cache 前面，或与 cache lookup 尽量重叠。context switch 后旧 TLB entry 可能把新进程的同名 VPN 错误翻译到旧进程的 PPN，因此要 flush，或使用 ASID/PID 区分地址空间。
+TLB 缓存的是地址翻译，不是数据本身。它通常位于 cache 前面，或与 cache lookup 尽量重叠。context switch 后旧 TLB entry 可能把新进程的同名 VPN 错误翻译到旧进程的 PPN，因此要 flush，或使用 ASID/PID 区分地址空间。
 
 ## Cache
 
 ![Cache placement](assets/lecture-14/slide-040-cache-placement.png)
-
-这张图适合对照三种 placement policy 的查找范围和替换范围。
 
 ### 机制
 

@@ -15,13 +15,11 @@ Readers/Writers 的安全条件很直观：reader 可并行，writer 必须排�
 
 Readers/Writers lock 解决的是读多写少场景中的并发控制。多个 reader 只读共享数据，因此可以并行；writer 会修改共享数据，所以必须独占。正确性条件可以压成两句话：有 writer 正在写时，不能有任何 reader 或其他 writer 进入；有 reader 正在读时，writer 不能进入。
 
-这比普通 mutex 多了一个目标：不要因为写者需要独占，就把所有 reader 也串行化。真正的设计空间在吞吐、公平和实现复杂度之间。Reader-priority 可以让读吞吐很好，但连续 reader 到来时 writer 可能饥饿；writer-priority 能减少 writer starvation，但 writer 持续到来时 reader 也可能长期进不去。换句话说，读写锁不是“更高级的 mutex”，而是把互斥条件拆成了更细的状态机。
+读写锁不能因为 writer 需要独占，就把所有 reader 也串行化。它需要在吞吐、公平和实现复杂度之间取舍。Reader-priority 的读吞吐较高，但连续 reader 到来时 writer 可能饥饿；writer-priority 能减少 writer starvation，但 writer 持续到来时 reader 也可能长期进不去。读写锁用更细的状态机描述不同角色的互斥条件。
 
-## Monitor 状态
+### Monitor 状态
 
 ![Reader code](assets/lecture-08/slide-012-reader-code.png)
-
-Reader 入场和退场都要更新 monitor 状态，但真正读取数据库不一定持有 monitor lock。
 
 Monitor 解法通常维护四个计数：
 
@@ -32,7 +30,7 @@ Monitor 解法通常维护四个计数：
 | `AW` | active writers | writer 入场成功后 `AW++`，退场时 `AW--` |
 | `WW` | waiting writers | writer 睡在 `okToWrite` 前后维护 |
 
-Monitor lock 只保护这些状态变量和 condition queues。真正访问数据库的读写阶段不一定持有 monitor lock：reader 已经通过状态确认没有 writer，可以并发读；writer 已经确认没有 reader 或 writer，可以独占写。不难发现，monitor lock 管的是“谁可以进场”，不是把整段数据库访问都串行化。
+Monitor lock 只保护这些状态变量和 condition queues。真正访问数据库的读写阶段不一定持有 monitor lock：reader 已经确认没有 writer，可以并发读；writer 已经确认没有 reader 或 writer，可以独占写。Monitor lock 只管理谁可以进场，不会把整段数据库访问串行化。
 
 典型结构是：
 
@@ -54,11 +52,9 @@ release(&lock);
 
 `cond_wait(&cv, &lock)` 会原子地释放 `lock` 并睡眠，被唤醒返回前重新拿回 `lock`。Mesa 语义下，醒来只表示条件可能成立，所以必须回到 `while` 重新检查。
 
-## 入场协议
+### 入场协议
 
 ![Writer code](assets/lecture-08/slide-013-writer-code.png)
-
-Writer 的入场条件更严格：不能有 active reader，也不能有 active writer。
 
 Writer-priority 版本中，reader 的等待条件常写作 `(AW + WW) > 0`：只要有活跃 writer 或等待 writer，新 reader 就不要继续插队。入场成功后 `AR++`，退场时 `AR--`；如果自己是最后一个 reader，并且有 writer 等待，就 `signal(okToWrite)`。
 
@@ -110,7 +106,7 @@ Writer() {
 
 Reader 退场处的 `AR == 0 && WW > 0` 不是装饰。只有最后一个 reader 离开时，writer 的入场条件才可能满足；只有确实有 writer 等待时，signal 才有意义。过早唤醒通常会造成无意义上下文切换，甚至让该推进的线程没有被及时叫醒。
 
-## signal / broadcast
+### signal / broadcast
 
 `signal` 更精准，开销更低；`broadcast` 更稳健，但会把很多醒来后又睡回去的线程一起叫醒。Readers/Writers 里对 writer 用 `signal` 是自然的，因为同一时刻最多只能有一个 writer 进入。对 reader 用 `broadcast` 则合理，因为多个 reader 可以一起读，唤醒一批 reader 能利用并行性。
 
@@ -126,7 +122,7 @@ Reader 退场处的 `AR == 0 && WW > 0` 不是装饰。只有最后一个 reader
 
 Semaphore 有计数历史：先发生的 `V` 会留下许可，未来的 `P` 可以消耗它。Condition variable 没有历史：如果 signal 发生时没人等待，这次 signal 就消失了。CV 的真正条件不在 CV 本身，而在受锁保护的共享状态里，例如队列是否为空、`AR/AW/WW` 是否满足入场条件。
 
-这解释了为什么不能把 `P/V` 直接替换成 `wait/signal`。`cond_wait` 需要原子地“释放 lock + 睡眠 + 醒来后重新拿 lock”；单独 `P` 一个 semaphore 不具备这种 monitor 语义。反过来，试图通过观察 semaphore 等待队列来模拟 CV，也会在释放锁和真正睡眠之间重新制造 lost wakeup 窗口。
+`cond_wait` 需要原子地“释放 lock + 睡眠 + 醒来后重新拿 lock”，单独 `P` 一个 semaphore 不具备这种 monitor 语义。反过来，试图通过观察 semaphore 等待队列来模拟 CV，也会在释放锁和真正睡眠之间重新制造 lost wakeup 窗口。
 
 ## 语言级同步
 
@@ -155,4 +151,4 @@ Chubby 代表把锁服务工程化到分布式系统中的思路。
 
 单机锁关注线程互斥和调度；分布式锁还要面对网络分区、节点故障、租约超时、时钟偏差和一致性。Chubby 是 Google 的粗粒度分布式锁服务，提供类似 UNIX 文件系统的接口，强调可用性、可靠性和工程落地。它不是给单机临界区做纳秒级 fast path 的 mutex，而是给松耦合分布式系统提供协调和命名服务。
 
-可以把 ZooKeeper、etcd 看作后续生态中常见的协调服务类比。课程引入 Chubby 的目的，是提醒我们：同步抽象一旦跨机器，正确性不再只是“谁先拿到锁”，还包括故障恢复和锁持有者是否仍然活着。
+ZooKeeper、etcd 也属于常见的协调服务。同步抽象一旦跨越机器，正确性除互斥外，还要覆盖故障恢复以及锁持有者是否仍然存活。

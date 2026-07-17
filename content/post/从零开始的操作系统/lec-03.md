@@ -21,13 +21,9 @@ POSIX 文件可以先理解为“文件系统中用名字引用的一组字节�
 
 ![IO layers](assets/lecture-03/slide-007-io-layers.png)
 
-I/O 分层说明了 `FILE *`、fd、syscall、文件系统和驱动各处在什么位置。
-
 ![High low API](assets/lecture-03/slide-026-high-low-api.png)
 
-高层 API 通过库函数包装系统调用，代价和能力边界都不同。
-
-图里的层次可以从应用一路读到硬件。应用看到的 I/O 大致有五层：
+从应用到硬件，I/O 大致分为五层：
 
 | 层次 | 代表对象 | 作用 |
 | --- | --- | --- |
@@ -41,11 +37,11 @@ I/O 分层说明了 `FILE *`、fd、syscall、文件系统和驱动各处在什�
 
 内核低层接口小而稳定，便于统一各种对象；标准库高层接口好用，但隐藏了 buffer 与 flush 时机。系统程序员要知道两层各自维护什么状态，尤其不能把 `FILE *` 当作“文件本身”。
 
-## `FILE *`
+## I/O 接口
+
+### High-level API
 
 ![File buffering](assets/lecture-03/slide-028-file-buffering.png)
-
-`FILE *` 的用户态缓冲解释了为什么 `fwrite` 后不一定立刻被另一个读者看到。
 
 `fopen` 返回的 `FILE *` 是 C 标准库维护的 stream 对象。它通常至少包含底层 fd、用户态 buffer、以及多线程访问时需要的 lock。常见接口包括：
 
@@ -75,7 +71,7 @@ fread(&x, sizeof(char), 1, f2);
 
 `FILE *` 和 fd 的差别不只是接口名字：前者是用户态库对象，会带 buffer；后者是内核对象表的下标，更靠近 system call。混用两层 API 时，要先想清楚数据可能停在哪一层 buffer 里。
 
-## fd
+### Low-level API
 
 低层接口以 fd 为中心：
 
@@ -99,17 +95,15 @@ close(fd);
 
 常见 flags 包括 `O_RDONLY`、`O_WRONLY`、`O_RDWR`、`O_CREAT`、`O_TRUNC`、`O_APPEND`、`O_EXCL`。`O_CREAT` 创建文件时需要第三个 `mode` 参数；`creat(filename, mode)` 可理解为 `open(filename, O_CREAT | O_WRONLY | O_TRUNC, mode)` 的简化形式。
 
-## fd 表
+## 内核文件状态
+
+### fd 表
 
 ![FD open description](assets/lecture-03/slide-039-fd-open-description.png)
 
-fd 是进程 fd 表的整数索引，真正的打开实例在内核里。
-
 ![Dup alias](assets/lecture-03/slide-058-dup-alias.png)
 
-`dup` 复制 fd 号，但不复制 open file description，所以 offset 会共享。
-
-`open(path, flags)` 不只是返回一个整数。内核还会创建 open file description，里面记录当前打开实例的状态。对本讲来说，最重要的是两个字段：
+`open(path, flags)` 不只是返回一个整数。内核还会创建 open file description，里面记录当前打开实例的状态，其中最重要的是两个字段：
 
 - 文件数据在哪里：例如 inode 或设备对象。
 - 当前读写位置：也就是 file offset。
@@ -140,7 +134,7 @@ printf("hello\n");
 
 `printf` 仍写 stdout，但 stdout 底层 fd 1 已经指向 `out.txt`。
 
-## fork 与 offset
+### fork 与 offset
 
 `fork()` 后 child 得到父进程 fd 表的副本，但表项通常指向同一批 open file description。因此父子进程可能共享 offset。若 fork 前 `fd` 的 offset 是 100，父子各读 100 字节，谁先读由调度决定；但它们不会都从 100 开始读，第二个读者会看到已经推进后的 offset。
 

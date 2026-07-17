@@ -11,9 +11,7 @@ hidden: true
 
 ![Replacement policy motivation](assets/lecture-16/slide-006-replacement-policies.png)
 
-这页把 replacement policy 的核心动机讲清楚：page cache 的 miss 代价尤其高。
-
-Demand paging 可以看成一种缓存：virtual page 是缓存块，physical frame 是缓存槽，backing store 是更慢的下一级存储。和 CPU cache 不同，page replacement 的错误代价非常高，因为缺页可能要发起磁盘 I/O，还要阻塞当前进程。
+Demand paging 是一层缓存：virtual page 是缓存块，physical frame 是缓存槽，backing store 是更慢的下一级存储。和 CPU cache 不同，page replacement 选错 victim 的代价非常高，因为缺页可能要发起磁盘 I/O，还会阻塞当前进程。
 
 常见策略可以按“是否知道未来”和“实现成本”来读：
 
@@ -24,25 +22,21 @@ Demand paging 可以看成一种缓存：virtual page 是缓存块，physical fr
 | `MIN/OPT` | 替换未来最久才会再用的页 | 理论最优，是评价其他算法的下界 | 在线系统不知道未来，不能真正实现 |
 | `LRU` | 替换过去最久没有使用的页 | locality 下常能近似 MIN | 精确维护访问时间或链表开销很高 |
 
-`MIN` 的价值不是实用，而是给出“最多能好到哪里”的基准。`LRU` 的价值在于相信程序访问具有 temporal locality：过去很久没用的页，未来短时间内也较不可能用到。
+`MIN` 无法在线实现，但能给出理论下界。`LRU` 则利用 temporal locality：过去很久没用的页，未来短时间内也较不可能用到。
 
 ## Stack Property
 
 ![Belady anomaly](assets/lecture-16/slide-017-belady-anomaly.png)
 
-FIFO 不满足 stack property，因此可能出现加内存反而 page faults 更多的 Belady's anomaly。
-
 一个 replacement algorithm 如果满足 `stack property`，那么给它更多 frames 时，较小内存中的页集合总是较大内存中页集合的子集。这样 frame 数增加时 miss rate 不会升高。
 
 `LRU` 和 `MIN` 满足这个性质。`FIFO` 不满足，因为它只看进入内存的时间，不看最近是否被使用。结果就是 Belady's anomaly：某些 reference string 下，增加 frame 数反而让 FIFO faults 变多。
 
-这件事的要点不是“FIFO 总是差”，而是 FIFO 的状态不具有包含关系。更多 frames 会改变进入队列和离开队列的相对历史，从而产生反直觉结果。
+FIFO 的页集合不具有包含关系。增加 frames 会改变页面进入和离开队列的相对历史，因此可能出现 Belady's anomaly；这并不表示 FIFO 在所有 workload 中都更差。
 
 ## Clock Algorithm
 
 ![Clock algorithm](assets/lecture-16/slide-018-clock-algorithm.png)
-
-Clock 把所有 resident pages 放成环，用 clock hand 和 use bit 给最近访问页 second chance。
 
 精确 LRU 需要在每次 memory reference 后更新全局状态，这对 OS 来说太贵。Clock Algorithm 用硬件维护的 `use bit/reference bit` 近似“最近是否用过”。
 
@@ -62,15 +56,13 @@ page fault:
     hand 前进
 ```
 
-这套机制的直觉很干净：最近被访问过的页会在第一次扫描中被放过；如果一整圈之后还没再次被访问，说明它在当前 locality 中较冷，可以被替换。
+最近被访问过的页会在第一次扫描中被放过；如果一整圈之后仍未再次被访问，说明它在当前 locality 中较冷，可以被替换。
 
 Clock hand 的速度也能反映系统状态。hand 移动慢通常说明 page faults 不多，系统比较健康；hand 转得很快则说明频繁缺页，可能已经接近内存压力或 thrashing。
 
 ## N-th Chance
 
 ![Nth chance clock](assets/lecture-16/slide-032-nth-chance-clock.png)
-
-N-th chance Clock 通过 sweep counter 控制一页获得多少次机会，也能区别对待 dirty page。
 
 N-th chance Clock 给每页维护一个 counter。扫描时如果 `use bit = 1`，清 use bit 并清 counter；如果 `use bit = 0`，counter 增加；counter 达到 N 才替换。
 
@@ -105,13 +97,11 @@ Frame 分配策略也有不同口味：
 | Priority allocation | 按优先级分配 | 保护重要任务 |
 | Page-Fault Frequency | 根据 fault rate 动态调节 | fault rate 高就加 frame，过低则可回收 |
 
-Page-Fault Frequency 的核心是用反馈控制内存：fault rate 高于上阈值，说明进程 frame 不够；fault rate 低于下阈值，说明可能分配过多。
+Page-Fault Frequency 用 fault rate 反馈调整内存：高于上阈值时增加 frames，低于下阈值时回收多余 frames。
 
 ## Thrashing
 
 ![Working set model](assets/lecture-16/slide-045-working-set.png)
-
-Working set 把 locality 变成可讨论的集合大小，是解释 thrashing 的关键抽象。
 
 `Thrashing` 指进程忙于把 pages 换进换出，几乎没有实际进展。典型现象是 page fault rate 很高、CPU utilization 很低、disk paging I/O 很高。
 
@@ -119,4 +109,4 @@ Working set 把 locality 变成可讨论的集合大小，是解释 thrashing �
 
 应对 thrashing 时，更换 replacement policy 只是表层办法。更根本的是让 working set 重新装得下：可以给进程更多 frames，也可以降低 multiprogramming degree，把一部分进程 swap out；进程之后重新调入时，最好恢复它的 working set。对于 compulsory misses，clustering 或 prefetching 能降低首次访问成本，但它们解决的是冷启动代价，不是内存总量不够的问题。
 
-这也是本讲从“替换哪一页”走向“系统是否给了足够内存”的地方：局部 victim 选择很重要，但如果工作集整体装不下，再聪明的 victim 选择也只是延缓崩溃。
+Victim 选择只能优化局部替换；如果 working set 整体装不下，再好的 replacement policy 也无法消除 thrashing。

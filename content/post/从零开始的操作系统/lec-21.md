@@ -11,11 +11,9 @@ hidden: true
 
 ![mmap paging](assets/lecture-21/slide-010-mmap-paging.png)
 
-`mmap()` 把文件页接入 page table，真正的数据读取由 page fault 触发。
-
 ### 问题
 
-传统文件 I/O 通过 `read()` / `write()` 在用户 buffer 和 kernel/file buffer 之间显式 copy，每次调用都要跨系统调用边界。`mmap()` 的目标是把文件映射到进程虚拟地址空间的一段 region，让程序通过普通 load/store 访问文件内容。
+传统文件 I/O 通过 `read()` / `write()` 在用户 buffer 和 kernel/file buffer 之间显式 copy，每次调用都要跨系统调用边界。`mmap()` 把文件映射到进程虚拟地址空间的一段 region，让程序通过普通 load/store 访问文件内容。
 
 这个接口之所以自然，是因为虚拟内存已经有一套成熟机制：page table、page fault、page replacement、dirty page。`mmap()` 做的事情，就是把文件系统变成这些机制的 backing store 之一。
 
@@ -33,7 +31,7 @@ hidden: true
 
 ### 例子
 
-课件中的代码先打开文件，再执行：
+例如，打开文件后建立一段 shared mapping：
 
 ```c
 mfile = mmap(0, 10000,
@@ -50,13 +48,11 @@ strcpy(mfile + 20, "Let's write over it");
 
 ![Buffer cache](assets/lecture-21/slide-017-buffer-cache.png)
 
-这张图把 buffer cache 放在内存和磁盘之间，方便看出 metadata 也会经过这层缓存。
-
 ### 问题
 
 kernel 必须把 disk blocks 拷到 main memory 才能查看或修改它们。如果每次 `open()`、`read()`、`write()` 都同步访问磁盘，文件系统会被 seek、rotational delay 和设备吞吐限制拖慢。buffer cache 就是 OS 用来缓存文件系统 blocks 的软件 cache。
 
-它缓存的不只是 file data blocks，也包括 directory blocks、inodes、free bitmap / freemap，以及 name translation 相关信息。也就是说，路径查找、metadata 更新和普通文件读写都会经过这层 cache。
+它除了缓存 file data blocks，也缓存 directory blocks、inodes、free bitmap / freemap，以及 name translation 相关信息。路径查找、metadata 更新和普通文件读写都会经过这层 cache。
 
 ### open / read / write
 
@@ -76,8 +72,6 @@ buffer cache 由 OS software 实现，不像 CPU cache/TLB 那样由硬件自动
 
 ![Delayed writes](assets/lecture-21/slide-027-delayed-writes.png)
 
-`write()` 快速返回时，修改可能只是进入 kernel buffer cache，还没有写入 disk。
-
 ### Prefetching
 
 文件访问常有顺序性，read ahead prefetching 会提前读取后续 blocks。这样做能减少应用等待，也让 disk scheduler 有更多请求可重排。风险是 prefetch 太多会抢占其他应用 I/O，太少又无法隐藏 seek 和 rotational delay。
@@ -86,7 +80,7 @@ buffer cache 由 OS software 实现，不像 CPU cache/TLB 那样由硬件自动
 
 buffer cache 是 writeback cache，因此文件系统写入常是 delayed writes。`write()` 返回时，数据通常只是从 user space copy 到 kernel buffer cache，并标记为 dirty。应用之后 `read()` 可以从 cache 读到刚写的数据，即使 disk 上仍是旧内容。
 
-dirty blocks 真正落盘通常发生在三种时机：cache 满了，必须 evict dirty block；OS 周期性 flush，以缩短 crash 丢失窗口；或者应用显式调用 `fsync` / sync 类接口。这里需要注意的是，`write()` 的返回值只说明 kernel 接收了这次写入，并不等价于数据已经进入 stable storage。
+dirty blocks 通常在三种时机落盘：cache 满了，需要 evict dirty block；OS 周期性 flush，以缩短 crash 丢失窗口；应用显式调用 `fsync` / sync 类接口。`write()` 的返回值只说明 kernel 接收了这次写入，并不等价于数据已经进入 stable storage。
 
 性能收益很大：`write()` 可以快速返回；disk scheduler 能积累多个 writes，用 elevator algorithm 排序；delayed block allocation 也可能让连续写更容易分配到 contiguous blocks。短命文件甚至可能在被删除前从未真正写到 disk。
 
@@ -109,17 +103,13 @@ buffer cache 和 demand paging 都在“内存不够时缓存 backing store 内�
 
 ![Reliability approaches](assets/lecture-21/slide-045-reliability-approaches.png)
 
-RAID 之后还需要文件系统层面的 careful ordering 或 copy-on-write。
-
-这组三个词容易混，但它们关注的时间尺度不同。`Availability` 是系统现在能接受并处理请求的概率，常用几个 9 衡量；`Durability` 是 fault 后数据仍能保存或恢复的能力；`Reliability` 更强，强调系统在一段时间内正确执行功能，通常包含 availability、security、fault tolerance 和 durability。
+`Availability`、`Durability` 和 `Reliability` 关注不同的性质。`Availability` 是系统现在能接受并处理请求的概率，常用几个 9 衡量；`Durability` 是 fault 后数据仍能保存或恢复的能力；`Reliability` 更强，强调系统在一段时间内正确执行功能，通常包含 availability、security、fault tolerance 和 durability。
 
 一个关机但磁盘完好的系统可能 durable 但 not available；一个在线但返回错误数据的系统可能 available 但 not reliable。
 
 ## RAID / erasure code
 
 ![RAID5 parity](assets/lecture-21/slide-037-raid5-parity.png)
-
-RAID5 用 XOR parity 在容量、读带宽和单盘容错之间折中。
 
 ### RAID1
 
@@ -157,11 +147,11 @@ erasure coding 也可用于跨地域复制：durability 高，因为很难同时
 
 RAID 能抵抗 disk media failure，却不能保证文件系统永远处在一致状态。原因在于，power failure 或 software crash 可能发生在一个 logical file operation 中间，而这个 operation 可能涉及 inode、indirect block、data block、free bitmap、directory block 等多块物理 blocks。
 
-本讲最后给出两个大方向：
+文件系统常用两类方法保护多块更新：
 
 | 方法 | 代表 | 思路 |
 | --- | --- | --- |
 | Careful ordering and recovery | FAT、FFS + `fsck` | 按安全顺序写，crash 后扫描并清理 |
 | Versioning and copy-on-write | ZFS | 不覆盖旧版本，写新结构，最后切换版本入口 |
 
-careful ordering 的直觉是先构造数据和 metadata，最后再把 pointer 或 directory entry link 到 namespace。COW 的直觉则是旧版本在新版本 ready 之前不被破坏。这两个方向会在下一讲展开成 transactions、journaling 和 distributed decision making。
+Careful ordering 先构造数据和 metadata，最后再把 pointer 或 directory entry link 到 namespace。COW 则在新版本 ready 前保留完整的旧版本。Transactions 和 journaling 会进一步把一组更新组织成可恢复的原子单位。

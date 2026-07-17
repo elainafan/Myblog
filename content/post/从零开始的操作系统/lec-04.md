@@ -19,11 +19,7 @@ hidden: true
 
 ![Pipe queue](assets/lecture-04/slide-014-pipe-queue.png)
 
-Pipe 的有限内存队列解释了阻塞读写和流式通信语义。
-
 ![Pipe EOF](assets/lecture-04/slide-020-pipe-eof.png)
-
-EOF/SIGPIPE 不是单个 fd 的属性，而是所有端点引用共同决定的结果。
 
 `pipe(pipefd)` 创建一个匿名管道：
 
@@ -57,20 +53,18 @@ if (pid == 0) {
 }
 ```
 
-关键不是只会 `read/write`，而是关闭不用的一端。fork 后父子都会持有读端和写端副本；如果不用的一端不关，引用计数就不符合协议预期，读者可能迟迟看不到 EOF，写者也可能迟迟收不到 `SIGPIPE`。
-
-## fd 生命周期
+fork 后父子都会持有读端和写端副本，因此双方都要关闭不用的一端。否则引用计数与通信方向不符，读者可能迟迟看不到 EOF，写者也可能迟迟收不到 `SIGPIPE`。
 
 Pipe 的结束条件看所有引用，而不是看某个局部变量还在不在：
 
 - 所有 write fd 都关闭后，read end 再读会返回 EOF。
 - 所有 read fd 都关闭后，write end 再写通常触发 `SIGPIPE`；若忽略信号，`write` 失败并设置 `EPIPE`。
 
-这也是为什么管道代码里常见 “child 关闭写端，parent 关闭读端”。不是为了整洁，而是为了让内核知道这条通信方向上还有没有可能产生数据。
+管道代码里的 “child 关闭写端，parent 关闭读端” 会让内核准确判断该方向上是否还可能产生数据。
 
 Pipe 轻量、接口简单、适合临时流式通信；但普通匿名 pipe 缺少路径名，通常依赖父子继承传递 fd。它也通常是单向的。如果需要跨无亲缘关系进程、跨机器或双向通信，就要换其他 IPC 机制，socket 是其中最重要的一类。
 
-## 协议
+## 通信协议
 
 一旦有通信通道，双方还需要约定如何解释字节。只写 `read/write` 不是协议；真正的协议要说明消息格式、消息顺序，以及每一步对双方状态的影响。
 
@@ -85,11 +79,7 @@ Pipe 轻量、接口简单、适合临时流式通信；但普通匿名 pipe 缺
 
 ![Socket abstraction](assets/lecture-04/slide-028-socket-abstraction.png)
 
-Socket 把网络连接包装成像文件一样可读写的通信端点。
-
 ![Client server flow](assets/lecture-04/slide-039-client-server-flow.png)
-
-C/S 建链流程展示了 client socket、server socket 和 connection socket 的分工。
 
 Socket 是网络连接的一个端点，也是一种 IPC 机制。Linux 中 socket 可以表现为 fd，因此很多情况下也用 `read/write/close` 操作。TCP socket 提供可靠、有序、双向字节流；可以把一条连接理解成两个方向独立的队列：A 到 B 一条，B 到 A 一条。
 
@@ -126,7 +116,7 @@ while (1) {
 
 `server_socket` 是 listening socket，用于接收连接请求，不能直接读写某个 client 的业务数据。`accept` 返回的 `conn_socket` 才对应一条具体 TCP connection。
 
-## 连接身份
+### 连接身份
 
 网络寻址要分层看：hostname/DNS 找到主机，IP 找到网络接口，port 找到主机上的服务端点。Client 通常让内核自动分配 ephemeral port；Server 必须绑定固定端口，否则 client 不知道连接哪里。
 
@@ -138,13 +128,11 @@ while (1) {
 - Destination Port Number。
 - Protocol。
 
-这就是为什么同一个 server port 可以同时服务多个 client：每条连接的 client IP/port 不同，五元组不同。
+同一个 server port 可以同时服务多个 client，因为每条连接的 client IP/port 不同，五元组也不同。
 
-## 并发服务器
+### 并发服务器
 
 ![Thread pool](assets/lecture-04/slide-050-thread-pool.png)
-
-线程池用固定 worker 数限制并发上限，避免一个连接一个线程无限增长。
 
 串行 server 每次 `accept` 一个连接，处理完才接下一个。内核可以排队连接，网络栈也有缓冲，但应用层服务仍会被长请求拖住。
 
@@ -158,4 +146,4 @@ while (1) {
 
 一个连接一个线程或进程容易理解，但高峰期可能无界增长。线程池提前创建固定数量 worker，主线程负责 accept 并把任务放入队列，worker 循环取任务处理。它限制最大并发量，减少创建销毁抖动，但队列和共享状态需要同步。
 
-并发服务器的设计回答要交代四件事：谁负责 `accept`，谁处理 request，任务如何排队，上限在哪里。常见 bug 包括混淆 listen fd 与 conn fd、忽略短读短写、没有应用层 framing、fork 后忘记关闭不用 fd、为了“并发”又在 accept 循环里立刻 `wait/join`。
+设计并发服务器时，需要明确谁负责 `accept`、谁处理 request、任务如何排队，以及并发上限设在哪里。常见 bug 包括混淆 listen fd 与 conn fd、忽略短读短写、没有应用层 framing、fork 后忘记关闭不用 fd，以及在 accept 循环里立刻 `wait/join`。

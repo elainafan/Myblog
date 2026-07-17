@@ -7,13 +7,13 @@ encrypt: false
 hidden: true
 ---
 
-## MTAO
+## 线程
+
+### 并发与并行
 
 ![Concurrency parallelism](assets/lecture-02/slide-009-concurrency-parallelism.png)
 
-并发与并行的区别，是理解单核线程价值的第一步。
-
-操作系统和应用都要 handle multiple things at once。OS 要同时处理进程、I/O、中断、后台维护；网络服务器要同时服务多个连接；图形界面要在后台任务运行时继续响应用户；磁盘和网络程序要隐藏慢设备延迟。
+操作系统和应用经常要同时处理多项工作。OS 要处理进程、I/O、中断和后台维护；网络服务器要服务多个连接；图形界面在后台任务运行时仍要响应用户；磁盘和网络程序则要隐藏慢设备的等待时间。
 
 如果没有线程，程序常常被迫写成事件驱动状态机：每个请求推进一点，记录中间状态，等下一次事件再继续。这种写法可以高效，但控制流被切碎，普通业务逻辑会变难读。
 
@@ -29,11 +29,9 @@ hidden: true
 | Multiprogramming | 系统中有多个 job/process | 目标是提高利用率和吞吐 |
 | Multithreading | 一个或多个进程中有多个 thread | 程序员看到多个执行流 |
 
-## 线程状态
+### 运行状态
 
 ![IO latency](assets/lecture-02/slide-013-io-latency.png)
-
-线程可以在一个任务阻塞等待 I/O 时，让另一个任务继续运行。
 
 线程最基本的运行状态有三种，它们描述的是线程和 CPU、等待事件之间的关系：
 
@@ -45,7 +43,7 @@ hidden: true
 
 一个 UI 程序如果只有一个线程，读取大文件时界面可能完全不响应。把读取文件和渲染界面拆成两个线程后，读文件线程阻塞等待磁盘时，界面线程仍能继续处理输入。这里并没有增加硬件并行度，但改善了响应性。
 
-## pthread
+### pthread
 
 `pthread_create` 创建同一进程内的新线程：
 
@@ -69,11 +67,9 @@ pthread_join(tid, &ret);
 | 私有 | PC、registers、stack、TCB 状态 | 上下文切换主要保存/恢复这些状态 |
 | 容易混淆 | stack 私有，但 stack 上的指针可指向 heap/global object | 判断 race 要看实际对象是否共享 |
 
-## 线程栈
+### 线程栈与 fork-join
 
 ![Fork join](assets/lecture-02/slide-020-fork-join.png)
-
-fork-join 是多线程程序最常见的控制结构之一。
 
 栈保存函数调用链、返回地址、局部变量和临时结果。多线程进程里，代码段、全局数据和堆通常共享，但每个线程必须有自己的栈；否则两个线程的函数调用就会互相覆盖。
 
@@ -81,11 +77,9 @@ fork-join 是多线程程序最常见的控制结构之一。
 
 在 fork-join 模式中，main thread 创建多个 worker thread，把参数传给它们；worker 分别执行任务，结束时返回结果；main 再依次 join。main 的 join 顺序只说明 main 等待的顺序，不代表 worker 的实际完成顺序。除非有 lock、condition variable、semaphore、join 等同步关系，否则打印顺序和完成顺序都不稳定。
 
-## Interleaving
+### 交错执行
 
 ![Interleavings](assets/lecture-02/slide-042-interleavings.png)
-
-线程交错执行的可能性，解释了为什么并发程序不能依赖偶然顺序。
 
 调度器可以按任意顺序运行线程，也可以在许多看似普通的指令之间切换线程。程序必须在所有可能 interleaving 下都正确，而不是只在某次运行的顺序下正确。
 
@@ -93,11 +87,9 @@ fork-join 是多线程程序最常见的控制结构之一。
 
 锁负责 mutual exclusion：同一时间最多一个线程进入受保护的 critical section。Semaphore 是更泛化的同步对象，初值为 1 时可当 mutex，初值为 0 时常用于事件通知，例如 worker 完成后 signal，main 再继续。
 
-## Process
+## 进程
 
 ![Two thread memory](assets/lecture-02/slide-038-two-thread-memory.png)
-
-同一进程中两个线程共享地址空间，但拥有各自的栈。
 
 进程是具有受限权限的执行环境：一个地址空间、一个或多个线程、打开文件、网络连接和其他内核状态。现代 OS 中，运行在内核外的程序通常都运行在某个进程中。进程隔离保证一个程序崩溃时不会直接破坏其他进程或 OS。
 
@@ -113,4 +105,4 @@ fork-join 是多线程程序最常见的控制结构之一。
 
 线程适合频繁共享内存、属于同一应用协作逻辑的任务；进程适合需要强隔离、独立故障恢复或本来就是不同程序的任务。线程更轻，但同步更难；进程更重，但保护边界更清楚。
 
-这三组 API 放在一起看时，关键是问地址空间和控制流发生了什么变化，而不是只背函数名。
+判断这三组 API 的语义时，需要分别检查地址空间和控制流发生了什么变化。

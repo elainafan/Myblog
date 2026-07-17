@@ -11,8 +11,6 @@ hidden: true
 
 ![FAT lookup](assets/lecture-20/slide-009-fat-lookup.png)
 
-FAT 的核心是从 file number 进入表，再沿链表追踪文件的 disk blocks。
-
 ### 问题
 
 FAT 的设计从一个很朴素的模型开始：磁盘是一堆 fixed-size blocks，文件是一串 blocks，directory 能把文件名翻译成 file number。这个 file number 不是文件内容本身，而是 File Allocation Table 中链表头的 index。
@@ -25,7 +23,7 @@ offset = <logical block number, offset within block>
 
 ### 机制
 
-FAT entry 本身很小，但语义很关键：它既可以指向下一个 block，也可以标记 end-of-file 或 free。格式化磁盘时，普通 format 可能清零数据块并把 FAT entries 标为 free；quick format 通常主要重置 FAT，因此旧数据块可能还在，只是文件系统不再认为它们可达。
+FAT entry 既可以指向下一个 block，也可以标记 end-of-file 或 free。格式化磁盘时，普通 format 可能清零数据块并把 FAT entries 标为 free；quick format 通常主要重置 FAT，因此旧数据块可能还在，只是文件系统不再认为它们可达。
 
 directory 在 FAT 中也是一个文件，内容是 `<file_name, file_number>` mappings。FAT 的一个重要差异是：不少 file attributes 存在 directory entry 里，而不是跟独立 inode 绑定。root directory 位于磁盘上的约定位置；普通 directory 查找常是 linear search。
 
@@ -37,17 +35,13 @@ FAT 的顺序访问很自然，只要沿链表向后走即可；但随机访问�
 
 ![Inode structure](assets/lecture-20/slide-017-inode-structure.png)
 
-inode 把文件 metadata 和 block index structure 收在一起，是 Unix 文件系统支持 hard link 与多级索引的基础。
-
 ![FFS block groups](assets/lecture-20/slide-025-ffs-block-groups.png)
-
-FFS 把 inode、data 和 free space 分散到 block groups 中，用布局换局部性。
 
 ### 问题
 
 FAT 把文件的 block mapping 放在全局表里，并用链表表达文件内容。Unix 文件系统换了一个抽象：`inumber` 是 inode array 的 index；inode 是文件的持久 metadata 和 block index structure。
 
-这样做有两个直接好处。第一，metadata 跟文件对象绑定，而不是跟某个名字绑定。第二，多个 directory entries 可以指向同一个 inode，这就是 hard link 的基础。
+Metadata 因此绑定到文件对象，而非某个名字；多个 directory entries 也可以指向同一个 inode，从而形成 hard link。
 
 ### 机制
 
@@ -65,7 +59,7 @@ inode 的 block pointers 是一个不对称树：前面若干个 direct pointers
 4096 / 4 = 1024 pointers
 ```
 
-于是 single indirect 约 4MB，double indirect 约 4GB，triple indirect 约 4TB。这个结构的用意很清楚：小文件读 inode 后可以直接定位 data block；大文件虽然多一层索引开销，但能扩展到很大。
+于是 single indirect 约 4MB，double indirect 约 4GB，triple indirect 约 4TB。小文件读 inode 后可以直接定位 data block；大文件增加索引层数后，仍能扩展到很大。
 
 ### 例子 / 推导
 
@@ -97,13 +91,11 @@ FFS 的优点是局部性强，小目录下的 inode、directory blocks 和 file
 
 ![Directory traversal](assets/lecture-20/slide-032-directory-traversal.png)
 
-打开一个绝对路径时，系统要一级一级读取目录 inode 和目录内容。
-
 ### Hard link
 
 hard link 是 directory 中 name 到 inode/file number 的 mapping。文件创建时，第一个名字就是第一个 hard link；`link()` 可以增加新的名字；`unlink()` 只是删除一个 name-to-inode mapping 并减少 link count。文件内容真正可回收通常需要两个条件：link count 变成 0，并且没有 open file description 仍引用它。
 
-这解释了一个常见现象：删除原文件名不等于删除文件内容。名字只是入口，只要还有另一个 hard link 指向同一 inode，内容仍可访问。
+删除原文件名不等于删除文件内容。名字只是入口，只要还有另一个 hard link 指向同一 inode，内容仍可访问。
 
 ### Symbolic link
 
@@ -131,8 +123,6 @@ symbolic link 更像：
 
 ![NTFS resident file](assets/lecture-20/slide-038-ntfs-small-file.png)
 
-这页先看 file record 的内部布局。
-
 ### 机制
 
 NTFS 的中心是 Master File Table。每个 MFT entry 大约 1KB，文件被描述为一组 `<attribute:value>` pairs：standard information、file name、data、security information 等都可以是 attribute。
@@ -141,7 +131,7 @@ NTFS 的中心是 Master File Table。每个 MFT entry 大约 1KB，文件被描
 
 ### 取舍
 
-extent 对连续文件非常紧凑，比一个 block 一个 pointer 更省 metadata。resident small file 则避免了 inode 加 data block 的额外跳转。NTFS directory 使用 B-tree，file number 标识 MFT entry；同一个 MFT entry 可以有多个 file name attributes，因此也能表达 hard link。换句话说，NTFS 把“小文件直接放近一点”和“大文件用范围描述”放进了同一套 metadata 模型里。
+extent 对连续文件非常紧凑，比一个 block 一个 pointer 更省 metadata。resident small file 则避免了 inode 加 data block 的额外跳转。NTFS directory 使用 B-tree，file number 标识 MFT entry；同一个 MFT entry 可以有多个 file name attributes，因此也能表达 hard link。小文件数据和大文件 extents 都由同一套 attribute 模型描述。
 
 ## 文件系统布局对比
 

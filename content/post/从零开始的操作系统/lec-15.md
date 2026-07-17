@@ -11,11 +11,7 @@ hidden: true
 
 ![Physically and virtually indexed caches](assets/lecture-15/slide-010-cache-indexing.png)
 
-物理索引和虚拟索引 cache 的差别决定了 TLB 是否在 cache lookup 的关键路径上。
-
 ![Address translation path](assets/lecture-15/slide-016-address-translation.png)
-
-地址翻译总图把多级页表、physical memory 和 virtual address 字段放在同一条路径上。
 
 ### 问题
 
@@ -65,9 +61,7 @@ TLB consistency 不只发生在 context switch。OS 修改 page table 时也必�
 
 ## Page Fault
 
-### 问题
-
-page fault 是虚拟到物理翻译失败时发生的同步 fault/trap，不是异步 interrupt。它和当前指令直接相关，OS 修复后通常要重试原指令。因此分析 page fault 时，重点是判断这个 fault 能不能被 OS 修复。
+page fault 是虚拟到物理翻译失败时发生的同步 fault/trap，与当前指令直接相关；它并非异步 interrupt。OS 修复后通常会重试原指令，因此处理前要先判断 fault 是否可修复。
 
 可能原因包括：
 
@@ -83,11 +77,9 @@ page fault 是虚拟到物理翻译失败时发生的同步 fault/trap，不是�
 
 ## Demand Paging
 
-### 机制
+demand paging 把 DRAM 作为 disk 的 cache。现代程序拥有很大的虚拟地址空间，但并非所有 code/data 都会同时活跃；常见的 90/10 rule 用来概括这种局部性。
 
-demand paging 把 DRAM 看作 disk 的 cache。现代程序拥有很大的虚拟地址空间，但并不是所有 code/data 都会同时活跃；课件用 90/10 rule 表达这种局部性。
-
-对应关系可以这样看：
+两套术语的对应关系如下：
 
 | Cache 术语 | Demand paging 对应物 |
 | --- | --- |
@@ -104,10 +96,6 @@ write policy 必须接近 write-back。若每次写页都同步写 disk，代价
 
 ![Page fault to demand paging](assets/lecture-15/slide-021-page-fault.png)
 
-page fault 图展示了 MMU、page table、OS handler 和 disk 之间的控制流。
-
-### 机制
-
 page fault handler 的流程可以按“判断能否修复、准备 frame、读入目标页、恢复执行”来组织：
 
 ```text
@@ -123,15 +111,11 @@ page fault handler 的流程可以按“判断能否修复、准备 frame、读�
 8. 将 faulting thread 放回 ready queue，之后从原 faulting instruction 继续。
 ```
 
-等待 disk I/O 时，faulting process/thread 进入 wait queue，OS 调度 ready queue 中的其他线程运行。这一点解释了为什么 page fault 对当前指令来说是同步 fault，但系统整体不一定空转等待。
+等待 disk I/O 时，faulting process/thread 进入 wait queue，OS 调度 ready queue 中的其他线程运行。Page fault 对当前指令是同步 fault，系统整体却不必空转等待。
 
 ## Backing Store
 
 ![Backing store](assets/lecture-15/slide-036-backing-store.png)
-
-backing store 图说明 resident pages 与 non-resident pages 都需要被 OS 纳入虚拟地址空间管理。
-
-### 机制
 
 加载可执行文件时，OS 不必把整个 binary 读入内存。它可以先建立虚拟地址空间、page table 和文件/磁盘位置映射；代码页第一次被执行或访问时，再通过 page fault 加载。
 
@@ -161,17 +145,13 @@ FindBlock(PID, page#) -> disk_block
 
 ### 机制
 
-如果进程分到的 frames 足够容纳当前 working set，page fault rate 就低；如果 working set 放不下，进程会不断 fault，系统大量时间用于 paging，进入 thrashing。working set 是理解 capacity miss、page frame allocation 和后续 thrashing 控制的桥梁。
+如果进程分到的 frames 足够容纳当前 working set，page fault rate 就低；如果 working set 放不下，进程会不断 fault，系统大量时间用于 paging，进入 thrashing。Working set 将 capacity miss、page frame allocation 与 thrashing 联系起来。
 
 虚拟内存里一般不强调 conflict miss，因为 demand paging 可视为 fully associative cache：虚拟页可以放到任意 physical frame。更常见的是 compulsory miss、capacity miss，以及进程阶段切换导致的 working set 变化。
 
 ## Cost Model
 
 ![Effective access time](assets/lecture-15/slide-046-eat.png)
-
-这页把 page fault probability 放进平均访问时间里，用来估算 paging 的真实代价。
-
-### 例子 / 推导
 
 page fault penalty 比普通内存访问大很多，所以很小的 miss rate 也会让系统明显变慢。公式是：
 

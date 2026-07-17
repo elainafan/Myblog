@@ -7,27 +7,27 @@ encrypt: false
 hidden: true
 ---
 
-## I/O Subsystem
+## I/O 接口与传输
 
-没有 I/O，计算机不能和外界、存储、网络交互。OS 面对的难点不是“有没有设备”，而是设备差异太大。同样叫 I/O，速度可以从极慢输入设备跨到高速网络/存储；数据粒度可能是 byte、block，也可能是 packet；访问模式可能是 sequential、random，也可能只支持特定顺序。再加上设备会失败，完成时间也未必可预测，内核就必须在统一接口和设备特性之间做一层翻译。
+### I/O Subsystem
+
+I/O 设备在速度、数据粒度和访问模式上差异很大。速度可以从极慢输入设备跨到高速网络/存储；数据粒度可能是 byte、block 或 packet；访问模式可能是 sequential、random，也可能只支持特定顺序。设备还会失败，完成时间也未必可预测，因此内核需要在统一接口与设备特性之间完成翻译。
 
 OS 的目标是给用户提供稳定接口，同时在快设备上不产生过高 per-byte overhead，在慢设备上不让 CPU 白等。
 
-## Bus / PCIe
+### Bus / PCIe
 
 `bus` 是硬件设备之间通信的一组 wires 加 protocol。它包含 control lines、address lines、data lines，还需要仲裁、寻址和握手协议。好处是多个设备可以共享一套连接；代价是同一时刻通常只有一个 transaction，其他设备必须等待。
 
-传统 `PCI` 是 parallel bus，多设备共享地址/数据线。`PCI Express` 名字仍叫 bus，但更像一组 fast serial lanes：设备可按需要使用多个 lane，慢设备不必和快设备强行共享同一条并行总线。这也是 OS 抽象的力量：底层 interconnect 从 PCI 变为 PCIe，上层设备 API 仍能保持稳定。
+传统 `PCI` 是 parallel bus，多设备共享地址/数据线。`PCI Express` 名字仍叫 bus，但更像一组 fast serial lanes：设备可按需要使用多个 lane，慢设备不必和快设备强行共享同一条并行总线。底层 interconnect 从 PCI 变为 PCIe 后，上层设备 API 仍可保持稳定。
 
 CPU 通常不直接理解设备细节，而是和 `device controller` 交互。controller 提供 control/status/data registers 或 request queues；CPU 访问这些寄存器时，可以走 `Port-mapped I/O`，也就是使用专门的 `in/out` 指令，例如 x86 的 `out 0x21, AL`；也可以走 `Memory-mapped I/O (MMIO)`，把设备寄存器映射到物理地址空间，再用普通 `load/store` 访问。
 
 MMIO 不是“真的内存”。写这些地址会触发设备行为，所以必须由内核控制映射和权限。
 
-## PIO 与 DMA
+### PIO 与 DMA
 
 ![I/O controllers](assets/lecture-18/slide-005-io-controllers.png)
-
-这页展示了 CPU 通过 controller registers 与各种 I/O devices 交互的整体结构。
 
 `Programmed I/O (PIO)` 中，每个 byte/word 都经由 CPU 的 `in/out` 或 `load/store` 搬运。它硬件简单、编程直接，但 CPU cycles 消耗和数据量成正比，大块 I/O 很亏。
 
@@ -49,9 +49,9 @@ OS:
   检查 status，唤醒等待线程
 ```
 
-DMA 不是不需要 CPU，而是让 CPU 不再逐字节搬运；CPU 仍要配置 controller、处理完成事件，并保证内存一致性和权限安全。
+DMA 免去了 CPU 逐字节搬运数据的工作。CPU 仍要配置 controller、处理完成事件，并保证内存一致性和权限安全。
 
-## Interrupt / Polling
+### Interrupt / Polling
 
 OS 需要知道 I/O operation 何时完成、是否出错。`Interrupt` 让设备主动打断 CPU，适合不可预测、低频事件；缺点是 interrupt overhead 高。`Polling` 让 OS 定期读取 status register，单次检查开销低，适合高频或短时间内连续事件；但事件稀疏时会浪费 CPU cycles。
 
@@ -64,11 +64,9 @@ OS 需要知道 I/O operation 何时完成、是否出错。`Interrupt` 让设�
 | 设备很快且马上完成 | polling | 等 interrupt 可能更贵 |
 | 高频完成队列 | polling 或混合 | 降低 interrupt storm |
 
-## Device Driver
+### Device Driver
 
 ![I/O request lifecycle](assets/lecture-18/slide-023-io-request-lifecycle.png)
-
-一次 I/O request 从用户态到 driver top half、设备、bottom half，再回到用户线程。
 
 `device driver` 是内核中直接和设备硬件交互的 device-specific code。它向 kernel I/O subsystem 提供标准内部接口，所以同一个 OS 可以面对不同硬件。
 
@@ -90,21 +88,19 @@ User program
 
 `ioctl()` 用于设备特有配置，但不能替代通用 read/write 接口。OS 仍需要 block device、character device、network device 等标准接口来隐藏设备差异。
 
-## Timing 接口
+### Timing 接口
 
 I/O timing 对用户程序有三种常见表现。`Blocking` 接口让调用者等待，直到数据 ready 或设备 ready；`Non-blocking` 接口会立即返回，告诉用户完成了多少，也可能只是说明暂时没有数据；`Asynchronous` 接口同样立即返回，但之后由 kernel 完成传输并通知用户。
 
-这三类接口的本质差异在于等待发生在哪里：用户线程里、用户事件循环里，还是 kernel 后台路径里。理解这一点后，`read()` 看起来就不只是“读数据”，而是一次关于等待位置的 API 选择。
+这三类接口的差异在于等待发生在哪里：用户线程、用户事件循环，还是 kernel 后台路径。调用 `read()` 时，也要根据等待位置选择合适的接口模式。
 
-## HDD
+## 存储设备
+
+### HDD
 
 ![Magnetic disk structure](assets/lecture-18/slide-029-magnetic-disk.png)
 
-HDD 的 sector、track、cylinder、head/arm 结构解释了为什么随机访问要付 seek 和 rotation。
-
 ![Disk performance example](assets/lecture-18/slide-035-disk-performance-example.png)
-
-这页把 7200 RPM、seek time、transfer rate 放进同一个随机读延迟计算中。
 
 HDD 的基本结构包括 sector、track、cylinder、head/arm。一次读写通常先付 `seek time`，让磁头移动到正确 track/cylinder；接着付 `rotational latency`，等待目标 sector 转到磁头下；最后才是 `transfer time`，也就是 sector 经过磁头并被传输的时间。
 
@@ -126,11 +122,9 @@ transfer time = block size / transfer rate
 
 HDD controller 还会隐藏很多复杂性：ECC 修复小错误，sector sparing 把坏扇区透明映射到备用扇区，slip sparing 尽量保留顺序性，track skewing 让换 track 后不必等一整圈。
 
-## SSD
+### SSD
 
 ![FTL and copy-on-write](assets/lecture-18/slide-043-ftl-cow.png)
-
-这页图把 SSD 的 FTL 映射和 copy-on-write 更新路径放在一起。
 
 SSD 没有 seek 和 rotational delay，随机读可以很快。问题在写入：NAND flash 通常只能写空 page，erase 的单位是更大的 block，而且 erase 很慢、次数有限。
 
@@ -138,4 +132,4 @@ OS 看到的仍常是类似 HDD 的 4KB block interface，但 SSD 内部不能�
 
 后台 `garbage collection (GC)` 会回收 invalid pages 所在的 erase block；`wear leveling` 把写入分散到不同 blocks，避免热点块过早磨损。
 
-因此 SSD 的一句话不是“随机访问都快”，而是：读快在无机械延迟，写复杂在 erase-before-write 和有限擦写寿命。
+SSD 读取没有机械延迟，写入却受 erase-before-write 和有限擦写寿命约束。

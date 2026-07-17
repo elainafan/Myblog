@@ -11,25 +11,21 @@ hidden: true
 
 ![Modern scheduling map](assets/lecture-12/slide-002-modern-scheduling-map.png)
 
-目录页把本讲所有系统论文和经典调度思想对应起来，是整讲的阅读索引。
-
 ### 问题
 
-系统论文很容易让人陷入实现细节。本讲更适合用“经典策略在现代约束下如何改造”的视角阅读：先判断旧方法哪里不够，再看论文用什么机制修正，再回头看它改善了哪个指标。
+阅读系统论文时，先找出旧方法无法满足的约束，再检查新机制改善了哪些指标，以及代价落在哪里。
 
 ### 机制
 
-第一遍可以只读 Title、Abstract、Introduction、Conclusion 和小节标题，回答 five C's：`Category`、`Context`、`Correctness`、`Contributions`、`Clarity`。这一遍的目的不是复现系统，而是判断论文属于什么问题，以及是否值得深读。
+第一遍可以只读 Title、Abstract、Introduction、Conclusion 和小节标题，回答 five C's：`Category`、`Context`、`Correctness`、`Contributions`、`Clarity`，先判断论文解决的问题和主要贡献。
 
-第二遍再抓主线：problem、motivation、design、evaluation、limitation。系统论文的核心经常藏在架构图和请求流里：请求从哪里进来，排在哪个队列，调度器如何做决策，瓶颈在哪里。
+第二遍梳理 problem、motivation、design、evaluation、limitation，并沿架构图追踪请求流：请求从哪里进入、在哪个队列等待、调度器如何决策、瓶颈出现在哪里。
 
 第三遍是假装自己要复现系统：沿着论文假设重新推导设计选择，挑战 workload、硬件和 SLO 变化后的结论，并整理“创新点 + 失败边界”。
 
 ## ZygOS
 
 ![ZygOS architecture](assets/lecture-12/slide-015-zygos-architecture.png)
-
-ZygOS 的架构图展示了每核 dataplane 和跨核 work stealing 如何合在一起。
 
 ### 问题
 
@@ -39,7 +35,7 @@ KV store、内存数据库和 leaf service 中，RPC 服务时间可到微秒级
 
 传统 single queue 理论上更 work-conserving：只要系统还有请求、还有空闲 worker，空闲 worker 就能拿到活，瞬时负载不均衡小。但 centralized queue 需要共享队列，同步开销高，放到微秒级 RPC 里会直接吃掉延迟预算。
 
-dataplane 系统走的是另一条路：路径短、同步少、cache/coherence 开销低，但通常采用每核队列，可能 not work-conserving。换句话说，某个 worker 的队列已经很忙，另一个 worker 却仍然空闲。
+dataplane 系统路径短、同步少、cache/coherence 开销低，但通常采用每核队列，可能 not work-conserving。某个 worker 的队列已经很忙时，另一个 worker 仍可能空闲。
 
 ZygOS 的折中是保留 dataplane 风格的 share-nothing 网络处理，同时通过 work stealing 让空闲核从繁忙核偷 ready connection，逼近 single queue 行为。它的结构可以分成三层：
 
@@ -51,7 +47,7 @@ ZygOS 的折中是保留 dataplane 风格的 share-nothing 网络处理，同时
 
 ### 取舍
 
-ZygOS 的贡献不是“简单回到单队列”，而是承认 centralized queue 和 dataplane 各有代价。课件中的 Silo TPC-C 结果显示，相比 Linux，吞吐约提升 `1.63x`，99 分位延迟约降低 `3.68x`。这说明低开销路径与近似 single queue 的 work conservation 可以同时服务 tail latency 和吞吐。
+ZygOS 保留 dataplane 的低开销路径，再用 work stealing 补足 per-core queue 的 work conservation。Silo TPC-C 实验中，相比 Linux，吞吐约提升 `1.63x`，99 分位延迟约降低 `3.68x`。
 
 ## Shinjuku
 
@@ -61,7 +57,7 @@ Shinjuku 的背景是微秒级低延迟服务中，请求分布可能非常偏�
 
 ### 机制
 
-它可以看成 RR / processor sharing 思想在微秒级系统中的工程化：目标不是传统毫秒级时间片公平轮转，而是在低开销用户态路径中实现足够细粒度的 preemption。核心机制包括 single address-space OS、dedicated scheduling core、硬件虚拟化辅助快速抢占，以及用户态快速上下文切换。
+Shinjuku 把 RR / processor sharing 的细粒度抢占放进微秒级服务。它使用 single address-space OS、dedicated scheduling core、硬件虚拟化辅助抢占和用户态快速上下文切换，避免传统内核路径耗尽延迟预算。
 
 ### 取舍
 
@@ -70,8 +66,6 @@ Shinjuku 与 ZygOS 的差别是：ZygOS 主要解决队列组织和 work conserv
 ## Tiresias
 
 ![Tiresias 2DAS](assets/lecture-12/slide-042-tiresias-2das.png)
-
-Tiresias 用 `#GPUs * executed time` 定义二维 age，把 LAS/MLFQ 思想搬到 GPU 集群。
 
 ### 问题
 
@@ -96,13 +90,11 @@ age = #GPUs * executed time
 
 ### 取舍
 
-把一个 job 尽量放在同一台机器可能减少跨机通信，但所有 job 都过度集中会制造碎片和排队。Tiresias 的 model profile-based placement 用 tensor size 等模型特征判断是否值得 consolidation。课件给出的结果是：60-GPU 测试床相对 YARN-CS 平均 JCT 改善约 `5.5x`，2000-GPU trace 仿真相对 Gandiva 平均 JCT 改善约 `2x`。
+把一个 job 尽量放在同一台机器可以减少跨机通信，但所有 job 都过度集中会制造碎片和排队。Tiresias 的 model profile-based placement 用 tensor size 等模型特征判断是否值得 consolidation。60-GPU 测试床中，它相对 YARN-CS 将平均 JCT 改善约 `5.5x`；2000-GPU trace 仿真中，相对 Gandiva 改善约 `2x`。
 
 ## DRF
 
 ![DRF example](assets/lecture-12/slide-062-drf-example.png)
-
-DRF 示例说明公平对象不是资源总和，而是每个用户的 dominant share。
 
 ### 问题
 
@@ -121,17 +113,15 @@ DRF 对所有用户的 dominant share 做 max-min fairness。计算例子流程�
 
 ### 例子
 
-课件示例中，总资源是 `<9 CPU, 18 GB>`。用户 1 的任务需求是 `<1 CPU, 4 GB>`，主导资源是内存；用户 2 的任务需求是 `<3 CPU, 1 GB>`，主导资源是 CPU。DRF 不把资源份额简单相加，而是让二者在各自瓶颈资源上的 dominant share 达到同层公平。
+设总资源为 `<9 CPU, 18 GB>`。用户 1 的任务需求是 `<1 CPU, 4 GB>`，主导资源是内存；用户 2 的任务需求是 `<3 CPU, 1 GB>`，主导资源是 CPU。DRF 不把资源份额简单相加，而是让二者在各自瓶颈资源上的 dominant share 达到同层公平。
 
 ### 取舍
 
-Asset fairness 看起来资源总和相等，但可能让某个用户在真正瓶颈资源上吃亏。CEEI 等市场思路可能提高利用率，但课件重点强调 DRF 的 share guarantee 和 strategy-proofness。
+Asset fairness 只保证资源总量相等，可能让某个用户在瓶颈资源上吃亏。DRF 还提供 share guarantee 和 strategy-proofness；CEEI 等市场方案则可能换取更高利用率。
 
 ## FairRide
 
 ![FairRide mechanism](assets/lecture-12/slide-082-fairride.png)
-
-FairRide 从 max-min fairness 出发，通过 blocking/delaying 抑制不付成本的策略性访问。
 
 ### 问题
 
@@ -139,7 +129,7 @@ FairRide 从 max-min fairness 出发，通过 blocking/delaying 抑制不付成�
 
 ### 机制
 
-课件给出的核心结论是三者无法同时完全满足。FairRide 从 max-min fairness 出发，先给每个用户 share guarantee，再对共享文件的访问成本进行分摊。如果用户不付出对应成本却想访问共享文件，系统就通过 blocking 或 delaying 让它不能无偿占用资源。
+Isolation/share guarantee、strategy-proofness 和 Pareto efficiency 无法同时完全满足。FairRide 从 max-min fairness 出发，先给每个用户 share guarantee，再分摊共享文件的访问成本。用户未承担相应成本时，系统通过 blocking 或 delaying 限制其访问。
 
 概率阻断公式是：
 
