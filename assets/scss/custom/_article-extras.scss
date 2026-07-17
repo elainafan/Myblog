@@ -1,57 +1,48 @@
-// 加密文章入口
+// Encrypted article entry
 .encrypt-box {
+  --encrypt-accent: #e85f91;
+  --encrypt-accent-rgb: 232, 95, 145;
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  max-width: 680px;
-  min-height: 300px;
+  max-width: 760px;
+  min-height: 330px;
   margin: 34px auto;
-  padding: 34px 285px 34px 30px;
-  border: 1px solid rgba(255, 132, 168, .30);
+  padding: 38px 322px 36px 34px;
+  border: 1px solid rgba(var(--encrypt-accent-rgb), .30);
   border-radius: 24px;
   background:
-    radial-gradient(circle at 18% 12%, rgba(255, 184, 210, .38), transparent 30%),
-    linear-gradient(135deg, rgba(255, 246, 250, .97), rgba(244, 249, 255, .92));
+    radial-gradient(circle at 16% 10%, rgba(var(--encrypt-accent-rgb), .18), transparent 32%),
+    linear-gradient(135deg, rgba(255, 249, 252, .97), rgba(244, 249, 255, .94));
   box-shadow: 0 18px 44px rgba(88, 54, 82, .14), var(--shadow-l2);
   color: var(--card-text-color-main);
-
-  &::after {
-    content: "";
-    position: absolute;
-    right: -24px;
-    bottom: -42px;
-    z-index: 0;
-    width: 300px;
-    height: 390px;
-    background: url("/images/eriri-lock.png") no-repeat right bottom / contain;
-    opacity: .96;
-    pointer-events: none;
-    filter: drop-shadow(0 18px 24px rgba(121, 77, 91, .22));
-  }
+  transition: border-color .28s ease, background .28s ease;
 
   &::before {
     content: "";
     position: absolute;
-    inset: auto 0 0 auto;
-    z-index: 0;
-    width: 340px;
-    height: 210px;
-    background: radial-gradient(circle, rgba(255, 132, 168, .30), transparent 66%);
+    right: -74px;
+    bottom: -92px;
+    z-index: -1;
+    width: 420px;
+    height: 310px;
+    background: radial-gradient(circle, rgba(var(--encrypt-accent-rgb), .25), transparent 68%);
     pointer-events: none;
   }
 }
 
 .encrypt-box__body {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   min-width: 0;
 
   h2 {
-    margin: 4px 0 8px;
+    margin: 4px 0 9px;
     padding: 0;
     border: 0;
     color: var(--card-text-color-main);
     font-size: 2.2rem;
-    line-height: 1.25;
+    line-height: 1.28;
 
     &::before {
       display: none;
@@ -61,11 +52,12 @@
 
 .encrypt-box__eyebrow {
   margin: 0;
-  color: #ff78a8;
+  color: var(--encrypt-accent);
   font-size: 1.18rem;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
+  transition: color .28s ease;
 }
 
 .encrypt-box__hint,
@@ -76,11 +68,15 @@
   line-height: 1.7;
 }
 
+.encrypt-box__message {
+  min-height: 2.35rem;
+}
+
 .encrypt-box__form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 48px;
   gap: 12px;
-  margin: 16px 0 8px;
+  margin: 16px 0 7px;
 
   input,
   button {
@@ -91,42 +87,93 @@
 
   input {
     width: 100%;
-    border: 1px solid rgba(255, 132, 168, .28);
-    background: rgba(255, 255, 255, .76);
-    padding: 0 14px;
+    padding: 0 16px;
+    border: 1px solid rgba(var(--encrypt-accent-rgb), .30);
+    background: rgba(255, 255, 255, .78);
     color: var(--card-text-color-main);
     outline: none;
-    transition: border-color .2s ease, box-shadow .2s ease;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 
     &:focus {
-      border-color: rgba(255, 120, 168, .72);
-      box-shadow: 0 0 0 4px rgba(255, 120, 168, .13);
-    }
-  }
-
-  button {
-    border: 0;
-    background: linear-gradient(135deg, #ff83ad, #ffb6cf);
-    box-shadow: 0 12px 24px rgba(255, 132, 168, .22);
-    color: #fff;
-    cursor: pointer;
-    font-size: 2rem;
-    font-weight: 900;
-    padding: 0;
-    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 28px rgba(255, 132, 168, .28);
-      filter: saturate(1.08);
+      border-color: rgba(var(--encrypt-accent-rgb), .78);
+      box-shadow: 0 0 0 4px rgba(var(--encrypt-accent-rgb), .14);
     }
   }
 }
 
+.encrypt-box__form .encrypt-box__submit {
+  padding: 0;
+  border: 0;
+  background: var(--encrypt-accent);
+  box-shadow: 0 12px 24px rgba(var(--encrypt-accent-rgb), .24);
+  color: #fff;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 900;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, background .28s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 28px rgba(var(--encrypt-accent-rgb), .30);
+    filter: saturate(1.08);
+  }
+}
+
+.encrypt-box__cast {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 318px;
+}
+
+.encrypt-box__portrait {
+  position: absolute;
+  inset: 8px 0 45px;
+  pointer-events: none;
+}
+
+.encrypt-box__character {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  transform: translateX(16px) scale(.96);
+  filter: drop-shadow(0 18px 23px rgba(77, 54, 68, .22));
+  transition: opacity .28s ease, transform .38s cubic-bezier(.2, .75, .2, 1), filter .28s ease;
+  user-select: none;
+
+  &.is-active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.encrypt-box__cast-name {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  left: 24px;
+  z-index: 3;
+  overflow: hidden;
+  color: var(--encrypt-accent);
+  font-size: 1.24rem;
+  font-weight: 800;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, .82);
+  transition: color .28s ease;
+}
+
 .encrypt-box[data-lock-state="checking"] {
-  .encrypt-box__form button {
+  .encrypt-box__submit {
     cursor: wait;
-    filter: saturate(.75);
+    filter: saturate(.72);
   }
 }
 
@@ -134,7 +181,7 @@
   animation: encrypt-shake .34s ease both;
 
   .encrypt-box__message {
-    color: #ff668f;
+    color: var(--encrypt-accent);
     font-weight: 700;
   }
 }
@@ -145,21 +192,24 @@
 
 [data-scheme="dark"] {
   .encrypt-box {
-    border-color: rgba(255, 132, 168, .24);
+    border-color: rgba(var(--encrypt-accent-rgb), .28);
     background:
-      radial-gradient(circle at 18% 12%, rgba(255, 132, 168, .25), transparent 30%),
-      linear-gradient(135deg, rgba(70, 58, 68, .94), rgba(52, 64, 78, .92));
+      radial-gradient(circle at 16% 10%, rgba(var(--encrypt-accent-rgb), .24), transparent 32%),
+      linear-gradient(135deg, rgba(70, 58, 68, .95), rgba(52, 64, 78, .93));
     box-shadow: 0 18px 44px rgba(0, 0, 0, .24), var(--shadow-l2);
-
-    &::after {
-      opacity: .82;
-      filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .32));
-    }
   }
 
   .encrypt-box__form input {
-    border-color: rgba(255, 180, 208, .22);
+    border-color: rgba(var(--encrypt-accent-rgb), .30);
     background: rgba(255, 255, 255, .08);
+  }
+
+  .encrypt-box__character {
+    filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .34));
+  }
+
+  .encrypt-box__cast-name {
+    text-shadow: 0 1px 11px rgba(0, 0, 0, .72);
   }
 }
 
@@ -193,24 +243,44 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 680px) {
   .encrypt-box {
-    min-height: 390px;
-    padding: 22px 22px 215px;
+    min-height: 565px;
+    padding: 26px 24px 312px;
     text-align: center;
+  }
 
-    &::after {
-      right: 50%;
-      bottom: -50px;
-      width: 230px;
-      height: 300px;
-      transform: translateX(50%);
-      opacity: .76;
-    }
+  .encrypt-box__body h2 {
+    font-size: 2rem;
   }
 
   .encrypt-box__form {
-    grid-template-columns: 1fr;
+    max-width: 410px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .encrypt-box__cast {
+    top: auto;
+    right: 50%;
+    width: 92%;
+    max-width: 340px;
+    height: 308px;
+    transform: translateX(50%);
+  }
+
+  .encrypt-box__portrait {
+    inset: 0 0 42px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .encrypt-box,
+  .encrypt-box__character,
+  .encrypt-box__submit {
+    animation: none;
+    transition: none;
   }
 }
 

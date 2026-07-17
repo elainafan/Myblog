@@ -236,6 +236,56 @@
             <div>
 
                 <script>
+                    window.__ELAINA_ENCRYPT_CHARACTERS__ = [
+                        {
+                            id: "eriri",
+                            name: "英梨梨",
+                            accent: "#e85f91",
+                            rgb: "232, 95, 145"
+                        },
+                        {
+                            id: "mikoto",
+                            name: "御坂美琴",
+                            accent: "#378fc5",
+                            rgb: "55, 143, 197"
+                        },
+                        {
+                            id: "taiga",
+                            name: "逢坂大河",
+                            accent: "#d65d64",
+                            rgb: "214, 93, 100"
+                        },
+                        {
+                            id: "kurisu",
+                            name: "牧濑红莉栖",
+                            accent: "#a95970",
+                            rgb: "169, 89, 112"
+                        }
+                    ];
+
+                    window.initEncryptedPostCast = function () {
+                        const box = document.getElementById("encrypt-box");
+                        if (!box || box.dataset.castReady === "true") return;
+
+                        const characters = window.__ELAINA_ENCRYPT_CHARACTERS__;
+                        const cast = box.querySelector("[data-encrypt-cast]");
+                        const image = box.querySelector("[data-encrypt-character]");
+                        const name = box.querySelector("[data-encrypt-character-name]");
+                        if (!characters.length || !cast || !image || !name) return;
+
+                        const character = characters[Math.floor(Math.random() * characters.length)];
+                        const imageSource = cast.dataset[`${character.id}Src`];
+                        if (!imageSource) return;
+
+                        box.dataset.encryptCharacter = character.id;
+                        box.style.setProperty("--encrypt-accent", character.accent);
+                        box.style.setProperty("--encrypt-accent-rgb", character.rgb);
+                        name.textContent = character.name;
+                        image.src = imageSource;
+                        image.classList.add("is-active");
+                        box.dataset.castReady = "true";
+                    };
+
                     async function derivePostPassword(password) {
                         const encoder = new TextEncoder();
                         const key = await crypto.subtle.importKey(
@@ -273,7 +323,7 @@
                             return;
                         }
 
-                        const button = box.querySelector("button");
+                        const button = box.querySelector(".encrypt-box__submit");
                         box.dataset.lockState = "checking";
                         box.classList.remove("encrypt-box--error");
                         if (message) message.textContent = "正在确认暗号...";
@@ -299,15 +349,25 @@
                             box.classList.remove("encrypt-box--error");
                             void box.offsetWidth;
                             box.classList.add("encrypt-box--error");
-                            if (message) message.textContent = "哼，暗号不对哦……再认真试一次啦！";
+                            if (message) {
+                                message.textContent = "笨蛋，暗号才不是这个！再认真想想啦！";
+                            }
                             if (button) button.removeAttribute("aria-busy");
                             input.select();
                         }
                     };
 
-                    document.addEventListener("keydown", e => {
-                        if (e.key === "Enter" && document.getElementById("pwd")) {
-                            window.unlockEncryptedPost();
-                        }
-                    });
+                    if (!window.__ELAINA_ENCRYPT_EVENTS_BOUND__) {
+                        document.addEventListener("keydown", event => {
+                            if (event.key === "Enter" && document.activeElement?.id === "pwd") {
+                                window.unlockEncryptedPost();
+                            }
+                        });
+                        document.addEventListener("pjax:complete", () => {
+                            window.initEncryptedPostCast();
+                        });
+                        window.__ELAINA_ENCRYPT_EVENTS_BOUND__ = true;
+                    }
+
+                    window.initEncryptedPostCast();
                 </script>

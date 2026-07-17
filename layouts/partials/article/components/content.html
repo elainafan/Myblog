@@ -7,9 +7,21 @@
             <p class="encrypt-box__hint">输入暗号的话……也不是不能让你看一下。</p>
             <div class="encrypt-box__form">
                 <input type="password" id="pwd" autocomplete="current-password" aria-label="输入暗号">
-                <button type="button" onclick="unlockEncryptedPost()" aria-label="确认暗号">♡</button>
+                <button type="button" class="encrypt-box__submit" onclick="unlockEncryptedPost()"
+                    aria-label="确认暗号">♡</button>
             </div>
             <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="encrypt-box__cast" data-encrypt-cast
+            data-eriri-src="{{ `/images/encrypt-cast/eriri.png` | relURL }}"
+            data-mikoto-src="{{ `/images/encrypt-cast/mikoto.png` | relURL }}"
+            data-taiga-src="{{ `/images/encrypt-cast/taiga.png` | relURL }}"
+            data-kurisu-src="{{ `/images/encrypt-cast/kurisu.png` | relURL }}">
+            <div class="encrypt-box__portrait" aria-hidden="true">
+                <img class="encrypt-box__character" data-encrypt-character alt="" draggable="false">
+            </div>
+            <span class="encrypt-box__cast-name" data-encrypt-character-name></span>
         </div>
     </div>
 
