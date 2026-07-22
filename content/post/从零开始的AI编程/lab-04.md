@@ -22,7 +22,7 @@ seriesOrder: 24
 
 ## 在动手之前
 
-pybind11 负责在 Python 对象与 C++ 类型之间转换。模块由 `PYBIND11_MODULE` 注册，编译结果必须与当前 Python 的 ABI、架构和运行库匹配；文件能生成并不代表一定能被 `import`。
+[pybind11]({{< ref "08-pybind-unit-test.md" >}}) 负责在 Python 对象与 C++ 类型之间转换。模块由 `PYBIND11_MODULE` 注册，编译结果必须与当前 Python 的 ABI、架构和运行库匹配；文件能生成并不代表一定能被 `import`。
 
 NumPy 数组除了数据首地址，还带有 dtype、shape、stride 和所有权信息。C++ 后端要求连续的 `float32` 数据时，绑定层必须显式检查或转换。返回数组时也要保证底层内存在 Python 对象存活期间一直有效，不能把局部缓冲区包装成悬空 view。
 

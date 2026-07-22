@@ -22,9 +22,9 @@ Lab 1 要用 PyTorch 完成 CIFAR-10 分类。提交内容只有一个 `test.py`
 
 分类网络接收一个 batch 的图像，输出每个类别对应的 logits。`nn.CrossEntropyLoss()` 内部已经包含 LogSoftmax 与负对数似然，模型末尾直接返回形状为 $N\times10$ 的 logits，标签则是形状为 $N$ 的类别下标。若在 `forward()` 末尾再手动做一次 Softmax，数值会被重复归一化。
 
-卷积层的输出尺寸由输入尺寸、kernel、padding 和 stride 共同决定。CIFAR-10 的输入为 $32\times32$ ，LeNet 使用两次 $5\times5$ 卷积和两次 $2\times2$ 池化，空间尺寸依次变为 $32\to28\to14\to10\to5$ 。展平时必须保留第 0 维的 batch，否则不同样本会被拼进同一个向量。
+[卷积层]({{< ref "07-convolution-pooling.md" >}})的输出尺寸由输入尺寸、kernel、padding 和 stride 共同决定。CIFAR-10 的输入为 $32\times32$ ，LeNet 使用两次 $5\times5$ 卷积和两次 $2\times2$ 池化，空间尺寸依次变为 $32\to28\to14\to10\to5$ 。展平时必须保留第 0 维的 batch，否则不同样本会被拼进同一个向量。
 
-PyTorch 的一次训练更新固定经过 `zero_grad()`、前向、计算 loss、`backward()` 和 `step()`。梯度默认累加，因此少一次 `zero_grad()` 就会把相邻 batch 的梯度混在一起。评估阶段使用 `eval()` 切换层状态，再用 `inference_mode()` 关闭自动微分；二者不能互相替代。
+PyTorch 的一次训练更新固定经过 `zero_grad()`、前向、计算 loss、`backward()` 和 `step()`。梯度默认累加，因此少一次 `zero_grad()` 就会把相邻 batch 的梯度混在一起。评估阶段使用 `eval()` 切换层状态，再用 `inference_mode()` 关闭[自动微分]({{< ref "09-auto-diff.md" >}})；二者不能互相替代。
 
 ## 开始动手！
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
 ### 数据处理
 
-每张 CIFAR-10 图像包含三个通道，每个通道的高和宽都是 32。训练集使用随机水平翻转和带四像素填充的随机裁剪，测试集只做张量转换与归一化。
+每张 CIFAR-10 图像包含三个通道，每个通道的高和宽都是 32。训练集的[数据处理]({{< ref "14-data-processing.md" >}})包含随机水平翻转和带四像素填充的随机裁剪，测试集只做张量转换与归一化。
 
 ```python
 transform_train = transforms.Compose(
@@ -203,7 +203,7 @@ for epoch in range(num_epochs):
 
 ### Momentum 对比
 
-普通 SGD 只看当前梯度。加入动量后，优化器还保存跨 batch 的速度项
+普通 SGD 只看当前梯度。加入[动量]({{< ref "12-optimization.md" >}})后，优化器还保存跨 batch 的速度项
 
 $$
 v_t=m v_{t-1}+g_t

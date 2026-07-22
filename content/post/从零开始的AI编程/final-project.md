@@ -56,7 +56,7 @@ Task 1 分为 `utils.py`、`models.py` 和 `main.py`。
 
 ### 数据划分
 
-CIFAR-10 的训练部分按固定随机种子划分为训练集和验证集。代码为同一批训练索引建立两个 Dataset view：带增强的一份用于参数更新，不带增强的一份用于统计训练准确率。
+CIFAR-10 的训练部分按固定随机种子[划分为训练集和验证集]({{< ref "14-data-processing.md" >}})。代码为同一批训练索引建立两个 Dataset view：带增强的一份用于参数更新，不带增强的一份用于统计训练准确率。
 
 ```text
 train indices ─┬─ 随机裁剪、翻转 -> trainloader_aug -> 训练
@@ -129,7 +129,7 @@ CosineAnnealingLR 的 `T_max` 等于总 epoch 数，每轮结束后调用一次�
 
 ## Task 2：数据并行
 
-Task 2 复用 Task 1 的数据、模型、损失和训练循环，只在模型创建后增加一层设备包装。
+Task 2 复用 Task 1 的数据、模型、损失和训练循环，只在模型创建后用[数据并行]({{< ref "16-distributed-data-parallel.md" >}})包装模型。
 
 ```python
 model = model.to(device)
@@ -219,7 +219,7 @@ class Module:
 
 ### 前向与反向
 
-模型前向只组合高层算子，输出 Tensor 会记录计算图。损失节点创建后，训练循环显式构造标量梯度种子，再调用图引擎。
+模型前向只组合高层算子，输出 Tensor 会记录[计算图]({{< ref "10-computational-graph.md" >}})。损失节点创建后，训练循环显式构造标量梯度种子，再调用图引擎。
 
 ```python
 logits = model(x)
@@ -234,7 +234,7 @@ optimizer.step()
 
 CPU 与 CUDA 路径使用不同的标签格式：CPU 使用 one-hot，CUDA 后端接收类别下标，训练入口因此分别构造 `y`。
 
-卷积和全连接的 backward 一次返回多个底层 Tensor。自动微分层用 `Conv2dBackprop` 或 `LinearBackprop` 建立一个结果节点，再通过 `TupleGetItem(0..2)` 取出 $\mathrm{d}X$ 、 $\mathrm{d}W$ 与 $\mathrm{d}b$ 。这样后端只跑一次反向，不会为了三个返回值重复启动整套 kernel。
+卷积和全连接的 backward 一次返回多个底层 Tensor。[自动微分]({{< ref "09-auto-diff.md" >}})层用 `Conv2dBackprop` 或 `LinearBackprop` 建立一个结果节点，再通过 `TupleGetItem(0..2)` 取出 $\mathrm{d}X$ 、 $\mathrm{d}W$ 与 $\mathrm{d}b$ 。这样后端只跑一次反向，不会为了三个返回值重复启动整套 kernel。
 
 ```python
 back_node = Conv2dBackprop(stride, padding)(
@@ -264,7 +264,7 @@ gc.collect()
 
 当前训练会记录 JSON 和曲线，但没有像 Task 1 那样保存最佳参数。
 
-自定义 SGD 按参数对象保存 momentum velocity，Adam 也按参数对象保存各自的 `t`、`m` 和 `v`。参数更新直接替换或原地修改 `cached_data`，不会把 optimizer step 接入计算图。`zero_grad()` 则把每个 `p.grad` 设为 `None`，下一轮反向重新累计。
+自定义[优化器]({{< ref "12-optimization.md" >}})中，SGD 按参数对象保存 momentum velocity，Adam 也按参数对象保存各自的 `t`、`m` 和 `v`。参数更新直接替换或原地修改 `cached_data`，不会把 optimizer step 接入计算图。`zero_grad()` 则把每个 `p.grad` 设为 `None`，下一轮反向重新累计。
 
 完整训练前先运行算子与 autodiff 测试，再构造一个卷积节点核对三份梯度 shape，最后让 LeNet 跑两个 batch。
 

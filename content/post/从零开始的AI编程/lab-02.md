@@ -20,7 +20,7 @@ Lab 2 要从一个只保存 `float` 的 Tensor 开始，补齐 CPU、GPU 两种�
 
 ## 在动手之前
 
-CPU 与 GPU 拥有彼此独立的地址空间。CPU 指针不能直接交给 kernel，GPU 指针也不能在普通 C++ 代码中解引用；跨设备数据必须经过 `cudaMemcpy`，并明确 HostToDevice、DeviceToHost 或 DeviceToDevice 方向。
+[Host 与 Device]({{< ref "02-parallel-programming.md" >}})拥有彼此独立的地址空间。CPU 指针不能直接交给 kernel，GPU 指针也不能在普通 C++ 代码中解引用；跨设备数据必须经过 `cudaMemcpy`，并明确 HostToDevice、DeviceToHost 或 DeviceToDevice 方向。
 
 CUDA kernel 由大量线程执行同一段函数。每个线程根据 block、thread 编号计算自己的线性下标，再判断下标是否越界。元素级激活函数可以让一个线程处理一个元素，block 数由元素总数向上取整得到。kernel launch 默认异步，调试阶段还要检查 launch error 并在读取结果前同步。
 
@@ -208,7 +208,7 @@ Tensor relu_cpu = input_cpu.relu_cpu_forward();
 
 当前代码通过打印结果进行比较，因此测试 Tensor 刻意取得很小。
 
-Host 端打印 GPU Tensor 时会先调用 `.cpu()`，所以打印正常只能说明 D2H copy 和输出格式正常。kernel launch 默认异步，源码在算子后调用 `cudaDeviceSynchronize()`，越界等错误会在这里暴露。同步本身也有返回值，`cudaMalloc`、`cudaMemcpy` 和 launch error 仍需分别检查，否则前一次复制失败可能拖到后一个 kernel 才报出来。
+Host 端打印 GPU Tensor 时会先调用 `.cpu()`，所以打印正常只能说明 D2H copy 和输出格式正常。[Kernel launch 默认异步]({{< ref "02-parallel-programming.md" >}})，源码在算子后调用 `cudaDeviceSynchronize()`，越界等错误会在这里暴露。同步本身也有返回值，`cudaMalloc`、`cudaMemcpy` 和 launch error 仍需分别检查，否则前一次复制失败可能拖到后一个 kernel 才报出来。
 
 ### 成品代码
 
