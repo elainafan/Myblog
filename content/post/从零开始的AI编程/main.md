@@ -4,6 +4,8 @@ date: 2025-09-10
 categories:
     - AI
 updates:
+    - date: 2026-07-22
+      content: 补充 Lab 1–6、Final Project 笔记与相关图示。
     - date: 2026-07-14
       content: 补齐各讲的实现细节，重组标题层级与阅读顺序。
 seriesExclude: true
@@ -46,3 +48,13 @@ seriesExclude: true
 - [量化]({{< ref "18-quantization.md" >}})
 - [LLM 推理与服务]({{< ref "19-llm-inference-serving.md" >}})
 - [联邦学习]({{< ref "20-federated-learning.md" >}})
+
+## Lab 笔记
+
+- [Lab 1：CIFAR-10 图像分类]({{< ref "lab-01.md" >}})
+- [Lab 2：Tensor 与激活函数]({{< ref "lab-02.md" >}})
+- [Lab 3：CUDA 神经网络算子]({{< ref "lab-03.md" >}})
+- [Lab 4：Python 扩展封装]({{< ref "lab-04.md" >}})
+- [Lab 5：自动微分]({{< ref "lab-05.md" >}})
+- [Lab 6：优化器]({{< ref "lab-06.md" >}})
+- [Lab 7：Final Project 与自定义深度学习框架]({{< ref "final-project.md" >}})
