@@ -14,7 +14,7 @@ seriesOrder: 21
 >
 > **本笔记仅供参考，请勿抄袭。**
 
-## 任务
+## CIFAR-10图像分类简要介绍
 
 Lab 1 要用 PyTorch 完成 CIFAR-10 分类。提交代码只有一个 `test.py`，其中要包含数据处理、LeNet、十轮训练、整体准确率、分类别准确率和 loss 曲线，最后再比较 SGD 是否使用 momentum 时的差别。
 
@@ -22,9 +22,19 @@ Lab 1 要用 PyTorch 完成 CIFAR-10 分类。提交代码只有一个 `test.py`
 数据与增强 -> LeNet -> 单个训练 step -> 整轮训练 -> 评估与保存
 ```
 
-文件不大，还是要把几段代码的边界分开。DataLoader 只交出 batch，`LeNet.forward()` 只返回 logits，训练循环负责求导和更新，测试阶段只统计结果。后面几次 Lab 会逐步重写 Tensor、算子和自动微分，这份 PyTorch 代码正好可以当作接口参照。
+## 在动手之前
 
-## 代码入口
+分类网络接收一个 batch 的图像，输出每个类别对应的 logits。`nn.CrossEntropyLoss()` 内部已经包含 LogSoftmax 与负对数似然，模型末尾直接返回形状为 $N\times10$ 的 logits，标签则是形状为 $N$ 的类别下标。若在 `forward()` 末尾再手动做一次 Softmax，数值会被重复归一化。
+
+卷积层的输出尺寸由输入尺寸、kernel、padding 和 stride 共同决定。CIFAR-10 的输入为 $32\times32$ ，LeNet 使用两次 $5\times5$ 卷积和两次 $2\times2$ 池化，空间尺寸依次变为 $32\to28\to14\to10\to5$ 。展平时必须保留第 0 维的 batch，否则不同样本会被拼进同一个向量。
+
+PyTorch 的一次训练更新固定经过 `zero_grad()`、前向、计算 loss、`backward()` 和 `step()`。梯度默认累加，因此少一次 `zero_grad()` 就会把相邻 batch 的梯度混在一起。评估阶段使用 `eval()` 切换层状态，再用 `inference_mode()` 关闭自动微分；二者不能互相替代。
+
+## 开始动手！
+
+文件不大，仍要把几段代码的边界分开。DataLoader 只交出 batch，`LeNet.forward()` 只返回 logits，训练循环负责求导和更新，测试阶段只统计结果。后面几次 Lab 会逐步重写 Tensor、算子和自动微分，这份 PyTorch 代码可以作为接口参照。
+
+### 代码入口
 
 程序从 `main()` 开始，先选设备，再依次创建数据、模型、损失函数、优化器和 TensorBoard writer。
 
@@ -53,7 +63,7 @@ if __name__ == "__main__":
 
 漏掉这层保护后，worker 会重新导入并执行整个文件，表现通常不是一条干净的异常，而是重复下载、重复打印或者一直卡在创建 DataLoader 的位置。
 
-## 数据入口
+### 数据入口
 
 每张 CIFAR-10 图像包含三个通道，每个通道的高和宽都是 32。训练集使用随机水平翻转和带四像素填充的随机裁剪，测试集只做张量转换与归一化。
 
@@ -102,7 +112,7 @@ testloader = DataLoader(
 
 `shuffle=True` 只改变样本进入 batch 的顺序，不改变数据集内容。测试阶段关闭 shuffle 后，分类别统计和异常样本定位都更容易复现。
 
-## 模型模块
+### 模型模块
 
 LeNet 由两组卷积、池化和三层全连接组成
 
@@ -163,7 +173,7 @@ class LeNet(nn.Module):
 
 这份 LeNet 一共有 62006 个可训练参数。规模不大，十轮训练足以看见 loss 明显下降。后面改写 CUDA 算子时，也可以先拿它跑一个 batch，避免一开始就用更深的网络排查问题。
 
-## 训练模块
+### 训练模块
 
 一个 batch 的训练过程只有四步。
 
@@ -201,7 +211,7 @@ for epoch in range(num_epochs):
 
 整轮训练只负责重复上述单步，并累计 `loss.item()`。epoch loss 应除以 batch 数；若只记录最后一个 batch，曲线会对样本顺序非常敏感。TensorBoard writer 和模型保存放在训练循环外侧，不让记录代码混进参数更新逻辑。
 
-## 优化器状态
+### 优化器状态
 
 普通 SGD 只看当前梯度。加入动量后，优化器还保存跨 batch 的速度项
 
@@ -219,9 +229,7 @@ $$
 
 比较动量时，网络初始化、数据顺序和随机增强都应使用相同随机种子。原实验只固定了网络结构与训练轮数，因此曲线能说明当次运行的差异，不能当成严格的统计结论。
 
-![](assets/labs/lab-01/momentum-loss-curves.png)
-
-## 评估模块
+### 评估模块
 
 评估前切换到 `eval()`，并使用 `torch.inference_mode()` 关闭计算图记录。
 
@@ -247,11 +255,9 @@ for class_index in range(len(classes)):
 
 这里的 `mask` 只选出当前类别的样本。某个 batch 没有该类别时，两个增量都为零，不需要额外分支。最终输出时再检查 `per_class_total`，避免空类别造成除零。
 
-![](assets/labs/lab-01/test-accuracy.png)
-
 这里还有两个容易混淆的状态。`model.eval()` 会改变 Dropout、Batch Normalization 等层的行为，`inference_mode()` 则关闭自动微分；它们解决的问题不同。当前 LeNet 没有这两类层，但保留完整评估模板后，换模型时不会悄悄得到错误结果。
 
-## 日志与检查点
+### 日志与检查点
 
 每轮平均 loss 写到 `runs/lenet_cifar10_task1`，TensorBoard 横轴使用 epoch，而不是 batch。
 
@@ -262,13 +268,33 @@ writer.add_scalar("train/epoch_loss", avg_loss, epoch + 1)
 
 训练结束后保存的是 `state_dict()`。它只包含参数和 buffer，不包含 Python 类定义、优化器动量与当前 epoch。用于本次测试已经足够；若要从中断处继续训练，还要一起保存 optimizer state 和训练进度。
 
-## 复验
+### 成品代码
+
+最终实现集中在一个 `test.py` 中，数据处理、模型、训练、评估和两组动量实验都由 `main()` 串起。完整代码见 [Lab 1 源码](https://github.com/elainafan/Programming-in-AI-2025Fall-PKU/tree/main/Lab1)。
+
+文件提交前至少检查以下接口：
+
+- `LeNet.forward()` 只接收图像 Tensor 并返回 logits。
+- `train_one_epoch()` 接收模型、loader、loss 与 optimizer，返回当轮平均 loss。
+- `evaluate()` 不修改参数，分别返回整体准确率与分类别统计。
+- 两组 momentum 实验重新创建模型和 optimizer，日志目录与检查点互不覆盖。
+
+### 训练结果
 
 ```bash
 python test.py
 tensorboard --logdir runs
 ```
 
-程序训练十轮后保存 `task1_lenet_cifar10.pth`，并输出整体与分类别准确率。复验重点是确认训练 loss 能持续下降、评估阶段不产生梯度，以及动量实验使用相互独立的日志目录和检查点文件。
+程序训练十轮后保存 `task1_lenet_cifar10.pth`，并输出整体与分类别准确率。两组 loss 曲线使用独立日志记录，分类结果由测试集的 10000 张图像统计得到。
+
+| momentum | 第 1 轮 loss | 第 10 轮 loss | 测试准确率 |
+| ---: | ---: | ---: | ---: |
+| 0 | 2.2205 | 1.3110 | 55.31% |
+| 0.9 | 1.6810 | 0.8443 | 62.98% |
+
+![](assets/labs/lab-01/momentum-loss-curves.png)
+
+![](assets/labs/lab-01/test-accuracy.png)
 
 若 loss 从一开始就停在 $\log 10$ 附近，可以按数据、模型、更新三段检查。先看一批输入的范围和标签，再确认输出 shape 为 $N\times10$ ，最后比较一次 `optimizer.step()` 前后的参数。哪一段没有变化，问题通常就停在哪一段。

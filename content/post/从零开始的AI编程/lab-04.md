@@ -14,11 +14,23 @@ seriesOrder: 24
 >
 > **本笔记仅供参考，请勿抄袭。**
 
-## 任务
+## Python扩展简要介绍
 
 前三次 Lab 的 CUDA Tensor 只能由 C++ 调用。Lab 4 用 pybind11 把它编译成 `mytensor`，Python 端要能创建 Tensor、与 NumPy 交换数据，并调用前面写好的神经网络算子。
 
 本次几乎没有新公式，工作量都在边界上。Python 数组是什么 dtype，内存是否连续，C++ 返回对象由谁持有，CUDA 错误在哪一次调用暴露，任何一处约定含糊都会变成 `import` 失败、段错误或者一组看似随机的数值。
+
+## 在动手之前
+
+pybind11 负责在 Python 对象与 C++ 类型之间转换。模块由 `PYBIND11_MODULE` 注册，编译结果必须与当前 Python 的 ABI、架构和运行库匹配；文件能生成并不代表一定能被 `import`。
+
+NumPy 数组除了数据首地址，还带有 dtype、shape、stride 和所有权信息。C++ 后端要求连续的 `float32` 数据时，绑定层必须显式检查或转换。返回数组时也要保证底层内存在 Python 对象存活期间一直有效，不能把局部缓冲区包装成悬空 view。
+
+Python 异常适合报告 shape、dtype 和参数范围错误，CUDA 错误则应尽量在 binding 返回前检查。kernel 异步执行时，真正的越界可能拖到 `.numpy()` 或下一次 CUDA API 调用才出现，因此导入、数据转换和数值计算要分层测试。
+
+黑盒测试只通过公开 Python 接口构造输入并检查输出，能够覆盖真实调用路径；白盒测试用于核对后端分支和边界。每个 CUDA 算子都与 PyTorch 结果对拍，前向、输入梯度和参数梯度分别比较。
+
+## 开始动手！
 
 ```text
 Python / NumPy
@@ -30,7 +42,7 @@ CUDA 算子与显存
 
 Python 只接触公开对象。绑定层把 Python 参数翻译为 Tensor 和标量，底层 CUDA 代码仍然只接收指针与 shape。
 
-## 项目分层
+### 项目分层
 
 ```text
 Lab4/
@@ -57,7 +69,7 @@ Lab4/
 
 绑定代码若直接实现卷积，C++ 调用和 Python 调用会逐渐变成两套后端；测试若访问裸指针，又无法验证真实用户经过的接口。
 
-## 构建扩展
+### 构建扩展
 
 `CMakeLists.txt` 同时启用 C++20 与 CUDA 20，再依次查找 Python、pybind11 和 CUDA Toolkit。
 
@@ -81,7 +93,7 @@ target_link_libraries(
 
 Windows 的 Release 构建产物通常位于 `build/Release/mytensor.pyd`。`conftest.py` 在测试开始前把 `build/Release` 和 `build` 加入 `sys.path`，并用 `os.add_dll_directory()` 注册 CUDA 的 `bin` 目录。若 `.pyd` 文件明明存在却提示缺少模块，先检查依赖 DLL 和 Python ABI，别急着改绑定代码。
 
-## 绑定层
+### 绑定层
 
 `PYBIND11_MODULE` 注册设备枚举、Tensor 类和 `nn` 子模块。
 
@@ -122,7 +134,7 @@ result = output.numpy()
 
 若 `repr` 顺手调用 `.numpy()`，在调试器或 Notebook 中查看变量也会触发同步和 D2H copy。元数据可以随时打印，真实数据则由调用者明确请求。
 
-## NumPy 桥接
+### NumPy 桥接
 
 `Tensor.from_numpy()` 接收 C-contiguous 的 `float32` 数组。`forcecast` 会把其他可转换类型或非连续 view 整理成所需布局。
 
@@ -144,7 +156,7 @@ Tensor numpy2tensor(
 
 标签也经过同一个 `float32` Tensor 通道。Python 测试传入整数标签时，`forcecast` 会把它转换成 `float`，CUDA kernel 再把数值当作类别编号比较。这是当前后端接口的历史约定，并不理想；若之后增加整型 Tensor，应让标签保留整数 dtype，避免类别索引先变成浮点数。
 
-## 算子包装
+### 算子包装
 
 每个 wrapper 都要完成参数检查、对象转换、算子调用和返回值整理。
 
@@ -185,7 +197,7 @@ dx, dw, db = mytensor.nn.conv_backward(
 | 最大池化 | 输入、核大小与步长 | 输出或输入梯度 |
 | 分类损失 | logits、标签 | 概率、损失或 logits 梯度 |
 
-## 数据模块
+### 数据模块
 
 `data/mnist.py` 只验证数据能经过 NumPy 进入自定义 Tensor，没有在本 Lab 训练网络。
 
@@ -197,7 +209,7 @@ tensor = mytensor.Tensor.from_numpy(images)
 
 实际脚本逐个迭代 Dataset，因此 `ToImage`、转为 `float32` 和归一化都会执行，再由 `np.array` 拼成 batch。这样能验证 transform 的真实结果，但对完整 MNIST 会产生较多 Python 循环开销。若只需要原始像素，可以直接读取 `dataset.data`；若需要 transform，则更适合交给 DataLoader 分批处理。
 
-## 测试分层
+### 测试分层
 
 单元测试从同一份 NumPy 随机输入出发，一份交给 PyTorch，一份交给 `mytensor`。反向测试还要传入相同的上游梯度。
 
@@ -236,7 +248,7 @@ cudaMemset(
 
 反向 kernel 使用 `+=`，没有这一步就会在未初始化显存上累计。
 
-## 排查导入与数值错误
+### 排查导入与数值错误
 
 - 构建扩展和运行测试必须使用兼容的 Python ABI。`import mytensor` 失败时，应先核对 CMake 找到的解释器，而不是立刻怀疑 kernel。
 - `forcecast` 提供了便利，也可能悄悄复制大数组。性能测试时要区分算子耗时和输入整理耗时。
@@ -246,7 +258,13 @@ cudaMemset(
 
 导入失败与数值失败应分开处理。前者只检查 `.pyd` 路径、Python 版本和依赖 DLL；能够 `import mytensor` 后，再用一个 $2\times3$ Tensor 检查 NumPy 往返；最后才运行算子测试。若直接用完整 `pytest` 反复构建，错误信息很容易被大量测试输出淹没。
 
-## 复验
+### 成品代码
+
+最终代码分为 `src/`、`data/` 和 `test/` 三部分，完整版本见 [Lab 4 源码](https://github.com/elainafan/Programming-in-AI-2025Fall-PKU/tree/main/Lab4)。`src/tensornn.cu` 是唯一的 Python 绑定入口，`src/tensor*` 保留 CUDA 后端，测试文件只依赖构建出的 `mytensor` 模块。
+
+构建目录不属于源码。换 Python 环境或 CUDA 工具链后应重新运行 CMake 配置，不能继续复用旧 `.pyd`。测试使用的 `PYTHONPATH` 只指向本次构建产物，避免误导入系统中残留的同名模块。
+
+### 单元测试
 
 ```powershell
 cmake -S src -B build

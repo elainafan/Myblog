@@ -14,9 +14,21 @@ seriesOrder: 22
 >
 > **本笔记仅供参考，请勿抄袭。**
 
-## 任务
+## CUDA Tensor简要介绍
 
-Lab 2 要从一个只保存 `float` 的 Tensor 开始，补齐 CPU、GPU 两种存储，再实现 ReLU、Sigmoid 的前向和反向。代码只有三个文件，真正麻烦的地方不在激活函数，而在一块数据由谁释放、复制 Tensor 时究竟复制什么，以及 Host 代码能不能直接访问手里的指针。
+Lab 2 要从一个只保存 `float` 的 Tensor 开始，补齐 CPU、GPU 两种存储，再实现 ReLU、Sigmoid 的前向和反向。代码只有三个文件，主要工作是理清存储由谁释放、复制 Tensor 时究竟复制什么，以及 Host 代码能不能直接访问手里的指针。
+
+## 在动手之前
+
+CPU 与 GPU 拥有彼此独立的地址空间。CPU 指针不能直接交给 kernel，GPU 指针也不能在普通 C++ 代码中解引用；跨设备数据必须经过 `cudaMemcpy`，并明确 HostToDevice、DeviceToHost 或 DeviceToDevice 方向。
+
+CUDA kernel 由大量线程执行同一段函数。每个线程根据 block、thread 编号计算自己的线性下标，再判断下标是否越界。元素级激活函数可以让一个线程处理一个元素，block 数由元素总数向上取整得到。kernel launch 默认异步，调试阶段还要检查 launch error 并在读取结果前同步。
+
+Tensor 本身只描述 shape、设备和存储引用。存储对象负责申请与释放内存，Tensor 的普通拷贝共享存储，`.cpu()` 与 `.gpu()` 才执行深拷贝。把生命周期放进构造和析构函数后，函数提前返回时也不会漏掉 `cudaFree()`。
+
+反向函数接收的是上游梯度。ReLU 根据输入是否大于零选择保留或清零，Sigmoid 则把上游梯度乘上 $y(1-y)$ 。两条 CPU 路径先给出数值基准，CUDA kernel 使用完全相同的边界约定。
+
+## 开始动手！
 
 ```text
 Lab2/
@@ -37,7 +49,7 @@ Tensor 保存形状、设备和共享存储
 
 `main.cu` 不碰裸指针之外的实现细节。它构造一个 $2\times3\times4$ Tensor，依次跑 CPU 与 GPU 的前向、反向，再把结果打印出来对照。
 
-## 存储层
+### 存储层
 
 `Device` 只负责一段连续存储。CPU 端用 `new[]` 与 `delete[]`，GPU 端用 `cudaMalloc` 与 `cudaFree`。设备类型、首地址和元素数都封装在同一个对象中。
 
@@ -82,7 +94,7 @@ Tensor::Tensor(const Tensor& other)
 
 ![Host 与 Device 的分工](assets/slides/02-host-device.png)
 
-## Tensor 层
+### Tensor 层
 
 Tensor 不直接负责释放内存，只保存元数据和指向存储对象的智能指针。
 
@@ -117,7 +129,7 @@ Tensor Tensor::gpu() const {
 
 打印函数很适合调试，却不应放进训练热路径。一次 `std::cout << gpu_tensor` 隐含了同步的 device-to-host copy，循环里频繁打印会让时间几乎都花在传输和等待上。
 
-## 算子分派
+### 算子分派
 
 ReLU 和 Sigmoid 的公开接口都放在 Tensor 上。函数先创建同形状输出，再根据 `device` 选择普通循环或 CUDA kernel。
 
@@ -142,7 +154,7 @@ Tensor::relu_cpu_forward()
 
 统一分派省掉了调用端分支，也让一次误传的 CPU 梯度悄悄触发 H2D copy。后面训练网络时，这种便利会掩盖性能问题，因此测试接口和训练接口未必要采用同一策略。
 
-## CUDA kernel
+### CUDA kernel
 
 逐元素算子使用 grid-stride loop。每个线程先处理自己的线性下标，再以整个 grid 的线程总数为步长继续向后扫描。
 
@@ -199,7 +211,7 @@ $$
 
 等框架拥有计算图后，可以缓存 $y$ 并在反向时复用，省去一次指数运算。这个例子也说明前向缓存应由计算图或算子节点管理，不宜随意塞进 Tensor 存储层。
 
-## CPU 与 GPU 对照
+### CPU 与 GPU 对照
 
 `main.cu` 先在 CPU 上生成从负数逐渐过渡到正数的输入，再调用 `.gpu()`。这种输入比全随机数更适合检查 ReLU，因为负区间、零附近与正区间能同时出现。上游梯度使用固定随机种子生成，CPU、GPU 的反向过程读的是同一份数值。
 
@@ -212,11 +224,11 @@ Tensor relu_gpu = input_gpu.relu_cpu_forward();
 Tensor relu_cpu = input_cpu.relu_cpu_forward();
 ```
 
-测试顺序也有讲究。先打印 `input_gpu.cpu()`，确认往返复制没有改变数据；再比较前向；最后才比较反向。若第一步已经错了，继续调激活函数只会把问题越追越远。
+测试先打印 `input_gpu.cpu()`，确认往返复制没有改变数据；随后比较前向，最后比较反向。第一步已经出错时，问题仍在存储或复制路径，尚未进入激活函数。
 
 当前代码通过打印人工比较，适合小 Tensor。更可靠的版本应增加 `allclose`，逐元素检查绝对误差与相对误差，并在失败时输出第一个不一致下标。Tensor 变大以后，肉眼看两屏数字几乎发现不了单个错误。
 
-## 调试时踩过的坑
+### 调试时踩过的坑
 
 - GPU 指针只能由设备代码直接解引用。Host 端若要查看数据，必须先复制到 CPU。
 - kernel launch 是异步的。当前实现用 `cudaDeviceSynchronize()` 便于定位错误，但每个算子都同步会切断流水执行。
@@ -226,7 +238,13 @@ Tensor relu_cpu = input_cpu.relu_cpu_forward();
 
 `cudaDeviceSynchronize()` 只负责等待 kernel 完成，返回值仍要检查。若 launch 配置非法，错误可能在同步处才暴露；若前面的 `cudaMemcpy` 已经失败，后续 kernel 报出的地址错误又只是连锁反应。分配、复制和 launch 三个边界应分别检查 CUDA 状态。
 
-## 复验
+### 成品代码
+
+最终版本由 `tensor.h`、`tensor.cu` 和 `main.cu` 组成，完整代码见 [Lab 2 源码](https://github.com/elainafan/Programming-in-AI-2025Fall-PKU/tree/main/Lab2)。三个文件的边界保持不变：头文件声明接口，CUDA 源文件管理存储与算子，测试入口只通过 Tensor 的公开方法构造和比较结果。
+
+提交前要确认普通 Tensor 拷贝不会重复释放内存，`.cpu()` 与 `.gpu()` 不会只改设备标签，所有输出 Tensor 都被完整写入。`main.cu` 中不应直接读取 GPU 指针。
+
+### 正确性验证
 
 `main.cu` 构造固定的 $2\times3\times4$ 输入和上游梯度，先检查 CPU/GPU 往返复制，再比较两种激活函数的前向与反向结果。ReLU 还应单独覆盖负数、零和正数三个边界，Sigmoid 则要补一个绝对值较大的输入，观察指数计算是否溢出。
 
@@ -235,5 +253,7 @@ nvcc -std=c++17 -Xcompiler=/utf-8 \
   main.cu tensor.cu -o build/lab2.exe
 ./build/lab2.exe
 ```
+
+CPU 与 GPU 之间往返复制后，打印值完全一致。确定性输入中，Sigmoid 在 $-1$ 、 $0$ 和 $11/12$ 处的输出分别为 0.26894143、0.5 和 0.71436244；ReLU 在非正输入处的输出与梯度均为零。CPU 与 CUDA 路径采用了相同的边界约定。
 
 两条路径只出现浮点末位差异时，再检查误差阈值；若整段输出错位，则先查 shape、复制方向和 kernel 下标。CPU 路径负责提供数值基准，CUDA 每增加一步都先与它对照，再继续接下一个算子。
