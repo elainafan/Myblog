@@ -5,7 +5,7 @@ categories:
     - AI
 updates:
     - date: 2026-07-22
-      content: 补充 Lab 1–7 笔记，按模块实现与调试问题重组内容。
+      content: 补充 Lab 1–6 与大作业笔记，按模块实现与调试问题重组内容。
     - date: 2026-07-14
       content: 补齐各讲的实现细节，重组标题层级与阅读顺序。
 seriesExclude: true

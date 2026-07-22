@@ -16,7 +16,16 @@ seriesOrder: 22
 
 ## 任务
 
-Lab 2 从一个只保存 `float` 的 Tensor 开始，补齐 CPU、GPU 两种存储，以及 ReLU、Sigmoid 的前向和反向计算。实现分为三个层次。
+Lab 2 要从一个只保存 `float` 的 Tensor 开始，补齐 CPU、GPU 两种存储，再实现 ReLU、Sigmoid 的前向和反向。代码只有三个文件，真正麻烦的地方不在激活函数，而在一块数据由谁释放、复制 Tensor 时究竟复制什么，以及 Host 代码能不能直接访问手里的指针。
+
+```text
+Lab2/
+├── tensor.h     Device、device_ptr、Tensor 与 kernel 声明
+├── tensor.cu    Tensor 方法、CPU 路径与 CUDA kernel
+└── main.cu      固定输入和 CPU/GPU 对照
+```
+
+先把存储和复制跑通，再接 Tensor 与算子。`.gpu()` 和 `.cpu()` 尚未验证时，后面的数值错误无法区分是拷贝还是 kernel 所致。
 
 ```text
 Device 管理一段内存
@@ -26,7 +35,7 @@ Tensor 保存形状、设备和共享存储
 算子根据设备分派到 CPU 循环或 CUDA kernel
 ```
 
-`main.cu` 位于最上层，只构造输入并对照两条执行路径。这样内存生命周期、Tensor 语义、算子计算和测试不会挤在同一层里。
+`main.cu` 不碰裸指针之外的实现细节。它构造一个 $2\times3\times4$ Tensor，依次跑 CPU 与 GPU 的前向、反向，再把结果打印出来对照。
 
 ## 存储层
 
@@ -46,6 +55,8 @@ public:
 
 内存的申请和释放在构造、析构函数中成对出现。上层即使提前返回或抛出异常，栈展开仍会触发析构，这比在每个算子末尾手动释放可靠得多。
 
+构造函数只做分配，不做初始化。新建输出 Tensor 后，CPU 循环或 kernel 必须覆盖其中每个元素；若某条分支漏写，打印出来的并不是固定的零，而是未初始化内存。输出每次运行都变化时，先检查是否完整写入。
+
 `device_ptr` 以 `std::shared_ptr<Device>` 为基础。普通 Tensor 拷贝只增加引用计数，共享同一段存储；跨设备迁移则调用 `deep_copy()`，在目标设备重新分配空间，再选择对应的复制方向。
 
 | 源 | 目标 | 复制方式 |
@@ -56,6 +67,18 @@ public:
 | GPU | GPU | `cudaMemcpyDeviceToDevice` |
 
 这里要有意识地区分浅拷贝和深拷贝。若每次复制 Tensor 都复制显存，传参成本会很高；若 `.gpu()` 只修改设备标签，kernel 又会把主机地址当成显存地址。共享存储用于同设备的对象语义，深拷贝用于真正的数据迁移，二者不能混用。
+
+```cpp
+Tensor::Tensor(const Tensor& other)
+    : device(other.device),
+      shape(other.shape),
+      data(other.data),
+      size(other.size) {}
+```
+
+这里复制的是 `device_ptr`。两个 Tensor 的 `data->space` 指向同一块内存，最后一个引用离开作用域时才释放。于是普通复制很轻，但也带来别名问题：以后若加入原地赋值，改动其中一个 Tensor 会同时改变另一个 Tensor 看到的数据。
+
+`deep_copy()` 则先按目标设备分配新空间，再根据源、目标的组合选择 `memcpy` 或 `cudaMemcpy`。四种方向都单独列出来，能避免把 `cudaMemcpyHostToDevice` 的参数顺序凭感觉写反。
 
 ![Host 与 Device 的分工](assets/slides/02-host-device.png)
 
@@ -75,7 +98,22 @@ public:
 
 构造函数计算一次各维长度之积，后续逐元素 kernel 直接使用 `size`。当前实现没有 stride 和 offset，所有 Tensor 都按连续行主序解释。因此 reshape、转置、切片等操作还不能只靠修改元数据完成；它们需要增加布局信息，或者重新整理数据。
 
+构造时还要处理 shape 的边界。空 shape 可以表示标量，此时元素数应为 1；任一维为 0 时，元素数为 0；负维度则应在分配前拒绝。当前实验只传入正维度，因此源码没有把这些检查全部补齐，但接口扩展后不能继续默认调用端永远正确。
+
 `.cpu()` 与 `.gpu()` 是 Tensor 层的设备入口。已经位于目标设备时，返回共享存储的轻量拷贝；需要迁移时，才通过存储层做深拷贝。GPU Tensor 的打印也复用 `.cpu()`，先把数据搬回主机，再按 `shape` 递归输出。
+
+```cpp
+Tensor Tensor::gpu() const {
+    if (device == TensorDevice::GPU) return Tensor(*this);
+
+    Tensor result(shape, TensorDevice::GPU);
+    result.data = data.deep_copy(TensorDevice::GPU);
+    result.size = size;
+    return result;
+}
+```
+
+这里会先由 `Tensor result(...)` 分配一块显存，随后 `result.data` 又被 `deep_copy()` 返回的新存储覆盖。旧存储会因智能指针失去引用而释放，结果正确，却多做了一次分配。若继续整理接口，可以让 Tensor 接受一份已经构造好的 `device_ptr`，或者让迁移函数直接填入既有目标空间。
 
 打印函数很适合调试，却不应放进训练热路径。一次 `std::cout << gpu_tensor` 隐含了同步的 device-to-host copy，循环里频繁打印会让时间几乎都花在传输和等待上。
 
@@ -93,6 +131,17 @@ Tensor::relu_cpu_forward()
 
 反向算子有两个输入：前向输入和上游梯度。`onlyDevice()` 先把它们对齐到同一设备，只要其中一个在 GPU，另一个也会迁移到 GPU。这个策略让调用端简单，却可能悄悄产生昂贵的数据复制。规模更大的框架通常直接拒绝设备不一致的输入，让调用者显式决定迁移时机。
 
+源码中四种组合对应四条调用路径。
+
+| `in` | `grad` | 计算位置 | 隐含复制 |
+| --- | --- | --- | --- |
+| CPU | CPU | CPU | 无 |
+| GPU | CPU | GPU | `grad` 搬到 GPU |
+| CPU | GPU | GPU | `in` 搬到 GPU |
+| GPU | GPU | GPU | 无 |
+
+统一分派省掉了调用端分支，也让一次误传的 CPU 梯度悄悄触发 H2D copy。后面训练网络时，这种便利会掩盖性能问题，因此测试接口和训练接口未必要采用同一策略。
+
 ## CUDA kernel
 
 逐元素算子使用 grid-stride loop。每个线程先处理自己的线性下标，再以整个 grid 的线程总数为步长继续向后扫描。
@@ -106,6 +155,18 @@ Tensor::relu_cpu_forward()
 ![Kernel 的线程层次](assets/slides/02-kernel-launch.png)
 
 这种写法把“输入有多少元素”和“本次启动多少线程”分开，同一个 kernel 可以覆盖任意长度。线性下标还让相邻线程访问相邻元素，显存请求更容易合并。
+
+每个 block 使用 512 个线程，block 数由向上取整得到。
+
+```cpp
+const int kCudaThreadsNum = 512;
+
+inline int CudaGetBlocks(int n) {
+    return (n + kCudaThreadsNum - 1) / kCudaThreadsNum;
+}
+```
+
+即使 block 数已经足以覆盖全部元素，grid-stride loop 仍然保留。以后若人为限制 grid 大小，kernel 也不需要改写；输入末尾不足一个 block 的部分则由 `i < n` 拦住。
 
 ![相邻线程的合并访存](assets/slides/02-coalesced-access.png)
 
@@ -138,7 +199,24 @@ $$
 
 等框架拥有计算图后，可以缓存 $y$ 并在反向时复用，省去一次指数运算。这个例子也说明前向缓存应由计算图或算子节点管理，不宜随意塞进 Tensor 存储层。
 
-## 写的时候容易踩的坑
+## CPU 与 GPU 对照
+
+`main.cu` 先在 CPU 上生成从负数逐渐过渡到正数的输入，再调用 `.gpu()`。这种输入比全随机数更适合检查 ReLU，因为负区间、零附近与正区间能同时出现。上游梯度使用固定随机种子生成，CPU、GPU 的反向过程读的是同一份数值。
+
+```cpp
+Tensor input_gpu = build_test_tensor_gpu();
+Tensor input_cpu = input_gpu.cpu();
+Tensor grad = random_cpu_tensor(input_gpu.shape);
+
+Tensor relu_gpu = input_gpu.relu_cpu_forward();
+Tensor relu_cpu = input_cpu.relu_cpu_forward();
+```
+
+测试顺序也有讲究。先打印 `input_gpu.cpu()`，确认往返复制没有改变数据；再比较前向；最后才比较反向。若第一步已经错了，继续调激活函数只会把问题越追越远。
+
+当前代码通过打印人工比较，适合小 Tensor。更可靠的版本应增加 `allclose`，逐元素检查绝对误差与相对误差，并在失败时输出第一个不一致下标。Tensor 变大以后，肉眼看两屏数字几乎发现不了单个错误。
+
+## 调试时踩过的坑
 
 - GPU 指针只能由设备代码直接解引用。Host 端若要查看数据，必须先复制到 CPU。
 - kernel launch 是异步的。当前实现用 `cudaDeviceSynchronize()` 便于定位错误，但每个算子都同步会切断流水执行。
@@ -146,11 +224,11 @@ $$
 - 二元算子不能只检查元素总数，还要检查形状是否兼容。两个 `size` 相同的 Tensor 不一定具有相同语义。
 - 共享存储意味着一份数据可能有多个 Tensor 引用。以后加入原地写入时，需要明确它会不会同时改变其他别名。
 
-这些问题分别属于存储、执行和接口层。把它们混在 kernel 内处理，最后往往只剩下一串难以定位的 CUDA 错误。
+`cudaDeviceSynchronize()` 只负责等待 kernel 完成，返回值仍要检查。若 launch 配置非法，错误可能在同步处才暴露；若前面的 `cudaMemcpy` 已经失败，后续 kernel 报出的地址错误又只是连锁反应。分配、复制和 launch 三个边界应分别检查 CUDA 状态。
 
 ## 复验
 
-`main.cu` 构造固定的 $2\times3\times4$ 输入和上游梯度，先检查 CPU/GPU 往返复制，再比较两种激活函数的前向与反向结果。ReLU 还应单独覆盖负数、零和正数三个边界。
+`main.cu` 构造固定的 $2\times3\times4$ 输入和上游梯度，先检查 CPU/GPU 往返复制，再比较两种激活函数的前向与反向结果。ReLU 还应单独覆盖负数、零和正数三个边界，Sigmoid 则要补一个绝对值较大的输入，观察指数计算是否溢出。
 
 ```bash
 nvcc -std=c++17 -Xcompiler=/utf-8 \
@@ -158,4 +236,4 @@ nvcc -std=c++17 -Xcompiler=/utf-8 \
 ./build/lab2.exe
 ```
 
-两条路径只出现浮点末位差异时，可以把问题收窄到数学库实现；若整段输出错位，则优先检查形状、复制方向和 kernel 下标。这样的对照比只看一份 GPU 输出更容易找到模块边界上的错误。
+两条路径只出现浮点末位差异时，再检查误差阈值；若整段输出错位，则先查 shape、复制方向和 kernel 下标。CPU 路径负责提供数值基准，CUDA 每增加一步都先与它对照，再继续接下一个算子。
