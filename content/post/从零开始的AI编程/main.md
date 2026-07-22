@@ -5,7 +5,7 @@ categories:
     - AI
 updates:
     - date: 2026-07-22
-      content: 参照 ICS Lab 笔记重组 Lab 1–6 与大作业的介绍、前置知识、实现过程和验证结果。
+      content: 参照 ICS Lab 笔记重整 Lab 1–6 与大作业的实现脉络，删去泛化说明并校对实际代码结构。
     - date: 2026-07-14
       content: 补齐各讲的实现细节，重组标题层级与阅读顺序。
 seriesExclude: true
