@@ -16,28 +16,24 @@ seriesOrder: 26
 
 ## 任务
 
-Lab 6 在 MNIST 上训练一个双层全连接分类器。需要完成数据读取、Softmax 交叉熵、网络梯度、mini-batch SGD 和 Adam，并比较训练集与测试集上的损失和错误率。
+Lab 6 在 MNIST 上训练一个双层全连接网络，手写 Softmax 交叉熵、反向传播、mini-batch SGD 和 Adam。代码保留了 Lab 5 的自动微分模块，不过训练入口直接使用 NumPy 梯度，让优化器的状态和更新过程更容易观察。
 
-代码保留了 Lab 5 的自动微分文件，不过这次的训练入口直接用 NumPy 写出两层网络的前向与反向，优化器拿到的是明确的 $\mathrm{d}W_1$ 、 $\mathrm{d}W_2$ 。这样更容易把注意力放在参数更新与优化器状态上。
-
-## 文件结构
+训练程序可以拆成下面几块。
 
 ```text
-Lab6/
-├── basic_operator.py
-├── device.py
-├── tensor.py
-├── task0_operators.py
-├── task0_autodiff.py
-├── task1_optimizer.py
-└── std_optimizer.py
+parse_mnist()          数据入口
+set_structure()       参数创建
+forward()             模型计算
+softmax_loss()        目标函数
+SGD_epoch()/Adam_epoch()  参数更新
+train_nn()            调度与评估
 ```
 
-`task1_optimizer.py` 是实际运行入口，包含 MNIST 读取、网络初始化、前向计算、损失、两种优化器和训练循环。`std_optimizer.py` 保留 PyTorch 优化器的参考实现，用于核对更新逻辑。
+每个函数只处理一个阶段。优化器拿到参数和梯度，不负责读取数据；训练循环负责保存跨 epoch 状态，不重复实现更新公式。
 
-## 数据与网络
+## 数据与参数
 
-MNIST 训练集有 60000 张图像，测试集有 10000 张。每张 $28\times28$ 图像展平为 784 维向量，转换成 `float32` 后除以 255。
+`parse_mnist()` 把每张 $28\times28$ 图像展平为 784 维 `float32` 向量，缩放后的像素落在 $[0,1]$ 区间内。
 
 ```python
 X_tr = trainset.data.numpy().reshape(-1, 28 * 28)
@@ -46,9 +42,21 @@ X_tr = X_tr.astype(np.float32) / 255.0
 X_te = X_te.astype(np.float32) / 255.0
 ```
 
-代码虽然为 torchvision Dataset 传入了 `Normalize`，但随后直接读取 `dataset.data`，不会触发 transform。因此实际输入只缩放到 $[0,1]$ ，没有使用 MNIST 的均值和标准差做标准化。复现实验时以这条实际执行路径为准。
+这里虽然给 torchvision Dataset 传入了 `Normalize`，后面却直接读取 `dataset.data`，因此 transform 不会执行。实际训练只做了除以 255。这个坑很隐蔽：代码中“写了标准化”不等于数据真的经过了标准化，必须沿真实的数据路径检查。
 
-分类器没有偏置，结构为
+参数创建集中在 `set_structure()`。第一层权重 $W_1\in\mathbb{R}^{784\times h}$ 负责把图像映射到隐藏层，第二层权重 $W_2\in\mathbb{R}^{h\times10}$ 输出十类 logits。当前网络没有偏置。
+
+```python
+W1 = np.random.randn(n, hidden_dim).astype(np.float32) / np.sqrt(hidden_dim)
+W2 = np.random.randn(hidden_dim, k).astype(np.float32) / np.sqrt(k)
+return [W1, W2]
+```
+
+SGD 与 Adam 对比时要在相同随机种子下分别调用一次参数创建，不能让第二个优化器接着第一个已经训练过的权重继续跑。
+
+## 前向与梯度
+
+`forward()` 只完成两次矩阵乘和一次 ReLU
 
 $$
 Z_1=XW_1
@@ -62,25 +70,7 @@ $$
 Z_2=A_1W_2
 $$
 
-输入维度为 784，隐藏层宽度为 100，输出维度为 10。两种优化器都在随机种子 0 下重新初始化权重，保证它们从同一套参数出发。
-
-## Softmax 交叉熵
-
-先从每行 logits 中减去最大值，再计算概率
-
-$$
-P_{i,c}=
-\frac{\exp(Z_{i,c}-\max_j Z_{i,j})}
-{\sum_j\exp(Z_{i,j}-\max_k Z_{i,k})}
-$$
-
-平均交叉熵为
-
-$$
-L=-\frac{1}{N}\sum_{i=1}^{N}\log P_{i,y_i}
-$$
-
-代码用 log-sum-exp 形式直接计算损失，没有先得到概率再取对数。
+损失使用稳定的 log-sum-exp 写法，先减去每行最大值。
 
 ```python
 z_max = np.max(logits, axis=1, keepdims=True)
@@ -97,7 +87,7 @@ $$
 \mathrm{d}Z_2=\frac{P-Y}{N}
 $$
 
-其中 $Y$ 是 one-hot 标签。其余梯度沿两次矩阵乘和 ReLU 继续传播
+其余梯度按模型模块的相反顺序传回
 
 $$
 \mathrm{d}W_2=A_1^\mathsf{T}\mathrm{d}Z_2
@@ -111,21 +101,28 @@ $$
 \mathrm{d}W_1=X^\mathsf{T}\mathrm{d}Z_1
 $$
 
-## SGD
+当前 `SGD_epoch()` 和 `Adam_epoch()` 内部各自写了一遍前向与反向。这样容易观察更新过程，却带来重复。更适合继续扩展的接口是单独提供 `backward(X, weights, y)`，返回与 `weights` 一一对应的梯度列表，两种优化器只消费这份列表。
 
-训练集按 batch size 100 顺序切分，每个 batch 计算一次梯度并原地更新参数
+## SGD 模块
+
+`SGD_epoch()` 顺序切分 mini-batch，计算梯度后原地更新参数
 
 $$
 W\leftarrow W-\eta\,\mathrm{d}W
 $$
 
-本次使用的学习率为 0.2。`SGD_epoch()` 不返回新权重，而是直接修改传入列表中的数组。若在函数内部写成 `weights = new_weights`，只会替换局部变量，外层训练循环看不到更新。
+```python
+weights[0] -= lr * dW1
+weights[1] -= lr * dW2
+```
 
-当前代码没有在每个 epoch 前打乱样本。MNIST 原始训练集已经按某种顺序存储，顺序 mini-batch 会让优化轨迹受数据排列影响。若继续比较优化器，应先增加固定随机种子的 shuffle，再保证 SGD 与 Adam 使用同一批次顺序。
+这里必须原地修改数组。若函数内部写成 `weights = new_weights`，只会替换局部列表，外层训练循环仍持有旧参数。使用 `weights[j] -= ...` 则保留对象身份，模型下一次前向能看到更新。
 
-## Adam
+当前代码没有在 epoch 开始前打乱样本，batch 顺序会一直相同。若要比较优化器，应使用固定随机种子的 permutation，并让两种优化器读取相同批次；否则差异中还混入了数据顺序。
 
-Adam 为每个参数保存一阶矩、二阶矩和全局时间步
+## Adam 模块
+
+Adam 除参数外还拥有一阶矩、二阶矩和全局步数
 
 $$
 m_t=\beta_1m_{t-1}+(1-\beta_1)g_t
@@ -135,24 +132,17 @@ $$
 v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2
 $$
 
-初始时 $m_0$ 、 $v_0$ 都为零，前几个时间步会偏向零，因此还要做偏差修正
-
 $$
-\widehat m_t=\frac{m_t}{1-\beta_1^t}
-$$
-
-$$
+\widehat m_t=\frac{m_t}{1-\beta_1^t},\qquad
 \widehat v_t=\frac{v_t}{1-\beta_2^t}
 $$
-
-参数更新为
 
 $$
 W_t=W_{t-1}-
 \eta\frac{\widehat m_t}{\sqrt{\widehat v_t}+\epsilon}
 $$
 
-实现使用 $\beta_1=0.9$ 、 $\beta_2=0.999$ 和 $\epsilon=10^{-8}$ 。最容易漏掉的是跨 epoch 保存状态。若每轮都重新创建 $m$ 、 $v$ 和 $t$ ，Adam 会反复回到第一步，历史动量全部丢失。
+状态用一个字典保存，与参数列表保持相同结构。
 
 ```python
 state = {
@@ -162,29 +152,48 @@ state = {
 }
 ```
 
-`Adam_epoch()` 返回更新后的状态，训练循环再传给下一轮。
+`Adam_epoch()` 接收上一轮状态并返回更新后的状态；`train_nn()` 在整个训练过程中持有它。
 
-学习率仍然决定每次参数更新的尺度。步长过小时损失下降很慢，步长过大时会跨过低损失区域并发生震荡；Adam 的自适应分母只能改变各坐标的相对尺度，不能让任意大的基础学习率都稳定。
+```python
+adam_state = None
+
+for epoch in range(epochs):
+    adam_state = opti_epoch(
+        X_tr,
+        y_tr,
+        weights,
+        using_adam=True,
+        adam_state=adam_state,
+    )
+```
+
+如果每个 epoch 都重新创建三个状态，其中 $m$ 保存一阶矩，变量 $v$ 保存二阶矩，变量 $t$ 保存步数，那么 Adam 会不断回到第一步，前面所有 batch 的历史都被清空。无状态 SGD 不必返回额外对象，有状态优化器则必须让状态跨越调用边界。
 
 ![学习率大小与收敛过程](assets/slides/12-learning-rate.png)
 
-## 实验结果
+自适应分母并不能替代学习率。Adam 和 SGD 适合的基础步长通常不同，用同一数值直接比较并不公平。一次实验里 Adam 波动更大，应先检查学习率、batch 顺序和状态生命周期，再解释准确率差异。
 
-两组实验都训练 20 个 epoch，batch size 为 100。SGD 学习率为 0.2，Adam 学习率为 0.02。
+## 训练调度
 
-| 优化器 | 训练损失 | 训练错误率 | 测试损失 | 测试错误率 |
-| --- | ---: | ---: | ---: | ---: |
-| SGD | 0.02243 | 0.545% | 0.08322 | 2.440% |
-| Adam | 0.12205 | 3.082% | 0.33932 | 5.020% |
+`train_nn()` 只做三件事：调用优化器跑完一轮、在完整训练集上评估、在测试集上评估。损失和错误率计算封装在 `loss_err()` 中，避免两份评估代码出现不同口径。
 
-SGD 的测试错误率从首轮的 5.85% 降到 2.44%。Adam 很快学到有效分类器，但随后损失和错误率有明显波动，最终结果不如 SGD。
+训练集与测试集的评估都只读取参数，不应修改 optimizer state。若以后把 Lab 5 的自动微分接回来，还需要在评估阶段关闭构图或及时释放图，否则每个 epoch 都会留下一整张无用计算图。
 
-这不能说明 Adam 天生弱于 SGD。0.02 对 Adam 来说偏大，而训练 batch 又没有打乱，两项因素都会放大更新震荡。更合理的后续实验是先把 Adam 学习率降到 $10^{-3}$ 附近，再固定数据顺序比较收敛速度。
+参数初始化也不应藏在 `train_nn()` 内部。调用者传入哪组权重，函数就训练哪组权重；否则外部设置的随机种子或预训练参数会被悄悄覆盖。
 
-## 运行
+## 写的时候踩过的坑
+
+- torchvision transform 被 `dataset.data` 绕过，实际预处理与代码表面不一致。
+- 最后一个 batch 可能小于设定大小，归一化梯度时应使用当前 batch 的真实样本数。
+- `weights` 与梯度列表必须保持相同顺序和形状，优化器不应靠变量名猜对应关系。
+- Adam 的时间步按参数更新次数递增，不是按 epoch 递增。
+- 一阶、二阶矩需要与参数同 dtype。默认创建 `float64` 状态会让内存和运算类型悄悄变化。
+- 评估测试集只能用于观察泛化，不能据此反复挑选超参数；需要调参时应再划出验证集。
+
+## 复验
 
 ```bash
 python task1_optimizer.py
 ```
 
-程序依次训练 SGD 与 Adam，并在每个 epoch 后对完整训练集和测试集计算损失、错误率。测试集只用于报告结果，不参与参数更新。
+复验时关注训练损失能否下降、参数是否原地改变，以及 Adam 的 `t` 是否跨 epoch 连续增长。最终损失和错误率用于确认训练链路是否接通。

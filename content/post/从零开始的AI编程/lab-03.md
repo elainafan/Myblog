@@ -16,45 +16,45 @@ seriesOrder: 23
 
 ## 任务
 
-Lab 3 要实现卷积网络里常用的五组核心计算：全连接、二维卷积、最大池化、Softmax，以及交叉熵。除了 Softmax 不单独写反向，其余模块都要给出正反向传播，并在 `main.cu` 中构造实例检查结果。
-
-全连接和卷积的主体由单精度 cuBLAS 矩阵乘完成，参数使用 cuRAND 初始化。卷积采用 `im2col` 与 `col2im`，没有实现 depthwise、dilated、transposed convolution 和 unpooling。
-
-## 文件结构
+Lab 3 在上一份 Tensor 上补全连接、二维卷积、最大池化、Softmax 和交叉熵。公共工作拆成三层，各算子沿同一条调用链组合已有模块。
 
 ```text
-Lab3/
-├── main.cu
-├── tensor.cu
-├── tensor.h
-└── tensor_kernel.h
+Tensor 接口与形状检查
+        ↓
+算子封装：分配输出、组织临时量、调用前后向过程
+        ↓
+CUDA kernel、cuBLAS、cuRAND
 ```
 
-`tensor_kernel.h` 保存五类算子的 kernel 与调用封装。`main.cu` 为每一类计算准备固定随机种子、形状和输出打印，因此同一份程序重复运行时结果不会变化。
+`tensor.cu` 保留存储与基础 Tensor 行为，`tensor_kernel.h` 保存算子后端，`main.cu` 只构造确定性小样例。上层关注张量形状和调用顺序，底层关注指针、线程和矩阵乘参数。
 
-编译环境为 CUDA Toolkit 12.4、MSVC 19.44、cuBLAS 与 cuRAND。
+## 公共后端
 
-## 行主序与 cuBLAS
-
-C++ 数组按行主序保存，而 cuBLAS 默认把矩阵解释为列主序。如果直接把行主序的 $A$ 、 $B$ 传给 `cublasSgemm`，矩阵尺寸和转置标志都会错位。
-
-当前代码用 `sgem()` 包了一层适配：先按照行主序接口接收 $m$ 、 $n$ 、 $k$ 和转置标志，再转换为 cuBLAS 所需的调用顺序。这样上层仍可按通常的 $C=AB$ 阅读代码。
+卷积和全连接看起来不同，展开后都依赖矩阵乘。代码用一层 `sgem()` 包装 `cublasSgemm`，上层继续按照行主序的 $C=AB$ 传入形状和转置标志，适配层再转换成 cuBLAS 的列主序参数。
 
 ![BLAS 的三个层次](assets/slides/06-blas-levels.png)
 
-`cublasSgemm` 属于 BLAS Level 3，计算形式为 $C\leftarrow\alpha AB+\beta C$ 。全连接前向、输入梯度和权重梯度都能落到 GEMM；卷积经过 `im2col` 后也会得到同一种接口。偏置广播和偏置梯度属于向量操作，仍由单独的 kernel 或归约完成。
+`cublasSgemm` 属于 BLAS Level 3，完成
 
-这层封装还分配了临时矩阵并做转置，读起来直观，代价是额外的显存与转置开销。继续优化时可以利用
+$$
+C\leftarrow\alpha AB+\beta C
+$$
+
+全连接前向、输入梯度和权重梯度都能调用它；卷积先经过 `im2col`，随后也落到同一个接口。偏置广播、偏置归约和数据重排仍由小型 CUDA kernel 完成。
+
+布局错误通常比乘法公式更难查。C++ 数组按行主序保存，cuBLAS 默认按列主序解释。只要一个维度或转置标志写反，输出仍可能是一块形状正确的内存，却没有任何数值意义。调试时先写出每个操作数的逻辑形状，再对照 `m`、`n`、`k`，比直接改 `CUBLAS_OP_T` 靠谱得多。
+
+当前适配层会创建临时矩阵并做显式转置，接口清楚，但多了一次分配和数据移动。后续可以利用
 
 $$
 (AB)^\mathsf{T}=B^\mathsf{T}A^\mathsf{T}
 $$
 
-交换操作数与维度，避免显式转置和额外显存。
+交换操作数和维度，让 cuBLAS 直接读取已有布局。
 
-## 全连接层
+## 全连接
 
-输入、权重与偏置分别记为
+输入、权重和偏置的形状为
 
 $$
 X\in\mathbb{R}^{N\times C_{\mathrm{in}}},\qquad
@@ -62,13 +62,13 @@ W\in\mathbb{R}^{C_{\mathrm{out}}\times C_{\mathrm{in}}},\qquad
 b\in\mathbb{R}^{C_{\mathrm{out}}}
 $$
 
-前向计算为
+前向模块先用 GEMM 计算主体，再用全一向量把偏置广播到 batch
 
 $$
 Y=XW^\mathsf{T}+b
 $$
 
-偏置通过长度为 $N$ 的全一向量广播到整个 batch。反向传播分别为
+反向模块返回三个彼此独立的结果
 
 $$
 \mathrm{d}X=\mathrm{d}Y W
@@ -82,45 +82,41 @@ $$
 \mathrm{d}b=\sum_{n=1}^{N}\mathrm{d}Y_n
 $$
 
-三条式子都能写成矩阵乘。实现时最容易混淆的是 `input_size` 与 `output_size`，建议先把每个矩阵的形状写在纸上，再决定 `CUBLAS_OP_N` 或 `CUBLAS_OP_T`。
+这个接口设计比在调用端分别求三类梯度更稳妥：输入、权重和偏置共享同一份形状信息，算子内部可以一次完成校验和临时资源准备。测试时则要分别检查三个返回值，不能只确认前向输出。
 
-## 二维卷积
+## 卷积
 
-### 输出形状
-
-输入形状为 $N\times C\times H\times W$ ，卷积核形状为 $K\times C\times K_H\times K_W$ 。给定 padding 与 stride 后，输出空间尺寸为
+卷积模块由形状计算、`im2col`、GEMM、偏置和 `col2im` 组成。输入采用 NCHW 布局，卷积核依次保存输出通道、输入通道、高和宽。输出尺寸先由接口层算出
 
 $$
-H_{\mathrm{out}}=\left\lfloor
+H_{\mathrm{out}}=left\lfloor
 \frac{H+2P_H-K_H}{S_H}
 \right\rfloor+1
 $$
 
 $$
-W_{\mathrm{out}}=\left\lfloor
+W_{\mathrm{out}}=left\lfloor
 \frac{W+2P_W-K_W}{S_W}
 \right\rfloor+1
 $$
 
-作业示例使用 stride 1 与保持尺寸的 zero padding，代码本身仍允许传入其他卷积核、padding 和 stride。
+### 展开窗口
 
-### im2col
-
-直接让一个 kernel 同时处理卷积窗口、通道和输出位置并不利于复用矩阵乘法。`im2col` 把每个输出位置看到的感受野展开成一列，得到
+`im2col` 把每个输出位置对应的感受野展成一列
 
 $$
 X_{\mathrm{col}}\in
 \mathbb{R}^{(CK_HK_W)\times(H_{\mathrm{out}}W_{\mathrm{out}})}
 $$
 
-越过输入边界的位置填零。卷积核展平为
+卷积核展平为
 
 $$
 W_{\mathrm{row}}\in
 \mathbb{R}^{K\times(CK_HK_W)}
 $$
 
-单张图像的卷积便化为
+单张图像的前向便成为
 
 $$
 Y_{\mathrm{col}}=W_{\mathrm{row}}X_{\mathrm{col}}+b
@@ -128,11 +124,7 @@ $$
 
 ![Im2col 的数据布局](assets/slides/07-im2col-layout.png)
 
-截图把每个感受野排成特征矩阵的一行，当前代码则把它排成 $X_{\mathrm{col}}$ 的一列，两种表示只差一次转置。只要权重布局和 GEMM 参数与之配套，计算结果完全相同。
-
-相邻窗口重叠的像素会在列矩阵中重复出现。这个布局用额外显存换来连续的 GEMM 输入，也把 padding 与 stride 的地址计算集中到了 `im2col` kernel 中，矩阵乘部分不再关心卷积窗口如何滑动。
-
-kernel 由线性下标反推出输出位置、卷积核位置和输入通道，再计算对应的输入坐标。
+`im2col` kernel 由一个线性下标反推出通道、卷积核位置和输出坐标。落在 padding 区域的元素写零，其余位置从输入取值。
 
 ```cpp
 int h_in = h_out * stride_h - pad_h + k_h;
@@ -145,34 +137,34 @@ if (h_in >= 0 && h_in < H && w_in >= 0 && w_in < W) {
 }
 ```
 
-### col2im
+这一步把复杂的窗口寻址集中在一个模块里。GEMM 不需要知道 stride 和 padding，卷积核也不需要自己处理边界。代价是重叠窗口会复制相同像素，临时矩阵可能远大于原输入。
 
-反向传播中，权重梯度由输出梯度和 `im2col` 结果相乘得到。输入梯度先在列空间计算
+### 写回梯度
+
+输入梯度先在列空间计算
 
 $$
 \mathrm{d}X_{\mathrm{col}}
 =W_{\mathrm{row}}^\mathsf{T}\mathrm{d}Y_{\mathrm{col}}
 $$
 
-随后由 `col2im` 写回原输入。一个输入像素可能出现在多个重叠窗口中，因此这里必须累加所有窗口的贡献，不能简单地把列矩阵 reshape 回去。
+`col2im` 再把各列写回输入布局。一个像素可能被多个卷积窗口覆盖，所以写回必须累加，不能把列矩阵直接 reshape。并行 kernel 若让多个线程同时写同一位置，还要使用原子加或换一种无冲突的线程映射。
 
-权重和偏置由整个 batch 共享。每张图像计算出的 $\mathrm{d}W$ 与 $\mathrm{d}b$ 都要累加，而 $\mathrm{d}X$ 则写入该样本自己的区域。
+权重和偏置由整个 batch 共用。每张图像都会得到两类参数梯度，其中 $\mathrm{d}W$ 对应权重，变量 $\mathrm{d}b$ 对应偏置，两者都要继续累加。输入梯度 $\mathrm{d}X$ 只写入该样本对应的区域。忘记前两项的 batch 累加时，小样例可能仍能通过，batch size 大于一才会暴露问题。
 
 ## 最大池化
 
-前向过程在每个池化窗口中寻找最大值。反向时只有最大值位置接收上游梯度，其余位置写零。
+池化前向寻找每个窗口的最大值，反向把上游梯度送回最大值位置。
 
 ![Max Pooling 的反向传播](assets/slides/07-maxpool-backward.png)
 
-```cpp
-input_grad[index] += (value == max_value) ? grad_value : 0.0f;
-```
+保存 argmax 比在反向时重新比较数值更可靠。当前实现按 `value == max_value` 判断；窗口出现多个相同最大值时，它会把完整梯度写给每个相等位置，而常见框架只把梯度送给前向记录的一个下标。随机输入不容易触发这个差异，专门构造含并列最大值的测试才能发现。
 
-图中的 mask 保存了每个窗口在前向时选中的 argmax，反向时只向这些位置散射梯度。当前测试使用不重叠窗口与连续随机输入，几乎不会出现并列最大值。如果窗口里有两个完全相同的最大值，代码按数值比较会把完整梯度同时写给两者，与只记录一个 argmax 的行为不同。要严格对齐 PyTorch，应在前向时保存最大值下标，反向时按下标散射梯度。
+池化窗口重叠时，多个输出也可能把梯度送到同一输入位置。此处和 `col2im` 一样，需要累加而非覆盖。
 
 ## Softmax 与交叉熵
 
-Softmax 先减去每行最大值，再做指数与归一化
+Softmax 先减去每行最大值，再计算指数和归一化
 
 $$
 p_{n,c}=
@@ -180,47 +172,34 @@ p_{n,c}=
 {\sum_j\exp(z_{n,j}-\max_k z_{n,k})}
 $$
 
-减去最大值不会改变最终概率，却能避免较大的 logit 令指数溢出。实现使用 Thrust 在每一行上求最大值、指数和总和。
-
 交叉熵对 batch 取平均
 
 $$
 L=-\frac{1}{N}\sum_{n=1}^{N}\log p_{n,y_n}
 $$
 
-Softmax 与交叉熵的反向合并后为
+两者的反向合并后为
 
 $$
 \frac{\partial L}{\partial z_{n,c}}
 =\frac{p_{n,c}-\mathbb{1}[c=y_n]}{N}
 $$
 
-合并后的式子不需要显式构造 Softmax 的雅可比矩阵，计算更短，数值也更稳定。
+合并接口省去了 Softmax 雅可比矩阵，也避免先得到极小概率再取对数。这里仍要统一标签表示：类别下标和 one-hot Tensor 对应不同的 kernel 输入，若 Python 层和 CUDA 层各自假设一种格式，很容易读错显存。
 
-## 测试
+## 模块间的坑
 
-| 模块 | 测试形状 | 检查内容 |
-| --- | --- | --- |
-| 全连接 | $2\times3$ 输入，输出维度 2 | 输出、输入梯度、权重梯度、偏置梯度 |
-| 卷积 | $1\times1\times3\times4$ ， $3\times3$ 核 | 输出尺寸与三类梯度 |
-| 最大池化 | $1\times4\times4$ ， $2\times2$ 核 | 窗口最大值和梯度落点 |
-| Softmax | $2\times3$ logits | 每行概率和 |
-| 交叉熵 | 两个样本、三个类别 | 标量损失和 logits 梯度 |
+- cuBLAS、cuRAND handle 应集中创建和销毁。每个小算子临时创建 handle 会把管理开销带进热路径。
+- 临时显存也应有清楚的所有者。`im2col`、转置矩阵和全一向量一旦在异常路径漏掉，就会随着 batch 数持续占用显存。
+- kernel launch 后立即同步便于调试，却让各算子无法并行。正确性稳定后，应把同步移到测试边界或真正需要读取结果的地方。
+- 前向和反向必须采用完全相同的 padding、stride 与布局约定。单独看每段公式都正确，也可能因为约定不同而接不上。
+- 输出形状要在分配前验证。负数或不能整除的空间尺寸不应留到 kernel 内变成越界访问。
 
-固定随机种子后，Softmax 两行概率和都为 1，交叉熵损失为 1.1317。合并反向梯度为
+这些错误往往发生在模块连接处，因此测试不能只验证单个 kernel。
 
-$$
-\begin{bmatrix}
--0.3624 & 0.1831 & 0.1793\\
-0.1636 & 0.1475 & -0.3111
-\end{bmatrix}
-$$
+## 复验
 
-每行梯度之和为零，符合 Softmax 对 logits 整体平移不敏感的性质。卷积与全连接还要检查输出尺寸，池化则应确认每个窗口的梯度落在最大值位置。
-
-这里的确定性实例适合排查维度和转置错误。更严格的数值对照放在 Lab 4 中完成，封装成 Python 扩展后，可以让每一项结果直接与 PyTorch 比较。
-
-## 编译与运行
+`main.cu` 为五类计算准备固定随机种子和小尺寸输入，分别检查前向、输入梯度、参数梯度与输出形状。Softmax 每行概率和应接近 1，合并后的 logits 梯度每行之和应接近 0。
 
 ```bash
 nvcc -std=c++17 --extended-lambda -Xcompiler=/utf-8 \
@@ -228,4 +207,4 @@ nvcc -std=c++17 --extended-lambda -Xcompiler=/utf-8 \
 ./build/lab3.exe
 ```
 
-若链接阶段找不到 cuBLAS 或 cuRAND，先确认 CUDA Toolkit 的库目录已进入工具链。若数值正确但速度很慢，优先检查循环内的 `cudaMalloc`、显式转置和 `cudaDeviceSynchronize()`，这些开销通常比小尺寸 kernel 本身更显眼。
+确定性小样例适合排查矩阵布局和下标。下一份 Lab 会把这些接口绑定到 Python，再用 PyTorch 对拍随机输入；两种测试分别守住内部计算和公开接口。

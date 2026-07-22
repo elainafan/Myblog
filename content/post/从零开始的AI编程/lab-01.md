@@ -16,29 +16,17 @@ seriesOrder: 21
 
 ## 任务
 
-Lab 1 要求用 PyTorch 跑通一条完整的图像分类流程：读取 CIFAR-10，搭建 LeNet，使用交叉熵与 SGD 训练 10 个 epoch，再统计整体准确率、分类别准确率和训练损失。最后还要改变 SGD 的 `momentum`，比较它对收敛过程的影响。
-
-代码集中在一个可直接运行的 Python 文件中，没有使用 Notebook。训练结束后会留下模型参数和 TensorBoard 日志，方便把最终模型与损失曲线对应起来。
-
-## 环境与文件
-
-复验使用的环境为 Windows 11、Python 3.12.7、PyTorch 2.8.0+cu128 和 TorchVision 0.23.0+cu128，显卡为 RTX 4060 Laptop GPU。程序也保留了 CPU 路径，没有 CUDA 时仍可运行，只是训练会慢不少。
+Lab 1 要用 PyTorch 跑通 CIFAR-10 分类：准备数据、搭建 LeNet、完成训练与测试，再比较 SGD 是否使用动量时的收敛情况。代码虽然只有一个 `test.py`，实现时仍然可以把它看成五个彼此独立的部分。
 
 ```text
-Lab1/
-├── test.py
-├── task1_lenet_cifar10.pth
-└── runs/
-    └── lenet_cifar10_task1/
+数据与增强 -> LeNet -> 单个训练 step -> 整轮训练 -> 评估与保存
 ```
 
-`test.py` 同时负责数据处理、模型定义、训练、测试和日志记录。第一次运行会把 CIFAR-10 下载到 `data/`，这个目录不需要提交。
+数据模块决定输入的分布；模型只负责把图像变成 logits；训练循环连接损失函数和优化器；评估代码不参与求导；日志与检查点则负责留下可复验的结果。把这些职责分清以后，更换网络、优化器或数据增强都不必重写整条流程。
 
-## 数据处理
+## 数据入口
 
-CIFAR-10 包含 10 个类别，共有 50000 张训练图像和 10000 张测试图像，每张图像的形状为 $3\times 32\times 32$ 。
-
-训练集使用随机水平翻转，以及四像素填充后的随机裁剪。测试集不能带随机增强，只做张量转换与归一化。三个通道都采用均值 0.5、标准差 0.5，因此像素会从 $[0,1]$ 映射到 $[-1,1]$ 。
+每张 CIFAR-10 图像包含三个通道，每个通道的高和宽都是 32。训练集使用随机水平翻转和带四像素填充的随机裁剪，测试集只做张量转换与归一化。
 
 ```python
 transform_train = transforms.Compose(
@@ -58,11 +46,20 @@ transform_test = transforms.Compose(
 )
 ```
 
-训练 loader 打乱样本，测试 loader 保持固定次序。两边的 batch size 都是 32。
+训练和测试必须使用两套 transform。若测试集也带随机裁剪，每次评估看到的图像都会变化，准确率便失去了可比性。`DataLoader` 的职责也很单纯：训练 loader 打乱样本，测试 loader 保持固定顺序，两边只向后续模块提供 `(inputs, labels)`。
 
-## LeNet
+Windows 下使用多个 DataLoader worker 时，程序入口需要放在
 
-输入先经过两组卷积与池化
+```python
+if __name__ == "__main__":
+    main()
+```
+
+之内，否则子进程会再次执行整个文件，常见表现是重复下载数据、重复创建 worker，甚至直接卡住。
+
+## 模型模块
+
+LeNet 由两组卷积、池化和三层全连接组成
 
 $$
 3\xrightarrow{5\times5\ \mathrm{Conv}}6
@@ -71,11 +68,13 @@ $$
 \xrightarrow{2\times2\ \mathrm{MaxPool}}16
 $$
 
-空间尺寸依次从 $32$ 变为 $28$ 、 $14$ 、 $10$ 和 $5$ ，最后得到 $16\times 5\times 5$ 的特征图。展平后依次经过 $400\to120\to84\to10$ 的全连接层。
+空间尺寸按下面的顺序变化
 
-![LeNet 的前向、损失与反向传播](assets/slides/01-lenet-training.png)
+$$
+32\to28\to14\to10\to5
+$$
 
-图中的前向链路也对应着反向传播需要保存的中间量。卷积和全连接层需要前一层输入来计算参数梯度，ReLU 需要知道哪些位置在前向时大于零，最大池化则需要最大值所在位置。PyTorch 会把这些关系记录在计算图中，所以模型只需返回 logits，`loss.backward()` 便能从损失一路把梯度传回各层参数。
+最后一组特征图共有 16 个通道，展平后得到 400 个特征。
 
 ```python
 class LeNet(nn.Module):
@@ -97,11 +96,15 @@ class LeNet(nn.Module):
         return self.fc3(x)
 ```
 
-最后一层输出 logits，不再手动接 Softmax。`CrossEntropyLoss` 已经把 log-softmax 与负对数似然合在一起，再做一次 Softmax 既多余，也会削弱数值稳定性。
+![LeNet 的前向、损失与反向传播](assets/slides/01-lenet-training.png)
 
-## 训练
+`forward()` 的返回值是 logits，末尾不接 Softmax。`CrossEntropyLoss` 已经把 log-softmax 和负对数似然合在一起，再手动做一次 Softmax 会改变损失的输入含义，也让数值稳定性变差。
 
-训练使用交叉熵和 SGD，初始学习率为 0.01，动量系数为 0.9，权重衰减为 $10^{-4}$ 。每个 batch 的顺序固定为清空梯度、前向传播、反向传播和参数更新。
+模型和数据各自只在边界处调用一次 `.to(device)`。层内部不判断 CPU 或 CUDA，这样同一份 `forward()` 可以直接复用在两种设备上。
+
+## 训练模块
+
+一个 batch 的训练过程只有四步。
 
 ```python
 optimizer.zero_grad()
@@ -111,67 +114,52 @@ loss.backward()
 optimizer.step()
 ```
 
-每轮记录 batch loss 的平均值，而不是只记录最后一个 batch。测试前切换到 `eval()`，并在 `torch.inference_mode()` 中运行，避免继续维护反向传播图。
+`zero_grad()` 必须发生在下一次反向传播前。PyTorch 默认累加梯度，漏掉这一步以后，当前 batch 会把前面所有 batch 的梯度一起用于更新。`backward()` 只填写各参数的 `.grad`，真正修改参数的是 `optimizer.step()`，两者也不能颠倒。
 
-## 动量
+整轮训练只负责重复上述单步，并累计 `loss.item()`。epoch loss 应除以 batch 数；若只记录最后一个 batch，曲线会对样本顺序非常敏感。TensorBoard writer 和模型保存放在训练循环外侧，不让记录代码混进参数更新逻辑。
 
-普通 SGD 只使用当前梯度。加入动量后，优化器还维护一个速度缓冲区
+## 优化器状态
 
-$$
-v_t = m v_{t-1} + g_t
-$$
+普通 SGD 只看当前梯度。加入动量后，优化器还保存跨 batch 的速度项
 
 $$
-\theta_t = \theta_{t-1} - \eta v_t
+v_t=m v_{t-1}+g_t
 $$
 
-其中 $m$ 是动量系数， $g_t$ 是当前梯度， $\eta$ 是学习率。连续几个 batch 的梯度方向接近时，历史项会加速这一方向的更新；梯度反复摆动时，缓冲区又能减弱单个 batch 带来的突变。
+$$
+\theta_t=\theta_{t-1}-\eta v_t
+$$
 
-动量也不能一味调大。若历史方向保留得太久，参数可能在损失谷底附近来回越过最优点，因此它需要和学习率一起调整。
+连续几个 batch 的梯度方向接近时，历史项会加快这一方向的移动；梯度来回摆动时，它又能削弱单个 batch 带来的突变。这也说明优化器并非一个无状态函数。重新创建 optimizer 会丢掉动量缓冲区，只保存模型参数也不足以无缝续训。
 
-## 测试
-
-整体准确率只需要累计预测正确的样本数。分类别准确率则为每个标签维护独立的 `correct` 与 `total`，不必在 CPU 上逐张处理。
-
-```python
-for class_index in range(len(classes)):
-    mask = labels == class_index
-    per_class_correct[class_index] += (
-        predicted[mask] == class_index
-    ).sum()
-    per_class_total[class_index] += mask.sum()
-```
-
-动量系数为 0.9 时，10 个 epoch 后的整体测试准确率为 **62.98%**。
-
-| 类别 | 准确率 | 类别 | 准确率 |
-| --- | ---: | --- | ---: |
-| airplane | 66.00% | automobile | 68.80% |
-| bird | 48.50% | cat | 49.90% |
-| deer | 54.90% | dog | 57.90% |
-| frog | 68.50% | horse | 58.80% |
-| ship | 78.30% | truck | 78.20% |
-
-![](assets/labs/lab-01/test-accuracy.png)
-
-`ship` 与 `truck` 的轮廓比较稳定，准确率最高；`bird`、`cat` 与其他动物类别更容易混淆。只看一个整体数字时，这种类别间的差异很容易被盖住。
-
-## 动量对比
-
-| 动量系数 | 第 1 轮损失 | 第 10 轮损失 | 测试准确率 |
-| ---: | ---: | ---: | ---: |
-| 0 | 2.2205 | 1.3110 | 55.31% |
-| 0.9 | 1.6810 | 0.8443 | 62.98% |
+比较动量时，网络初始化、数据顺序和随机增强都应使用相同随机种子。原实验只固定了网络结构与训练轮数，因此曲线能说明当次运行的差异，不能当成严格的统计结论。
 
 ![](assets/labs/lab-01/momentum-loss-curves.png)
 
-两次运行使用相同的网络、数据处理与训练轮数，但没有锁定完全相同的初始化和随机增强序列。因此，这组结果适合观察收敛趋势，不应被当作严格控制随机变量后的统计结论。
+## 评估模块
 
-## 运行
+评估前切换到 `eval()`，并使用 `torch.inference_mode()` 关闭计算图记录。
+
+```python
+model.eval()
+
+with torch.inference_mode():
+    for inputs, labels in testloader:
+        outputs = model(inputs.to(device))
+        predicted = outputs.argmax(dim=1)
+```
+
+整体准确率只需要累计预测正确的样本数。分类别准确率则为每个标签分别维护 `correct` 和 `total`。这一层统计揭示了整体数字看不到的偏差，例如 `ship`、`truck` 往往比外形相近的动物类别更容易区分。
+
+![](assets/labs/lab-01/test-accuracy.png)
+
+这里还有两个容易混淆的状态。`model.eval()` 会改变 Dropout、Batch Normalization 等层的行为，`inference_mode()` 则关闭自动微分；它们解决的问题不同。当前 LeNet 没有这两类层，但保留完整评估模板后，换模型时不会悄悄得到错误结果。
+
+## 复验
 
 ```bash
 python test.py
 tensorboard --logdir runs
 ```
 
-程序会自动选择 CUDA 或 CPU，训练完成后将参数保存为 `task1_lenet_cifar10.pth`。若要比较不同超参数，最好把日志目录和模型文件名一并改掉，避免后一次运行覆盖前一次结果。
+程序训练十轮后保存 `task1_lenet_cifar10.pth`，并输出整体与分类别准确率。复验重点是确认训练 loss 能持续下降、评估阶段不产生梯度，以及动量实验使用相互独立的日志目录和检查点文件。

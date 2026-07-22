@@ -16,99 +16,88 @@ seriesOrder: 27
 
 ## 任务
 
-Final Project 围绕 CIFAR-10 展开，包含三条逐步下沉的训练路径。
+Lab 7 用三条路径训练 CIFAR-10：先写一个 PyTorch 单卡基线，再加入数据并行，最后把训练切换到前几次 Lab 搭出的 CUDA Tensor、Python 扩展和自动微分框架。Bonus 将同一套自定义框架扩展到 Tiny ImageNet。
 
-1. 用 PyTorch 建立单卡分类基线。
-2. 在 PyTorch 中实现数据并行或模型并行。
-3. 不使用现成深度学习框架完成模型计算，以 CUDA、pybind11 和 Python 组成自己的训练框架。
-
-Bonus 原题要求把自定义框架扩展到 ImageNet。受显存、训练时间和调试成本限制，实际跑完的是 Tiny ImageNet。两者规模差异很大，因此这里明确记录为 Tiny ImageNet，不把结果写成完整 ImageNet 实验。
-
-## 文件结构
+四个目录都能独立运行。
 
 ```text
 Final_Project/
-├── Task1/
-│   ├── main.py
-│   ├── models.py
-│   └── utils.py
-├── Task2/
-│   ├── main.py
-│   ├── models.py
-│   └── utils.py
-├── Task3/
-│   ├── src/
-│   ├── mytorch/
-│   ├── main.py
-│   └── models.py
-└── Bonus/
-    ├── src/
-    ├── mytorch/
-    ├── main.py
-    └── prepare_tiny_imagenet.py
+├── Task1/    PyTorch 单卡基线
+├── Task2/    PyTorch 数据并行
+├── Task3/    自定义训练框架
+└── Bonus/    Tiny ImageNet 扩展
 ```
 
-前三部分各自可以独立构建和运行。Task 3 与 Bonus 都有自己的 CUDA 扩展，不能把一个目录生成的 `mytensor` 动态库混到另一个目录中。
+三条路径逐层替换实现，同时保持相同的训练目标。Task 1 提供可信参照；Task 2 只改变设备调度；Task 3 再把模型、算子、梯度与优化器换成自己的代码。某一层出错时，可以退回上一条路径判断问题属于数据、模型还是框架。
 
-## Task 1：PyTorch 基线
+## PyTorch 基线
 
-### 数据划分
+Task 1 分为 `utils.py`、`models.py` 和 `main.py`。
 
-CIFAR-10 的 50000 张训练图像按固定随机种子划分为 45000 张训练样本和 5000 张验证样本。官方 10000 张测试图像只在训练完成、恢复最佳验证模型后评估一次。
+| 模块 | 职责 |
+| --- | --- |
+| `utils.py` | 随机种子、设备选择、评估和曲线保存 |
+| `models.py` | LeNet、MiniVGG 与模型工厂 |
+| `main.py` | 数据划分、优化器、调度器、训练和检查点 |
 
-训练集使用随机水平翻转和四像素填充后的随机裁剪。验证集与测试集只做张量转换和归一化。另建一份无增强的训练集视图，用于统计可比较的训练准确率。
+### 数据路径
 
-测试集不参与挑选模型，带随机裁剪的训练图像也不用于统计训练准确率。
+CIFAR-10 的训练部分按固定随机种子划分为训练集和验证集。代码为同一批训练索引建立两个 Dataset view：带增强的一份用于参数更新，不带增强的一份用于统计训练准确率。
 
-### 模型
+```text
+train indices ─┬─ 随机裁剪、翻转 -> trainloader_aug -> 训练
+               └─ 固定预处理     -> trainloader_clean -> 评估
+val indices ------ 固定预处理     -> valloader
+test set --------- 固定预处理     -> testloader
+```
 
-LeNet 沿用 Lab 1 的两层卷积结构，作为低成本基线。MiniVGG 使用三组双卷积块，通道数依次为 64、128、256，每个卷积后接 Batch Normalization 与 ReLU，每组末尾再池化。最后通过自适应平均池化得到 $256\times1\times1$ 特征，经 dropout 后映射到 10 个类别。
+若直接在带随机增强的 loader 上报告训练准确率，每个 epoch 看到的图像都不同，数值会额外包含增强噪声。测试集只在恢复最佳验证检查点后使用一次，不参与挑选模型。
 
-两种模型都使用交叉熵、SGD、动量 0.9 和权重衰减 $5\times10^{-4}$ ，初始学习率为 0.01，并在完整训练周期上做余弦退火。MiniVGG 额外启用自动混合精度。
+数据索引和 transform 应分开保存。只固定 `random_split` 的种子还不够；若训练、验证各自重新划分一次，同一个样本可能落入不同集合。
 
-| 模型 | Epoch | Batch size | 混合精度 |
-| --- | ---: | ---: | --- |
-| LeNet | 30 | 64 | 否 |
-| MiniVGG | 50 | 128 | 是 |
+### 模型接口
 
-每轮验证准确率提高时才覆盖 `best_model.pth`。最终测试加载最佳检查点，而不是直接使用最后一个 epoch 的参数。
+`get_model(name)` 隔离模型创建，训练循环只依赖 `nn.Module` 接口。LeNet 用来快速检查整条流水线，MiniVGG 用三组卷积块承担正式训练。两者都返回 logits，损失函数、优化器和评估函数可以完全复用。
 
-### 结果
+模型工厂还让命令行参数不必散落在训练代码中。
 
-| 模型 | 最佳验证准确率 | 测试准确率 | 训练时间 |
-| --- | ---: | ---: | ---: |
-| LeNet | 70.32% | 70.26% | 1362.27 s |
-| MiniVGG | 90.70% | 89.97% | 9769.58 s |
+```python
+model = get_model(args.model, num_classes=10).to(device)
+criterion = nn.CrossEntropyLoss()
+```
 
-LeNet 与 MiniVGG 的训练损失都持续下降，没有出现数值发散。
+MiniVGG 启用混合精度时，autocast 只包住前向与损失；梯度缩放由 `GradScaler` 管理。
+
+```python
+with torch.autocast(
+    device_type=device.type,
+    enabled=args.amp and device.type == "cuda",
+):
+    outputs = model(inputs)
+    loss = criterion(outputs, labels)
+
+scaler.scale(loss).backward()
+scaler.step(optimizer)
+scaler.update()
+```
+
+若直接对缩放后的梯度调用普通 `optimizer.step()`，参数会使用错误尺度。AMP 的前向上下文和更新流程必须成套出现。
+
+### 训练调度
+
+`main.py` 每轮按固定顺序执行训练、学习率调度、训练集评估、验证集评估和检查点更新。只有验证准确率提高时才覆盖 `best_model.pth`，最终测试也加载这份参数，不使用最后一个 epoch 的模型。
+
+检查点只保存 `state_dict`，模型结构仍由 `models.py` 创建。恢复时模型名和类别数必须与保存时一致。若以后需要真正续训，还应一并保存 optimizer、scheduler、scaler 和当前 epoch；仅保存参数只能用于推理或重新开始优化。
+
+两种模型的 loss 曲线在这里充当流水线体检。持续下降说明数据、损失和更新至少能接通，不需要把每次运行的硬件耗时写进实现笔记。
 
 ![](assets/labs/final-project/task1-lenet-loss.png)
 
 ![](assets/labs/final-project/task1-minivgg-loss.png)
 
-MiniVGG 比 LeNet 高出 19.71 个百分点，训练时间约为后者的 7.2 倍。验证与测试准确率相差不到一个百分点，说明验证集挑出的检查点在独立测试集上保持了接近的表现。
+## 数据并行
 
-```bash
-python main.py --model lenet --epochs 30 --batch-size 64 \
-  --optimizer sgd --lr 0.01 --output-dir results_lenet
-
-python main.py --model minivgg --epochs 50 --batch-size 128 \
-  --optimizer sgd --lr 0.01 --amp \
-  --output-dir results_minivgg
-```
-
-## Task 2：数据并行
-
-### 训练过程
-
-这一部分选择同步数据并行。每个训练 step 分为四步。
-
-1. 沿 batch 维把输入切分到多张 GPU。
-2. 每张 GPU 保存一份模型副本，独立完成前向与反向。
-3. 梯度归约到主设备。
-4. 主设备上的优化器更新参数，下一步再同步各副本。
-
-代码先把模型移动到主设备，检测到多张 GPU 时才包装 `nn.DataParallel`。
+Task 2 复用 Task 1 的数据、模型、损失和训练循环，只在模型创建后增加一层设备包装。
 
 ```python
 model = model.to(device)
@@ -116,143 +105,160 @@ if torch.cuda.device_count() > 1:
     model = nn.DataParallel(model)
 ```
 
-`DataParallel` 会在参数名外增加 `module.` 前缀。保存与恢复检查点时要取得内部模型对象。
+每个 step 中，`DataParallel` 沿 batch 维切分输入，在多张 GPU 上复制模型并独立前向、反向，随后把梯度归约到主设备，由同一个 optimizer 更新主副本。训练循环仍看到一个普通 `nn.Module`，这正是模块化带来的好处：并行策略改变了，损失和评估代码不必跟着改。
+
+### 包装后的状态
+
+`DataParallel` 会在参数名前增加 `module.`。为了让单卡与多卡检查点互通，保存和加载时都要访问内部模型。
 
 ```python
-state_dict = (
-    model.module.state_dict()
+base_model = (
+    model.module
     if isinstance(model, nn.DataParallel)
-    else model.state_dict()
+    else model
 )
+torch.save(base_model.state_dict(), checkpoint_path)
 ```
 
-数据划分、增强、损失、SGD 参数与学习率调度都沿用 Task 1。这样才能把训练差异尽量限制在设备并行上。
+这个兼容处理应收进单独的 checkpoint helper，保存和加载共用同一处判断。以后替换成 DistributedDataParallel 时，只需要改 helper。
 
-### 结果边界
+### 并行实验的坑
 
-| 模型 | 总 batch | GPU 数 | Epoch | 验证准确率 | 测试准确率 | 时间 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| LeNet | 64 | 1 | 30 | 70.32% | 70.26% | 1362.27 s |
-| LeNet | 64 | 4 | 30 | 71.08% | 70.90% | 402.50 s |
-| MiniVGG | 128 | 1 | 50 | 90.17% | 89.95% | 8528.34 s |
-| MiniVGG | 128 | 4 | 50 | 91.66% | 90.48% | 922.58 s |
-| MiniVGG | 512 | 4 | 50 | 89.50% | 87.92% | 314.89 s |
+- 对比单卡与多卡时，总 batch size 应保持一致。若每卡 batch 不变，总 batch 会随 GPU 数增长，优化轨迹也随之变化。
+- 大 batch 减少每个 epoch 的更新次数，学习率和 warmup 往往需要一起调整，不能把速度变化全归因于并行。
+- CUDA kernel 是异步的，计时前后要同步设备。数据缓存、存储速度和不同机器也会污染耗时对比。
+- `DataParallel` 每轮都在主进程散射与归约，适合完成接口实验；正式多卡训练通常使用一进程一卡的 DistributedDataParallel。
 
-单卡与四卡记录来自不同机器，旧日志没有完整留下 GPU 型号、CPU、存储和软件版本。因此，这些时间只能表示当次运行耗时，不能直接计算严格的四卡加速比。
+这部分的验收重点是单卡、多卡能读取同一检查点，并在相同总 batch 下保持接近的验证行为。
 
-总 batch 保持不变时，单卡与四卡的准确率接近，说明模型复制与梯度归约没有改变训练目标。将 MiniVGG 的 batch 从 128 提到 512 后，时间继续下降，测试准确率却降到 87.92%。每个 epoch 的更新次数变少，而学习率与调度没有同步调整，优化轨迹已经不同。大 batch 的公平比较还需要学习率缩放与 warmup。
+## 自定义框架
 
-```bash
-python main.py --model minivgg --epochs 50 \
-  --batch-size 128 --amp \
-  --output-dir multi_results_minivgg
+Task 3 把前几次 Lab 的代码组合成五层。
+
+```text
+main.py                 训练调度与数据批次
+models.py               Module、LeNet、MiniVGG
+mytorch/                Tensor、Op、自动微分、优化器
+src/tensornn.cu         pybind11 边界
+src/tensor*.{h,cu}      CUDA 存储与算子
 ```
 
-复现计时时，应在同一台机器、相同数据缓存状态下分别限制一张和多张 GPU，并保持总 batch 不变。
+一次 batch 会沿这条路径往返。
 
-## Task 3：自定义框架
+```text
+torch DataLoader
+ -> NumPy
+ -> mytensor.Tensor
+ -> mytorch.Tensor
+ -> model forward
+ -> cross_entropy
+ -> compute_gradient_of_variables
+ -> optimizer.step
+ -> NumPy 统计
+```
 
-### 三层结构
+每一层只认识紧邻的接口。`models.py` 调用 `conv2d()`、`relu()`、`linear()`，不接触 CUDA 指针；自动微分只调用各 Op 的 `gradient()`；Python 绑定负责在 NumPy 与后端 Tensor 间复制；CUDA 层只接收形状和裸数据。
 
-自定义框架分成 CUDA 后端、pybind11 边界和 Python 前端。
+### Module 与参数
 
-| 层次 | 作用 |
-| --- | --- |
-| CUDA 后端 | Tensor 内存、逐元素运算、矩阵乘、卷积、池化与交叉熵 |
-| pybind11 | 暴露 `mytensor`，完成 NumPy 与设备 Tensor 的复制 |
-| Python 前端 | 计算图、自动微分、Module、SGD、Adam 与训练循环 |
-
-输入由 torchvision 读取，再通过 NumPy 送入自定义 Tensor。PyTorch 只在测试中生成参考结果，不参与模型前向、反向或参数更新。
-
-后端在 Lab 3、Lab 4 的基础上补充逐元素加减乘除、平方根、reshape、broadcast、summation 和 flatten。矩阵乘使用 cuBLAS，卷积仍由 `im2col`、矩阵乘和 `col2im` 组成。
-
-Python 端的 Tensor 把 CUDA 对象保存在 `cached_data` 中。运算符建立计算图，反向时做拓扑排序与梯度累计；优化器再直接更新参数的缓存数据。
+自定义 `Module` 提供 `forward()`、`parameters()`、`train()` 和 `eval()`。LeNet、MiniVGG 手动创建可求导参数，并在 `parameters()` 中按固定顺序返回。
 
 ```python
+class Module:
+    def parameters(self):
+        return []
+
+    def __call__(self, *args, **kwargs):
+        return self.forward(*args, **kwargs)
+```
+
+手动列参数能让小框架先跑起来，也很容易漏掉新加的一层。更完整的做法是让 Module 自动注册成员中的 Tensor 和子 Module，再递归收集参数。优化器、设备迁移和检查点都可以共用这份注册表。
+
+`to_device()` 只迁移 `model.parameters()`。输入在每个 batch 创建时直接进入目标设备，二者职责分开。若以后加入 Batch Normalization 的 running statistics 等非参数状态，还需要单独的 buffer 注册机制。
+
+### 前向与反向
+
+模型前向只组合高层算子，输出 Tensor 会记录计算图。损失节点创建后，训练循环显式构造标量梯度种子，再调用图引擎。
+
+```python
+logits = model(x)
+loss = cross_entropy(logits, y)
+
 optimizer.zero_grad()
-logits = model(images)
-loss = cross_entropy(logits, labels)
-loss.backward()
+compute_gradient_of_variables(loss, Tensor(grad_seed))
 optimizer.step()
 ```
 
-### 模型差异
-
-自定义 LeNet 与 PyTorch 基线一致。MiniVGG 仍有三组双卷积块，但框架没有实现 Batch Normalization，自适应平均池化也改为一次 $4\times4$ 最大池化，将 $256\times4\times4$ 压到 $256\times1\times1$ ，再接线性分类器。
-
-因此，Task 1 与 Task 3 中名为 MiniVGG 的网络并不完全相同，准确率差异不能全部归因于框架执行效率。
-
-### 测试
-
-训练前先构建扩展，再运行前向、数值梯度、拓扑排序和整图反向测试。本次重新构建后共 22 项测试，全部通过。
+这段流程把 Lab 3 的算子、Lab 4 的绑定、Lab 5 的计算图和 Lab 6 的优化器串在一起。任一算子的 `gradient()` 返回形状不对，错误都会在 optimizer 读取参数梯度前传开；因此框架测试必须先于完整训练。
 
 ![](assets/labs/final-project/framework-tests.png)
 
-单元测试覆盖小尺寸算子和计算图。CIFAR-10 的长时间训练又进一步检查了卷积、自动微分与参数更新能否持续协同工作。
+CPU 与 CUDA 路径目前对标签格式的约定不同：CPU 使用 one-hot，CUDA 后端接收类别下标。训练入口为两条路径分别构造 `y`。这个分支能工作，却把后端细节泄漏到了调度层。更稳妥的接口是让 `cross_entropy` 统一接收类别下标，再由各后端自己转换。
 
-### CIFAR-10 结果
+### 训练过程
 
-| 模型 | Batch | 优化器 | Epoch | 验证准确率 | 测试准确率 | 时间 |
-| --- | ---: | --- | ---: | ---: | ---: | ---: |
-| LeNet | 64 | SGD | 30 | 66.44% | 67.11% | 2172.7 s |
-| LeNet | 128 | SGD | 30 | 67.86% | 68.87% | 1312.3 s |
-| MiniVGG | 128 | SGD | 50 | 85.80% | 86.12% | 2383.0 s |
-| MiniVGG | 256 | SGD | 50 | 84.72% | 84.45% | 1930.1 s |
-| MiniVGG | 128 | SGD | 100 | 87.10% | 86.43% | 5063.1 s |
-| MiniVGG | 128 | Adam | 50 | 63.38% | 63.05% | 1984.6 s |
+训练循环负责 batch 转换、前向、反向、更新和统计。每个 batch 末尾显式删除图中对象并触发垃圾回收，避免 Python 引用让整张图长期留在内存中。
+
+```python
+del x, y, logits, loss, grad_seed
+gc.collect()
+```
+
+这是一种保守处理。若 Value、Op 和输入节点形成引用环，频繁 `gc.collect()` 会掩盖生命周期设计问题，也带来明显开销。应通过内存曲线确认是否真的有泄漏，再决定是断开图引用、实现 `detach()`，还是保留周期性回收。
+
+当前训练会记录 JSON 和曲线，但没有像 Task 1 那样保存最佳参数。若要把自定义框架用于长时间训练，参数序列化和恢复是比继续调准确率更优先的模块。
 
 ![](assets/labs/final-project/custom-minivgg-acc.png)
 
-LeNet 将 batch 从 64 增到 128 后，训练时间减少约 40%，测试准确率提高 1.76 个百分点。MiniVGG 从 50 个 epoch 延长到 100 个 epoch 后，验证准确率继续上升，测试准确率只增加 0.31 个百分点。
+### 框架里的坑
 
-Adam 的结果明显低于 SGD，只能说明当前学习率与这套框架中的模型不匹配。它不能概括两种优化器的一般优劣。
+- Python Tensor、`mytorch.Tensor` 和 C++ Tensor 是三个对象层次，调试时先确认手里的 `.cached_data` 属于哪一层。
+- 设备迁移不能只改标签，必须复制底层存储；参数列表也不能漏掉任何可训练 Tensor。
+- 每次 `.numpy()` 都会同步并复制。训练中只在统计确有需要时回传标量或预测结果。
+- `train()`、`eval()` 目前只是状态接口。加入 Dropout、Batch Normalization 后，具体层必须真正读取该状态。
+- MiniVGG 的自定义版本没有完整复刻 PyTorch 版的所有层，因而只能比较训练链路，不能把差异全部解释成后端性能。
+- 计算图与 optimizer state 都跨越模块边界，检查点若只保存参数，无法恢复一次中断的训练。
 
-自定义框架的主要性能开销来自频繁的 Python/CUDA 边界调用、逐算子同步、结果回传和缺少算子融合。模型侧缺少 Batch Normalization，也限制了 MiniVGG 的训练表现。
+## Tiny ImageNet
 
-```powershell
-cmake -S src -B build
-cmake --build build --config Release
+Bonus 沿用 Task 3 的五层结构，只扩展数据和模型边界。实际完成的是 Tiny ImageNet，而非完整 ImageNet。
 
-$env:PYTHONPATH = "$(Resolve-Path build/Release);$PWD"
-python check_install.py
-python -m pytest -q mytorch
+`prepare_tiny_imagenet.py` 先把验证集按类别重排成 `ImageFolder` 可读取的目录；`utils.py` 提供 Tiny ImageNet loader；`models.py` 增加 200 类输出和适配 64 像素输入的 `MiniVGG64`；`main.py` 根据数据集选择类别数和预处理。
 
-python main.py --cuda --model lenet --optimizer sgd \
-  --epochs 30 --batch-size 128 \
-  --output-dir result_lenet_SGD_2
+```text
+原始验证标注
+ -> 按类别整理目录
+ -> ImageFolder
+ -> 训练/验证 loader
+ -> MiniVGG64(num_classes=200)
 ```
 
-## Bonus：Tiny ImageNet
+这里最需要守住的是输入契约。把 64 像素图像裁到 32 像素可以复用 CIFAR-10 模型，却损失大量空间信息；保留 64 像素又会改变展平后的特征尺寸。模型不能只把输出类别从 10 改成 200，还要重新核对每次池化后的空间大小和分类器输入维度。
 
-Tiny ImageNet 包含 200 个类别，每类 500 张训练图像，分辨率为 $64\times64$ 。它比 CIFAR-10 更难，却仍远小于完整 ImageNet。
-
-官方测试集没有公开标签，代码把带标签的验证集同时交给最终评估接口。两者实际上是同一批数据，因此只报告一次验证准确率，不再列一个假的独立测试准确率。
-
-训练增强包括八像素填充后的随机裁剪、随机水平翻转、ColorJitter，以及 Tiny ImageNet 的通道均值与标准差归一化。验证集只做张量转换与归一化。
-
-基础 MiniVGG 把输入缩放为 $32\times32$ 。MiniVGG64 保留原生分辨率，三次池化后将空间尺寸从 64 降到 8，再加一次池化得到 $256\times4\times4$ ，展平后映射到 200 个类别。
-
-训练使用 batch size 256、SGD 和动量 0.9，共 50 个 epoch，在第 20、40 个 epoch 将学习率乘以 0.1。
-
-| 实验 | 输入 | 初始学习率 | 权重衰减 | 验证准确率 |
-| --- | ---: | ---: | ---: | ---: |
-| Original | $32\times32$ | 0.01 | $5\times10^{-4}$ | 32.15% |
-| MiniVGG64 v1 | $64\times64$ | 0.01 | $5\times10^{-4}$ | 44.93% |
-| Final 1 | $64\times64$ | 0.01 | $10^{-3}$ | 45.24% |
-| Final 2 | $64\times64$ | 0.02 | $10^{-3}$ | 48.89% |
+验证集有标签，可以用于调参与报告；Tiny ImageNet 官方 test 目录没有直接提供可用标签，不能把验证集复制一份后同时称作验证和独立测试。数据模块应明确返回哪些 split，训练入口也不应假装存在未加载的测试标签。
 
 ![](assets/labs/final-project/tiny-imagenet-acc.png)
 
-保留原生分辨率后，MiniVGG64 v1 比 $32\times32$ 基线提高 12.78 个百分点。加入更强的数据增强和学习率衰减后，Final 2 达到 48.89%。
+Tiny ImageNet 的曲线只用于确认扩展后的数据、模型和后端可以共同训练。它暴露出的显存、数据加载和收敛问题，比一个孤立的最终数字更值得保留。
 
-```bash
-python prepare_tiny_imagenet.py
+## 复验顺序
 
-python main.py --cuda --dataset tinyimagenet \
-  --model minivgg64 --optimizer sgd \
-  --epochs 50 --batch-size 256 \
-  --lr 0.02 --weight-decay 0.001 \
-  --output-dir result_3
+不要一上来运行完整训练。按模块逐层验收更容易定位问题。
+
+```text
+1. Task 1 用少量 batch 跑通数据、模型和检查点
+2. Task 2 在相同总 batch 下验证单卡、多卡状态兼容
+3. Task 3 先运行算子与自动微分测试
+4. Task 3 用 --debug-steps 跑一个短 epoch
+5. 再运行完整 CIFAR-10 训练
+6. 最后整理 Tiny ImageNet 并检查一个 batch 的形状
 ```
 
-这组结果说明自定义框架能够处理 200 类和更大的输入，但没有完成原题中的完整 ImageNet。继续扩展前，应先减少 Python 调度与显存开销，增加 Batch Normalization 与检查点保存，并为最终评估准备独立数据集。
+自定义框架的短跑命令可以先限制 batch 数。
+
+```bash
+python main.py --model lenet --cuda --debug-steps 2 \
+  --epochs 1 --output-dir debug-run
+```
+
+这套顺序把错误限制在刚接入的模块里。只有短路径稳定后再增加模型规模和数据量，调试时间才不会被完整训练吞掉。
