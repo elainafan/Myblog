@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T06:49:13.366101+00:00",
+  "generated_at": "2026-07-30T09:48:22.291938+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -286,6 +286,39 @@
   "warnings": [],
   "posts": [
     {
+      "friend": "Yjy's blog",
+      "site": "https://yjyxfcy.github.io/",
+      "feed": "https://yjyxfcy.github.io/",
+      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
+      "title": "模型加速",
+      "url": "https://yjyxfcy.github.io/2026/07/30/gen7/",
+      "summary": "",
+      "published": "2026-07-30T00:00:00+00:00",
+      "published_text": "2026-07-30"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "SimpleMem",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/simplemem/",
+      "summary": "SimpleMem 作者：Equinox（shixy2003@gmail.com） 本文2026-07-29首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-29",
+      "published": "2026-07-29T06:55:08+00:00",
+      "published_text": "Wed, 29 Jul 2026 14:55:08 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "[CH07]神经网络和Q学习",
+      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch07%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8Cq%E5%AD%A6%E4%B9%A0/",
+      "summary": "[CH07]神经网络和Q学习 作者：Equinox（shixy2003@gmail.com） 本文2026-07-27首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-27",
+      "published": "2026-07-27T10:00:32+00:00",
+      "published_text": "Mon, 27 Jul 2026 18:00:32 +0800"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -295,6 +328,17 @@
       "summary": "各位小夥伴，你們好呀～由於站點近期遭遇大量自動化垃圾推廣SPAN，且無法透過IP、UA、特定URL等方式來鑑別。所以，本站對未通過審覈的使用者不再允許附加URL於留言中。這對我的影響是什麼？您不...",
       "published": "2026-07-25T22:37:00+00:00",
       "published_text": "Sun, 26 Jul 2026 06:37:00 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "[CH06]TD方法",
+      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch06td%E6%96%B9%E6%B3%95/",
+      "summary": "[CH06]TD方法 作者：Equinox（shixy2003@gmail.com） 本文2026-07-24首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-24",
+      "published": "2026-07-24T08:18:07+00:00",
+      "published_text": "Fri, 24 Jul 2026 16:18:07 +0800"
     },
     {
       "friend": "Equinox",
@@ -394,39 +438,6 @@
       "summary": "[CH02]马尔可夫决策过程 作者：Equinox（shixy2003@gmail.com） 本文2026-07-17首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-17",
       "published": "2026-07-17T11:19:52+00:00",
       "published_text": "Fri, 17 Jul 2026 19:19:52 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "[CH01]老虎机问题",
-      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch01%E8%80%81%E8%99%8E%E6%9C%BA%E9%97%AE%E9%A2%98/",
-      "summary": "[CH01]老虎机问题 作者：Equinox（shixy2003@gmail.com） 本文2026-07-17首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-17",
-      "published": "2026-07-17T07:24:08+00:00",
-      "published_text": "Fri, 17 Jul 2026 15:24:08 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文精读 | RGMem",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/rgmem/",
-      "summary": "论文精读 | RGMem 作者：Equinox（shixy2003@gmail.com） 本文2026-07-14首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-14",
-      "published": "2026-07-14T02:47:55+00:00",
-      "published_text": "Tue, 14 Jul 2026 10:47:55 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文精读 | Memory OS of AI Agent",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/memory-os-of-ai-agent/",
-      "summary": "论文精读 | Memory OS of AI Agent 作者：Equinox（shixy2003@gmail.com） 本文2026-07-13首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-13",
-      "published": "2026-07-13T04:52:59+00:00",
-      "published_text": "Mon, 13 Jul 2026 12:52:59 +0800"
     },
     {
       "friend": "Aerisun",
@@ -878,17 +889,6 @@
       "summary": "",
       "published": "2026-04-16T00:00:00+00:00",
       "published_text": "2026-04-16"
-    },
-    {
-      "friend": "Yjy's blog",
-      "site": "https://yjyxfcy.github.io/",
-      "feed": "https://yjyxfcy.github.io/",
-      "avatar": "https://yjyxfcy.github.io/img/avatar.jpg",
-      "title": "神经序列建模及其扩展",
-      "url": "https://yjyxfcy.github.io/2026/04/08/fnlp8/",
-      "summary": "",
-      "published": "2026-04-08T00:00:00+00:00",
-      "published_text": "2026-04-08"
     },
     {
       "friend": "Collapse179",
