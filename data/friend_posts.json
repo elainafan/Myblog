@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T18:30:54.980801+00:00",
+  "generated_at": "2026-08-04T21:25:00.016678+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -77,15 +77,15 @@
     {
       "name": "Hinai",
       "site": "https://blog.woo.moe",
-      "feed": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "description": "昙花一现",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 13
     },
     {
       "name": "Elty-Nov",
@@ -283,12 +283,7 @@
       "post_count": 10
     }
   ],
-  "warnings": [
-    {
-      "friend": "Hinai",
-      "message": "feed not found and no dated posts found in HTML"
-    }
-  ],
+  "warnings": [],
   "posts": [
     {
       "friend": "Equinox",
@@ -344,6 +339,17 @@
       "summary": "[CH07]神经网络和Q学习 作者：Equinox（shixy2003@gmail.com） 本文2026-07-27首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-27",
       "published": "2026-07-27T10:00:32+00:00",
       "published_text": "Mon, 27 Jul 2026 18:00:32 +0800"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "關於站點不允許留言附帶鏈接說明",
+      "url": "https://blog.woo.moe/archives/477/",
+      "summary": "各位小夥伴，你們好呀～由於站點近期遭遇大量自動化垃圾推廣SPAN，且無法透過IP、UA、特定URL等方式來鑑別。所以，本站對未通過審覈的使用者不再允許附加URL於留言中。這對我的影響是什麼？您不...",
+      "published": "2026-07-25T22:37:00+00:00",
+      "published_text": "Sun, 26 Jul 2026 06:37:00 +0800"
     },
     {
       "friend": "Equinox",
@@ -674,6 +680,17 @@
       "summary": "HIGH IR Return Insertion 正如字面意思，这个 pass 很简单，就是给所有没有写上 return 指令的函数补上 return 指令。也不需要考虑很多，看见缺了就填，反正后面会进行的 pass 会消除这个 pass 的副作用。 简单常量传播 在 sysy （c 语言的一个子集） 中，store 语句只会在这几种情况下出现： int...",
       "published": "2026-05-24T03:56:38+00:00",
       "published_text": "Sun, 24 May 2026 11:56:38 +0800"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "⌈你連死都不怕，還怕活著嗎？⌋ [推薦]",
+      "url": "https://blog.woo.moe/archives/475/",
+      "summary": "⌈你連死都不怕，還怕活著嗎？⌋這句話聽起來很有力，像當頭一棒喝，似乎是想把人從深淵裏拉出來。它的邏輯也很直觀—— 如果連「死亡」這件事都不害怕，那麼「活著」這件事，理應更容易才對。但人不是這麼運...",
+      "published": "2026-05-23T09:00:00+00:00",
+      "published_text": "Sat, 23 May 2026 17:00:00 +0800"
     },
     {
       "friend": "~zzz",
@@ -1149,6 +1166,17 @@
       "published_text": "Wed, 24 Dec 2025 00:00:00 +0000"
     },
     {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "現代、可自定、開源的自動更新方案 —— NekoLauncher",
+      "url": "https://blog.woo.moe/archives/472/",
+      "summary": "什麼是 NekoLauncher（NekoLc）Neko Launcher（簡稱 NekoLc）是一個現代化、跨平台、多語言的啟動器，內建自動更新與 UI 系統。 它的主要目標是：讓你的遊戲或...",
+      "published": "2025-12-19T08:42:00+00:00",
+      "published_text": "Fri, 19 Dec 2025 16:42:00 +0800"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -1270,6 +1298,17 @@
       "published_text": "Fri, 28 Nov 2025 08:21:14 +0800"
     },
     {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "來讓你的程式庫支援C++20 Module吧！ 如何快速支援C++ Module？",
+      "url": "https://blog.woo.moe/archives/470/",
+      "summary": "引言C++ 20標準已經發佈6年時間了。其中最重要的一項標準就是 ⌈模塊⌋ 這個特性。什麼是模塊？ 怎麼用模塊？ 如何快速讓你的已有代碼支援模塊？—— 本文都將爲你講解。什麼是模塊 & 如何使用...",
+      "published": "2025-11-24T18:01:00+00:00",
+      "published_text": "Tue, 25 Nov 2025 02:01:00 +0800"
+    },
+    {
       "friend": "Lane's Blog",
       "site": "https://www.laneljc.cn/",
       "feed": "https://www.laneljc.cn/rss.xml",
@@ -1356,6 +1395,17 @@
       "summary": "什么年代了，还在传统学习？",
       "published": "2025-10-15T06:56:01+00:00",
       "published_text": "Wed, 15 Oct 2025 06:56:01 GMT"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "NekoNet - 一個易用的，現代libcurl C++封裝庫",
+      "url": "https://blog.woo.moe/archives/468/",
+      "summary": "你， 是否還在爲libcurl太難用，太底層，各種麻煩的函式與變數看不懂而困擾 ——那麼就Try Neko Network (NekoNet) ，一個易用，高效的C++ Libcurl封裝。準備...",
+      "published": "2025-10-14T06:27:00+00:00",
+      "published_text": "Tue, 14 Oct 2025 14:27:00 +0800"
     },
     {
       "friend": "Arthal's ink",
@@ -1501,6 +1551,17 @@
       "published_text": "Tue, 23 Sep 2025 01:31:05 +0800"
     },
     {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "一個易用、現代、輕量且高效的 C++20 日誌庫 —— nlog",
+      "url": "https://blog.woo.moe/archives/437/",
+      "summary": "Neko Loggingnlog 是我之前在開發Neko Launcher時所產生的需求而編寫的一個日誌程式庫。下面就請讓我來講解一下這個用了絕對大吃一驚日誌庫的優點吧：沒有宏你無需忍受C語言遺...",
+      "published": "2025-09-19T19:48:00+00:00",
+      "published_text": "Sat, 20 Sep 2025 03:48:00 +0800"
+    },
+    {
       "friend": "dodola",
       "site": "https://dodolalorc.cn/",
       "feed": "https://dodolalorc.cn/rss.xml",
@@ -1512,6 +1573,17 @@
       "published_text": "Wed, 17 Sep 2025 09:53:56 GMT"
     },
     {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "作業系統基礎 - 環境變數 & 環境變數的由來",
+      "url": "https://blog.woo.moe/archives/426/",
+      "summary": "什麼是環境變數你可能經常聽到 ⌈沒有環境⌋ ⌈需要配置環境⌋等。 到底什麼是環境？ 怎樣配置環境？這就涉及到一個作業系統的概念—— 環境變數。程式設計中的變數，大家應該都能夠理解，簡單來說可以理...",
+      "published": "2025-09-07T12:16:00+00:00",
+      "published_text": "Sun, 07 Sep 2025 20:16:00 +0800"
+    },
+    {
       "friend": "Lane's Blog",
       "site": "https://www.laneljc.cn/",
       "feed": "https://www.laneljc.cn/rss.xml",
@@ -1521,6 +1593,17 @@
       "summary": "回顾我从小学时期折腾建站平台到使用 Hugo 重构个人博客的十年建站经历与思考。",
       "published": "2025-09-05T08:55:41+00:00",
       "published_text": "Fri, 05 Sep 2025 16:55:41 +0800"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "隨筆 - 一個Nginx反代埋下的坑",
+      "url": "https://blog.woo.moe/archives/422/",
+      "summary": "簡單分享一下遇到的問題和解決心路。很久沒有好好整理伺服器了， 雖然平時有基礎的運維，簡單的檢查，審查日誌和維護等，但並不會花太多時間在上面。前些日子有空清理了一下目前未使用的DNS記錄。 按理來...",
+      "published": "2025-09-02T11:43:00+00:00",
+      "published_text": "Tue, 02 Sep 2025 19:43:00 +0800"
     },
     {
       "friend": "Zhaoyi Tian",
@@ -1565,6 +1648,17 @@
       "summary": "当然是写个脚本啦！",
       "published": "2025-08-17T01:02:27+00:00",
       "published_text": "Sun, 17 Aug 2025 01:02:27 GMT"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "Modern C++ - Lambda",
+      "url": "https://blog.woo.moe/archives/384/",
+      "summary": "Modern C++ - Lambdalambda是一個閉合體，其本身是一種特殊的物件。具有無名，變數捕獲等特徵的函式體。爲什麼需要Lambda？在以前，如果要傳遞函式作爲參數調用，你需要定義一...",
+      "published": "2025-08-16T19:40:00+00:00",
+      "published_text": "Sun, 17 Aug 2025 03:40:00 +0800"
     },
     {
       "friend": "Zhaoyi Tian",
@@ -1719,6 +1813,17 @@
       "summary": "简单做的一个毛利华社会心理学关键概念整理，一部分来自《社会心理学》（戴维 •迈尔斯 第十一版），部分概念标明了页数，另一部分来自ai。",
       "published": "2025-06-19T00:00:00+00:00",
       "published_text": "Thu, 19 Jun 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "隨筆-視窗接口設計-Qt",
+      "url": "https://blog.woo.moe/archives/366/",
+      "summary": "這幾天在重新編寫整理NekoLc的文檔，故分享一下我之前設計的接口和思路，希望大家也能從中受益。首先，在MainWindow中定義了兩個接口：updatePage()切換頁面並resize一次s...",
+      "published": "2025-05-29T22:06:00+00:00",
+      "published_text": "Fri, 30 May 2025 06:06:00 +0800"
     },
     {
       "friend": "Anfsity",
@@ -1952,6 +2057,17 @@
       "published_text": "Sat, 01 Mar 2025 09:51:58 +0800"
     },
     {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "網路安全 - 伺服器安全",
+      "url": "https://blog.woo.moe/archives/291/",
+      "summary": "網路安全與伺服器安全安全的核心就是功能盡可能簡單與避免對外暴露。避免暴露越複雜的功能，留下的隱患也就越多，這是必然的。而避免暴露也是同理，對外暴露越多，風險也就越高。舉例來說，一般情況下你不應該...",
+      "published": "2025-01-25T05:33:00+00:00",
+      "published_text": "Sat, 25 Jan 2025 13:33:00 +0800"
+    },
+    {
       "friend": "Arthal's ink",
       "site": "https://arthals.ink/",
       "feed": "https://arthals.ink/rss.xml",
@@ -1961,6 +2077,28 @@
       "summary": "我说为什么写 lab 这么慢，原来我们是乌龟。",
       "published": "2025-01-14T00:09:26+00:00",
       "published_text": "Tue, 14 Jan 2025 00:09:26 GMT"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "使用C++編寫Java Minecraft Launcher 啓動器 —— 定義 [推薦]",
+      "url": "https://blog.woo.moe/archives/24/",
+      "summary": "製作麥塊/我的世界啓動器Java Minecraft Edition是最常見的Mc版本，其遊戲在設計時將遊戲分爲了⌈遊戲本體⌋與⌈啓動器⌋兩個部分，這使我們可以透過自行編寫啓動器支援第三方內容。...",
+      "published": "2024-12-23T05:49:00+00:00",
+      "published_text": "Mon, 23 Dec 2024 13:49:00 +0800"
+    },
+    {
+      "friend": "Hinai",
+      "site": "https://blog.woo.moe",
+      "feed": "https://blog.woo.moe/feed/",
+      "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
+      "title": "Modern C++ - Move & 移動構造/C++移動語義 [推薦]",
+      "url": "https://blog.woo.moe/archives/16/",
+      "summary": "Modern C++ - Move移動語義是C++爲了提高資源管理效率而在C++11新增的特性。它透過右值引用(T&&)、move和移動構造等方法實現。⌈移動⌋並不真的轉移資源，...",
+      "published": "2024-11-23T09:10:00+00:00",
+      "published_text": "Sat, 23 Nov 2024 17:10:00 +0800"
     },
     {
       "friend": "Anfsity",
