@@ -41,11 +41,19 @@ BILIBILI_USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/125.0.0.0 Safari/537.36"
 )
-BILIBILI_FIRST_PAGE_ONLY = {
+BILIBILI_PAGE_SELECTION = {
     # 継母の連れ子が元カノだった OP / ED. These uploads are multi-part
     # videos, but only P1 is the actual track needed by the playlist.
-    "BV1MW4y1S7nL",
-    "BV13a411H7mU",
+    "BV1MW4y1S7nL": {1},
+    "BV13a411H7mU": {1},
+    # K-ON!: keep both Mio/Yui versions of ふわふわ時間, but not the
+    # intentionally broken-vocal P21 version.
+    "BV1chikYJEMZ": {1, 2, 3, 4, 12, 19, 20},
+}
+BILIBILI_EXCLUDED_VIDEOS = {
+    # NEW GAME! OP. Keep it out of the local playlist even if it remains in
+    # the Bilibili favorite list.
+    "BV1Ns411M7TG",
 }
 
 # Bilibili titles are video titles, not reliable song metadata. After each sync,
@@ -323,12 +331,24 @@ def sync_bilibili(args: argparse.Namespace) -> None:
         bvid = media.get("bvid")
         if not bvid:
             continue
+        if bvid in BILIBILI_EXCLUDED_VIDEOS:
+            continue
 
         title = media.get("title") or bvid
         artist = (media.get("upper") or {}).get("name") or "Bilibili"
         pages = fetch_bilibili_pages(bvid, cookie)
-        if bvid in BILIBILI_FIRST_PAGE_ONLY:
-            pages = [page for page in pages if int(page.get("page") or 1) == 1] or pages[:1]
+        selected_pages = BILIBILI_PAGE_SELECTION.get(bvid)
+        if selected_pages is not None:
+            available_pages = {int(page.get("page") or 1) for page in pages}
+            missing_pages = selected_pages - available_pages
+            if missing_pages:
+                missing = ", ".join(str(page) for page in sorted(missing_pages))
+                raise RuntimeError(f"Bilibili page selection missing for {bvid}: {missing}")
+            pages = [
+                page
+                for page in pages
+                if int(page.get("page") or 1) in selected_pages
+            ]
         page_count = len(pages)
 
         for page_info in pages:

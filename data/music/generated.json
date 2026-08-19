@@ -1,15 +1,5 @@
 [
   {
-    "name": "Step by Step Up",
-    "artist": "fourfolium",
-    "url": "/music/bilibili/BV1Ns411M7TG/music.m4a",
-    "cover": "/music/bilibili/BV1Ns411M7TG/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1Ns411M7TG",
-    "page": 1,
-    "sourceUrl": "https://www.bilibili.com/video/BV1Ns411M7TG"
-  },
-  {
     "name": "Magia",
     "artist": "Kalafina",
     "url": "/music/bilibili/BV1n5411D77G/music.m4a",
@@ -180,76 +170,6 @@
     "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=4"
   },
   {
-    "name": "翼をください",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p05/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p05/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 5,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=5"
-  },
-  {
-    "name": "咖喱之后是米饭",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p06/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p06/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 6,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=6"
-  },
-  {
-    "name": "わたしの恋はホッチキス",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p07/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p07/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 7,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=7"
-  },
-  {
-    "name": "毛笔 ～圆珠笔～",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p08/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p08/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 8,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=8"
-  },
-  {
-    "name": "GO! GO! MANIAC",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p09/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p09/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 9,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=9"
-  },
-  {
-    "name": "Listen!!",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p10/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p10/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 10,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=10"
-  },
-  {
-    "name": "Utauyo!! MIRACLE",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p11/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p11/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 11,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=11"
-  },
-  {
     "name": "No, Thank You!",
     "artist": "樱高轻音部",
     "url": "/music/bilibili/BV1chikYJEMZ/p12/music.m4a",
@@ -258,66 +178,6 @@
     "bvid": "BV1chikYJEMZ",
     "page": 12,
     "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=12"
-  },
-  {
-    "name": "纯纯的心",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p13/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p13/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 13,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=13"
-  },
-  {
-    "name": "米饭是菜",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p14/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p14/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 14,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=14"
-  },
-  {
-    "name": "U&I",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p15/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p15/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 15,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=15"
-  },
-  {
-    "name": "天使にふれたよ!",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p16/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p16/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 16,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=16"
-  },
-  {
-    "name": "全部都是第一！",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p17/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p17/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 17,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=17"
-  },
-  {
-    "name": "Unmei♪wa♪Endless!",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p18/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p18/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 18,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=18"
   },
   {
     "name": "五月雨20ラブ",
@@ -338,16 +198,6 @@
     "bvid": "BV1chikYJEMZ",
     "page": 20,
     "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=20"
-  },
-  {
-    "name": "ふわふわ時間（破音版）",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p21/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p21/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 21,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=21"
   },
   {
     "name": "LOVE 2000",
