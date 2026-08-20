@@ -103,7 +103,7 @@ comments: true
 title: Elainafan's blog
 description: 痛饮所有踌躇之后？
 website: https://www.elainafan.one/
-image: https://www.elainafan.one/avatars/elainafan.jpg
+image: https://www.elainafan.one/avatars/elaniafan.jpg
 ```
 如欲在本站添加友链，请你
 - 确认已在你的友链添加了本站。
