@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T00:08:46.866457+00:00",
+  "generated_at": "2026-08-28T14:40:43.865276+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -291,6 +291,28 @@
   ],
   "posts": [
     {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Dqn From Scratch",
+      "url": "https://blog.equinox.wiki/post/reinforcement-learning/dqn-from-scratch/dqn-from-scratch/",
+      "summary": "Dqn From Scratch 作者：Equinox（shixy2003@gmail.com） 本文2026-08-26首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-26",
+      "published": "2026-08-26T12:19:30+00:00",
+      "published_text": "Wed, 26 Aug 2026 20:19:30 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Coding Agent From Scratch",
+      "url": "https://blog.equinox.wiki/post/agent/coding-agent-from-scratch/",
+      "summary": "Coding Agent From Scratch 作者：Equinox（shixy2003@gmail.com） 本文2026-08-26首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-26",
+      "published": "2026-08-26T05:29:42+00:00",
+      "published_text": "Wed, 26 Aug 2026 13:29:42 +0800"
+    },
+    {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
       "feed": "https://yjyxfcy.github.io/",
@@ -317,9 +339,20 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文精读 |JITRL",
+      "title": "论文泛读 | ViT$^3$",
+      "url": "https://blog.equinox.wiki/post/paper-reading/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89---transformer/vitt3/",
+      "summary": "论文泛读 | ViT$^3$ 作者：Equinox（shixy2003@gmail.com） 本文2026-08-24首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-24",
+      "published": "2026-08-24T11:09:12+00:00",
+      "published_text": "Mon, 24 Aug 2026 19:09:12 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "论文精读 | JITRL",
       "url": "https://blog.equinox.wiki/post/paper-reading/rlself-evolving/jitrl/",
-      "summary": "论文精读 |JITRL 作者：Equinox（shixy2003@gmail.com） 本文2026-08-13首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-13",
+      "summary": "论文精读 | JITRL 作者：Equinox（shixy2003@gmail.com） 本文2026-08-13首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-13",
       "published": "2026-08-13T10:59:16+00:00",
       "published_text": "Thu, 13 Aug 2026 18:59:16 +0800"
     },
@@ -423,28 +456,6 @@
       "published_text": "2026-07-30"
     },
     {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文精读 | SimpleMem",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/simplemem/",
-      "summary": "论文精读 | SimpleMem 作者：Equinox（shixy2003@gmail.com） 本文2026-07-29首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-29",
-      "published": "2026-07-29T06:55:08+00:00",
-      "published_text": "Wed, 29 Jul 2026 14:55:08 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "[CH07]神经网络和Q学习",
-      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch07%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8Cq%E5%AD%A6%E4%B9%A0/",
-      "summary": "[CH07]神经网络和Q学习 作者：Equinox（shixy2003@gmail.com） 本文2026-07-27首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-27",
-      "published": "2026-07-27T10:00:32+00:00",
-      "published_text": "Mon, 27 Jul 2026 18:00:32 +0800"
-    },
-    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -454,17 +465,6 @@
       "summary": "各位小夥伴，你們好呀～由於站點近期遭遇大量自動化垃圾推廣SPAN，且無法透過IP、UA、特定URL等方式來鑑別。所以，本站對未通過審覈的使用者不再允許附加URL於留言中。這對我的影響是什麼？您不...",
       "published": "2026-07-25T22:37:00+00:00",
       "published_text": "Sun, 26 Jul 2026 06:37:00 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "[CH06]TD方法",
-      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch06td%E6%96%B9%E6%B3%95/",
-      "summary": "[CH06]TD方法 作者：Equinox（shixy2003@gmail.com） 本文2026-07-24首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-24",
-      "published": "2026-07-24T08:18:07+00:00",
-      "published_text": "Fri, 24 Jul 2026 16:18:07 +0800"
     },
     {
       "friend": "Yjy's blog",
