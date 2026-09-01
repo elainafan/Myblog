@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T00:10:18.873216+00:00",
+  "generated_at": "2026-09-01T08:04:03.381502+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -295,6 +295,28 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Policy-Gradient-Method-From-Scratch | Actor Critic",
+      "url": "https://blog.equinox.wiki/post/reinforcement-learning/policy-from-scratch/actor-critic/",
+      "summary": "Policy-Gradient-Method-From-Scratch | Actor Critic 作者：Equinox（shixy2003@gmail.com） 本文2026-08-31首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-31",
+      "published": "2026-08-31T02:34:10+00:00",
+      "published_text": "Mon, 31 Aug 2026 10:34:10 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Policy-Gradient-Method-From-Scratch | REINFORCE",
+      "url": "https://blog.equinox.wiki/post/reinforcement-learning/policy-from-scratch/reinforce/",
+      "summary": "Policy-Gradient-Method-From-Scratch | REINFORCE 作者：Equinox（shixy2003@gmail.com） 本文2026-08-28首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-28",
+      "published": "2026-08-28T13:54:55+00:00",
+      "published_text": "Fri, 28 Aug 2026 21:54:55 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "Dqn From Scratch",
       "url": "https://blog.equinox.wiki/post/reinforcement-learning/dqn-from-scratch/dqn-from-scratch/",
       "summary": "Dqn From Scratch 作者：Equinox（shixy2003@gmail.com） 本文2026-08-26首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-26",
@@ -421,28 +443,6 @@
       "summary": "[CH09]策略梯度法 作者：Equinox（shixy2003@gmail.com） 本文2026-08-04首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-04",
       "published": "2026-08-04T06:37:31+00:00",
       "published_text": "Tue, 04 Aug 2026 14:37:31 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "[CH08]DQN",
-      "url": "https://blog.equinox.wiki/post/reinforcement-learning/ch08dqn/",
-      "summary": "[CH08]DQN 作者：Equinox（shixy2003@gmail.com） 本文2026-07-31首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-31",
-      "published": "2026-07-31T05:03:13+00:00",
-      "published_text": "Fri, 31 Jul 2026 13:03:13 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文精读 | MemGen",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/memgen/",
-      "summary": "论文精读 | MemGen 作者：Equinox（shixy2003@gmail.com） 本文2026-07-30首发于 Welcome to Equinox's wiki！ ，最后修改于2026-07-30",
-      "published": "2026-07-30T08:47:35+00:00",
-      "published_text": "Thu, 30 Jul 2026 16:47:35 +0800"
     },
     {
       "friend": "Yjy's blog",
