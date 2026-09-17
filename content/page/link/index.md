@@ -39,7 +39,7 @@ links:
   - title: Aerisun
     description: 在喧嚣的缝隙里，做一个关于自由和好奇心的梦
     website: https://aerisun.top/
-    image: https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg
+    image: https://aerisun.top/media/assets/16e8deac-b725-42c5-9807-cb7bcad1742a.jpg
   - title: Lane's Blog
     description: 探索未知，解码未来
     website: https://www.laneljc.cn/
