@@ -54,7 +54,7 @@ friends:
     description: There is a reason
   - name: Aerisun
     site: https://aerisun.top/
-    feed: https://aerisun.top/feeds/posts.xml
+    feed: https://aerisun.top/feeds/articles.xml
     avatar: https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg
     description: 在喧嚣的缝隙里，做一个关于自由和好奇心的梦
   - name: Lane's Blog
@@ -121,3 +121,8 @@ friends:
     feed: https://equinox.wiki/index.xml
     avatar: https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png
     description: I like it and I'm good at it.
+  - name: MODUSENSUS
+    site: https://modusensus.space/
+    feed: https://modusensus.space/rss.xml
+    avatar: https://modusensus.github.io/images/profile-avatar.jpg
+    description: 城市、数据与创造力的交汇处，写博客也做小工具。

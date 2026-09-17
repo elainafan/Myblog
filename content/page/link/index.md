@@ -88,6 +88,10 @@ links:
     description: I like it and I'm good at it.
     website: https://equinox.wiki/
     image: https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png
+  - title: MODUSENSUS
+    description: 城市、数据与创造力的交汇处，写博客也做小工具。
+    website: https://modusensus.space/
+    image: https://modusensus.github.io/images/profile-avatar.jpg
 
 menu:
     main: 

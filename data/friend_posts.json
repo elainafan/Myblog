@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T13:53:05.912723+00:00",
+  "generated_at": "2026-09-17T14:59:54.410914+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -116,15 +116,15 @@
     {
       "name": "Aerisun",
       "site": "https://aerisun.top/",
-      "feed": "https://aerisun.top/",
+      "feed": "https://aerisun.top/feeds/articles.xml",
       "avatar": "https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg",
       "description": "在喧嚣的缝隙里，做一个关于自由和好奇心的梦",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 2
     },
     {
       "name": "Lane's Blog",
@@ -281,14 +281,22 @@
       "retries": null,
       "status": "ok",
       "post_count": 10
-    }
-  ],
-  "warnings": [
+    },
     {
-      "friend": "Aerisun",
-      "message": "feed not found and no dated posts found in HTML"
+      "name": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "description": "城市、数据与创造力的交汇处，写博客也做小工具。",
+      "circle": true,
+      "circle_reason": "",
+      "timeout": null,
+      "retries": null,
+      "status": "ok",
+      "post_count": 14
     }
   ],
+  "warnings": [],
   "posts": [
     {
       "friend": "Equinox",
@@ -311,6 +319,39 @@
       "summary": "论文速览 | Titans 作者：Equinox（shixy2003@gmail.com） 本文2026-09-16首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-16",
       "published": "2026-09-16T08:21:04+00:00",
       "published_text": "Wed, 16 Sep 2026 16:21:04 +0800"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "让注入的记忆会轮换",
+      "url": "https://modusensus.space/blog/mneme-inject-rotation-notes/",
+      "summary": "跨轮窗口的语义设计——「一轮」怎么数、别拿本轮转本轮，以及池子不扩轮换越不出箱子的补测教训",
+      "published": "2026-09-16T00:00:00+00:00",
+      "published_text": "Wed, 16 Sep 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "一个 1GB 模型文件的断点续传课",
+      "url": "https://modusensus.space/blog/mneme-model-fetch-resume-notes/",
+      "summary": "Range/If-Range/416 的完整语义、单写者锁与空闲看门狗——把 TypeError: terminated 治成可续传",
+      "published": "2026-09-16T00:00:00+00:00",
+      "published_text": "Wed, 16 Sep 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "SQLite 检索提速三招：把搬运挡在数学外面",
+      "url": "https://modusensus.space/blog/mneme-sqlite-perf-notes/",
+      "summary": "5k 行记忆库的周期性卡顿解剖——97% 的耗时不在算法，在数据搬运；231ms 到 51ms 的三步",
+      "published": "2026-09-16T00:00:00+00:00",
+      "published_text": "Wed, 16 Sep 2026 00:00:00 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -379,6 +420,17 @@
       "published_text": "Fri, 04 Sep 2026 16:45:00 +0800"
     },
     {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "把 @modusensus.space 刻成自己的门牌号",
+      "url": "https://modusensus.space/blog/brand-email-setup/",
+      "summary": "品牌邮箱从零到收发全通的完整档案——DNS 迁移、Cloudflare 收件、Resend 发信，以及邮件系统到底怎么运转",
+      "published": "2026-09-04T00:00:00+00:00",
+      "published_text": "Fri, 04 Sep 2026 00:00:00 GMT"
+    },
+    {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -388,6 +440,28 @@
       "summary": "论文速览 | Search R1 作者：Equinox（shixy2003@gmail.com） 本文2026-09-03首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-03",
       "published": "2026-09-03T06:54:27+00:00",
       "published_text": "Thu, 03 Sep 2026 14:54:27 +0800"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "长沙 6 座湿地公园，开车 30 分钟能覆盖多少人？",
+      "url": "https://modusensus.space/blog/changsha-wetland-accessibility/",
+      "summary": "用 OSM 路网算驾车等时圈，叠合 WorldPop 人口栅格，度量长沙湿地公园的真实服务范围",
+      "published": "2026-09-03T00:00:00+00:00",
+      "published_text": "Thu, 03 Sep 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "用 Python + QGIS 复现一次驾车可达性分析",
+      "url": "https://modusensus.space/blog/gis-isochrone-pipeline-notes/",
+      "summary": "从路网下载、等时圈计算到人口叠加的完整流水线，以及十五个踩过的坑",
+      "published": "2026-09-03T00:00:00+00:00",
+      "published_text": "Thu, 03 Sep 2026 00:00:00 GMT"
     },
     {
       "friend": "Equinox",
@@ -401,6 +475,17 @@
       "published_text": "Tue, 01 Sep 2026 14:53:32 +0800"
     },
     {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "傲慢的两种面孔",
+      "url": "https://modusensus.space/blog/threshold-notes-02/",
+      "summary": "从一场评论区骂战，看见今天的两种傲慢",
+      "published": "2026-09-01T00:00:00+00:00",
+      "published_text": "Tue, 01 Sep 2026 00:00:00 GMT"
+    },
+    {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -410,6 +495,17 @@
       "summary": "Policy-Gradient-Method-From-Scratch | Actor Critic 作者：Equinox（shixy2003@gmail.com） 本文2026-08-31首发于 Welcome to Equinox's wiki！ ，最后修改于2026-08-31",
       "published": "2026-08-31T02:34:10+00:00",
       "published_text": "Mon, 31 Aug 2026 10:34:10 +0800"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "Docker 知识档案：镜像 · 容器 · 网络 · Compose",
+      "url": "https://modusensus.space/blog/docker-learning/",
+      "summary": "从零开始的自学笔记，类比 + 命令双轨记录，归档自 2026-08-29 网课与实操",
+      "published": "2026-08-29T00:00:00+00:00",
+      "published_text": "Sat, 29 Aug 2026 00:00:00 GMT"
     },
     {
       "friend": "Equinox",
@@ -443,6 +539,39 @@
       "summary": "",
       "published": "2026-08-25T00:00:00+00:00",
       "published_text": "2026-08-25"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "Mneme：记忆不是储藏室，是会遗忘的缪斯",
+      "url": "https://modusensus.space/blog/mneme-technical-blog/",
+      "summary": "一个非科班工科生写给记忆的道歉信——为什么我给 AI 的跨会话记忆插件，不做一个更大的档案室，而要做一场梦。",
+      "published": "2026-08-23T00:00:00+00:00",
+      "published_text": "Sun, 23 Aug 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "如何用 Astro 搭建一个博客网站（入门版）",
+      "url": "https://modusensus.space/blog/astro-blog-tutorial/",
+      "summary": "零基础也能跟着操作的 Astro 博客搭建指南，从环境准备、模板选择到部署上线",
+      "published": "2026-08-14T00:00:00+00:00",
+      "published_text": "Fri, 14 Aug 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "个人 AI 工作台「nest」：对话驱动的个人工作台",
+      "url": "https://modusensus.space/blog/nest-v1/",
+      "summary": "像 Notion + ChatGPT 的结合体，但数据完全归你管，可以部署到自己的服务器上，手机也能访问",
+      "published": "2026-08-10T00:00:00+00:00",
+      "published_text": "Mon, 10 Aug 2026 00:00:00 GMT"
     },
     {
       "friend": "Yjy's blog",
@@ -489,6 +618,28 @@
       "published_text": "Sun, 26 Jul 2026 06:37:00 +0800"
     },
     {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "我的 Obsidian 知识库架构：从收件箱到归档的七层系统",
+      "url": "https://modusensus.space/blog/archive-01/",
+      "summary": "当笔记积累到搜索无能为力的时候，结构才真正开始说话",
+      "published": "2026-07-24T00:00:00+00:00",
+      "published_text": "Fri, 24 Jul 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "我做了个 AI 个人成长 Widget，把脑子里乱七八糟的想法交给 AI 整理",
+      "url": "https://modusensus.space/blog/lab-01/",
+      "summary": "一篇开发日志，记录从 4 层架构到 8 个 tab、从单一 Claude API 到多 provider 兼容、从想法到上线的过程",
+      "published": "2026-07-23T00:00:00+00:00",
+      "published_text": "Thu, 23 Jul 2026 00:00:00 GMT"
+    },
+    {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
       "feed": "https://yjyxfcy.github.io/",
@@ -509,6 +660,39 @@
       "summary": "",
       "published": "2026-07-18T00:00:00+00:00",
       "published_text": "2026-07-18"
+    },
+    {
+      "friend": "MODUSENSUS",
+      "site": "https://modusensus.space/",
+      "feed": "https://modusensus.space/rss.xml",
+      "avatar": "https://modusensus.github.io/images/profile-avatar.jpg",
+      "title": "我们正在失去好好说话的能力",
+      "url": "https://modusensus.space/blog/threshold-notes-01/",
+      "summary": "算法时代，人类如何重新夺回思考的主动权",
+      "published": "2026-07-16T00:00:00+00:00",
+      "published_text": "Thu, 16 Jul 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "Aerisun",
+      "site": "https://aerisun.top/",
+      "feed": "https://aerisun.top/feeds/articles.xml",
+      "avatar": "https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg",
+      "title": "Serino 系统的 Markdown 语法",
+      "url": "https://aerisun.top/posts/serino-markdown",
+      "summary": "丰富漂亮的 markdown 渲染，持续更新......",
+      "published": "2026-07-03T15:30:56+00:00",
+      "published_text": "Fri, 03 Jul 2026 23:30:56 +0800"
+    },
+    {
+      "friend": "Aerisun",
+      "site": "https://aerisun.top/",
+      "feed": "https://aerisun.top/feeds/articles.xml",
+      "avatar": "https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg",
+      "title": "Serino 系统部署与使用指南",
+      "url": "https://aerisun.top/posts/serino-tutorial",
+      "summary": "喜欢这个博客风格的话，不妨也自己一键部署一个试试看，超简单呦～",
+      "published": "2026-07-03T13:48:42+00:00",
+      "published_text": "Fri, 03 Jul 2026 21:48:42 +0800"
     },
     {
       "friend": "dodola",
