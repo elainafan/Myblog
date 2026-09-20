@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T13:16:11.254172+00:00",
+  "generated_at": "2026-09-20T17:46:40.519821+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -64,15 +64,15 @@
     {
       "name": "Zhaoyi Tian",
       "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
+      "feed": "https://zhaoyi-tian.cn",
       "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
       "description": "故事的下一页",
       "circle": true,
       "circle_reason": "",
       "timeout": 25,
       "retries": 3,
-      "status": "ok",
-      "post_count": 5
+      "status": "warning",
+      "post_count": 0
     },
     {
       "name": "Hinai",
@@ -296,7 +296,12 @@
       "post_count": 14
     }
   ],
-  "warnings": [],
+  "warnings": [
+    {
+      "friend": "Zhaoyi Tian",
+      "message": "feed not found and no dated posts found in HTML"
+    }
+  ],
   "posts": [
     {
       "friend": "Equinox",
@@ -1234,17 +1239,6 @@
       "published_text": "Sat, 07 Feb 2026 00:00:00 +0000"
     },
     {
-      "friend": "Zhaoyi Tian",
-      "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
-      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
-      "title": "PKU-Grade-Watcher",
-      "url": "https://zhaoyi-tian.cn/blog/pku-grade-watcher",
-      "summary": "自用查分脚本，在此保留其README，仅作纪念",
-      "published": "2026-01-30T00:00:00+00:00",
-      "published_text": "Fri, 30 Jan 2026 00:00:00 GMT"
-    },
-    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -1795,17 +1789,6 @@
       "published_text": "Tue, 02 Sep 2025 19:43:00 +0800"
     },
     {
-      "friend": "Zhaoyi Tian",
-      "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
-      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
-      "title": "第四期神经计算建模及编程培训笔记",
-      "url": "https://zhaoyi-tian.cn/blog/brainpy",
-      "summary": "简单的测评与笔记，以作纪念",
-      "published": "2025-08-28T00:00:00+00:00",
-      "published_text": "Thu, 28 Aug 2025 00:00:00 GMT"
-    },
-    {
       "friend": "dodola",
       "site": "https://dodolalorc.cn/",
       "feed": "https://dodolalorc.cn/rss.xml",
@@ -1850,17 +1833,6 @@
       "published_text": "Sun, 17 Aug 2025 03:40:00 +0800"
     },
     {
-      "friend": "Zhaoyi Tian",
-      "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
-      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
-      "title": "本主页搭建流程",
-      "url": "https://zhaoyi-tian.cn/blog/personal-website-setup",
-      "summary": "零基础小白搭建个人主页的流程，总结了通过ai对网站进行个性化的经验，愿能够有所帮助",
-      "published": "2025-08-10T00:00:00+00:00",
-      "published_text": "Sun, 10 Aug 2025 00:00:00 GMT"
-    },
-    {
       "friend": "Anfsity",
       "site": "https://www.anfstiy.me/",
       "feed": "https://www.anfstiy.me/index.xml",
@@ -1881,17 +1853,6 @@
       "summary": "基础开发环境配置",
       "published": "2025-08-05T00:00:00+00:00",
       "published_text": "Tue, 05 Aug 2025 00:00:00 GMT"
-    },
-    {
-      "friend": "Zhaoyi Tian",
-      "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
-      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
-      "title": "北大课程资料",
-      "url": "https://zhaoyi-tian.cn/blog/pku-course-materials",
-      "summary": "我将在此记录一些我修过且觉得值得记录的课程。主要内容会包括一些xk的专业课以及'ai+心理认知'项目的课程",
-      "published": "2025-08-03T00:00:00+00:00",
-      "published_text": "Sun, 03 Aug 2025 00:00:00 GMT"
     },
     {
       "friend": "dodola",
@@ -1991,17 +1952,6 @@
       "summary": "起因是我重装 win10 的时候把我整块磁盘都清空了，事后才发现我没有给我的博客备份😭。遂想，反正已经要 remake 了，索性换一个框架，于是便从 hexo 换成了 hugo。 虽然说所有的数据我在 vercel 上都有，但是都不是 markdown 的储存形式，我也懒得再从网上找工具实现 html 转 markdown 了。就仅仅迁移了几篇还算有意义的...",
       "published": "2025-06-24T14:42:13+00:00",
       "published_text": "Tue, 24 Jun 2025 22:42:13 +0800"
-    },
-    {
-      "friend": "Zhaoyi Tian",
-      "site": "https://zhaoyi-tian.cn",
-      "feed": "https://zhaoyi-tian.cn/rss.xml",
-      "avatar": "https://zhaoyi-tian.github.io/images/profile.png",
-      "title": "社会心理学关键概念表补充",
-      "url": "https://zhaoyi-tian.cn/blog/social-psychology-key-concepts",
-      "summary": "简单做的一个毛利华社会心理学关键概念整理，一部分来自《社会心理学》（戴维 •迈尔斯 第十一版），部分概念标明了页数，另一部分来自ai。",
-      "published": "2025-06-19T00:00:00+00:00",
-      "published_text": "Thu, 19 Jun 2025 00:00:00 GMT"
     },
     {
       "friend": "Hinai",
