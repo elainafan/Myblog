@@ -34,8 +34,8 @@ links:
     image: https://elty-nov.github.io/images/sakiko.jpg
   - title: Anfsity
     description: There is a reason
-    website: https://www.anfstiy.me/
-    image: https://www.anfstiy.me/img/avatar_hu0e8ba48a24970c7658943dd270c9a735_6298047_300x0_resize_box_3.png
+    website: https://anfsity.com/
+    image: https://anfsity.com/avatar.png
   - title: Aerisun
     description: 在喧嚣的缝隙里，做一个关于自由和好奇心的梦
     website: https://aerisun.top/

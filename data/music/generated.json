@@ -248,5 +248,35 @@
     "bvid": "BV1j7411A7mB",
     "page": 1,
     "sourceUrl": "https://www.bilibili.com/video/BV1j7411A7mB"
+  },
+  {
+    "name": "僕らは今のなかで",
+    "artist": "μ's",
+    "url": "/music/bilibili/BV1Ji421i7vJ/music.m4a",
+    "cover": "/music/bilibili/BV1Ji421i7vJ/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1Ji421i7vJ",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1Ji421i7vJ"
+  },
+  {
+    "name": "向着明天前进",
+    "artist": "高坂穗乃果、南小鸟、园田海未",
+    "url": "/music/bilibili/BV1UUXRYVETs/music.m4a",
+    "cover": "/music/bilibili/BV1UUXRYVETs/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1UUXRYVETs",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1UUXRYVETs"
+  },
+  {
+    "name": "きっと青春が聞こえる",
+    "artist": "μ's",
+    "url": "/music/bilibili/BV1BG4y1c7oU/music.m4a",
+    "cover": "/music/bilibili/BV1BG4y1c7oU/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1BG4y1c7oU",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1BG4y1c7oU"
   }
 ]
