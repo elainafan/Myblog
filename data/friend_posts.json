@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T12:14:02.744512+00:00",
+  "generated_at": "2026-10-07T20:16:32.330448+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -12,15 +12,15 @@
     {
       "name": "Arthal's ink",
       "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
+      "feed": "https://arthals.ink/",
       "avatar": "https://cdn.arthals.ink/Arthals.png",
       "description": "所见高山远暮，阔云流风；所幸岁月盈余，了无拘束",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "ok",
-      "post_count": 24
+      "status": "warning",
+      "post_count": 0
     },
     {
       "name": "Jing Xu's Site",
@@ -142,15 +142,15 @@
     {
       "name": "CcoMm",
       "site": "https://blog.ccomm.top/",
-      "feed": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
       "avatar": "https://avatars.githubusercontent.com/u/147143261",
       "description": "你要听T4吗？",
       "circle": true,
       "circle_reason": "",
       "timeout": null,
       "retries": null,
-      "status": "warning",
-      "post_count": 0
+      "status": "ok",
+      "post_count": 11
     },
     {
       "name": "Masttf",
@@ -298,11 +298,11 @@
   ],
   "warnings": [
     {
-      "friend": "Zhaoyi Tian",
+      "friend": "Arthal's ink",
       "message": "feed not found and no dated posts found in HTML"
     },
     {
-      "friend": "CcoMm",
+      "friend": "Zhaoyi Tian",
       "message": "feed not found and no dated posts found in HTML"
     }
   ],
@@ -416,28 +416,6 @@
       "summary": "5k 行记忆库的周期性卡顿解剖——97% 的耗时不在算法，在数据搬运；231ms 到 51ms 的三步",
       "published": "2026-09-16T00:00:00+00:00",
       "published_text": "Wed, 16 Sep 2026 00:00:00 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "Treehole Art",
-      "url": "https://arthals.ink/blog/treehole-art",
-      "summary": "现代化的北大树洞",
-      "published": "2026-09-15T18:47:00+00:00",
-      "published_text": "Tue, 15 Sep 2026 18:47:00 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "困在北医的五年",
-      "url": "https://arthals.ink/blog/trapped-at-pkuhsc",
-      "summary": "也许这才是我在北医真正的毕业论文",
-      "published": "2026-09-11T08:26:30+00:00",
-      "published_text": "Fri, 11 Sep 2026 08:26:30 GMT"
     },
     {
       "friend": "Equinox",
@@ -1111,6 +1089,17 @@
       "published_text": "Sun, 05 Apr 2026 00:00:00 +0000"
     },
     {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "訂閱監控看板 (Subscription Monitor • Pure)",
+      "url": "https://blog.ccomm.top/blog/subpulse/subpulse",
+      "summary": "一個基於 Cloudflare Workers 構建的輕量級、無伺服器（Serverless）訂閱流量監控看板。",
+      "published": "2026-04-02T20:15:00+00:00",
+      "published_text": "Thu, 02 Apr 2026 20:15:00 GMT"
+    },
+    {
       "friend": "Lane's Blog",
       "site": "https://www.laneljc.cn/",
       "feed": "https://www.laneljc.cn/rss.xml",
@@ -1142,6 +1131,39 @@
       "summary": "Black Swannnnnnnn Steam ID: 76561198813051984 添加好友 数据实时拉取自 Steam API Deadlock 最近两周: 19.9 小时 总计: 420.9 小时 DJMAX RESPECT V 最近两周: 8.0 小时 总计: 299.6 小时",
       "published": "2026-03-17T00:00:00+00:00",
       "published_text": "Tue, 17 Mar 2026 00:00:00 +0000"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "在博客中优雅地添加 Bilibili 追番页面 (Astro & Hugo 无 CORS 秒开方案)",
+      "url": "https://blog.ccomm.top/blog/zuifan/bilibili",
+      "summary": "如何利用后端构建能力彻底解决前端跨域痛点，实现静态化零延迟的完美追番展示。包含基于 Astro 和 Hugo 两种不同技术栈的完整实现方案。",
+      "published": "2026-03-12T21:15:00+00:00",
+      "published_text": "Thu, 12 Mar 2026 21:15:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "如何使用 Cloudflare API 為 Astro 網站新增高級數據監測大屏",
+      "url": "https://blog.ccomm.top/blog/cloudflare-jc/%E5%AE%9E%E7%8E%B0cloudflare%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B%E9%9D%A2%E6%9D%BF",
+      "summary": "手把手教你在 Astro 項目中，利用 Cloudflare GraphQL API 和 ECharts 構建一個純本地渲染、不洩露密鑰的極速網站流量與安全監控面板。",
+      "published": "2026-03-10T14:00:00+00:00",
+      "published_text": "Tue, 10 Mar 2026 14:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "碎碎念：找實習、生病與一塊薯餅的治癒",
+      "url": "https://blog.ccomm.top/blog/%E9%86%89%E9%B8%A1%E6%97%A5%E8%AE%B0",
+      "summary": "最近幾個月忙於尋找實習，加上反覆感冒發燒，博客與 Astro 項目暫時停擺。生活雖然疲憊，但吃塊肯德基薯餅還是能開心一下。",
+      "published": "2026-03-10T00:00:00+00:00",
+      "published_text": "Tue, 10 Mar 2026 00:00:00 GMT"
     },
     {
       "friend": "Collapse179",
@@ -1221,28 +1243,6 @@
       "published_text": "Tue, 13 Jan 2026 20:27:02 +0800"
     },
     {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part8",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part8",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 8",
-      "published": "2026-01-11T23:00:01+00:00",
-      "published_text": "Sun, 11 Jan 2026 23:00:01 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part6",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part6",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 6",
-      "published": "2026-01-11T23:00:00+00:00",
-      "published_text": "Sun, 11 Jan 2026 23:00:00 GMT"
-    },
-    {
       "friend": "Collapse179",
       "site": "https://collapse179.github.io/",
       "feed": "https://collapse179.github.io/index.xml",
@@ -1252,6 +1252,17 @@
       "summary": "免责声明：此文章为记录自主学习malloc机制而留，并没有提交到任何评测机，使用的数据是来自Arthals提供的PKU的包，尚不清楚在别的测评数据的评测情况，请勿直接复制粘贴，后果自负。 这个lab,要我们做什么？ 简单来说就是不用libc的malloc相关包函数实现一个简单的动态内存分配器,但是我们可以使用以下三个函数： void* mem_heap_l...",
       "published": "2025-12-29T00:00:00+00:00",
       "published_text": "Mon, 29 Dec 2025 00:00:00 +0000"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "PROTOCOL-RELAY 介紹",
+      "url": "https://blog.ccomm.top/blog/protocol-relay",
+      "summary": "一個基於 Astro + React 構建的磁帶未來主義（Cassette Futurism）風格 Git 加速工具，透過 CDN 邊緣節點轉發流量實現高速訪問。",
+      "published": "2025-12-27T00:00:00+00:00",
+      "published_text": "Sat, 27 Dec 2025 00:00:00 GMT"
     },
     {
       "friend": "Lane's Blog",
@@ -1331,6 +1342,61 @@
       "published_text": "Wed, 17 Dec 2025 13:57:23 +0800"
     },
     {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.Ins.Blog 項目",
+      "url": "https://blog.ccomm.top/blog/nebulainsblog-%E9%A1%B9%E7%9B%AE",
+      "summary": "一個更適合生活類的圖文博客項目，目前處於開發中。",
+      "published": "2025-12-11T00:00:00+00:00",
+      "published_text": "Thu, 11 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "優化了網站的一些功能",
+      "url": "https://blog.ccomm.top/blog/%E4%BC%98%E5%8C%96%E4%BA%86%E7%BD%91%E7%AB%99%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8A%9F%E8%83%BD",
+      "summary": "2025年12月8日網站優化記錄：修復了移動端導航欄重疊問題，並為無數據庫後台開發了基於 LocalStorage 和 GitHub API 的暫存區批量提交功能。",
+      "published": "2025-12-08T00:00:00+00:00",
+      "published_text": "Mon, 08 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "熬了一晚上給網站新增了幾個小功能",
+      "url": "https://blog.ccomm.top/blog/endfieldsys%E6%96%B0%E5%A2%9E%E5%8A%9F%E8%83%BD",
+      "summary": "2025年12月7日熬夜為網站新增了GitHub倉庫、B站追番列表、音樂播放器、時間線以及RSS訂閱列表等功能，並優化了友鏈頁面。",
+      "published": "2025-12-07T00:00:00+00:00",
+      "published_text": "Sun, 07 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.ICP 介紹",
+      "url": "https://blog.ccomm.top/blog/nebula-icp-%E4%BB%8B%E7%BB%8D",
+      "summary": "一個基於 Cloudflare D1 的去中心化、賽博朋克風格的數字實體檔案庫系統。無服務器架構，邊緣秒級響應。",
+      "published": "2025-12-05T00:00:00+00:00",
+      "published_text": "Fri, 05 Dec 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.ICP 項目",
+      "url": "https://blog.ccomm.top/blog/nebulaicp",
+      "summary": "Nebula.ICP 項目界面展示，包含首頁、選號頁、展示頁等，目前項目正在開發中。",
+      "published": "2025-12-04T00:00:00+00:00",
+      "published_text": "Thu, 04 Dec 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://anfsity.com/",
       "feed": "https://anfsity.com/index.xml",
@@ -1353,15 +1419,15 @@
       "published_text": "Tue, 02 Dec 2025 17:54:36 +0800"
     },
     {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "如何降级 iOS / iPadOS App",
-      "url": "https://arthals.ink/blog/downgrade-ios-app",
-      "summary": "唉，商业化，原本好好的 App 就这么被塞满了广告",
-      "published": "2025-11-28T22:33:33+00:00",
-      "published_text": "Fri, 28 Nov 2025 22:33:33 GMT"
+      "friend": "CcoMm",
+      "site": "https://blog.ccomm.top/",
+      "feed": "https://blog.ccomm.top/rss.xml",
+      "avatar": "https://avatars.githubusercontent.com/u/147143261",
+      "title": "Nebula.SYS 介紹",
+      "url": "https://blog.ccomm.top/blog/nebulasys",
+      "summary": "一個致敬《明日方舟：終末地》工業機能美學的現代化博客系統。",
+      "published": "2025-12-02T00:00:00+00:00",
+      "published_text": "Tue, 02 Dec 2025 00:00:00 GMT"
     },
     {
       "friend": "Anfsity",
@@ -1395,17 +1461,6 @@
       "summary": "分析 Hugo 站点 favicon 更新后浏览器仍显示旧图的原因，并给出无痕模式、禁用缓存和修改资源 URL 的排查与解决办法。",
       "published": "2025-11-23T07:16:40+00:00",
       "published_text": "Sun, 23 Nov 2025 15:16:40 +0800"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part5",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part5",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 5",
-      "published": "2025-11-22T20:49:15+00:00",
-      "published_text": "Sat, 22 Nov 2025 20:49:15 GMT"
     },
     {
       "friend": "Lane's Blog",
@@ -1452,28 +1507,6 @@
       "published_text": "Sat, 01 Nov 2025 10:18:37 +0800"
     },
     {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part4",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part4",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 4",
-      "published": "2025-10-27T13:40:52+00:00",
-      "published_text": "Mon, 27 Oct 2025 13:40:52 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "如何高效利用录播",
-      "url": "https://arthals.ink/blog/ai-utilized-replay",
-      "summary": "什么年代了，还在传统学习？",
-      "published": "2025-10-15T06:56:01+00:00",
-      "published_text": "Wed, 15 Oct 2025 06:56:01 GMT"
-    },
-    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1483,28 +1516,6 @@
       "summary": "你， 是否還在爲libcurl太難用，太底層，各種麻煩的函式與變數看不懂而困擾 ——那麼就Try Neko Network (NekoNet) ，一個易用，高效的C++ Libcurl封裝。準備...",
       "published": "2025-10-14T06:27:00+00:00",
       "published_text": "Tue, 14 Oct 2025 14:27:00 +0800"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part7",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part7",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 7",
-      "published": "2025-10-13T01:15:36+00:00",
-      "published_text": "Mon, 13 Oct 2025 01:15:36 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part2",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part2",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 2",
-      "published": "2025-10-11T03:56:13+00:00",
-      "published_text": "Sat, 11 Oct 2025 03:56:13 GMT"
     },
     {
       "friend": "dodola",
@@ -1562,17 +1573,6 @@
       "published_text": "Wed, 08 Oct 2025 14:49:23 GMT"
     },
     {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part3",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part3",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 3",
-      "published": "2025-10-05T02:41:24+00:00",
-      "published_text": "Sun, 05 Oct 2025 02:41:24 GMT"
-    },
-    {
       "friend": "dodola",
       "site": "https://dodolalorc.cn/",
       "feed": "https://dodolalorc.cn/rss.xml",
@@ -1593,28 +1593,6 @@
       "summary": "CSS 优先级笔记，整理选择器权重计算、比较规则以及 !important 和深度选择器的覆盖策略。",
       "published": "2025-10-02T18:34:28+00:00",
       "published_text": "Thu, 02 Oct 2025 18:34:28 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part1",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part1",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 1",
-      "published": "2025-10-02T16:20:53+00:00",
-      "published_text": "Thu, 02 Oct 2025 16:20:53 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "更适合北大宝宝体质的 xv6 OS Lab 踩坑记 - Part0",
-      "url": "https://arthals.ink/blog/xv6-os-lab-part0",
-      "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 0",
-      "published": "2025-10-02T16:17:53+00:00",
-      "published_text": "Thu, 02 Oct 2025 16:17:53 GMT"
     },
     {
       "friend": "Anfsity",
@@ -1703,17 +1681,6 @@
       "summary": "记录为博客跳转链接添加 favicon 图标的字段设计与实现思路，对比默认路径和 Google Favicon 服务。",
       "published": "2025-08-20T17:31:51+00:00",
       "published_text": "Wed, 20 Aug 2025 17:31:51 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "如何彻底解决 Cursor Remote-SSH Server 下载问题",
-      "url": "https://arthals.ink/blog/cursor-remote-ssh-solution",
-      "summary": "当然是写个脚本啦！",
-      "published": "2025-08-17T01:02:27+00:00",
-      "published_text": "Sun, 17 Aug 2025 01:02:27 GMT"
     },
     {
       "friend": "Hinai",
@@ -1925,72 +1892,6 @@
       "published_text": "Mon, 21 Apr 2025 22:35:59 +0800"
     },
     {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "策略 II",
-      "url": "https://arthals.ink/blog/policy-ii",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 09",
-      "published": "2025-04-17T19:34:04+00:00",
-      "published_text": "Thu, 17 Apr 2025 19:34:04 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "策略 I",
-      "url": "https://arthals.ink/blog/policy-i",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 08",
-      "published": "2025-04-15T22:38:04+00:00",
-      "published_text": "Tue, 15 Apr 2025 22:38:04 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "视觉与抓取 III",
-      "url": "https://arthals.ink/blog/vision-and-grasping-iii",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 07",
-      "published": "2025-04-03T16:00:04+00:00",
-      "published_text": "Thu, 03 Apr 2025 16:00:04 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "VLA Frontier",
-      "url": "https://arthals.ink/blog/vla-frontier",
-      "summary": "VLA 前沿模型论文研读",
-      "published": "2025-03-26T23:39:31+00:00",
-      "published_text": "Wed, 26 Mar 2025 23:39:31 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "视觉与抓取 II",
-      "url": "https://arthals.ink/blog/vision-and-grasping-ii",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 06",
-      "published": "2025-03-25T23:26:04+00:00",
-      "published_text": "Tue, 25 Mar 2025 23:26:04 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "RL in VLA",
-      "url": "https://arthals.ink/blog/rl-in-vla",
-      "summary": "强化学习在 VLA 中的应用",
-      "published": "2025-03-22T00:34:00+00:00",
-      "published_text": "Sat, 22 Mar 2025 00:34:00 GMT"
-    },
-    {
       "friend": "dodola",
       "site": "https://dodolalorc.cn/",
       "feed": "https://dodolalorc.cn/rss.xml",
@@ -2022,50 +1923,6 @@
       "summary": "JavaScript 链式调用设计笔记，以 Vue createApp 和 Promise 为例讲解链式 API 的实现方式。",
       "published": "2025-03-17T01:26:02+00:00",
       "published_text": "Mon, 17 Mar 2025 01:26:02 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "视觉与抓取 I",
-      "url": "https://arthals.ink/blog/vision-and-grasping-i",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 05",
-      "published": "2025-03-17T01:12:04+00:00",
-      "published_text": "Mon, 17 Mar 2025 01:12:04 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "机器人学 III",
-      "url": "https://arthals.ink/blog/robotics-iii",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 04",
-      "published": "2025-03-12T02:26:52+00:00",
-      "published_text": "Wed, 12 Mar 2025 02:26:52 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "机器人学 II",
-      "url": "https://arthals.ink/blog/robotics-ii",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 03",
-      "published": "2025-03-05T09:53:00+00:00",
-      "published_text": "Wed, 05 Mar 2025 09:53:00 GMT"
-    },
-    {
-      "friend": "Arthal's ink",
-      "site": "https://arthals.ink/",
-      "feed": "https://arthals.ink/rss.xml",
-      "avatar": "https://cdn.arthals.ink/Arthals.png",
-      "title": "机器人学 I",
-      "url": "https://arthals.ink/blog/robotics-i",
-      "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 02",
-      "published": "2025-03-01T17:02:00+00:00",
-      "published_text": "Sat, 01 Mar 2025 17:02:00 GMT"
     },
     {
       "friend": "Lane's Blog",
