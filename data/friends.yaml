@@ -126,3 +126,8 @@ friends:
     feed: https://modusensus.space/rss.xml
     avatar: https://modusensus.github.io/images/profile-avatar.jpg
     description: 城市、数据与创造力的交汇处，写博客也做小工具。
+  - name: 亭外日录
+    site: https://akutagawa.cn/
+    feed: https://akutagawa.cn/rss.xml
+    avatar: https://akutagawa.cn/avatar.png
+    description: 理想は、追い求める中にこそ永遠に存在する。

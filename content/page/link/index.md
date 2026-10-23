@@ -92,6 +92,10 @@ links:
     description: 城市、数据与创造力的交汇处，写博客也做小工具。
     website: https://modusensus.space/
     image: https://modusensus.github.io/images/profile-avatar.jpg
+  - title: 亭外日录
+    description: 理想は、追い求める中にこそ永遠に存在する。
+    website: https://akutagawa.cn/
+    image: https://akutagawa.cn/avatar.png
 
 menu:
     main: 
