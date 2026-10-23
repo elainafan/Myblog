@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T13:54:31.516525+00:00",
+  "generated_at": "2026-10-23T16:50:48.919791+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -294,6 +294,19 @@
       "retries": null,
       "status": "ok",
       "post_count": 15
+    },
+    {
+      "name": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "description": "理想は、追い求める中にこそ永遠に存在する。",
+      "circle": true,
+      "circle_reason": "",
+      "timeout": null,
+      "retries": null,
+      "status": "ok",
+      "post_count": 18
     }
   ],
   "warnings": [
@@ -381,6 +394,17 @@
       "published_text": "Wed, 07 Oct 2026 14:33:17 +0800"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "中秋节",
+      "url": "https://akutagawa.cn/blog/mid-autumn",
+      "summary": "暮云收尽溢清寒，银汉无声转玉盘。此生此夜不长好，明月明年何处看。",
+      "published": "2026-09-26T00:00:00+00:00",
+      "published_text": "Sat, 26 Sep 2026 00:00:00 GMT"
+    },
+    {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -414,6 +438,17 @@
       "published_text": "Fri, 25 Sep 2026 00:00:00 GMT"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "缺文与边码",
+      "url": "https://akutagawa.cn/blog/missing-text-and-marginal-numbers",
+      "summary": "读毛雷尔《行政法学总论》中译本，读到第二章有关前民主德国行政法的部分时，一条简短的译者注引起了我的注意。注中提到“因特殊原因”作了删除，并列出了相应的编码。短短一句话，读过之后却让人想再翻回正文看一看：其所说的“删除”，究竟落在了哪里？ 带着这个疑问，将德文第12版与法律出版社、元照出版的两种中译本逐段对读，才发现正文与边码并非总能相互照应。有些段落在中文...",
+      "published": "2026-09-25T00:00:00+00:00",
+      "published_text": "Fri, 25 Sep 2026 00:00:00 GMT"
+    },
+    {
       "friend": "Equinox",
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
@@ -423,6 +458,17 @@
       "summary": "论文精读 | Engram 作者：Equinox（shixy2003@gmail.com） 本文2026-09-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-23",
       "published": "2026-09-23T04:42:25+00:00",
       "published_text": "Wed, 23 Sep 2026 12:42:25 +0800"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "废名·燕园·我",
+      "url": "https://akutagawa.cn/blog/me-and-fei-ming",
+      "summary": "一、读书录 二零二六，三，二四至三，三一，读完第一册。 相见恨晚的作家，只觉不够过瘾。只恨不能令天下人尽知其名。转念一想，似这般孤寂倒也别有一番风味，又想把他藏于我梦中的一角了。虽不能作于北大西斋与其同风共雨，但位于燕园西南角的我，也许能在所谓精神上窥得其一二笔意罢。 二零二六，四，一至四，十三，读完第二册。 越读越喜，其文风为之一变，较之前面的文章，变得...",
+      "published": "2026-09-20T00:00:00+00:00",
+      "published_text": "Sun, 20 Sep 2026 00:00:00 GMT"
     },
     {
       "friend": "Equinox",
@@ -544,6 +590,17 @@
       "summary": "从零开始的自学笔记，类比 + 命令双轨记录，归档自 2026-08-29 网课与实操",
       "published": "2026-08-29T00:00:00+00:00",
       "published_text": "Sat, 29 Aug 2026 00:00:00 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "学校与狗",
+      "url": "https://akutagawa.cn/blog/high-school-and-dog",
+      "summary": "开学不久的一天，他在讲台上趴着，对着台下汪汪起来。我望向他张开的口，总觉得他的舌头黑黑的。我意识到，我们班上有一只狗。 在四周同学们的抚摸之下，他是被淹及的稻田。我想象着他摇着尾巴的样子，那种时缓时快的劲儿最是动人。中午晚上放学后，我便会想那只狗此时又在哪对着谁摇着尾巴呢？ 狗喜欢奔跑，也许这是天性，但我却感觉那是长年累月的积淀。不得不承认，那跃动的身姿令...",
+      "published": "2026-08-27T00:00:00+00:00",
+      "published_text": "Thu, 27 Aug 2026 00:00:00 GMT"
     },
     {
       "friend": "Yjy's blog",
@@ -753,6 +810,17 @@
       "summary": "Hardware Synchronization Solution: Atomic read/write 即 Read & write in single instruction. No other access permitted between read and write.一般都涉及到共享内存。 Common implementation: Atom...",
       "published": "2026-06-18T12:05:36+00:00",
       "published_text": "Thu, 18 Jun 2026 20:05:36 +0800"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "在荒原里寻找爱",
+      "url": "https://akutagawa.cn/blog/love-in-the-wasteland",
+      "summary": "人間は、時として、充されるか充されないか、わからない欲望の為に、一生を捧げてしまふ。その愚を哂ふ者は、畢竟、人生に対する路傍の人に過ぎない。[^1] 什么是爱？越是简单的命题回答起来越不容易。从古至今，无论是哲人圣贤还是人民大众，无疑都追逐着属于自己的答案。有人著书立说，于理智见长，有人潜心生活，用经验发声。每个人都有自己的哈姆雷特，每个人都有自己的一套爱...",
+      "published": "2026-06-18T00:00:00+00:00",
+      "published_text": "Thu, 18 Jun 2026 00:00:00 GMT"
     },
     {
       "friend": "~zzz",
@@ -1580,6 +1648,17 @@
       "published_text": "Sat, 01 Nov 2025 10:18:37 +0800"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "法意识形态机器：重读马克思《关于林木盗窃法的辩论》",
+      "url": "https://akutagawa.cn/blog/article-aaa5d51c-57df-4e71-9825-7deab05d159f",
+      "summary": "马克思主义基本原理概论课程论文 · 2025 秋",
+      "published": "2025-11-01T00:00:00+00:00",
+      "published_text": "Sat, 01 Nov 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Arthal's ink",
       "site": "https://arthals.ink/",
       "feed": "https://arthals.ink/rss.xml",
@@ -1589,6 +1668,28 @@
       "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 4",
       "published": "2025-10-27T13:40:52+00:00",
       "published_text": "Mon, 27 Oct 2025 13:40:52 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "蓝眼娃娃",
+      "url": "https://akutagawa.cn/blog/blue-eyed-doll",
+      "summary": "《蓝眼娃娃》（青い眼の人形）写的是一个来自美国、不懂日语的娃娃。它抵达日本港口，眼含泪水，担心迷路，只好向当地的小女孩请求陪伴。这里先录下歌词与一版古典意译，再介绍后来同样被称为“蓝眼娃娃”的亲善人偶。 两者的年代需要分清：野口雨情作词、本居长世作曲的童谣发表于 1921 年；日美之间大规模的人偶交流则发生在 1927 年。歌曲在先，赠偶在后，不能将它理解...",
+      "published": "2025-10-23T00:00:00+00:00",
+      "published_text": "Thu, 23 Oct 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "葫芦制度初探",
+      "url": "https://akutagawa.cn/blog/gourd-system",
+      "summary": "《大学寝室夜间安宁权保障及呼吸源性噪音侵害惩戒法典》 (Gesetzbuch zum Schutz der nächtlichen Ruhe im Studentenwohnheim und zur Bestrafung atmungsbedingter Lärmbelästigung) 序言 (Präambel) 睡眠，乃人类维持理智与生存之绝对生理前提...",
+      "published": "2025-10-22T00:00:00+00:00",
+      "published_text": "Wed, 22 Oct 2025 00:00:00 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -1622,6 +1723,17 @@
       "summary": "北京大学 2025 年秋季学期操作系统/OS Lab Part 7",
       "published": "2025-10-13T01:15:36+00:00",
       "published_text": "Mon, 13 Oct 2025 01:15:36 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "既望后记",
+      "url": "https://akutagawa.cn/blog/after-full-moon",
+      "summary": "中秋方过，往事云烟。闲窗弄笔，漫记流年。几多才子佳人，惊动京华倦客；数卷玄门秘法，搅乱玉宇清寒。 旧时厌笔，非关纸贱；中宵不寐，岂是心寂？圭臬难读，百般技艺难救主，小说易看，环球妙笔苦寻春。五四少塌，心余气短。外食徐行，腹空情切。念往日，苦今朝。四洲旧部，人头涌动，游戏庭前，侧望西山。北理工旁观农院，芈重山里品香锅。西海国际，难容石城游子，魏公村店，岂留异...",
+      "published": "2025-10-12T00:00:00+00:00",
+      "published_text": "Sun, 12 Oct 2025 00:00:00 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -1745,6 +1857,17 @@
       "published_text": "Thu, 02 Oct 2025 16:17:53 GMT"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "雨一直下",
+      "url": "https://akutagawa.cn/blog/rain-keeps-falling",
+      "summary": "旧日天气 · 恋爱三部曲 · Ⅰ",
+      "published": "2025-09-25T00:00:00+00:00",
+      "published_text": "Thu, 25 Sep 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Anfsity",
       "site": "https://anfsity.com/",
       "feed": "https://anfsity.com/index.xml",
@@ -1778,6 +1901,28 @@
       "published_text": "Wed, 17 Sep 2025 09:53:56 GMT"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "致17岁的你",
+      "url": "https://akutagawa.cn/blog/to-you-at-seventeen",
+      "summary": "旧日天气 · 恋爱三部曲 · Ⅱ",
+      "published": "2025-09-14T00:00:00+00:00",
+      "published_text": "Sun, 14 Sep 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "三月四日",
+      "url": "https://akutagawa.cn/blog/march-fourth",
+      "summary": "旧日天气 · 恋爱三部曲 · Ⅲ",
+      "published": "2025-09-13T00:00:00+00:00",
+      "published_text": "Sat, 13 Sep 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -1809,6 +1954,17 @@
       "summary": "簡單分享一下遇到的問題和解決心路。很久沒有好好整理伺服器了， 雖然平時有基礎的運維，簡單的檢查，審查日誌和維護等，但並不會花太多時間在上面。前些日子有空清理了一下目前未使用的DNS記錄。 按理來...",
       "published": "2025-09-02T11:43:00+00:00",
       "published_text": "Tue, 02 Sep 2025 19:43:00 +0800"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "《克拉拉与太阳》读后记",
+      "url": "https://akutagawa.cn/blog/klara-and-the-sun",
+      "summary": "本想在电脑上写个书评，但在键盘上打字时总有一种莫名的冲动，让我无法正常地思考。文字翻飞之时，便不知所云了。很多时候写出来的东西言之无物，这是我不能容忍的。这次手写了原稿，再在电脑上打出来，希望有所改善。 在我以往看小说时，以及在我自己尝试进行创作时，我时常思考如何对“当代生活”进行创作，该用什么样的语言和方式来进行创作。因为在文坛上，很少能够看见将当代社会...",
+      "published": "2025-09-02T00:00:00+00:00",
+      "published_text": "Tue, 02 Sep 2025 00:00:00 GMT"
     },
     {
       "friend": "dodola",
@@ -2031,6 +2187,17 @@
       "published_text": "Sat, 24 May 2025 22:31:23 +0800"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "田山花袋于我——95年忌辰之日有感",
+      "url": "https://akutagawa.cn/blog/tayama-katai",
+      "summary": "错过了柠檬祭，今日在Wiki上看到了5月13号是田山花袋的忌日。突然觉得这次不能再错过了，一种想写点什么的心情油然而生。田山花袋是谁？日本小说家，私小说创始人也。 私小说很出名，但田山花袋的名字在大众读者中并没有那么出名。或许在当下的阅读人之中，私小说流派不怎么受待见吧。在这个意识流大行其道，被无数文青奉为圭臬的时代，像田山花袋这样毫不掩饰剖析自己内心的自...",
+      "published": "2025-05-13T00:00:00+00:00",
+      "published_text": "Tue, 13 May 2025 00:00:00 GMT"
+    },
+    {
       "friend": "dodola",
       "site": "https://dodolalorc.cn/",
       "feed": "https://dodolalorc.cn/rss.xml",
@@ -2084,6 +2251,17 @@
       "summary": "北京大学 2025 年春季学期具身智能导论 - 笔记 07",
       "published": "2025-04-03T16:00:04+00:00",
       "published_text": "Thu, 03 Apr 2025 16:00:04 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "记忆之于AI",
+      "url": "https://akutagawa.cn/blog/memory-and-ai",
+      "summary": "现在人们的日子越来越离不开AI了，作为一名大学生的我也不例外。上课听讲，下课作业，甚至日常生活一些鸡毛蒜皮的小事也会在DeepSeek上问上几句。但在惊叹于其进步之快的同时，我也一直在思考人类究竟还剩有些什么。还是说小一点，谈谈我自己吧，毕竟还没到达能论及整个人类的水准。 今早在学一食堂，我吃着油饼，伴着咸菜，喝着牛奶。突然一个想法涌入我的心头，这个事物于...",
+      "published": "2025-04-01T00:00:00+00:00",
+      "published_text": "Tue, 01 Apr 2025 00:00:00 GMT"
     },
     {
       "friend": "Arthal's ink",
@@ -2196,6 +2374,28 @@
       "published_text": "Sat, 01 Mar 2025 09:51:58 +0800"
     },
     {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "渝中游记",
+      "url": "https://akutagawa.cn/blog/chongqing-travel-notes",
+      "summary": "余应故人L君之邀，于甲辰腊月廿七八日共游渝中。虽千里赴会，非独为揽胜，前志已陈，兹不赘述。 廿七辰时启程，巳时抵渝北。途中困顿，酣睡不已。期间或醒，读《小小十年》一书。因其采旧时体例，引左右注意。时过境迁，旧时王谢堂前燕，亦或出走人世，而未飞入寻常百姓家罢。夫文白之更替，确乃时势所造。然旧例恰似旧历，尚有一丝温热，不时抚慰人心。悲夫未尝其味者！《十年》一书...",
+      "published": "2025-03-01T00:00:00+00:00",
+      "published_text": "Sat, 01 Mar 2025 00:00:00 GMT"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "野草",
+      "url": "https://akutagawa.cn/blog/wild-grass",
+      "summary": "“过去的生命已经死亡。我对于这死亡有大欢喜，因为我借此知道它曾经存活。死亡的生命已经朽腐。我对于这朽腐有大欢喜，因为我借此知道它还非空虚。”——《野草》 旧历的新年毕竟更像新年。城里的人流与车流的交响曲减弱，那一排树上的大红灯笼的颜色似乎暗淡了几分。街上零星几个行人小碎步前行，又或是几人围着站成一圈笑谈，他们在谈什么？是去年的生离死别，不满失意或是来年的美...",
+      "published": "2025-01-29T00:00:00+00:00",
+      "published_text": "Wed, 29 Jan 2025 00:00:00 GMT"
+    },
+    {
       "friend": "Hinai",
       "site": "https://blog.woo.moe",
       "feed": "https://blog.woo.moe/feed/",
@@ -2205,6 +2405,17 @@
       "summary": "網路安全與伺服器安全安全的核心就是功能盡可能簡單與避免對外暴露。避免暴露越複雜的功能，留下的隱患也就越多，這是必然的。而避免暴露也是同理，對外暴露越多，風險也就越高。舉例來說，一般情況下你不應該...",
       "published": "2025-01-25T05:33:00+00:00",
       "published_text": "Sat, 25 Jan 2025 13:33:00 +0800"
+    },
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "大学之我见",
+      "url": "https://akutagawa.cn/blog/on-university",
+      "summary": "思来想去，与其制作精美的图文，还是写写自己的杂感来得最真实。经过一学期的学习，也算是对大学，尤其是自己的大学，有了一定的认识。虽不能说很深刻，但也想拿出来和大家分享一下。为什么取了这样一个奇怪的标题，原因是无意之间突然联想到高一上班会时W君讲说的《日本文化之我见》。故我也取了这样一个名字，或许是向他致敬？在此我先提一句，我是从一个文科生，一个法学生的角度来...",
+      "published": "2025-01-21T00:00:00+00:00",
+      "published_text": "Tue, 21 Jan 2025 00:00:00 GMT"
     },
     {
       "friend": "Hinai",
