@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T08:13:51.899416+00:00",
+  "generated_at": "2026-10-26T15:35:20.637061+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -321,6 +321,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "PersonaVLM",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/retrieve/personavlm/",
+      "summary": "PersonaVLM 作者：Equinox（shixy2003@gmail.com） 本文2026-10-26首发于 Welcome to Equinox's wiki！ ，最后修改于2026-10-26",
+      "published": "2026-10-26T11:29:14+00:00",
+      "published_text": "Mon, 26 Oct 2026 19:29:14 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "[CH06]Training Reasoning Models With Reinforcement Learning",
       "url": "https://blog.equinox.wiki/post/reasoning-from-scratch/ch06training-reasoning-models-with-reinforcement-learning/",
       "summary": "[CH06]Training Reasoning Models With Reinforcement Learning 作者：Equinox（shixy2003@gmail.com） 本文2026-10-23首发于 Welcome to Equinox's wiki！ ，最后修改于2026-10-23",
@@ -469,17 +480,6 @@
       "summary": "一、读书录 二零二六，三，二四至三，三一，读完第一册。 相见恨晚的作家，只觉不够过瘾。只恨不能令天下人尽知其名。转念一想，似这般孤寂倒也别有一番风味，又想把他藏于我梦中的一角了。虽不能作于北大西斋与其同风共雨，但位于燕园西南角的我，也许能在所谓精神上窥得其一二笔意罢。 二零二六，四，一至四，十三，读完第二册。 越读越喜，其文风为之一变，较之前面的文章，变得...",
       "published": "2026-09-20T00:00:00+00:00",
       "published_text": "Sun, 20 Sep 2026 00:00:00 GMT"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "论文速览 | LiveMem",
-      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/parametriclatent/livemem/",
-      "summary": "论文速览 | LiveMem 作者：Equinox（shixy2003@gmail.com） 本文2026-09-17首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-17",
-      "published": "2026-09-17T06:50:15+00:00",
-      "published_text": "Thu, 17 Sep 2026 14:50:15 +0800"
     },
     {
       "friend": "MODUSENSUS",
