@@ -14,6 +14,11 @@
   }
 }
 
+// 《我的网瘾物语果然有问题》封面：向上取景，保留真那和六喰的完整面部。
+.article-image img[src$="/images/my-internet-addiction/cover.jpg"] {
+  object-position: center 15%;
+}
+
 //---------------------------------------------------
 // 全局页面布局间距调整
 .main-container {
