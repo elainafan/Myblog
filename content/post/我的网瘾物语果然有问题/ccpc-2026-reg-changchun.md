@@ -5,7 +5,7 @@ date: 2026-10-26
 encrypt: false
 seriesOrder: 1
 hidden: true
-image: "/images/my-internet-addiction/cover.png"
+image: "/images/my-internet-addiction/cover.jpg"
 categories:
     - 算法
     - 数学

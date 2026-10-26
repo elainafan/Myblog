@@ -6,7 +6,7 @@ categories:
     - 算法
     - 数学
 slug: 我的网瘾物语果然有问题
-image: "/images/my-internet-addiction/cover.png"
+image: "/images/my-internet-addiction/cover.jpg"
 seriesExclude: true
 ---
 
