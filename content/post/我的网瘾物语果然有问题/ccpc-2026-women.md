@@ -266,7 +266,7 @@ void solve() {
 
 ## E
 
-题目大意：给定 $a_1,\ldots,a_n$ ，满足 $3 \times a_i \leq a_{i+1}$ ，有 $q$ 次询问，每次给出一个整数 $v$ ，问是否存在 $\sum\limits_{i=1}^{n}a_i \cdot c_i=q,c_i \in \{-1,0,1\}$ ，如有，请求出 $c_i$ ，否则请输出 NO。
+题目大意：给定 $a_1,\ldots,a_n$ ，满足 $3 \times a_i \leq a_{i+1}$ ，有 $q$ 次询问，每次给出一个整数 $v$ ，问是否存在 $\sum\limits_{i=1}^{n}a_i \cdot c_i=v,c_i \in \{-1,0,1\}$ ，如有，请求出 $c_i$ ，否则请输出 NO。
 
 数据范围： $1 \leq n \leq 50, 1 \leq a_i \leq 10^{18},\sum(q \times n) \leq 5 \times 10^5$
 
