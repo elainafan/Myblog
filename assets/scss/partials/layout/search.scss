@@ -80,3 +80,19 @@
     }
 
 }
+
+.template-search .search-form:not(.widget) {
+    input {
+        background-color: transparent;
+        box-shadow: inset 0 0 0 1px var(--card-separator-color);
+    }
+
+    label, input::placeholder, button svg {
+        color: var(--card-text-color-main);
+    }
+
+    input:focus-visible, button:focus-visible {
+        outline: 2px solid var(--accent-color);
+        outline-offset: -2px;
+    }
+}
