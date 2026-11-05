@@ -5,26 +5,25 @@
 {{ with index . 0 }}
 <style>
     body {
-        --wallpaper-wash: rgba(245, 245, 250, 0.72);
-        --wallpaper-image: url({{ .Permalink }});
-        --wallpaper-overlay: linear-gradient(var(--wallpaper-wash), var(--wallpaper-wash));
-        background-image: var(--wallpaper-overlay), var(--wallpaper-image);
-        background-repeat: no-repeat;
-        background-position: center top;
+        background:
+            linear-gradient(rgba(245, 245, 250, 0.72), rgba(245, 245, 250, 0.72)),
+            url({{ .Permalink }}) no-repeat center top;
         background-size: cover;
         background-attachment: fixed;
     }
 
     [data-scheme="dark"] body {
-        --wallpaper-wash: rgba(48, 48, 48, 0.62);
+        background:
+            linear-gradient(rgba(48, 48, 48, 0.62), rgba(48, 48, 48, 0.62)),
+            url({{ .Permalink }}) no-repeat center top;
+        background-size: cover;
+        background-attachment: fixed;
     }
     {{ if eq (path.Base .Name) "wallpaper-25a7bd91.jpg" }}
-    /* 宽屏保留上下两排人物，两侧用同图缩略图铺底。 */
+    /* 宽屏继续铺满画面，稍微下移取景，兼顾上下两排人物。 */
     @media (min-width: 768px) and (min-aspect-ratio: 3/2) {
-        body {
-            background-image: var(--wallpaper-overlay), var(--wallpaper-image), url({{ (.Resize "32x").Permalink }});
-            background-size: cover, min(100vw, 151vh) auto, cover;
-            background-position: center;
+        body, [data-scheme="dark"] body {
+            background-position: center 52%;
         }
     }
     {{ end }}
