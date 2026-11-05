@@ -1,7 +1,7 @@
 (function () {
     const STORAGE_KEY = "elainaMusicPlayerState";
     const PLAYER_ID = "elaina-music-player";
-    const ALGORITHM_ENTRY_TRACK_NAMES = ["Magia", "Everyday World"];
+    const ALGORITHM_ENTRY_TRACK_NAMES = ["Inside Identity"];
     const PLAYBACK_MODES = ["list", "random", "repeat-one"];
     const PLAYBACK_MODE_LABELS = {
         list: "List loop",
