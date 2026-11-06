@@ -135,7 +135,7 @@
             if (form) form.removeAttribute("aria-busy");
             if (button) {
                 button.disabled = false;
-                button.textContent = "打开笔记";
+                button.textContent = "打开";
             }
             if (reveal) reveal.disabled = false;
         }

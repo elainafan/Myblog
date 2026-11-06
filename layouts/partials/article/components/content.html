@@ -1,27 +1,28 @@
 <section class="article-content">
     {{ if .Params.encrypt }}
     <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
+      <div class="encrypt-box__layout">
         <div class="encrypt-box__intro">
-            <p class="encrypt-box__line" data-encrypt-line>请先输入暗号，再继续阅读。</p>
             <div class="encrypt-box__cast" data-encrypt-cast aria-hidden="true">
                 <div class="encrypt-box__portrait">
                     <img class="encrypt-box__character" data-encrypt-character alt="" draggable="false" decoding="async">
                 </div>
             </div>
+            <p class="encrypt-box__line" data-encrypt-line>请先输入暗号，再继续阅读。</p>
         </div>
         <form class="encrypt-box__form" onsubmit="event.preventDefault(); unlockEncryptedPost();">
-            <label class="encrypt-box__label" for="pwd">暗号</label>
             <div class="encrypt-box__controls">
                 <div class="encrypt-box__input-wrap">
-                    <input type="password" id="pwd" autocomplete="current-password" placeholder="输入暗号"
+                    <input type="password" id="pwd" autocomplete="current-password" placeholder="输入" aria-label="暗号"
                         autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-describedby="encrypt-message">
                     <button type="button" class="encrypt-box__reveal" onclick="togglePostPassword()"
                         aria-controls="pwd" aria-pressed="false">显示</button>
                 </div>
-                <button type="submit" class="encrypt-box__submit">打开笔记</button>
+                <button type="submit" class="encrypt-box__submit">打开</button>
             </div>
             <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
         </form>
+      </div>
         <noscript>请启用 JavaScript 后输入暗号。</noscript>
     </div>
     <div id="encrypt-unlocked" class="encrypt-unlocked" hidden>
