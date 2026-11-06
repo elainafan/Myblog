@@ -1,0 +1,38 @@
+[
+  {
+    "id": "kuroneko",
+    "name": "黑猫（五更琉璃）",
+    "line": "呵……竟然找到了这里。想要窥探堕天圣黑猫的秘密，就献上契约的密语吧。",
+    "image": "/images/encrypt-cast/v2/kuroneko.webp",
+    "accent": "#915c7b",
+    "rgb": "145, 92, 123",
+    "source": "https://yande.re/post/show/166797"
+  },
+  {
+    "id": "umi",
+    "name": "园田海未",
+    "line": "等、等一下！未经允许就翻看别人的笔记……太、太不知羞耻了！请先说出暗号！",
+    "image": "/images/encrypt-cast/v2/umi.webp",
+    "accent": "#456c99",
+    "rgb": "69, 108, 153",
+    "source": "https://idol.st/idol/13/Sonoda-Umi/"
+  },
+  {
+    "id": "natsumi",
+    "name": "镜野七罪",
+    "line": "噫？！你、你为什么会找到这里啊？！该不会是专门来看我笑话的吧？！……反、反正你肯定不知道暗号！快走开啦！",
+    "image": "/images/encrypt-cast/v2/natsumi.webp",
+    "accent": "#42766b",
+    "rgb": "66, 118, 107",
+    "source": "https://www.compileheart.com/date/ren/chara/?page=natsumi"
+  },
+  {
+    "id": "kaguya",
+    "name": "八舞耶俱矢",
+    "line": "哼哼！竟能抵达吾以飓风封印的禁域！凡人，报上解放结界的真言吧！",
+    "image": "/images/encrypt-cast/v2/kaguya.webp",
+    "accent": "#a66539",
+    "rgb": "166, 101, 57",
+    "source": "https://www.compileheart.com/date/ren/chara/?page=kaguya"
+  }
+]

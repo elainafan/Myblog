@@ -1,29 +1,39 @@
 <section class="article-content">
     {{ if .Params.encrypt }}
-    <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
-        <div class="encrypt-box__body">
-            <p class="encrypt-box__eyebrow">SECRET NOTE</p>
-            <h2>才、才不是谁都能看的笔记呢！</h2>
-            <p class="encrypt-box__hint">输入暗号的话……也不是不能让你看一下。</p>
-            <div class="encrypt-box__form">
-                <input type="password" id="pwd" autocomplete="current-password" aria-label="输入暗号">
-                <button type="button" class="encrypt-box__submit" onclick="unlockEncryptedPost()"
-                    aria-label="确认暗号">♡</button>
-            </div>
-            <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
-        </div>
-
-        <div class="encrypt-box__cast" data-encrypt-cast
-            data-eriri-src="{{ `/images/eriri-lock.png` | relURL }}"
-            data-mikoto-src="{{ `/images/encrypt-cast/mikoto.png` | relURL }}"
-            data-taiga-src="{{ `/images/encrypt-cast/taiga.png` | relURL }}"
-            data-kurisu-src="{{ `/images/encrypt-cast/kurisu.png` | relURL }}">
-            <div class="encrypt-box__portrait" aria-hidden="true">
-                <img class="encrypt-box__character" data-encrypt-character alt="" draggable="false">
+    <div id="encrypt-box" class="encrypt-box" data-lock-state="idle" data-page-key="{{ .RelPermalink }}">
+        <div class="encrypt-box__intro">
+            <p class="encrypt-box__eyebrow" data-encrypt-name>熟人暗号</p>
+            <p class="encrypt-box__line" data-encrypt-line>请先输入暗号，再继续阅读。</p>
+            <div class="encrypt-box__cast" data-encrypt-cast aria-hidden="true">
+                <div class="encrypt-box__portrait">
+                    <img class="encrypt-box__character" data-encrypt-character alt="" draggable="false" decoding="async">
+                </div>
             </div>
         </div>
+        <form class="encrypt-box__form" onsubmit="event.preventDefault(); unlockEncryptedPost();">
+            <label class="encrypt-box__label" for="pwd">暗号</label>
+            <div class="encrypt-box__controls">
+                <div class="encrypt-box__input-wrap">
+                    <input type="password" id="pwd" autocomplete="current-password" placeholder="输入暗号"
+                        autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-describedby="encrypt-message">
+                    <button type="button" class="encrypt-box__reveal" onclick="togglePostPassword()"
+                        aria-controls="pwd" aria-pressed="false">显示</button>
+                </div>
+                <button type="submit" class="encrypt-box__submit">打开笔记</button>
+            </div>
+            <div class="encrypt-box__foot">
+                <label class="encrypt-box__remember">
+                    <input type="checkbox" id="encrypt-remember" checked>本标签页记住
+                </label>
+                <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
+            </div>
+        </form>
+        <noscript>请启用 JavaScript 后输入暗号。</noscript>
     </div>
-
+    <div id="encrypt-unlocked" class="encrypt-unlocked" hidden>
+        <span>暗号已确认</span>
+        <button type="button" onclick="lockEncryptedPost()" aria-controls="post-content">重新上锁</button>
+    </div>
     <div id="post-content" style="display:none;">
         {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") |
         safeHTML }}
