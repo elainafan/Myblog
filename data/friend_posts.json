@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T01:14:08.802072+00:00",
+  "generated_at": "2026-11-06T10:03:18.186545+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -306,7 +306,7 @@
       "timeout": null,
       "retries": null,
       "status": "ok",
-      "post_count": 18
+      "post_count": 19
     }
   ],
   "warnings": [
@@ -316,6 +316,17 @@
     }
   ],
   "posts": [
+    {
+      "friend": "亭外日录",
+      "site": "https://akutagawa.cn/",
+      "feed": "https://akutagawa.cn/rss.xml",
+      "avatar": "https://akutagawa.cn/avatar.png",
+      "title": "一本关于芥川龙之介的旧书",
+      "url": "https://akutagawa.cn/blog/article-57ec8734-4570-4bb9-9115-71ef2975fa2a",
+      "summary": "《二つの繪——芥川龍之介の囘想》",
+      "published": "2026-11-06T00:00:00+00:00",
+      "published_text": "Fri, 06 Nov 2026 00:00:00 GMT"
+    },
     {
       "friend": "Yjy's blog",
       "site": "https://yjyxfcy.github.io/",
