@@ -1,8 +1,7 @@
 <section class="article-content">
     {{ if .Params.encrypt }}
-    <div id="encrypt-box" class="encrypt-box" data-lock-state="idle" data-page-key="{{ .RelPermalink }}">
+    <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
         <div class="encrypt-box__intro">
-            <p class="encrypt-box__eyebrow" data-encrypt-name>熟人暗号</p>
             <p class="encrypt-box__line" data-encrypt-line>请先输入暗号，再继续阅读。</p>
             <div class="encrypt-box__cast" data-encrypt-cast aria-hidden="true">
                 <div class="encrypt-box__portrait">
@@ -21,12 +20,7 @@
                 </div>
                 <button type="submit" class="encrypt-box__submit">打开笔记</button>
             </div>
-            <div class="encrypt-box__foot">
-                <label class="encrypt-box__remember">
-                    <input type="checkbox" id="encrypt-remember" checked>本标签页记住
-                </label>
-                <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
-            </div>
+            <p id="encrypt-message" class="encrypt-box__message" role="status" aria-live="polite"></p>
         </form>
         <noscript>请启用 JavaScript 后输入暗号。</noscript>
     </div>

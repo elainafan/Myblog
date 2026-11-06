@@ -6,28 +6,6 @@
     window.__ELAINA_POST_LOCK_INITIALIZED__ = true;
 
     const expectedDigest = "3fa5179a0d266b35635ae87d1b9ea61d8543e75605871069d924f9c515dc24aa";
-    const storagePrefix = "elainaPostUnlock:v1:" + expectedDigest.slice(0, 12) + ":";
-
-    function storageKey(box) {
-        return storagePrefix + (box.dataset.pageKey || window.location.pathname);
-    }
-
-    function isRemembered(box) {
-        try {
-            return sessionStorage.getItem(storageKey(box)) === "1";
-        } catch (_) {
-            return false;
-        }
-    }
-
-    function remember(box, unlocked) {
-        try {
-            if (unlocked) sessionStorage.setItem(storageKey(box), "1");
-            else sessionStorage.removeItem(storageKey(box));
-        } catch (_) {
-            // Reading still works when browser storage is unavailable.
-        }
-    }
 
     function revealContent(box, focusContent) {
         const content = document.getElementById("post-content");
@@ -58,16 +36,13 @@
                 box.dataset.encryptCharacter = character.id;
                 box.style.setProperty("--encrypt-accent", character.accent);
                 box.style.setProperty("--encrypt-accent-rgb", character.rgb);
-                const name = box.querySelector("[data-encrypt-name]");
                 const line = box.querySelector("[data-encrypt-line]");
-                if (name) name.textContent = character.name;
                 if (line) line.textContent = character.line;
                 image.src = character.image;
                 box.dataset.castReady = "true";
             }
         }
 
-        if (isRemembered(box)) revealContent(box, false);
     };
 
     async function derivePostPassword(password) {
@@ -140,8 +115,6 @@
             // A PJAX navigation may have replaced this page while the KDF ran.
             if (!box.isConnected || document.getElementById("encrypt-box") !== box) return;
             if (digest === expectedDigest) {
-                const checkbox = document.getElementById("encrypt-remember");
-                remember(box, !!checkbox && checkbox.checked);
                 input.value = "";
                 if (message) message.textContent = "";
                 revealContent(box, true);
@@ -172,7 +145,6 @@
         const box = document.getElementById("encrypt-box");
         const content = document.getElementById("post-content");
         if (!box || !content) return;
-        remember(box, false);
         box.hidden = false;
         box.style.display = "";
         box.dataset.lockState = "idle";

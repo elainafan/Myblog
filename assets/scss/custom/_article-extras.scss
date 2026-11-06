@@ -18,25 +18,15 @@
 .encrypt-box__intro {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 152px;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto;
   gap: 8px 22px;
   align-items: center;
 }
 
-.encrypt-box .encrypt-box__eyebrow {
-  grid-column: 1;
-  grid-row: 1;
-  margin: 0;
-  color: var(--card-text-color-secondary);
-  font-size: 1.4rem;
-  line-height: 1.5;
-  font-weight: 500;
-}
-
 .encrypt-box .encrypt-box__line {
   grid-column: 1;
-  grid-row: 2;
-  align-self: start;
+  grid-row: 1;
+  align-self: center;
   margin: 0;
   font-size: 1.7rem;
   line-height: 1.8;
@@ -46,7 +36,7 @@
 
 .encrypt-box__cast {
   grid-column: 2;
-  grid-row: 1 / 3;
+  grid-row: 1;
   align-self: center;
   width: 152px;
 }
@@ -117,20 +107,7 @@
   white-space: nowrap;
 }
 .encrypt-box button:disabled { opacity: .65; cursor: wait; }
-.encrypt-box__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 7px; }
-.encrypt-box__remember {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  width: fit-content;
-  min-height: 32px;
-  margin: 0;
-  color: var(--card-text-color-secondary);
-  font-size: 1.3rem;
-  cursor: pointer;
-}
-.encrypt-box__remember input { width: 16px; height: 16px; margin: 0; accent-color: var(--encrypt-accent); }
-.encrypt-box .encrypt-box__message { flex: 1 1 120px; min-height: 22px; margin: 0; font-size: 1.35rem; line-height: 1.6; color: #a73845; }
+.encrypt-box .encrypt-box__message { min-height: 22px; margin: 8px 0 0; font-size: 1.35rem; line-height: 1.6; color: #a73845; }
 .encrypt-box input[aria-invalid="true"] { border-color: #a73845; }
 .encrypt-box[data-lock-state="checking"] .encrypt-box__message { color: var(--card-text-color-secondary); }
 [data-scheme="dark"] .encrypt-box .encrypt-box__message { color: #ffb4bd; }
@@ -163,10 +140,14 @@
 
 @container entry-lock (max-width: 480px) {
   .encrypt-box__intro { grid-template-columns: minmax(0, 1fr) 88px; gap: 12px; }
-  .encrypt-box__eyebrow { align-self: center; }
   .encrypt-box__cast { grid-column: 2; grid-row: 1; width: 88px; }
   .encrypt-box__portrait { height: 96px; }
-  .encrypt-box .encrypt-box__line { grid-column: 1 / -1; grid-row: 2; font-size: 1.6rem; line-height: 1.75; }
+  .encrypt-box .encrypt-box__line { font-size: 1.6rem; line-height: 1.75; }
+}
+@container entry-lock (max-width: 300px) {
+  .encrypt-box__intro { grid-template-columns: minmax(0, 1fr); }
+  .encrypt-box__cast { grid-column: 1; grid-row: 1; justify-self: center; }
+  .encrypt-box .encrypt-box__line { grid-column: 1; grid-row: 2; }
 }
 @container entry-lock (max-width: 250px) {
   .encrypt-box__controls { grid-template-columns: minmax(0, 1fr); }
