@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-11T03:35:51.453280+00:00",
+  "generated_at": "2026-11-11T13:07:27.696807+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -420,6 +420,17 @@
       "site": "https://equinox.wiki/",
       "feed": "https://equinox.wiki/index.xml",
       "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
+      "title": "Disentangling Long Term Memory via Latent Neuro Symbolic Reasoning",
+      "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/parametriclatent/disentangling-long-term-memory-via-latent-neuro-symbolic-reasoning/",
+      "summary": "Disentangling Long Term Memory via Latent Neuro Symbolic Reasoning 作者：Equinox（shixy2003@gmail.com） 本文2026-11-01首发于 Welcome to Equinox's wiki！ ，最后修改于2026-11-01",
+      "published": "2026-11-01T09:24:14+00:00",
+      "published_text": "Sun, 01 Nov 2026 17:24:14 +0800"
+    },
+    {
+      "friend": "Equinox",
+      "site": "https://equinox.wiki/",
+      "feed": "https://equinox.wiki/index.xml",
+      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
       "title": "论文速览 | Memory Retrieval for Changing Preferences",
       "url": "https://blog.equinox.wiki/post/paper-reading/agent-memory/retrieve/memory-retrieval-for-changing-preferences/",
       "summary": "论文速览 | Memory Retrieval for Changing Preferences 作者：Equinox（shixy2003@gmail.com） 本文2026-10-28首发于 Welcome to Equinox's wiki！ ，最后修改于2026-10-28",
@@ -535,17 +546,6 @@
       "summary": "[CH02]Generating text with a pretrained LLM 作者：Equinox（shixy2003@gmail.com） 本文2026-09-26首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-26",
       "published": "2026-09-25T16:26:43+00:00",
       "published_text": "Sat, 26 Sep 2026 00:26:43 +0800"
-    },
-    {
-      "friend": "Equinox",
-      "site": "https://equinox.wiki/",
-      "feed": "https://equinox.wiki/index.xml",
-      "avatar": "https://8504cc9c.cloudflare-imgbed-8qo.pages.dev/file/1779453776014_image.png",
-      "title": "[CH01]Understanding reasoning models",
-      "url": "https://blog.equinox.wiki/post/reasoning-from-scratch/ch01understanding-reasoning-models/",
-      "summary": "[CH01]Understanding reasoning models 作者：Equinox（shixy2003@gmail.com） 本文2026-09-25首发于 Welcome to Equinox's wiki！ ，最后修改于2026-09-25",
-      "published": "2026-09-25T14:50:27+00:00",
-      "published_text": "Fri, 25 Sep 2026 22:50:27 +0800"
     },
     {
       "friend": "MODUSENSUS",
