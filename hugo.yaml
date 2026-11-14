@@ -20,7 +20,7 @@ languages:
         title: Elainafan
         weight: 2
         params:
-            description: 痛饮所有踌躇之后？记录编程、算法、音乐、动画与建站折腾。
+            description: 堕入无数璀璨的梦境。记录编程、算法、音乐、动画与建站折腾。
 services:
     # Change it to your Disqus shortname before using
     disqus:
@@ -34,7 +34,7 @@ permalinks:
     page: /:slug/
 
 params:
-    description: 痛饮所有踌躇之后？记录编程、算法、音乐、动画与建站折腾。
+    description: 堕入无数璀璨的梦境。记录编程、算法、音乐、动画与建站折腾。
     mainSections:
         - post
     featuredImageField: image
@@ -52,7 +52,7 @@ params:
 
     sidebar:
         emoji: 😉
-        subtitle: 痛饮所有踌躇之后？
+        subtitle: 堕入无数璀璨的梦境
         avatar:
             enabled: true
             local: true
