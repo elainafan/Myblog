@@ -109,7 +109,7 @@ comments: true
 参考样式&本站信息：
 ```
 title: Elainafan's blog
-description: 痛饮所有踌躇之后？
+description: 坠入无数璀璨的梦境
 website: https://www.elainafan.one/
 image: https://www.elainafan.one/avatars/elainafan.jpg
 ```
