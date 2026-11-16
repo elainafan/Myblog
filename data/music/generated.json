@@ -268,5 +268,35 @@
     "bvid": "BV1axp1eAESj",
     "page": 1,
     "sourceUrl": "https://www.bilibili.com/video/BV1axp1eAESj"
+  },
+  {
+    "name": "梦想之门",
+    "artist": "μ's",
+    "url": "/music/bilibili/BV13bp1ecEWr/music.m4a",
+    "cover": "/music/bilibili/BV13bp1ecEWr/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV13bp1ecEWr",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV13bp1ecEWr"
+  },
+  {
+    "name": "我们是合而为一的光芒",
+    "artist": "μ's",
+    "url": "/music/bilibili/BV1Kzp1eWEPe/music.m4a",
+    "cover": "/music/bilibili/BV1Kzp1eWEPe/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1Kzp1eWEPe",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1Kzp1eWEPe"
+  },
+  {
+    "name": "SUNNY DAY SONG",
+    "artist": "μ's",
+    "url": "/music/bilibili/BV1A2p1eUENu/music.m4a",
+    "cover": "/music/bilibili/BV1A2p1eUENu/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV1A2p1eUENu",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV1A2p1eUENu"
   }
 ]
