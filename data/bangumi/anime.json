@@ -3,17 +3,17 @@
   "user": "1020990",
   "subject_type": 2,
   "total": 133,
-  "fetched_at": "2026-11-16T15:29:24+00:00",
+  "fetched_at": "2026-11-16T15:31:06+00:00",
   "data": [
     {
-      "updated_at": "2026-11-16T23:29:23+08:00",
+      "updated_at": "2026-11-16T23:29:25+08:00",
       "comment": null,
       "tags": [],
       "subject_id": 165553,
       "subject_type": 2,
       "type": 3,
       "rate": 0,
-      "ep_status": 2,
+      "ep_status": 3,
       "vol_status": 0,
       "private": false,
       "subject": {
@@ -2352,7 +2352,7 @@
         "score": 7.4,
         "rank": 1162,
         "eps": 1,
-        "collection_total": 28261,
+        "collection_total": 28260,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/10/19/260680_Sx2HP.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/10/19/260680_Sx2HP.jpg",
