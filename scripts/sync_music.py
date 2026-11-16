@@ -56,6 +56,8 @@ BILIBILI_EXCLUDED_VIDEOS = {
     "BV1Ns411M7TG",
     "BV15k4y1m7zb",  # 厘米 / センチメートル
     "BV1ab411S7UV",  # SAVE MY HEART
+    "BV1du4m1u7rL",  # 夢の続き
+    "BV15NbN6jEM3",  # 梦想世界
 }
 BILIBILI_EXCLUDED_PAGES = {
     "BV1chikYJEMZ": {
