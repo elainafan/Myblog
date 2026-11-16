@@ -1,90 +1,5 @@
 [
   {
-    "folder": "bilibili/BV1n5411D77G",
-    "name": "Magia",
-    "artist": "Kalafina"
-  },
-  {
-    "folder": "bilibili/BV1me411Q7hf",
-    "name": "God Knows...",
-    "artist": "平野绫"
-  },
-  {
-    "folder": "bilibili/BV1fx411K7km",
-    "name": "人大森☆我叫要不",
-    "artist": "丹生谷森夏"
-  },
-  {
-    "folder": "bilibili/BV1chikYJEMZ/p02",
-    "name": "Don't Say Lazy",
-    "artist": "樱高轻音部"
-  },
-  {
-    "folder": "bilibili/BV1chikYJEMZ/p03",
-    "name": "ふわふわ時間",
-    "artist": "樱高轻音部"
-  },
-  {
-    "folder": "bilibili/BV1chikYJEMZ/p12",
-    "name": "No, Thank You!",
-    "artist": "樱高轻音部"
-  },
-  {
-    "folder": "bilibili/BV1chikYJEMZ/p20",
-    "name": "Singing!",
-    "artist": "樱高轻音部"
-  },
-  {
-    "folder": "bilibili/BV1iz421q7cd",
-    "name": "LOVE 2000",
-    "artist": "八奈见杏菜 / hitomi"
-  },
-  {
-    "folder": "bilibili/BV1nt411z7Wq",
-    "name": "Inside Identity",
-    "artist": "Black Raison d'etre"
-  },
-  {
-    "folder": "bilibili/BV17h411S7R5",
-    "name": "Sparkling Daydream",
-    "artist": "ZAQ"
-  },
-  {
-    "folder": "bilibili/BV1MEmjYQE44",
-    "name": "君にまつわるミステリー",
-    "artist": "佐藤聪美、茅野爱衣"
-  },
-  {
-    "folder": "bilibili/BV1Q2421M7pf/p02",
-    "name": "Everyday World",
-    "artist": "雪之下雪乃、由比滨结衣"
-  },
-  {
-    "folder": "bilibili/BV1bf4y1978H",
-    "name": "告白バンジージャンプ",
-    "artist": "halca"
-  },
-  {
-    "folder": "bilibili/BV1Du411J7xv",
-    "name": "Sweet Hurt",
-    "artist": "ReoNa"
-  },
-  {
-    "folder": "bilibili/BV1bZ4y1W7C6",
-    "name": "SAVE THE WORLD",
-    "artist": "野水いおり"
-  },
-  {
-    "folder": "bilibili/BV13W8gzkEi2",
-    "name": "why, or why not",
-    "artist": "片霧烈火"
-  },
-  {
-    "folder": "bilibili/BV1j7411A7mB",
-    "name": "ひぐらしのなく頃に",
-    "artist": "島みやえい子"
-  },
-  {
     "folder": "bilibili/BV1Ji421i7vJ",
     "name": "僕らは今のなかで",
     "artist": "μ's"
@@ -95,23 +10,13 @@
     "artist": "高坂穗乃果、南小鸟、园田海未"
   },
   {
-    "folder": "bilibili/BV1BG4y1c7oU",
-    "name": "きっと青春が聞こえる",
-    "artist": "μ's"
-  },
-  {
-    "folder": "bilibili/BV1WCp1eDEZ6",
-    "name": "Snow halation",
-    "artist": "μ's"
-  },
-  {
     "folder": "bilibili/BV1G4p1eYEv5",
     "name": "Wonder zone",
     "artist": "μ's"
   },
   {
-    "folder": "bilibili/BV1g8p1e8EM2",
-    "name": "无论何时都永远",
+    "folder": "bilibili/BV1BG4y1c7oU",
+    "name": "きっと青春が聞こえる",
     "artist": "μ's"
   },
   {
@@ -130,13 +35,108 @@
     "artist": "μ's"
   },
   {
-    "folder": "bilibili/BV1Kzp1eWEPe",
-    "name": "我们是合而为一的光芒",
+    "folder": "bilibili/BV1WCp1eDEZ6",
+    "name": "Snow halation",
+    "artist": "μ's"
+  },
+  {
+    "folder": "bilibili/BV1g8p1e8EM2",
+    "name": "无论何时都永远",
     "artist": "μ's"
   },
   {
     "folder": "bilibili/BV1A2p1eUENu",
     "name": "SUNNY DAY SONG",
     "artist": "μ's"
+  },
+  {
+    "folder": "bilibili/BV1Kzp1eWEPe",
+    "name": "我们是合而为一的光芒",
+    "artist": "μ's"
+  },
+  {
+    "folder": "bilibili/BV17h411S7R5",
+    "name": "Sparkling Daydream",
+    "artist": "ZAQ"
+  },
+  {
+    "folder": "bilibili/BV1nt411z7Wq",
+    "name": "Inside Identity",
+    "artist": "Black Raison d'etre"
+  },
+  {
+    "folder": "bilibili/BV1fx411K7km",
+    "name": "人大森☆我叫要不",
+    "artist": "丹生谷森夏"
+  },
+  {
+    "folder": "bilibili/BV1chikYJEMZ/p03",
+    "name": "ふわふわ時間",
+    "artist": "樱高轻音部"
+  },
+  {
+    "folder": "bilibili/BV1chikYJEMZ/p02",
+    "name": "Don't Say Lazy",
+    "artist": "樱高轻音部"
+  },
+  {
+    "folder": "bilibili/BV1chikYJEMZ/p12",
+    "name": "No, Thank You!",
+    "artist": "樱高轻音部"
+  },
+  {
+    "folder": "bilibili/BV1chikYJEMZ/p20",
+    "name": "Singing!",
+    "artist": "樱高轻音部"
+  },
+  {
+    "folder": "bilibili/BV1me411Q7hf",
+    "name": "God Knows...",
+    "artist": "平野绫"
+  },
+  {
+    "folder": "bilibili/BV1iz421q7cd",
+    "name": "LOVE 2000",
+    "artist": "八奈见杏菜 / hitomi"
+  },
+  {
+    "folder": "bilibili/BV1MEmjYQE44",
+    "name": "君にまつわるミステリー",
+    "artist": "佐藤聪美、茅野爱衣"
+  },
+  {
+    "folder": "bilibili/BV1bf4y1978H",
+    "name": "告白バンジージャンプ",
+    "artist": "halca"
+  },
+  {
+    "folder": "bilibili/BV1Q2421M7pf/p02",
+    "name": "Everyday World",
+    "artist": "雪之下雪乃、由比滨结衣"
+  },
+  {
+    "folder": "bilibili/BV1bZ4y1W7C6",
+    "name": "SAVE THE WORLD",
+    "artist": "野水いおり"
+  },
+  {
+    "folder": "bilibili/BV1Du411J7xv",
+    "name": "Sweet Hurt",
+    "artist": "ReoNa"
+  },
+  {
+    "folder": "bilibili/BV1n5411D77G",
+    "name": "Magia",
+    "artist": "Kalafina"
+  },
+  {
+    "folder": "bilibili/BV1j7411A7mB",
+    "name": "ひぐらしのなく頃に",
+    "artist": "島みやえい子"
+  },
+  {
+    "folder": "bilibili/BV13W8gzkEi2",
+    "name": "why, or why not",
+    "artist": "片霧烈火"
   }
 ]
