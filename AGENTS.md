@@ -136,9 +136,9 @@
 - 歌手规范：不要把 UP 主默认当作歌手。优先使用真实演唱者；角色歌或动画内由角色演唱、角色身份更有意义时，使用作品中的角色名。
 - 分 P 不能一刀切。脚本默认同步一个 BVID 的全部分 P，但 `scripts/sync_music.py` 的 `BILIBILI_PAGE_SELECTION` 可以为特定 BVID 指定保留页；是否保留 P2 及后续页要按实际歌曲内容判断。
 - `BV1MW4y1S7nL`（天津四与角宿一）和 `BV13a411H7mU`（两人的匹诺曹）只保留 P1，不要同步 P2。
-- `BV1chikYJEMZ`（轻音合集）只保留 P1、P2、P3、P4、P12、P19、P20，即 `Cagayake! GIRLS`、`Don't Say Lazy`、澪版和唯版 `ふわふわ時間`、`No, Thank You!`、`五月雨20ラブ`、`Singing!`；明确排除 P21 破音版及其他分 P。
-- 其他已知需保留全部分 P 的投稿包括 `BV1K2421F737`（春物 OP 合集，P1–P3）和 `BV1Q2421M7pf`（春物 ED 合集，P1–P3）。遇到新的多 P 投稿时先检查每一 P；无法判断就停止并向用户确认 `BVID → 保留哪些 P`，不得猜测后直接运行非 dry-run 同步。
-- `BILIBILI_EXCLUDED_VIDEOS` 保存“收藏夹中即使存在也不要进入本地歌单”的投稿；当前 `BV1Ns411M7TG`（`Step by Step Up`）必须排除。删除这类歌曲时同步更新该集合，否则下次抓取会重新下载。
+- `BV1chikYJEMZ`（轻音合集）当前只保留 P2、P3、P12、P20，即 `Don't Say Lazy`、澪版 `ふわふわ時間`、`No, Thank You!`、`Singing!`。P1 `Cagayake! GIRLS`、P4 唯版 `ふわふわ時間`、P19 `五月雨20ラブ` 已列入分 P 禁用名单；P21 破音版及其他未选分 P 也不加入歌单。
+- `BV1K2421F737`（春物 OP 合集）保留 P1–P3。`BV1Q2421M7pf`（春物 ED 合集）只保留 P2 `Everyday World`，P1 `Hello Alone` 和 P3 `ダイヤモンドの純度` 已禁用。筛选后只剩 P2 时仍须保留 `p02` 目录和 `?p=2` 地址。遇到新的多 P 投稿时先检查每一 P；无法判断就停止并向用户确认 `BVID → 保留哪些 P`，不得猜测后直接运行非 dry-run 同步。
+- `BILIBILI_EXCLUDED_VIDEOS` 保存整段投稿的禁用名单：`BV1Ns411M7TG`（`Step by Step Up`）、`BV15k4y1m7zb`（《厘米》）、`BV1ab411S7UV`（`SAVE MY HEART`）。`BILIBILI_EXCLUDED_PAGES` 保存合集内单曲的禁用名单，优先于分 P 选择规则。即使这些歌曲仍在收藏夹中也不重新加入；删除歌曲时同步更新对应名单。
 - `scripts/sync_music.py` 的 Bilibili 模式会调用 `yt-dlp`、下载媒体并改写 `static/music/bilibili/` 与生成数据；非 dry-run 还会清理未包含在本次列表中的旧曲目。小范围探查只能把 `--limit` 与 `--dry-run` 联用：单独使用 `--limit` 会把截断范围外的现有曲目当作 stale 删除。dry-run 仍会重写 `data/music/generated.json`，所以同样要先记录状态并审查 diff。不要随意使用 `--force`。
 - 私有 Bilibili Cookie 只放在环境变量或被忽略的 `bilibili.cookie.txt`。不得打印、提交或复制到文章、日志和交接说明中。
 

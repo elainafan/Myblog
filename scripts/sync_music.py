@@ -46,15 +46,32 @@ BILIBILI_PAGE_SELECTION = {
     # videos, but only P1 is the actual track needed by the playlist.
     "BV1MW4y1S7nL": {1},
     "BV13a411H7mU": {1},
-    # K-ON!: keep both Mio/Yui versions of ふわふわ時間, but not the
-    # intentionally broken-vocal P21 version.
+    # K-ON!: eligible tracks; explicit exclusions below take precedence.
+    # The intentionally broken-vocal P21 version is never selected.
     "BV1chikYJEMZ": {1, 2, 3, 4, 12, 19, 20},
 }
 BILIBILI_EXCLUDED_VIDEOS = {
     # NEW GAME! OP. Keep it out of the local playlist even if it remains in
     # the Bilibili favorite list.
     "BV1Ns411M7TG",
+    "BV15k4y1m7zb",  # 厘米 / センチメートル
+    "BV1ab411S7UV",  # SAVE MY HEART
 }
+BILIBILI_EXCLUDED_PAGES = {
+    "BV1chikYJEMZ": {
+        1,   # Cagayake! GIRLS
+        4,   # ふわふわ時間（唯版）; keep the Mio version at P3.
+        19,  # 五月雨20ラブ
+    },
+    "BV1Q2421M7pf": {
+        1,  # Hello Alone
+        3,  # ダイヤモンドの純度; keep Everyday World at P2.
+    },
+}
+
+
+def is_bilibili_track_excluded(bvid: str, page: int) -> bool:
+    return bvid in BILIBILI_EXCLUDED_VIDEOS or page in BILIBILI_EXCLUDED_PAGES.get(bvid, set())
 
 # Bilibili titles are video titles, not reliable song metadata. After each sync,
 # add overrides in data/music/local.json so the player shows song title + singer:
@@ -132,6 +149,9 @@ def discover_track(directory: Path, overrides: dict[str, dict[str, Any]]) -> dic
     key = folder_key(directory)
     info = load_json(directory / "info.json", {})
     info.update(overrides.get(key, overrides.get(directory.name, {})))
+
+    if is_bilibili_track_excluded(info.get("bvid", ""), int(info.get("page") or 1)):
+        return None
 
     cover = find_cover(directory)
     track = {
@@ -350,6 +370,12 @@ def sync_bilibili(args: argparse.Namespace) -> None:
                 if int(page.get("page") or 1) in selected_pages
             ]
         page_count = len(pages)
+        # Keep the existing folder and ?p= URL when exclusions leave only one
+        # track from a multi-part upload (for example, Everyday World at P2).
+        pages = [
+            page for page in pages
+            if not is_bilibili_track_excluded(bvid, int(page.get("page") or 1))
+        ]
 
         for page_info in pages:
             page = int(page_info.get("page") or 1)

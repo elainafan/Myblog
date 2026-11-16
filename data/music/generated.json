@@ -30,16 +30,6 @@
     "sourceUrl": "https://www.bilibili.com/video/BV1fx411K7km"
   },
   {
-    "name": "Cagayake! GIRLS",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p01/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p01/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 1,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=1"
-  },
-  {
     "name": "Don't Say Lazy",
     "artist": "樱高轻音部",
     "url": "/music/bilibili/BV1chikYJEMZ/p02/music.m4a",
@@ -60,16 +50,6 @@
     "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=3"
   },
   {
-    "name": "ふわふわ時間（唯版）",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p04/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p04/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 4,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=4"
-  },
-  {
     "name": "No, Thank You!",
     "artist": "樱高轻音部",
     "url": "/music/bilibili/BV1chikYJEMZ/p12/music.m4a",
@@ -78,16 +58,6 @@
     "bvid": "BV1chikYJEMZ",
     "page": 12,
     "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=12"
-  },
-  {
-    "name": "五月雨20ラブ",
-    "artist": "樱高轻音部",
-    "url": "/music/bilibili/BV1chikYJEMZ/p19/music.m4a",
-    "cover": "/music/bilibili/BV1chikYJEMZ/p19/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1chikYJEMZ",
-    "page": 19,
-    "sourceUrl": "https://www.bilibili.com/video/BV1chikYJEMZ?p=19"
   },
   {
     "name": "Singing!",
@@ -150,16 +120,6 @@
     "sourceUrl": "https://www.bilibili.com/video/BV1du4m1u7rL"
   },
   {
-    "name": "Hello Alone",
-    "artist": "雪之下雪乃、由比滨结衣",
-    "url": "/music/bilibili/BV1Q2421M7pf/p01/music.m4a",
-    "cover": "/music/bilibili/BV1Q2421M7pf/p01/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1Q2421M7pf",
-    "page": 1,
-    "sourceUrl": "https://www.bilibili.com/video/BV1Q2421M7pf?p=1"
-  },
-  {
     "name": "Everyday World",
     "artist": "雪之下雪乃、由比滨结衣",
     "url": "/music/bilibili/BV1Q2421M7pf/p02/music.m4a",
@@ -168,26 +128,6 @@
     "bvid": "BV1Q2421M7pf",
     "page": 2,
     "sourceUrl": "https://www.bilibili.com/video/BV1Q2421M7pf?p=2"
-  },
-  {
-    "name": "ダイヤモンドの純度",
-    "artist": "雪之下雪乃、由比滨结衣",
-    "url": "/music/bilibili/BV1Q2421M7pf/p03/music.m4a",
-    "cover": "/music/bilibili/BV1Q2421M7pf/p03/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1Q2421M7pf",
-    "page": 3,
-    "sourceUrl": "https://www.bilibili.com/video/BV1Q2421M7pf?p=3"
-  },
-  {
-    "name": "厘米",
-    "artist": "the peggies",
-    "url": "/music/bilibili/BV15k4y1m7zb/music.m4a",
-    "cover": "/music/bilibili/BV15k4y1m7zb/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV15k4y1m7zb",
-    "page": 1,
-    "sourceUrl": "https://www.bilibili.com/video/BV15k4y1m7zb"
   },
   {
     "name": "告白バンジージャンプ",
@@ -208,16 +148,6 @@
     "bvid": "BV1Du411J7xv",
     "page": 1,
     "sourceUrl": "https://www.bilibili.com/video/BV1Du411J7xv"
-  },
-  {
-    "name": "SAVE MY HEART",
-    "artist": "野水いおり",
-    "url": "/music/bilibili/BV1ab411S7UV/music.m4a",
-    "cover": "/music/bilibili/BV1ab411S7UV/cover.jpg",
-    "source": "bilibili",
-    "bvid": "BV1ab411S7UV",
-    "page": 1,
-    "sourceUrl": "https://www.bilibili.com/video/BV1ab411S7UV"
   },
   {
     "name": "SAVE THE WORLD",
