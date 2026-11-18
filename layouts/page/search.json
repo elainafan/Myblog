@@ -15,7 +15,7 @@
     {{- if .Params.encrypt -}}
         {{- $content = "本文已加密，请打开文章后输入密码阅读。" -}}
     {{- else -}}
-        {{- $content = .Plain -}}
+        {{- $content = partial "helper/render-alerts.html" .Content | plainify -}}
     {{- end -}}
     {{- $data := dict "title" .Title "date" .Date "permalink" .Permalink "content" $content -}}
     {{- if $chapter -}}

@@ -27,12 +27,13 @@
         {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
         {{- end -}}
         {{ range $pages }}
-        {{- $content := safeHTML (.Summary | html) -}}
-        {{- if .Site.Params.rssFullContent -}}
-            {{- $content = safeHTML (.Content | html) -}}
-        {{- end -}}
+        {{- $content := "" -}}
         {{- if .Params.encrypt -}}
             {{- $content = safeHTML ("本文已加密，请打开文章后输入密码阅读。" | html) -}}
+        {{- else if .Site.Params.rssFullContent -}}
+            {{- $content = safeHTML (partial "helper/render-alerts.html" .Content | html) -}}
+        {{- else -}}
+            {{- $content = safeHTML (partial "helper/alert-summary.html" . | html) -}}
         {{- end -}}
         <item>
         <title>{{ .Title }}</title>

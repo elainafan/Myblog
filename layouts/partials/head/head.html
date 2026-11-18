@@ -5,10 +5,18 @@
 <meta name='description' {{ printf "content=%q" $description | safeHTMLAttr }}>
 {{ with .Params.Keywords }}<meta name="keywords" content="{{ delimit . ", " }}">{{ end }}
 
+{{- $canonical := .Permalink -}}
+{{- if in (slice "home" "section" "taxonomy" "term") .Kind -}}
+    {{- $listing := partial "helper/paginated-list.html" . -}}
+    {{- if $listing.pager.HasPrev -}}
+        {{- $canonical = $listing.pager.URL | absURL -}}
+    {{- end -}}
+{{- end -}}
 {{- $title := partial "data/title" . -}}
 <title>{{ $title }}</title>
 
-<link rel='canonical' href='{{ .Permalink }}'>
+<link rel='canonical' href='{{ $canonical }}'>
+<meta property='og:url' content='{{ $canonical }}'>
 
 {{- partial "head/style.html" . -}}
 {{- partial "head/script.html" . -}}

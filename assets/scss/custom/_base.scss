@@ -76,10 +76,41 @@ code {
 //------------------------------------------------
 // 文章内容引用块样式
 .article-content {
-  blockquote {
+  blockquote:not(.article-alert) {
     border-left: 6px solid #358b9a1f !important;
     background: #3a97431f;
   }
+
+  blockquote.article-alert {
+    width: auto;
+    margin: 1.25em 0;
+    padding: .75em 1em;
+    border: 0;
+    border-inline-start: 4px solid var(--alert-color);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--alert-color) 8%, var(--card-background));
+
+    > .article-alert__title {
+      color: var(--alert-color);
+      font-size: .95em;
+      font-weight: 700;
+      margin: 0;
+    }
+    > .article-alert__title + * { margin-top: .35em; }
+    > :last-child { margin-bottom: 0; }
+  }
+}
+
+$article-alert-colors: (
+  note: (#245b99, #94c5ff),
+  tip: (#246749, #91d7b0),
+  important: (#694697, #d3b5ff),
+  warning: (#81510a, #f4cb83),
+  caution: (#953b47, #ffacb8)
+);
+@each $kind, $colors in $article-alert-colors {
+  .article-alert--#{$kind} { --alert-color: #{nth($colors, 1)}; }
+  [data-scheme="dark"] .article-alert--#{$kind} { --alert-color: #{nth($colors, 2)}; }
 }
 
 // ---------------------------------------

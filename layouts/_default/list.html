@@ -47,20 +47,11 @@
         </div>
     </header>
 
-    {{- $subsections := where .Sections "Params.hideFromCategoryList" "!=" true -}}
-    {{- $pages := where (.Pages | complement .Sections) "Params.hidden" "!=" true -}}
-    {{- $pages = where $pages "Params.hideFromCategoryList" "!=" true -}}
-    
-    {{- if eq (len $pages) 0 -}}
-        {{/* If there are no normal pages, display subsections in list style, with pagination */}}
-        {{/* This happens with taxonomies like categories or tags */}}
-        {{- $pages = $subsections -}}
-        {{- $subsections = slice -}}
-    {{- end -}}
+    {{- $listing := partial "helper/paginated-list.html" . -}}
 
-    {{- with $subsections -}}
+    {{- with $listing.subsections -}}
         <aside>
-            <h2 class="section-title">{{ T "list.subsection" (len $subsections) }}</h2>
+            <h2 class="section-title">{{ T "list.subsection" (len .) }}</h2>
             <div class="subsection-list">
                 <div class="article-list--tile">
                     {{ range . }}
@@ -72,9 +63,8 @@
     {{- end -}}
     
     {{/* List only pages that are not a subsection */}}
-    {{ $paginator := .Paginate $pages }}
     <section class="article-list--compact">
-        {{ range $paginator.Pages }}
+        {{ range $listing.pager.Pages }}
             {{ partial "article-list/compact" . }}
         {{ end }}
     </section>

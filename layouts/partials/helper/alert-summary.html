@@ -1,0 +1,13 @@
+{{- $summary := .Summary -}}
+{{- if in $summary "[!" -}}
+    {{- $summary = partial "helper/render-alerts.html" $summary -}}
+    {{/* Automatic summaries are already plain text in Hugo 0.131. Use the same
+         excerpt length, this time from the rendered alerts. Keep author summaries. */}}
+    {{- if and (in $summary "[!") (not .Params.summary) (not (in .RawContent "<!--more-->")) -}}
+        {{- $body := partial "helper/render-alerts.html" .Content -}}
+        {{- if ne $body .Content -}}
+            {{- $summary = truncate (strings.RuneCount ($summary | plainify)) ($body | plainify) -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- return $summary -}}

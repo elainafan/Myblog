@@ -13,7 +13,7 @@
     {{ $description = "本文已加密，请打开文章后输入密码阅读。" }}
 {{ else if .IsPage }}
     <!-- Use page summary -->
-    {{ $description = .Summary }}
+    {{ $description = partial "helper/alert-summary.html" . }}
 {{ end }}
 
 {{ return (replaceRE "\n" " " $description | plainify) }}

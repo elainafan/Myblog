@@ -1,0 +1,16 @@
+{{/* Both the head and the list must initialize Hugo's pager with the same pages. */}}
+{{- $subsections := slice -}}
+{{- $pages := .Pages -}}
+{{- if .IsHome -}}
+    {{- $pages = where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+    {{- $pages = where $pages "Params.hidden" "!=" true -}}
+{{- else -}}
+    {{- $subsections = where .Sections "Params.hideFromCategoryList" "!=" true -}}
+    {{- $pages = where (.Pages | complement .Sections) "Params.hidden" "!=" true -}}
+    {{- $pages = where $pages "Params.hideFromCategoryList" "!=" true -}}
+    {{- if not $pages -}}
+        {{- $pages = $subsections -}}
+        {{- $subsections = slice -}}
+    {{- end -}}
+{{- end -}}
+{{- return (dict "pager" (.Paginate $pages) "subsections" $subsections) -}}

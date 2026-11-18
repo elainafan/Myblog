@@ -10,6 +10,8 @@
     };
 
     const icons = {
+        minimize: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15h14v2H5z"/></svg>',
+        music: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5v10.4a3.7 3.7 0 1 0 2 3.3V8.4l6-1.5v6.5a3.7 3.7 0 1 0 2 3.3V2.5z"/></svg>',
         prev: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6z"/><path d="m18 6-8 6 8 6z"/></svg>',
         play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>',
         pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7z"/><path d="M13 5h4v14h-4z"/></svg>',
@@ -84,7 +86,8 @@
         let pendingSeek = savedIndex >= 0 ? clampNumber(savedState.currentTime, 0, Number.MAX_SAFE_INTEGER) : 0;
         let lastEntryMusicKey = null;
         let progressFrame = 0;
-        let isExpanded = savedState.expanded === true;
+        let isMinimized = savedState.minimized === true;
+        let isExpanded = !isMinimized && savedState.expanded === true;
         let playbackMode = PLAYBACK_MODES.includes(savedState.mode) ? savedState.mode : "list";
 
         const audio = new Audio();
@@ -96,10 +99,12 @@
         root.className = "music-player";
         root.setAttribute("aria-label", "Music player");
         if (isExpanded) root.classList.add("music-player--expanded");
+        if (isMinimized) root.classList.add("music-player--minimized");
 
         const panel = document.createElement("div");
         panel.className = "music-player__panel";
         panel.setAttribute("aria-hidden", String(!isExpanded));
+        panel.inert = !isExpanded;
 
         const panelHead = document.createElement("div");
         panelHead.className = "music-player__panel-head";
@@ -126,6 +131,7 @@
         panel.append(panelHead, list);
 
         const dock = document.createElement("div");
+        dock.id = PLAYER_ID + "-dock";
         dock.className = "music-player__dock";
 
         const coverButton = document.createElement("button");
@@ -163,10 +169,17 @@
         const nextButton = createIconButton("next", "Next", icons.next);
         const modeButton = createIconButton("mode", PLAYBACK_MODE_LABELS[playbackMode], icons.modeList);
         const listButton = createIconButton("list", "Playlist", icons.list);
-        controls.append(prevButton, playButton, nextButton, modeButton, listButton);
+        const minimizeButton = createIconButton("minimize", "收起播放器", icons.minimize);
+        minimizeButton.setAttribute("aria-controls", dock.id);
+        minimizeButton.setAttribute("aria-expanded", "true");
+        const restoreButton = createIconButton("restore", "展开播放器", icons.music);
+        restoreButton.classList.add("music-player__launcher");
+        restoreButton.setAttribute("aria-controls", dock.id);
+        restoreButton.setAttribute("aria-expanded", "false");
+        controls.append(prevButton, playButton, nextButton, modeButton, listButton, minimizeButton);
 
         dock.append(coverButton, info, controls);
-        root.append(panel, dock);
+        root.append(panel, dock, restoreButton);
         document.body.append(root);
 
         function saveState() {
@@ -176,6 +189,7 @@
                 paused: audio.paused,
                 volume: audio.volume,
                 expanded: isExpanded,
+                minimized: isMinimized,
                 mode: playbackMode
             };
             try {
@@ -198,7 +212,15 @@
             isExpanded = nextExpanded;
             root.classList.toggle("music-player--expanded", isExpanded);
             panel.setAttribute("aria-hidden", String(!isExpanded));
+            panel.inert = !isExpanded;
             saveState();
+        }
+
+        function setMinimized(minimized) {
+            isMinimized = minimized;
+            root.classList.toggle("music-player--minimized", minimized);
+            setExpanded(false);
+            (minimized ? restoreButton : minimizeButton).focus({ preventScroll: true });
         }
 
         function updateProgress() {
@@ -253,6 +275,7 @@
             artist.textContent = song.artist;
             panelTitle.textContent = song.name;
             panelArtist.textContent = song.artist;
+            restoreButton.title = "展开播放器 · " + song.name;
             setImageSource(cover, song.cover);
             setImageSource(panelCover, song.cover);
 
@@ -457,10 +480,14 @@
                 case "list":
                     setExpanded(!isExpanded);
                     break;
+                case "minimize":
+                    setMinimized(true);
+                    break;
             }
         });
 
         coverButton.addEventListener("click", () => setExpanded(!isExpanded));
+        restoreButton.addEventListener("click", () => setMinimized(false));
         list.addEventListener("click", event => {
             const button = event.target.closest(".music-player__track");
             if (!button) return;

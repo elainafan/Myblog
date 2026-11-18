@@ -403,7 +403,7 @@ HYL
 CDW
 ```
 ### Solution
-重题，原题思路见[elainafan-从零开始的C++补充题(2)](https://www.elainafan.one/p/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E6%9C%9F%E4%B8%ADc-%E8%A1%A5%E5%85%85%E9%A2%982/#%E6%9B%B4%E5%BC%BA%E7%9A%84%E5%8D%B7%E7%8E%8B%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F)，此处只需要翻译为Python即可。
+重题，原题思路见[elainafan-从零开始的C++补充题(2)]({{< ref "midterm-cpp-02.md#更强的卷王查询系统" >}})，此处只需要翻译为Python即可。
 ```py
 n = int(input())
 dict = {}

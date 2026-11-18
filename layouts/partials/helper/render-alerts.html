@@ -1,0 +1,12 @@
+{{/* Hugo 0.131 emits GitHub alert markers as the first paragraph of a blockquote.
+     Change only its opening; Goldmark has already rendered the rest of the block. */}}
+{{- $html := . -}}
+{{- if in $html "[!" -}}
+    {{- range $kind, $label := dict "NOTE" "说明" "TIP" "提示" "IMPORTANT" "重要" "WARNING" "警告" "CAUTION" "注意" -}}
+        {{- $marker := printf `(?i)<blockquote>\s*<p>\[!%s\][ \t]*` $kind -}}
+        {{- $title := printf `<blockquote class="article-alert article-alert--%s" role="note"><p class="article-alert__title">%s</p>` (lower $kind) $label -}}
+        {{- $html = replaceRE (print $marker "</p>") $title $html -}}
+        {{- $html = replaceRE (print $marker `(?:<br\s*/?>\s*|\r?\n)`) (print $title "\n<p>") $html -}}
+    {{- end -}}
+{{- end -}}
+{{- return ($html | safeHTML) -}}

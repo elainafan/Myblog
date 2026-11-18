@@ -3,7 +3,7 @@
     <meta name="twitter:creator" content="@{{ . }}">
 {{- end -}}
 
-{{- $title := partialCached "data/title" . .RelPermalink -}}
+{{- $title := partial "data/title" . -}}
 {{- $description := partialCached "data/description" . .RelPermalink -}}
 
 <meta name="twitter:title" {{ printf "content=%q" $title | safeHTMLAttr }}>

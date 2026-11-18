@@ -198,6 +198,32 @@
   background: color-mix(in srgb, var(--music-accent) 84%, #fff);
 }
 
+.music-player__launcher {
+  display: none;
+  color: var(--card-text-color-main);
+  background: var(--card-background);
+  border: 1px solid var(--music-line);
+  box-shadow: var(--shadow-l2);
+  pointer-events: auto;
+}
+
+.music-player.music-player--minimized {
+  left: auto;
+  width: 46px;
+
+  .music-player__dock, .music-player__panel { display: none; }
+  .music-player__launcher { display: grid; width: 46px; height: 46px; }
+  &.music-player--playing .music-player__launcher {
+    color: color-mix(in srgb, var(--music-accent) 55%, var(--card-text-color-main));
+  }
+}
+
+.music-player__launcher:hover { background: var(--card-background); }
+.music-player__icon-button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
 .music-player__panel {
   position: absolute;
   right: 0;

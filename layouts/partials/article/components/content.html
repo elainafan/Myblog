@@ -1,4 +1,5 @@
 <section class="article-content">
+    {{- $content := partial "helper/render-alerts.html" .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML -}}
     {{ if .Params.encrypt }}
     <div id="encrypt-box" class="encrypt-box" data-lock-state="idle">
       <div class="encrypt-box__layout">
@@ -30,11 +31,9 @@
         <button type="button" onclick="lockEncryptedPost()" aria-controls="post-content">重新上锁</button>
     </div>
     <div id="post-content" style="display:none;">
-        {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") |
-        safeHTML }}
+        {{ $content }}
     </div>
     {{ else }}
-    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" (printf "<div class=\"table-wrapper\">${1}</div>") | safeHTML
-    }}
+    {{ $content }}
     {{ end }}
 </section>

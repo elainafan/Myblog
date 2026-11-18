@@ -4,12 +4,6 @@
 {{- if .IsHome -}}
     <!-- Homepage, and it's pagination -->
 
-    <!-- Build paginator -->
-    {{ $pages := where .Site.RegularPages "Section" "in" .Site.Params.mainSections }}
-    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
-    {{ $filtered := ($pages | intersect $notHidden) }}
-    {{ $pag := .Paginate ($filtered) }}
-
     {{ if .Paginator.HasPrev }}
         <!-- Paginated. Append page number to title -->
         {{ $title = printf "%s - %s" .Paginator $siteTitle }}
@@ -18,10 +12,6 @@
     {{ end }}
 {{- else if eq .Kind "term" -}}
     <!-- Taxonomy page -->
-
-    <!-- Build paginator -->
-    {{ $notHidden := where .Pages "Params.hidden" "!=" true }}
-    {{ $pag := .Paginate ($notHidden) }}
 
     <!-- {TAXONOMY_TYPE}: {TAXONOMY_TERM} -->
     {{ $title = slice (title .Data.Singular) ": " $title }}
