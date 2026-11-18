@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T00:08:33.655605+00:00",
+  "generated_at": "2026-11-18T10:50:39.284515+00:00",
   "settings": {
     "max_posts": 240,
     "max_posts_per_friend": 24,
@@ -741,7 +741,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "關於站點不允許留言附帶鏈接說明",
       "url": "https://blog.woo.moe/archives/477/",
-      "summary": "各位小夥伴，你們好呀～ 由於站點近期遭遇大量自動化垃圾推廣SPAM，且無法透過IP、UA、特定URL等方式來鑑別。 所以，本站對未通過審覈的使用者不再允許附加URL於留言中。 這對我的影響是什麼？ 您不再可直接送出帶有URL的留言。 那怎麼申請友鏈呢？ 如需申請友鏈的小夥伴，可以透過 人類可讀 的形式送出留言喔！ 建議移除 網域 的 Dot，並使用空格（某...",
+      "summary": "各位小夥伴，你們好呀～ 由於站點近期遭遇大量自動化垃圾推廣SPAM，且無法透過IP、UA、特定URL等方式來鑑別。 所以，本站對未通過審覈的使用者不再允許附加URL於留言中。 這對我的影響是什麼？ # 您不再可直接送出帶有URL的留言。 那怎麼申請友鏈呢？ # 如需申請友鏈的小夥伴，可以透過 人類可讀 的形式送出留言喔！ 建議移除 網域 的 Dot，並使用...",
       "published": "2026-07-25T22:37:00+00:00",
       "published_text": "Sat, 25 Jul 2026 22:37:00 +0000"
     },
@@ -983,7 +983,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "⌈你連死都不怕，還怕活著嗎？⌋",
       "url": "https://blog.woo.moe/archives/475/",
-      "summary": "⌈你連死都不怕，還怕活著嗎？⌋ 這句話聽起來很有力，像當頭一棒喝，似乎是想把人從深淵裏拉出來。 它的邏輯也很直觀—— 如果連「死亡」這件事都不害怕，那麼「活著」這件事，理應更容易才對。 但人不是這麼運作的。 當一個人走到崩潰的邊緣時，他需要的是什麼？ —— 停止痛苦 而死亡在當事人看來，似乎是唯一的出路，⌈只要死了這一切就結束了，就不會再痛苦了⌋。 不是他...",
+      "summary": "⌈你連死都不怕，還怕活著嗎？⌋ # 這句話聽起來很有力，像當頭一棒喝，似乎是想把人從深淵裏拉出來。 它的邏輯也很直觀—— 如果連「死亡」這件事都不害怕，那麼「活著」這件事，理應更容易才對。 但人不是這麼運作的。 當一個人走到崩潰的邊緣時，他需要的是什麼？ —— 停止痛苦 而死亡在當事人看來，似乎是唯一的出路，⌈只要死了這一切就結束了，就不會再痛苦了⌋。 不...",
       "published": "2026-05-23T09:00:00+00:00",
       "published_text": "Sat, 23 May 2026 09:00:00 +0000"
     },
@@ -1434,7 +1434,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "現代、可自定、開源的自動更新方案 —— NekoLauncher",
       "url": "https://blog.woo.moe/archives/472/",
-      "summary": "什麼是 NekoLauncher（NekoLc） Neko Launcher （簡稱 NekoLc ）是一個現代化、跨平台、多語言的啟動器，內建自動更新與 UI 系統。 它的主要目標是：讓你的遊戲或應用（例如 Minecraft 客戶端）能夠 自動保持最新版本 ， 同時盡量減少玩家 ／ 使用者需要操作的步驟 。 過去你可能常常遇到這些問題： 使用者懶得更新...",
+      "summary": "什麼是 NekoLauncher（NekoLc） # Neko Launcher （簡稱 NekoLc ）是一個現代化、跨平台、多語言的啟動器，內建自動更新與 UI 系統。 它的主要目標是：讓你的遊戲或應用（例如 Minecraft 客戶端）能夠 自動保持最新版本 ， 同時盡量減少玩家 ／ 使用者需要操作的步驟 。 過去你可能常常遇到這些問題： 使用者懶得...",
       "published": "2025-12-19T08:42:00+00:00",
       "published_text": "Fri, 19 Dec 2025 08:42:00 +0000"
     },
@@ -1566,7 +1566,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "來讓你的程式庫支援C++20 Module吧！ 如何快速支援C++ Module？",
       "url": "https://blog.woo.moe/archives/470/",
-      "summary": "引言 C++ 20標準已經發佈6年時間了。 其中最重要的一項標準就是 ⌈模塊⌋ 這個特性。 什麼是模塊？ 怎麼用模塊？ 如何快速讓你的已有代碼支援模塊？ —— 本文都將爲你講解。 什麼是模塊 & 如何使用模塊 在模塊誕生之前，我們如何編譯我們的C++專案？ 一個標頭 hello.hpp 一個翻譯單元 hello.cpp 標頭用於在多個翻譯單元間共享聲明和定...",
+      "summary": "引言 # C++ 20標準已經發佈6年時間了。 其中最重要的一項標準就是 ⌈模塊⌋ 這個特性。 什麼是模塊？ 怎麼用模塊？ 如何快速讓你的已有代碼支援模塊？ —— 本文都將爲你講解。 什麼是模塊 & 如何使用模塊 # 在模塊誕生之前，我們如何編譯我們的C++專案？ 一個標頭 hello.hpp 一個翻譯單元 hello.cpp 標頭用於在多個翻譯單元間共享...",
       "published": "2025-11-24T18:01:00+00:00",
       "published_text": "Mon, 24 Nov 2025 18:01:00 +0000"
     },
@@ -1698,7 +1698,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "NekoNet - 一個易用的，現代libcurl C++封裝庫",
       "url": "https://blog.woo.moe/archives/468/",
-      "summary": "你， 是否還在爲libcurl太難用，太底層，各種麻煩的函式與變數看不懂而困擾 —— 那麼就Try Neko Network (NekoNet) ，一個易用，高效的C++ Libcurl封裝。 準備 先決條件 一個支援C++20或以上的C++編譯器 CMake 3.16+ Git libcurl 8.0+ OpenSSL 3.0+ （windows上是可選...",
+      "summary": "你， 是否還在爲libcurl太難用，太底層，各種麻煩的函式與變數看不懂而困擾 —— 那麼就Try Neko Network (NekoNet) ，一個易用，高效的C++ Libcurl封裝。 準備 # 先決條件 # 一個支援C++20或以上的C++編譯器 CMake 3.16+ Git libcurl 8.0+ OpenSSL 3.0+ （windows...",
       "published": "2025-10-14T06:27:00+00:00",
       "published_text": "Tue, 14 Oct 2025 06:27:00 +0000"
     },
@@ -1874,7 +1874,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "一個易用、現代、輕量且高效的 C++20 日誌庫 —— nlog",
       "url": "https://blog.woo.moe/archives/437/",
-      "summary": "Neko Logging nlog 是我之前在開發Neko Launcher時所產生的需求而編寫的一個日誌程式庫。 下面就請讓我來講解一下這個用了絕對大吃一驚日誌庫的優點吧： 沒有宏 你無需忍受C語言遺留下的糟粕 —— 宏。 僅標頭檔 (無需構建/鏈接) 不需要構建或鏈接，新手小白福音。 —— 我太奶來了都會用 XD Auto SrcLoc 自動捕獲原始碼...",
+      "summary": "Neko Logging # nlog 是我之前在開發Neko Launcher時所產生的需求而編寫的一個日誌程式庫。 下面就請讓我來講解一下這個用了絕對大吃一驚日誌庫的優點吧： 沒有宏 你無需忍受C語言遺留下的糟粕 —— 宏。 僅標頭檔 (無需構建/鏈接) 不需要構建或鏈接，新手小白福音。 —— 我太奶來了都會用 XD Auto SrcLoc 自動捕獲原...",
       "published": "2025-09-19T19:48:00+00:00",
       "published_text": "Fri, 19 Sep 2025 19:48:00 +0000"
     },
@@ -1918,7 +1918,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "作業系統基礎 - 環境變數 & 環境變數的由來",
       "url": "https://blog.woo.moe/archives/426/",
-      "summary": "什麼是環境變數 你可能經常聽到 ⌈沒有環境⌋ ⌈需要配置環境⌋等。 到底什麼是環境？ 怎樣配置環境？ 這就涉及到一個作業系統的概念—— 環境變數。 程式設計中的變數，大家應該都能夠理解，簡單來說可以理解爲一個別名，這個別名再指向真正的數據。 x = 0 那什麼是環境變數呢？ 和程式設計中的變數類似，也是名稱和值。 $var=123 某些程式透過環境變數來控...",
+      "summary": "什麼是環境變數 # 你可能經常聽到 ⌈沒有環境⌋ ⌈需要配置環境⌋等。 到底什麼是環境？ 怎樣配置環境？ 這就涉及到一個作業系統的概念—— 環境變數。 程式設計中的變數，大家應該都能夠理解，簡單來說可以理解爲一個別名，這個別名再指向真正的數據。 x = 0 那什麼是環境變數呢？ 和程式設計中的變數類似，也是名稱和值。 $var=123 某些程式透過環境變數...",
       "published": "2025-09-07T12:16:00+00:00",
       "published_text": "Sun, 07 Sep 2025 12:16:00 +0000"
     },
@@ -1995,7 +1995,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "Modern C++ - Lambda",
       "url": "https://blog.woo.moe/archives/384/",
-      "summary": "Modern C++ - Lambda lambda是一個**[閉合]( https://en.wikipedia.org/wiki/Closure_(computer_programming%29) **體，其本身是一種特殊的物件。 具有無名，變數捕獲等特徵的函式體。 爲什麼需要Lambda？ 在以前，如果要傳遞函式作爲參數調用，你需要定義一個函式，並使...",
+      "summary": "Modern C++ - Lambda # lambda是一個**[閉合]( https://en.wikipedia.org/wiki/Closure_(computer_programming%29) **體，其本身是一種特殊的物件。 具有無名，變數捕獲等特徵的函式體。 爲什麼需要Lambda？ # 在以前，如果要傳遞函式作爲參數調用，你需要定義一個函...",
       "published": "2025-08-16T19:40:00+00:00",
       "published_text": "Sat, 16 Aug 2025 19:40:00 +0000"
     },
@@ -2391,7 +2391,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "網路安全 - 伺服器安全",
       "url": "https://blog.woo.moe/archives/291/",
-      "summary": "#網路安全與伺服器安全 安全的核心就是功能盡可能簡單與避免對外暴露。 避免暴露 越 複雜 的功能，留下的 隱患也就越多 ，這是必然的。 而 避免暴露 也是同理，對 外暴露越多，風險也就越高 。 舉例來說，一般情況下你 不應該將後端暴露在公共網絡 下。 行業安全的標準是， 透過vpn訪問內部網路 。 對外暴露vpn ，再透過vpn去訪問內部網路。 比如： p...",
+      "summary": "#網路安全與伺服器安全 安全的核心就是功能盡可能簡單與避免對外暴露。 避免暴露 # 越 複雜 的功能，留下的 隱患也就越多 ，這是必然的。 而 避免暴露 也是同理，對 外暴露越多，風險也就越高 。 舉例來說，一般情況下你 不應該將後端暴露在公共網絡 下。 行業安全的標準是， 透過vpn訪問內部網路 。 對外暴露vpn ，再透過vpn去訪問內部網路。 比如：...",
       "published": "2025-01-25T05:33:00+00:00",
       "published_text": "Sat, 25 Jan 2025 05:33:00 +0000"
     },
@@ -2402,7 +2402,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "壞掉的多巴胺 - 爲何我們不再快樂",
       "url": "https://blog.woo.moe/archives/281/",
-      "summary": "壞掉的多巴胺：我們為何不再快樂？ 速覽結論 ： 沒事可以去自找苦吃 ！ 因爲這可以降低你的快樂水平，從而使原本僅⌈小愉快⌋的事變得⌈很高興⌋，這樣 你這段時間就會感到很愉悅（不是 但大致類似。 現代社會中，唾手可得的娛樂和便利正在改變我們對快樂的感知。短影音、即時回應的社交媒體、外送的快捷便利……所有這些看似無害的「小確幸」，其實都在悄然消耗著我們的快樂耐...",
+      "summary": "壞掉的多巴胺：我們為何不再快樂？ # 速覽結論 ： 沒事可以去自找苦吃 ！ 因爲這可以降低你的快樂水平，從而使原本僅⌈小愉快⌋的事變得⌈很高興⌋，這樣 你這段時間就會感到很愉悅（不是 但大致類似。 現代社會中，唾手可得的娛樂和便利正在改變我們對快樂的感知。短影音、即時回應的社交媒體、外送的快捷便利……所有這些看似無害的「小確幸」，其實都在悄然消耗著我們的快...",
       "published": "2025-01-23T18:38:00+00:00",
       "published_text": "Thu, 23 Jan 2025 18:38:00 +0000"
     },
@@ -2424,7 +2424,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "Modern C++ - UB",
       "url": "https://blog.woo.moe/archives/91/",
-      "summary": "什麼是未定義行為？ 本文將講述 未定義行為 （Undefined Behavior, UB）與相關概念，包括： 實現定義行為 （Implementation-Defined Behavior）、 非良構行為 （Ill-Formed Behavior）。 未定義行為是指運行 C++ 標準規定爲未定義 的代碼時，結果可能無法預測，也沒有保證。這意味著程序可能：...",
+      "summary": "什麼是未定義行為？ # 本文將講述 未定義行為 （Undefined Behavior, UB）與相關概念，包括： 實現定義行為 （Implementation-Defined Behavior）、 非良構行為 （Ill-Formed Behavior）。 未定義行為是指運行 C++ 標準規定爲未定義 的代碼時，結果可能無法預測，也沒有保證。這意味著程序可...",
       "published": "2025-01-03T17:03:00+00:00",
       "published_text": "Fri, 03 Jan 2025 17:03:00 +0000"
     },
@@ -2435,7 +2435,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "Oha Api隨機背景圖像Api-隨機音樂&在線免費聆聽jaychou音樂！",
       "url": "https://blog.woo.moe/archives/68/",
-      "summary": "#Oha Api ohayo api https://api.oha.li 圖像Api beta https://api.oha.li/img/? : Get 查詢符 參數 描述 type desktop 顯示一個適合 桌面端 顯示的圖像。 type mobile 顯示一個適合 移動端 顯示的圖像。 type sticker 顯示一個 貼紙 或適合作爲圖標...",
+      "summary": "#Oha Api ohayo api https://api.oha.li 圖像Api beta # https://api.oha.li/img/? : Get 查詢符 參數 描述 type desktop 顯示一個適合 桌面端 顯示的圖像。 type mobile 顯示一個適合 移動端 顯示的圖像。 type sticker 顯示一個 貼紙 或適合作爲...",
       "published": "2024-12-27T12:59:00+00:00",
       "published_text": "Fri, 27 Dec 2024 12:59:00 +0000"
     },
@@ -2446,7 +2446,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "使用C++編寫Java Minecraft Launcher 啓動器 —— 定義",
       "url": "https://blog.woo.moe/archives/24/",
-      "summary": "製作麥塊/我的世界啓動器 Java Minecraft Edition是最常見的Mc版本，其遊戲在設計時將遊戲分爲了⌈ 遊戲本體 ⌋與⌈ 啓動器 ⌋兩個部分，這使我們可以透過自行編寫啓動器支援第三方內容。 啓動器的基本原理 Minecraft透過 Java 虛擬機（JVM）運行遊戲，並需要附加一些遊戲的啓動參數。這些參數控制了 Minecraft 的行爲，...",
+      "summary": "製作麥塊/我的世界啓動器 # Java Minecraft Edition是最常見的Mc版本，其遊戲在設計時將遊戲分爲了⌈ 遊戲本體 ⌋與⌈ 啓動器 ⌋兩個部分，這使我們可以透過自行編寫啓動器支援第三方內容。 啓動器的基本原理 # Minecraft透過 Java 虛擬機（JVM）運行遊戲，並需要附加一些遊戲的啓動參數。這些參數控制了 Minecraft...",
       "published": "2024-12-23T05:49:00+00:00",
       "published_text": "Mon, 23 Dec 2024 05:49:00 +0000"
     },
@@ -2490,7 +2490,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "Modern C++ - Move & 移動構造/C++移動語義",
       "url": "https://blog.woo.moe/archives/16/",
-      "summary": "# Modern C++ - Move 移動語義 是C++爲了 提高資源管理效率 而在C++11新增的特性。 它透過 右值引用 ( T&& )、 move 和 移動構造 等方法實現。 ⌈ 移動 ⌋並不真的轉移資源，而是轉移了資源的 所有權 與 生命週期 。 爲什麼需要移動語義 拷貝 時 原對象 與 新對象 同時存在且 相互獨立 。 這造成了大量的 資源浪費...",
+      "summary": "# Modern C++ - Move 移動語義 是C++爲了 提高資源管理效率 而在C++11新增的特性。 它透過 右值引用 ( T&& )、 move 和 移動構造 等方法實現。 ⌈ 移動 ⌋並不真的轉移資源，而是轉移了資源的 所有權 與 生命週期 。 爲什麼需要移動語義 # 拷貝 時 原對象 與 新對象 同時存在且 相互獨立 。 這造成了大量的 資源...",
       "published": "2024-11-23T09:10:00+00:00",
       "published_text": "Sat, 23 Nov 2024 09:10:00 +0000"
     },
@@ -2512,7 +2512,7 @@
       "avatar": "https://blog.woo.moe/usr/uploads/avatarCache/f5be63f0923cfda8988b9d73bffa8396.jpg",
       "title": "Modern C++ - inline & 什麼是內聯函式/內嵌靜態變數",
       "url": "https://blog.woo.moe/archives/13/",
-      "summary": "# Modern C++ - inline inline 是一個C++聲明符，直譯爲⌈在行內⌋。 顧名思義， inline 希望編譯器在函式調用的地方直接插入函式的代碼。 這就是 C++ inline (內聯/內嵌)。 內聯函式 現代C++中，通常你並不需要手動聲明 inline ，這是因爲內聯只是一個⌈ 建議 ⌋。 如果函式內聯展開，可以避免函式調用的堆...",
+      "summary": "# Modern C++ - inline inline 是一個C++聲明符，直譯爲⌈在行內⌋。 顧名思義， inline 希望編譯器在函式調用的地方直接插入函式的代碼。 這就是 C++ inline (內聯/內嵌)。 內聯函式 # 現代C++中，通常你並不需要手動聲明 inline ，這是因爲內聯只是一個⌈ 建議 ⌋。 如果函式內聯展開，可以避免函式調用...",
       "published": "2024-11-17T15:58:00+00:00",
       "published_text": "Sun, 17 Nov 2024 15:58:00 +0000"
     },
