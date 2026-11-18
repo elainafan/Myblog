@@ -22,6 +22,9 @@
             <main class="main full-width">
                 {{- block "main" . }}{{- end }}
             </main>
+            <script>
+                window.__ELAINA_MUSIC_PLAYLIST__ = {{ .Site.Data.music.generated | default (slice) | jsonify | safeJS }};
+            </script>
         </div>
         {{ partial "footer/include.html" . }}
     </body>

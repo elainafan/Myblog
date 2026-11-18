@@ -5,14 +5,11 @@ class StackColorScheme {
     private currentScheme: colorScheme;
     private systemPreferScheme: colorScheme;
 
-    constructor(toggleEl: HTMLElement) {
+    constructor() {
         this.bindMatchMedia();
         this.currentScheme = this.getSavedScheme();
 
         this.dispatchEvent(document.documentElement.dataset.scheme as colorScheme);
-
-        if (toggleEl)
-            this.bindClick(toggleEl);
 
         if (document.body.style.transition == '')
             document.body.style.setProperty('transition', 'background-color .3s ease');
@@ -22,7 +19,7 @@ class StackColorScheme {
         localStorage.setItem(this.localStorageKey, this.currentScheme);
     }
 
-    private bindClick(toggleEl: HTMLElement) {
+    bindClick(toggleEl: HTMLElement) {
         toggleEl.addEventListener('click', (e) => {
             if (this.isDark()) {
                 /// Disable dark mode
@@ -73,7 +70,9 @@ class StackColorScheme {
     }
 
     private bindMatchMedia() {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        this.systemPreferScheme = media.matches ? 'dark' : 'light';
+        media.addEventListener('change', (e) => {
             if (e.matches) {
                 this.systemPreferScheme = 'dark';
             }

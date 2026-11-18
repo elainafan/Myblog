@@ -1,0 +1,16 @@
+{{/* Each series has a main.md and chapter files in the same content directory. */}}
+{{- $posts := where (where .RegularPages "Type" "in" .Params.mainSections) "Draft" false -}}
+{{- $series := dict -}}
+{{- range where $posts "File.TranslationBaseName" "main" -}}
+    {{- $entry := . -}}
+    {{- $words := .WordCount -}}
+    {{- $chapters := 0 -}}
+    {{- range where $posts "File.Dir" .File.Dir -}}
+        {{- if and (ne .File.Path $entry.File.Path) (not .Params.seriesExclude) -}}
+            {{- $words = add $words .WordCount -}}
+            {{- $chapters = add $chapters 1 -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $series = merge $series (dict .File.Dir (dict "entry" . "words" $words "chapters" $chapters)) -}}
+{{- end -}}
+{{- return $series -}}

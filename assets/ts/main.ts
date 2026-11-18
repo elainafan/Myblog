@@ -578,8 +578,14 @@ function escapeHTML(value: string) {
         .replace(/'/g, '&#039;');
 }
 
+let colorScheme: StackColorScheme;
+let initializedContainer: Element | null;
+
 let Stack = {
     init: () => {
+        const container = document.querySelector('.main-container');
+        if (!container || initializedContainer === container) return;
+        initializedContainer = container;
         /**
          * Bind menu event
          */
@@ -634,7 +640,9 @@ let Stack = {
 
         setupCodeBlocks();
 
-        new StackColorScheme(document.getElementById('dark-mode-toggle'));
+        if (!colorScheme) colorScheme = new StackColorScheme();
+        const toggle = document.getElementById('dark-mode-toggle');
+        if (toggle) colorScheme.bindClick(toggle);
     }
 }
 

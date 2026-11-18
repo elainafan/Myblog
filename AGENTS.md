@@ -67,6 +67,8 @@
 - `slug` 决定文章的 `/p/:slug/` URL；`url` 会直接覆盖地址。不要随意更改文件名、`slug` 或 `url`，否则内部链接、外部链接和按 URL 映射的 Giscus 评论都可能断开。
 - 确需迁移地址时，搜索全部引用并根据相邻建站文章的做法保留 `aliases`。
 - `hidden: true` 表示页面仍构建、仍可由链接访问，只是不进入常规列表；它不是草稿。不要自行把 `hidden` 和 `draft` 互换。
+- 首页系列卡片在 Hugo 构建时合计同目录入口和已发布子篇的 `.WordCount`，按中文阅读速度统一换算分钟。入口以 `main.md` 识别，子篇的 `seriesExclude: true` 会将它排除在系列之外。
+- 普通公开系列的子篇参加站内搜索，并标出所属系列。用 `searchExclude: true` 可单独排除页面或整个系列。带暗号的系列入口只索引标题和提示，不索引其子篇；草稿也不入索引。
 - `encrypt` 是逐页开关，不从目录或入口继承；只有 `encrypt: true` 才启用，`false` 明确表示不加密。任何 `true`/`false` 变化都必须由用户明确授权。
 - `updates` 只记录已发布文章的实质变更，例如内容、代码、资源、结构或页面行为。普通错别字不记；格式沿用当前文件，通常最新记录在前，说明写简短事实句。
 
@@ -139,7 +141,7 @@
 - `BV1chikYJEMZ`（轻音合集）当前只保留 P2、P3、P12、P20，即 `Don't Say Lazy`、澪版 `ふわふわ時間`、`No, Thank You!`、`Singing!`。P1 `Cagayake! GIRLS`、P4 唯版 `ふわふわ時間`、P19 `五月雨20ラブ` 已列入分 P 禁用名单；P21 破音版及其他未选分 P 也不加入歌单。
 - `BV1K2421F737`（春物 OP 合集）保留 P1–P3。`BV1Q2421M7pf`（春物 ED 合集）只保留 P2 `Everyday World`，P1 `Hello Alone` 和 P3 `ダイヤモンドの純度` 已禁用。筛选后只剩 P2 时仍须保留 `p02` 目录和 `?p=2` 地址。遇到新的多 P 投稿时先检查每一 P；无法判断就停止并向用户确认 `BVID → 保留哪些 P`，不得猜测后直接运行非 dry-run 同步。
 - `BILIBILI_EXCLUDED_VIDEOS` 保存整段投稿的禁用名单：`BV1Ns411M7TG`（`Step by Step Up`）、`BV15k4y1m7zb`（《厘米》）、`BV1ab411S7UV`（`SAVE MY HEART`）、`BV1du4m1u7rL`（《夢の続き》）、`BV15NbN6jEM3`（《梦想世界》）。`BILIBILI_EXCLUDED_PAGES` 保存合集内单曲的禁用名单，优先于分 P 选择规则。即使这些歌曲仍在收藏夹中也不重新加入；删除歌曲时同步更新对应名单。
-- `scripts/sync_music.py` 的 Bilibili 模式会调用 `yt-dlp`、下载媒体并改写 `static/music/bilibili/` 与生成数据；非 dry-run 还会清理未包含在本次列表中的旧曲目。小范围探查只能把 `--limit` 与 `--dry-run` 联用：单独使用 `--limit` 会把截断范围外的现有曲目当作 stale 删除。dry-run 仍会重写 `data/music/generated.json`，所以同样要先记录状态并审查 diff。不要随意使用 `--force`。
+- `scripts/sync_music.py bilibili --dry-run` 预览新增、保留和待删除项，不写入媒体、元数据或歌单。`--limit N` 仅处理前 N 个投稿，并跳过所有旧曲目清理。完整同步核对收藏数和分 P，待下载成功后才更新歌单并清理失效项。音频优先使用 yt-dlp，缺失或遇到 HTTP 412 时尝试该分 P 的公开音轨。不要随意使用 `--force`。
 - 私有 Bilibili Cookie 只放在环境变量或被忽略的 `bilibili.cookie.txt`。不得打印、提交或复制到文章、日志和交接说明中。
 
 ### 其他同步

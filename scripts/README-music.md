@@ -50,7 +50,15 @@ python scripts\sync_music.py bilibili --media-id 你的media_id --cookie-file bi
 
 Bilibili 同步默认保存原始音频格式，通常是 `music.m4a`，不强制转成 mp3，因此不需要额外安装 `ffmpeg`。
 
-第一次测试时可以只同步前几首：
+先预览完整收藏夹的新增、保留和待移除曲目：
+
+```powershell
+python scripts\sync_music.py bilibili --dry-run
+```
+
+预览不会写文件。完整同步核对收藏总数和分 P，等媒体下载成功再更新歌单并清理旧文件。每次只同步前几个投稿时，脚本会保留范围外的曲目。缺少 yt-dlp 或遇到 HTTP 412 时，脚本会尝试所选分 P 的公开音轨。
+
+例如，只同步前三个投稿：
 
 ```powershell
 python scripts\sync_music.py bilibili --limit 3

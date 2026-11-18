@@ -1,15 +1,26 @@
 {{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
-{{- $notHidden := where .Site.RegularPages "Params.hidden" "!=" true -}}
-{{- $filtered := ($pages | intersect $notHidden) -}}
+{{- $series := partialCached "helper/post-series.html" .Site .Site.Language.Lang -}}
 
 {{- $result := slice -}}
 
-{{- range $filtered -}}
-    {{- $content := .Plain -}}
+{{- range where $pages "Draft" false -}}
+    {{- if .Params.searchExclude -}}{{- continue -}}{{- end -}}
+    {{- $group := index $series .File.Dir -}}
+    {{- $chapter := and $group (ne .File.Path $group.entry.File.Path) (not .Params.seriesExclude) -}}
+    {{- if and $chapter (or $group.entry.Params.encrypt $group.entry.Params.hidden $group.entry.Params.searchExclude) -}}
+        {{- continue -}}
+    {{- end -}}
+    {{- if and .Params.hidden (not $chapter) -}}{{- continue -}}{{- end -}}
+    {{- $content := "" -}}
     {{- if .Params.encrypt -}}
         {{- $content = "本文已加密，请打开文章后输入密码阅读。" -}}
+    {{- else -}}
+        {{- $content = .Plain -}}
     {{- end -}}
     {{- $data := dict "title" .Title "date" .Date "permalink" .Permalink "content" $content -}}
+    {{- if $chapter -}}
+        {{- $data = merge $data (dict "series" $group.entry.Title) -}}
+    {{- end -}}
 
     {{- $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" -}}
     {{- if $image.exists -}}

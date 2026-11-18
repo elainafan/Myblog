@@ -4,6 +4,7 @@ interface pageData {
     permalink: string,
     content: string,
     image?: string,
+    series?: string,
     preview: string,
     matchCount: number
 }
@@ -39,8 +40,9 @@ function escapeRegExp(string) {
 }
 
 class Search {
-    private data: pageData[];
-    private form: HTMLFormElement;
+    private data?: Promise<pageData[]>;
+    private requestId = 0;
+    readonly form: HTMLFormElement;
     private input: HTMLInputElement;
     private list: HTMLDivElement;
     private resultTitle: HTMLHeadElement;
@@ -54,7 +56,7 @@ class Search {
         this.resultTitleTemplate = resultTitleTemplate;
 
         this.handleQueryString();
-        this.bindQueryStringChange();
+        window.addEventListener('popstate', this.onPopState);
         this.bindSearchForm();
     }
 
@@ -133,10 +135,7 @@ class Search {
         const rawData = await this.getData();
         const results: pageData[] = [];
 
-        const regex = new RegExp(keywords.filter((v, index, arr) => {
-            arr[index] = escapeRegExp(v);
-            return v.trim() !== '';
-        }).join('|'), 'gi');
+        const regex = new RegExp(keywords.filter(Boolean).map(escapeRegExp).join('|'), 'gi');
 
         for (const item of rawData) {
             const titleMatches: match[] = [],
@@ -144,6 +143,7 @@ class Search {
 
             let result = {
                 ...item,
+                title: replaceHTMLEnt(item.title),
                 preview: '',
                 matchCount: 0
             }
@@ -186,8 +186,19 @@ class Search {
     private async doSearch(keywords: string[]) {
         const startTime = performance.now();
 
-        const results = await this.searchKeywords(keywords);
-        this.clear();
+        const requestId = ++this.requestId;
+        let results: pageData[];
+        try {
+            results = await this.searchKeywords(keywords);
+        } catch {
+            if (requestId === this.requestId && this.form.isConnected) {
+                this.list.replaceChildren();
+                this.resultTitle.textContent = '搜索索引加载失败，请重试。';
+            }
+            return;
+        }
+        if (requestId !== this.requestId || !this.form.isConnected) return;
+        this.list.replaceChildren();
 
         for (const item of results) {
             this.list.append(Search.render(item));
@@ -197,30 +208,23 @@ class Search {
 
         this.resultTitle.innerText = this.generateResultTitle(results.length, ((endTime - startTime) / 1000).toPrecision(1));
 
-        /* 
-        方法末尾，让pjax重新解析文档数据，识别动态渲染的数据
-        虽然当前文件没有pjax对象，但最后静态页面会生成一个整体的js文件
-        pjax对象那时就能识别到，就可成功调用
-        */
-        pjax.refresh(document);
+        window.pjax?.refresh(this.list);
     }
 
     private generateResultTitle(resultLen, time) {
         return this.resultTitleTemplate.replace("#PAGES_COUNT", resultLen).replace("#TIME_SECONDS", time);
     }
 
-    public async getData() {
+    private getData(): Promise<pageData[]> {
         if (!this.data) {
-            /// Not fetched yet
-            const jsonURL = this.form.dataset.json;
-            this.data = await fetch(jsonURL).then(res => res.json());
-            const parser = new DOMParser();
-
-            for (const item of this.data) {
-                item.content = parser.parseFromString(item.content, 'text/html').body.innerText;
-            }
+            this.data = fetch(this.form.dataset.json).then(response => {
+                if (!response.ok) throw new Error(String(response.status));
+                return response.json();
+            }).catch(error => {
+                this.data = undefined;
+                throw error;
+            });
         }
-
         return this.data;
     }
 
@@ -238,31 +242,35 @@ class Search {
                 return this.clear();
             }
 
-            if (lastSearch === keywords) return;
+            if (lastSearch === keywords && e.type !== 'submit') return;
             lastSearch = keywords;
 
             this.doSearch(keywords.split(' '));
         }
 
+        this.form.addEventListener('submit', eventHandler);
         this.input.addEventListener('input', eventHandler);
         this.input.addEventListener('compositionend', eventHandler);
     }
 
     private clear() {
-        this.list.innerHTML = '';
+        ++this.requestId;
+        this.list.replaceChildren();
         this.resultTitle.innerText = '';
     }
 
-    private bindQueryStringChange() {
-        window.addEventListener('popstate', (e) => {
-            this.handleQueryString()
-        })
+    private onPopState = () => {
+        if (this.form.isConnected) this.handleQueryString();
+    };
+
+    destroy() {
+        window.removeEventListener('popstate', this.onPopState);
     }
 
     private handleQueryString() {
         const pageURL = new URL(window.location.toString());
         const keywords = pageURL.searchParams.get('keyword');
-        this.input.value = keywords;
+        this.input.value = keywords || '';
 
         if (keywords) {
             this.doSearch(keywords.split(' '));
@@ -283,7 +291,8 @@ class Search {
         }
 
         if (replaceState) {
-            window.history.replaceState('', '', pageURL.toString());
+            const state = window.history.state;
+            window.history.replaceState(state && { ...state, url: pageURL.href }, '', pageURL.href);
         }
         else {
             window.history.pushState('', '', pageURL.toString());
@@ -295,6 +304,7 @@ class Search {
             <a href={item.permalink}>
                 <div class="article-details">
                     <h2 class="article-title" dangerouslySetInnerHTML={{ __html: item.title }}></h2>
+                    {item.series && <p class="article-subtitle">{item.series}</p>}
                     <section class="article-preview" dangerouslySetInnerHTML={{ __html: item.preview }}></section>
                 </div>
                 {item.image &&
@@ -309,53 +319,25 @@ class Search {
 
 declare global {
     interface Window {
-        searchResultTitleTemplate: string;
+        pjax?: { refresh: (root: Element) => void };
     }
 }
 
-/*
-window.addEventListener('load', () => {
-    setTimeout(function () {
-        const searchForm = document.querySelector('.search-form') as HTMLFormElement,
-            searchInput = searchForm.querySelector('input') as HTMLInputElement,
-            searchResultList = document.querySelector('.search-result--list') as HTMLDivElement,
-            searchResultTitle = document.querySelector('.search-result--title') as HTMLHeadingElement;
+let activeSearch: Search | undefined;
 
-        new Search({
-            form: searchForm,
-            input: searchInput,
-            list: searchResultList,
-            resultTitle: searchResultTitle,
-            resultTitleTemplate: window.searchResultTitleTemplate
-        });
-    }, 0);
-})
-*/
-
-/**
- * 记得把window.addEventListener('load' ...这部分代码注释掉
- * 初始化工作交给Stack.init()处理了，不需要这个了
- */  
-function searchInit() {
-    let search = document.querySelector('.search-result');
-    if (search) {
-        const searchForm = document.querySelector('.search-form') as HTMLFormElement,
-            searchInput = searchForm.querySelector('input') as HTMLInputElement,
-            searchResultList = document.querySelector('.search-result--list') as HTMLDivElement,
-            searchResultTitle = document.querySelector('.search-result--title') as HTMLHeadingElement;
-
-        new Search({
-            form: searchForm,
-            input: searchInput,
-            list: searchResultList,
-            resultTitle: searchResultTitle,
-            resultTitleTemplate: window.searchResultTitleTemplate
-        });
-    }
-}
-
-export {
-    searchInit
+export function searchInit() {
+    const form = document.querySelector<HTMLFormElement>('form[data-result-title][data-json]');
+    if (activeSearch?.form === form) return;
+    activeSearch?.destroy();
+    activeSearch = undefined;
+    if (!form) return;
+    activeSearch = new Search({
+        form,
+        input: form.querySelector('input'),
+        list: document.querySelector('.search-result--list'),
+        resultTitle: document.querySelector('.search-result--title'),
+        resultTitleTemplate: form.dataset.resultTitle
+    });
 }
 
 export default Search;

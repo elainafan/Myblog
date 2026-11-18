@@ -21,10 +21,12 @@
     };
 
     function normalizeSong(song) {
+        const url = String(song?.url || "");
         return {
+            key: song?.bvid ? "bilibili:" + song.bvid + ":p" + (song.page || 1) : url,
             name: song && song.name ? String(song.name) : "Unknown",
             artist: song && song.artist ? String(song.artist) : "",
-            url: song && song.url ? String(song.url) : "",
+            url,
             cover: song && song.cover ? String(song.cover) : "",
             sourceUrl: song && song.sourceUrl ? String(song.sourceUrl) : ""
         };
@@ -48,7 +50,7 @@
 
     function readState() {
         try {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
         } catch (error) {
             return {};
         }
@@ -75,9 +77,11 @@
 
     function createMusicPlayer(initialPlaylist) {
         let playlist = initialPlaylist;
-        let savedState = readState();
-        let currentIndex = clampNumber(savedState.index, 0, Math.max(playlist.length - 1, 0));
-        let pendingSeek = clampNumber(savedState.currentTime, 0, Number.MAX_SAFE_INTEGER);
+        const savedState = readState();
+        // Older saves only contain an index; after a reorder it cannot identify a track.
+        const savedIndex = playlist.findIndex(song => song.key === savedState.trackKey);
+        let currentIndex = Math.max(0, savedIndex);
+        let pendingSeek = savedIndex >= 0 ? clampNumber(savedState.currentTime, 0, Number.MAX_SAFE_INTEGER) : 0;
         let lastEntryMusicKey = null;
         let progressFrame = 0;
         let isExpanded = savedState.expanded === true;
@@ -167,14 +171,18 @@
 
         function saveState() {
             const state = {
-                index: currentIndex,
-                currentTime: Number.isFinite(audio.currentTime) ? audio.currentTime : 0,
+                trackKey: currentSong()?.key,
+                currentTime: pendingSeek || audio.currentTime || 0,
                 paused: audio.paused,
                 volume: audio.volume,
                 expanded: isExpanded,
                 mode: playbackMode
             };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (_) {
+                // Playback is still available when storage is full or disabled.
+            }
         }
 
         function currentSong() {
@@ -377,10 +385,26 @@
         }
 
         function setPlaylist(nextPlaylist) {
-            if (!Array.isArray(nextPlaylist) || nextPlaylist.length === 0) return;
+            const previous = currentSong();
+            const index = nextPlaylist.findIndex(song => song.key === previous?.key);
+            const seek = pendingSeek || audio.currentTime;
+            const wasPlaying = !audio.paused;
             playlist = nextPlaylist;
-            currentIndex = clampNumber(currentIndex, 0, playlist.length - 1);
+            currentIndex = Math.max(0, index);
+            root.hidden = !playlist.length;
+            if (!playlist.length) {
+                pendingSeek = 0;
+                audio.pause();
+                audio.removeAttribute("src");
+                audio.load();
+                list.replaceChildren();
+                saveState();
+                return;
+            }
             renderList();
+            if (index < 0 || previous.url !== currentSong().url) {
+                switchTrack(currentIndex, { seek: index >= 0 ? seek : 0, autoplay: index >= 0 && wasPlaying });
+            }
         }
 
         audio.addEventListener("loadedmetadata", () => {
@@ -450,7 +474,7 @@
         window.addEventListener("beforeunload", saveState);
 
         renderList();
-        switchTrack(currentIndex, { seek: pendingSeek, autoplay: savedState.paused === false });
+        switchTrack(currentIndex, { seek: pendingSeek, autoplay: savedIndex >= 0 && savedState.paused === false });
         updatePlayButton();
         updateModeButton();
 
@@ -462,14 +486,13 @@
 
     function initMusicPlayer() {
         const playlist = getPlaylist();
-        if (playlist.length === 0) {
-            window.playArticleEntryMusic = function () {};
-            return;
-        }
-
         if (window.ElainaMusicPlayer) {
             window.ElainaMusicPlayer.setPlaylist(playlist);
             window.ElainaMusicPlayer.syncPage();
+            return;
+        }
+        if (playlist.length === 0) {
+            window.playArticleEntryMusic = function () {};
             return;
         }
 
@@ -488,5 +511,5 @@
     } else {
         initMusicPlayer();
     }
-    document.addEventListener("pjax:complete", initMusicPlayer);
+    document.addEventListener("pjax:success", initMusicPlayer);
 })();
