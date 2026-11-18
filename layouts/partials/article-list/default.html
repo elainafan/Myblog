@@ -90,7 +90,7 @@
                             {{- $series := index (partialCached "helper/post-series.html" .Site .Site.Language.Lang) .File.Dir -}}
                             {{- if and $series (eq .File.Path $series.entry.File.Path) $series.chapters -}}
                                 {{/* Match Hugo's CJK estimate, rounding once across the whole series. */}}
-                                全系列约 {{ div (add $series.words 500) 501 }} 分钟
+                                约 {{ div (add $series.words 500) 501 }} 分钟
                             {{- else -}}
                                 {{ T "article.readingTime" .ReadingTime }}
                             {{- end -}}
