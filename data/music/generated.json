@@ -110,6 +110,16 @@
     "sourceUrl": "https://www.bilibili.com/video/BV1Kzp1eWEPe"
   },
   {
+    "name": "ユメ語るよりユメ歌おう",
+    "artist": "Aqours",
+    "url": "/music/bilibili/BV11WWneHE7N/music.m4a",
+    "cover": "/music/bilibili/BV11WWneHE7N/cover.jpg",
+    "source": "bilibili",
+    "bvid": "BV11WWneHE7N",
+    "page": 1,
+    "sourceUrl": "https://www.bilibili.com/video/BV11WWneHE7N"
+  },
+  {
     "name": "Sparkling Daydream",
     "artist": "ZAQ",
     "url": "/music/bilibili/BV17h411S7R5/music.m4a",

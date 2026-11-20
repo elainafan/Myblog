@@ -2,18 +2,550 @@
   "source": "bangumi",
   "user": "1020990",
   "subject_type": 2,
-  "total": 133,
-  "fetched_at": "2026-11-16T15:53:25+00:00",
+  "total": 142,
+  "fetched_at": "2026-11-20T06:40:49+00:00",
   "data": [
     {
-      "updated_at": "2026-11-16T23:29:25+08:00",
+      "updated_at": "2026-11-20T12:10:32+08:00",
       "comment": null,
       "tags": [],
-      "subject_id": 165553,
+      "subject_id": 296659,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 296659,
+        "name": "ラブライブ！虹ヶ咲学園スクールアイドル同好会",
+        "name_cn": "Love Live! 虹咲学园校园偶像同好会",
+        "date": "2020-10-03",
+        "score": 7.5,
+        "rank": 899,
+        "eps": 13,
+        "collection_total": 12985,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a7/35/296659_o709D.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/a7/35/296659_o709D.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/a7/35/296659_o709D.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/a7/35/296659_o709D.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T12:10:24+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 638773,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 638773,
+        "name": "ラブライブ！蓮ノ空女学院スクールアイドルクラブ",
+        "name_cn": "LoveLive！莲之空女学院学园偶像俱乐部",
+        "date": "2027-01-10",
+        "score": 9,
+        "rank": 0,
+        "eps": 7,
+        "collection_total": 185,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/2f/34/638773_4I364.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/2f/34/638773_4I364.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/2f/34/638773_4I364.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/2f/34/638773_4I364.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T12:10:22+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 563256,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 563256,
+        "name": "映画 ラブライブ！蓮ノ空女学院スクールアイドルクラブ Bloom Garden Party",
+        "name_cn": "电影 LoveLive！莲之空女学院学园偶像俱乐部 Bloom Garden Party",
+        "date": "2026-05-08",
+        "score": 6.9,
+        "rank": 2985,
+        "eps": 1,
+        "collection_total": 778,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/05/4f/563256_mZIJ9.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/05/4f/563256_mZIJ9.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/05/4f/563256_mZIJ9.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/05/4f/563256_mZIJ9.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T12:10:18+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 408883,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 408883,
+        "name": "ラブライブ！虹ヶ咲学園スクールアイドル同好会 NEXT SKY",
+        "name_cn": "LoveLive！虹咲学园学园偶像同好会 NEXT SKY",
+        "date": "2023-06-23",
+        "score": 6.8,
+        "rank": 3305,
+        "eps": 1,
+        "collection_total": 2985,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/bb/ed/408883_A164w.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/bb/ed/408883_A164w.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/bb/ed/408883_A164w.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/bb/ed/408883_A164w.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T12:10:11+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 443003,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 443003,
+        "name": "幻日のリムル -SUNSHINE in the SLIME-",
+        "name_cn": "",
+        "date": "2023-06-21",
+        "score": 4.2,
+        "rank": 9540,
+        "eps": 2,
+        "collection_total": 178,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c1/5f/443003_1F0FV.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/c1/5f/443003_1F0FV.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/c1/5f/443003_1F0FV.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/c1/5f/443003_1F0FV.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:35:24+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 404480,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 404480,
+        "name": "ラブライブ！スーパースター!! 3期",
+        "name_cn": "Love Live! Superstar!! 第三季",
+        "date": "2024-10-06",
+        "score": 6.1,
+        "rank": 7588,
+        "eps": 12,
+        "collection_total": 3659,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/4f/12/404480_OokoZ.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/4f/12/404480_OokoZ.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/4f/12/404480_OokoZ.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/4f/12/404480_OokoZ.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:35:12+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 354146,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 354146,
+        "name": "ラブライブ！スーパースター!! 2期",
+        "name_cn": "Love Live! Superstar!! 第二季",
+        "date": "2022-07-17",
+        "score": 3.5,
+        "rank": 10421,
+        "eps": 12,
+        "collection_total": 6370,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a8/2c/354146_qU41Z.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/a8/2c/354146_qU41Z.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/a8/2c/354146_qU41Z.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/a8/2c/354146_qU41Z.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:35:03+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 306742,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 306742,
+        "name": "ラブライブ！スーパースター!!",
+        "name_cn": "Love Live! Superstar!!",
+        "date": "2021-07-11",
+        "score": 6.5,
+        "rank": 5370,
+        "eps": 12,
+        "collection_total": 12731,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/bf/92/306742_MvLk2.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/bf/92/306742_MvLk2.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/bf/92/306742_MvLk2.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/bf/92/306742_MvLk2.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:30:24+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 234295,
+      "subject_type": 2,
+      "type": 1,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 234295,
+        "name": "ラブライブ!サンシャイン!! The School Idol Movie Over the Rainbow",
+        "name_cn": "LoveLive! Sunshine!! 学园偶像 电影 彩虹彼端",
+        "date": "2019-01-04",
+        "score": 6.6,
+        "rank": 4665,
+        "eps": 1,
+        "collection_total": 3027,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/2f/1e/234295_UPw0o.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/2f/1e/234295_UPw0o.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/2f/1e/234295_UPw0o.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/2f/1e/234295_UPw0o.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:26:02+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 210272,
       "subject_type": 2,
       "type": 3,
       "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 210272,
+        "name": "ラブライブ! サンシャイン!! 第2期",
+        "name_cn": "LoveLive! Sunshine!! 第二季",
+        "date": "2017-10-07",
+        "score": 6.5,
+        "rank": 5182,
+        "eps": 13,
+        "collection_total": 5560,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d1/71/210272_JIkpK.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d1/71/210272_JIkpK.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d1/71/210272_JIkpK.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/d1/71/210272_JIkpK.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:52+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 622288,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 622288,
+        "name": "FX戦士くるみちゃん",
+        "name_cn": "FX战士久留美",
+        "date": "2026-10-01",
+        "score": 6.8,
+        "rank": 3581,
+        "eps": 12,
+        "collection_total": 20018,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/99/622288_nmbC3.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/99/622288_nmbC3.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d3/99/622288_nmbC3.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/d3/99/622288_nmbC3.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:49+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 537738,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 1,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 537738,
+        "name": "とある暗部の少女共棲",
+        "name_cn": "某暗部的少女共栖",
+        "date": "2026-10-09",
+        "score": 7,
+        "rank": 2460,
+        "eps": 11,
+        "collection_total": 7630,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1c/9b/537738_6rr67.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/1c/9b/537738_6rr67.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/1c/9b/537738_6rr67.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/1c/9b/537738_6rr67.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:45+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 37137,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 37137,
+        "name": "TARI TARI",
+        "name_cn": "",
+        "date": "2012-07-01",
+        "score": 7.3,
+        "rank": 1562,
+        "eps": 13,
+        "collection_total": 15562,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/de/a5/37137_2F57F.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/de/a5/37137_2F57F.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/de/a5/37137_2F57F.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/de/a5/37137_2F57F.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:42+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 20851,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 20851,
+        "name": "Another",
+        "name_cn": "",
+        "date": "2012-01-09",
+        "score": 6.9,
+        "rank": 2952,
+        "eps": 12,
+        "collection_total": 30488,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/39/20851_V4eXe.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/39/20851_V4eXe.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d3/39/20851_V4eXe.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/d3/39/20851_V4eXe.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:39+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 405785,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 0,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 405785,
+        "name": "ゆるキャン△ SEASON３",
+        "name_cn": "摇曳露营△ 第三季",
+        "date": "2024-04-04",
+        "score": 6.9,
+        "rank": 2950,
+        "eps": 12,
+        "collection_total": 15593,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/19/1a/405785_u9it9.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/19/1a/405785_u9it9.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/19/1a/405785_u9it9.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/19/1a/405785_u9it9.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:35+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 78405,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 1,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 78405,
+        "name": "のんのんびより",
+        "name_cn": "悠哉日常大王",
+        "date": "2013-10-07",
+        "score": 8,
+        "rank": 229,
+        "eps": 12,
+        "collection_total": 29395,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/47/fa/78405_dodKZ.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/47/fa/78405_dodKZ.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/47/fa/78405_dodKZ.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/47/fa/78405_dodKZ.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:32+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 165972,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 1,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 165972,
+        "name": "ステラのまほう",
+        "name_cn": "斯特拉的魔法",
+        "date": "2016-10-03",
+        "score": 6.5,
+        "rank": 5215,
+        "eps": 12,
+        "collection_total": 4181,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/03/72/165972_bY6dY.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/03/72/165972_bY6dY.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/03/72/165972_bY6dY.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/03/72/165972_bY6dY.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:28+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 217249,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
+      "ep_status": 2,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 217249,
+        "name": "こみっくがーるず",
+        "name_cn": "漫画女孩",
+        "date": "2018-04-05",
+        "score": 7.1,
+        "rank": 2317,
+        "eps": 12,
+        "collection_total": 10096,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/27/97/217249_jIbkA.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/27/97/217249_jIbkA.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/27/97/217249_jIbkA.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/27/97/217249_jIbkA.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:25+08:00",
+      "comment": null,
+      "tags": [],
+      "subject_id": 110467,
+      "subject_type": 2,
+      "type": 4,
+      "rate": 0,
       "ep_status": 3,
+      "vol_status": 0,
+      "private": false,
+      "subject": {
+        "id": 110467,
+        "name": "SHIROBAKO",
+        "name_cn": "白箱",
+        "date": "2014-10-09",
+        "score": 8.7,
+        "rank": 13,
+        "eps": 24,
+        "collection_total": 53789,
+        "images": {
+          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/73/26/110467_Fx9tT.jpg",
+          "common": "https://lain.bgm.tv/r/400/pic/cover/l/73/26/110467_Fx9tT.jpg",
+          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/73/26/110467_Fx9tT.jpg",
+          "large": "https://lain.bgm.tv/pic/cover/l/73/26/110467_Fx9tT.jpg"
+        }
+      }
+    },
+    {
+      "updated_at": "2026-11-20T10:25:10+08:00",
+      "comment": "很不错啊，虽然希望没有奇迹那么动人，但是还是很好看的，而且也不能总是沿着前辈的路子走",
+      "tags": [],
+      "subject_id": 165553,
+      "subject_type": 2,
+      "type": 2,
+      "rate": 10,
+      "ep_status": 13,
       "vol_status": 0,
       "private": false,
       "subject": {
@@ -22,9 +554,9 @@
         "name_cn": "LoveLive! Sunshine!!",
         "date": "2016-07-02",
         "score": 6.5,
-        "rank": 5165,
+        "rank": 5163,
         "eps": 13,
-        "collection_total": 8020,
+        "collection_total": 8025,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/37/165553_5f88z.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/37/165553_5f88z.jpg",
@@ -50,9 +582,9 @@
         "name_cn": "Love Live! 学园偶像 电影",
         "date": "2015-06-13",
         "score": 7.3,
-        "rank": 1471,
+        "rank": 1467,
         "eps": 1,
-        "collection_total": 7564,
+        "collection_total": 7566,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/f7/f9/107199_lHOHa.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/f7/f9/107199_lHOHa.jpg",
@@ -77,10 +609,10 @@
         "name": "映画ぼっち・ざ・ろっく！星のあしあと",
         "name_cn": "电影 孤独摇滚！星之足迹",
         "date": null,
-        "score": 7,
+        "score": 10,
         "rank": 0,
         "eps": 0,
-        "collection_total": 923,
+        "collection_total": 944,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d6/81/718086_3MYt2.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/d6/81/718086_3MYt2.jpg",
@@ -108,40 +640,12 @@
         "score": 7.3,
         "rank": 1520,
         "eps": 13,
-        "collection_total": 15098,
+        "collection_total": 15108,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/94/2a/75989_ylW5o.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/94/2a/75989_ylW5o.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/94/2a/75989_ylW5o.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/94/2a/75989_ylW5o.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-10-12T12:53:20+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 210272,
-      "subject_type": 2,
-      "type": 1,
-      "rate": 0,
-      "ep_status": 0,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 210272,
-        "name": "ラブライブ! サンシャイン!! 第2期",
-        "name_cn": "LoveLive! Sunshine!! 第二季",
-        "date": "2017-10-07",
-        "score": 6.5,
-        "rank": 5185,
-        "eps": 13,
-        "collection_total": 5556,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d1/71/210272_JIkpK.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d1/71/210272_JIkpK.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d1/71/210272_JIkpK.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/d1/71/210272_JIkpK.jpg"
         }
       }
     },
@@ -162,98 +666,14 @@
         "name_cn": "Love Live!",
         "date": "2013-01-06",
         "score": 7.2,
-        "rank": 1817,
+        "rank": 1816,
         "eps": 13,
-        "collection_total": 21458,
+        "collection_total": 21488,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/75/74/49294_ISOI2.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/75/74/49294_ISOI2.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/75/74/49294_ISOI2.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/75/74/49294_ISOI2.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-10-04T20:24:31+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 537738,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 1,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 537738,
-        "name": "とある暗部の少女共棲",
-        "name_cn": "某暗部的少女共栖",
-        "date": "2026-10-09",
-        "score": 7,
-        "rank": 2457,
-        "eps": 11,
-        "collection_total": 7517,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1c/9b/537738_6rr67.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/1c/9b/537738_6rr67.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/1c/9b/537738_6rr67.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/1c/9b/537738_6rr67.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-09-28T11:29:13+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 622288,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 0,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 622288,
-        "name": "FX戦士くるみちゃん",
-        "name_cn": "FX战士久留美",
-        "date": "2026-10-01",
-        "score": 6.8,
-        "rank": 3535,
-        "eps": 12,
-        "collection_total": 19761,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/99/622288_nmbC3.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/99/622288_nmbC3.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d3/99/622288_nmbC3.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/d3/99/622288_nmbC3.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-09-19T15:47:31+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 37137,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 0,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 37137,
-        "name": "TARI TARI",
-        "name_cn": "",
-        "date": "2012-07-01",
-        "score": 7.3,
-        "rank": 1560,
-        "eps": 13,
-        "collection_total": 15551,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/de/a5/37137_2F57F.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/de/a5/37137_2F57F.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/de/a5/37137_2F57F.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/de/a5/37137_2F57F.jpg"
         }
       }
     },
@@ -276,7 +696,7 @@
         "score": 7.8,
         "rank": 420,
         "eps": 13,
-        "collection_total": 20263,
+        "collection_total": 20296,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/7e/83/2582_9JJ3u.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/7e/83/2582_9JJ3u.jpg",
@@ -302,9 +722,9 @@
         "name_cn": "妖精的旋律",
         "date": "2004-07-25",
         "score": 7.3,
-        "rank": 1589,
+        "rank": 1591,
         "eps": 14,
-        "collection_total": 14776,
+        "collection_total": 14792,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/65/65/536_MKMkg.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/65/65/536_MKMkg.jpg",
@@ -330,9 +750,9 @@
         "name_cn": "零之使魔",
         "date": "2006-07-02",
         "score": 7,
-        "rank": 2584,
+        "rank": 2582,
         "eps": 13,
-        "collection_total": 20853,
+        "collection_total": 20882,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/32/14/1880_fsmcg.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/32/14/1880_fsmcg.jpg",
@@ -358,42 +778,14 @@
         "name_cn": "黑暗集会",
         "date": "2023-07-09",
         "score": 6.8,
-        "rank": 3724,
+        "rank": 3727,
         "eps": 25,
-        "collection_total": 7975,
+        "collection_total": 7986,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/27/14/390794_LG1k6.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/27/14/390794_LG1k6.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/27/14/390794_LG1k6.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/27/14/390794_LG1k6.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-09-03T15:44:18+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 20851,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 0,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 20851,
-        "name": "Another",
-        "name_cn": "",
-        "date": "2012-01-09",
-        "score": 6.9,
-        "rank": 2951,
-        "eps": 12,
-        "collection_total": 30448,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/39/20851_V4eXe.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/39/20851_V4eXe.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/d3/39/20851_V4eXe.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/d3/39/20851_V4eXe.jpg"
         }
       }
     },
@@ -416,7 +808,7 @@
         "score": 8.1,
         "rank": 182,
         "eps": 24,
-        "collection_total": 26716,
+        "collection_total": 26751,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/48/ae/288_HvHm5.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/48/ae/288_HvHm5.jpg",
@@ -444,7 +836,7 @@
         "score": 8,
         "rank": 231,
         "eps": 26,
-        "collection_total": 35637,
+        "collection_total": 35688,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/83/9a/289_h0nz0.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/83/9a/289_h0nz0.jpg",
@@ -470,9 +862,9 @@
         "name_cn": "寒蝉鸣泣之时 扩",
         "date": "2013-08-15",
         "score": 6.6,
-        "rank": 4537,
+        "rank": 4551,
         "eps": 1,
-        "collection_total": 5893,
+        "collection_total": 5901,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/fe/9a/57269_ZQQc8.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/fe/9a/57269_ZQQc8.jpg",
@@ -500,7 +892,7 @@
         "score": 5,
         "rank": 10021,
         "eps": 15,
-        "collection_total": 6827,
+        "collection_total": 6840,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/bb/b8/331033_Uis6n.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/bb/b8/331033_Uis6n.jpg",
@@ -526,9 +918,9 @@
         "name_cn": "寒蝉鸣泣之时 业",
         "date": "2020-10-01",
         "score": 6.7,
-        "rank": 4157,
+        "rank": 4153,
         "eps": 24,
-        "collection_total": 8809,
+        "collection_total": 8824,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1e/83/297969_CwJ7z.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/1e/83/297969_CwJ7z.jpg",
@@ -554,9 +946,9 @@
         "name_cn": "寒蝉鸣泣之时 礼",
         "date": "2009-02-25",
         "score": 7.2,
-        "rank": 1693,
+        "rank": 1692,
         "eps": 5,
-        "collection_total": 11156,
+        "collection_total": 11169,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c7/0d/1326_DQ576.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/c7/0d/1326_DQ576.jpg",
@@ -584,7 +976,7 @@
         "score": 6.8,
         "rank": 3587,
         "eps": 1,
-        "collection_total": 7474,
+        "collection_total": 7483,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/76/e0/37870_5Fc4g.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/76/e0/37870_5Fc4g.jpg",
@@ -610,9 +1002,9 @@
         "name_cn": "寒蝉鸣泣之时 煌",
         "date": "2011-07-21",
         "score": 6.7,
-        "rank": 3870,
+        "rank": 3861,
         "eps": 4,
-        "collection_total": 8084,
+        "collection_total": 8097,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/35/74/14429_Dt8id.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/35/74/14429_Dt8id.jpg",
@@ -638,9 +1030,9 @@
         "name_cn": "ReLIFE 完结篇",
         "date": "2018-03-21",
         "score": 7.7,
-        "rank": 556,
+        "rank": 553,
         "eps": 4,
-        "collection_total": 19721,
+        "collection_total": 19754,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/55/63/213816_y91Nb.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/55/63/213816_y91Nb.jpg",
@@ -666,9 +1058,9 @@
         "name_cn": "",
         "date": "2016-07-01",
         "score": 7.7,
-        "rank": 596,
+        "rank": 597,
         "eps": 13,
-        "collection_total": 30803,
+        "collection_total": 30866,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e0/a2/126173_II0Y1.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e0/a2/126173_II0Y1.jpg",
@@ -696,40 +1088,12 @@
         "score": 7.4,
         "rank": 1180,
         "eps": 25,
-        "collection_total": 51917,
+        "collection_total": 52005,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/2e/c8/23686_e36x9.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/2e/c8/23686_e36x9.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/2e/c8/23686_e36x9.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/2e/c8/23686_e36x9.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-08-13T22:43:28+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 405785,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 0,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 405785,
-        "name": "ゆるキャン△ SEASON３",
-        "name_cn": "摇曳露营△ 第三季",
-        "date": "2024-04-04",
-        "score": 6.9,
-        "rank": 2950,
-        "eps": 12,
-        "collection_total": 15561,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/19/1a/405785_u9it9.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/19/1a/405785_u9it9.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/19/1a/405785_u9it9.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/19/1a/405785_u9it9.jpg"
         }
       }
     },
@@ -752,7 +1116,7 @@
         "score": 8.3,
         "rank": 87,
         "eps": 13,
-        "collection_total": 29721,
+        "collection_total": 29772,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/0f/50/262897_d3555.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/0f/50/262897_d3555.jpg",
@@ -778,9 +1142,9 @@
         "name_cn": "约会大作战 第五季",
         "date": "2024-04-10",
         "score": 6.6,
-        "rank": 4751,
+        "rank": 4746,
         "eps": 12,
-        "collection_total": 10619,
+        "collection_total": 10641,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/2f/86/389466_2K1dH.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/2f/86/389466_2K1dH.jpg",
@@ -808,7 +1172,7 @@
         "score": 8,
         "rank": 0,
         "eps": 0,
-        "collection_total": 915,
+        "collection_total": 925,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/fe/e9/551559_YyYCl.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/fe/e9/551559_YyYCl.jpg",
@@ -834,9 +1198,9 @@
         "name_cn": "约会大作战 第四季",
         "date": "2022-04-08",
         "score": 6.5,
-        "rank": 5276,
+        "rank": 5280,
         "eps": 12,
-        "collection_total": 14752,
+        "collection_total": 14781,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6c/2a/302128_82c5B.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6c/2a/302128_82c5B.jpg",
@@ -864,7 +1228,7 @@
         "score": 5.2,
         "rank": 9919,
         "eps": 12,
-        "collection_total": 16992,
+        "collection_total": 17012,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/73/8c/228254_X7Y56.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/73/8c/228254_X7Y56.jpg",
@@ -890,9 +1254,9 @@
         "name_cn": "约会大作战 第二季",
         "date": "2014-04-11",
         "score": 6.1,
-        "rank": 7472,
+        "rank": 7470,
         "eps": 10,
-        "collection_total": 22531,
+        "collection_total": 22560,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/65/55/76325_8yJ4Y.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/65/55/76325_8yJ4Y.jpg",
@@ -918,9 +1282,9 @@
         "name_cn": "约会大作战",
         "date": "2013-04-05",
         "score": 6.7,
-        "rank": 4222,
+        "rank": 4220,
         "eps": 12,
-        "collection_total": 35688,
+        "collection_total": 35760,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/99/08/49131_CIPjC.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/99/08/49131_CIPjC.jpg",
@@ -948,7 +1312,7 @@
         "score": 7.8,
         "rank": 406,
         "eps": 12,
-        "collection_total": 19954,
+        "collection_total": 19986,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ef/d3/313852_550li.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ef/d3/313852_550li.jpg",
@@ -974,9 +1338,9 @@
         "name_cn": "街角魔族",
         "date": "2019-07-11",
         "score": 7.5,
-        "rank": 948,
+        "rank": 946,
         "eps": 12,
-        "collection_total": 27001,
+        "collection_total": 27044,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/af/22/272510_BZ00p.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/af/22/272510_BZ00p.jpg",
@@ -1002,9 +1366,9 @@
         "name_cn": "黄金拼图",
         "date": "2013-07-06",
         "score": 7.3,
-        "rank": 1478,
+        "rank": 1476,
         "eps": 12,
-        "collection_total": 11369,
+        "collection_total": 11387,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/9b/42/57978_NK1n4.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/9b/42/57978_NK1n4.jpg",
@@ -1030,9 +1394,9 @@
         "name_cn": "摇曳百合 夏日时光！+",
         "date": "2015-08-20",
         "score": 7.5,
-        "rank": 970,
+        "rank": 966,
         "eps": 2,
-        "collection_total": 7223,
+        "collection_total": 7233,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6b/d7/136311_N51T6.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6b/d7/136311_N51T6.jpg",
@@ -1058,9 +1422,9 @@
         "name_cn": "摇曳百合 3☆High!",
         "date": "2015-10-05",
         "score": 7.7,
-        "rank": 633,
+        "rank": 632,
         "eps": 12,
-        "collection_total": 11170,
+        "collection_total": 11184,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/3e/f2/127573_HfPRJ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/3e/f2/127573_HfPRJ.jpg",
@@ -1088,7 +1452,7 @@
         "score": 7.5,
         "rank": 865,
         "eps": 1,
-        "collection_total": 7875,
+        "collection_total": 7887,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/cb/c2/99796_NV7tq.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/cb/c2/99796_NV7tq.jpg",
@@ -1114,9 +1478,9 @@
         "name_cn": "摇曳百合、",
         "date": "2019-11-13",
         "score": 7.5,
-        "rank": 854,
+        "rank": 852,
         "eps": 1,
-        "collection_total": 6690,
+        "collection_total": 6704,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/7c/de/243787_b8Zgz.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/7c/de/243787_b8Zgz.jpg",
@@ -1142,9 +1506,9 @@
         "name_cn": "摇曳百合",
         "date": "2011-07-04",
         "score": 7.7,
-        "rank": 593,
+        "rank": 591,
         "eps": 12,
-        "collection_total": 22992,
+        "collection_total": 23020,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/43/d9/14588_bDB2r.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/43/d9/14588_bDB2r.jpg",
@@ -1170,9 +1534,9 @@
         "name_cn": "摇曳百合♪♪",
         "date": "2012-07-02",
         "score": 7.8,
-        "rank": 474,
+        "rank": 472,
         "eps": 12,
-        "collection_total": 17696,
+        "collection_total": 17719,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/f2/9f/28900_PB3pC.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/f2/9f/28900_PB3pC.jpg",
@@ -1200,40 +1564,12 @@
         "score": 8.2,
         "rank": 146,
         "eps": 12,
-        "collection_total": 38449,
+        "collection_total": 38523,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6e/1a/509986_99qsc.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6e/1a/509986_99qsc.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/6e/1a/509986_99qsc.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/6e/1a/509986_99qsc.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-08-01T19:09:31+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 78405,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 1,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 78405,
-        "name": "のんのんびより",
-        "name_cn": "悠哉日常大王",
-        "date": "2013-10-07",
-        "score": 8,
-        "rank": 228,
-        "eps": 12,
-        "collection_total": 29348,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/47/fa/78405_dodKZ.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/47/fa/78405_dodKZ.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/47/fa/78405_dodKZ.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/47/fa/78405_dodKZ.jpg"
         }
       }
     },
@@ -1254,9 +1590,9 @@
         "name_cn": "悠哉日常大王 Nonstop",
         "date": "2021-01-10",
         "score": 8.2,
-        "rank": 131,
+        "rank": 132,
         "eps": 12,
-        "collection_total": 17757,
+        "collection_total": 17783,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ac/b7/282684_5lN9Z.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ac/b7/282684_5lN9Z.jpg",
@@ -1282,9 +1618,9 @@
         "name_cn": "悠哉日常大王 Repeat",
         "date": "2015-07-06",
         "score": 8.1,
-        "rank": 205,
+        "rank": 207,
         "eps": 12,
-        "collection_total": 17773,
+        "collection_total": 17795,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/8b/6b/101442_EM1Vg.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/8b/6b/101442_EM1Vg.jpg",
@@ -1310,42 +1646,14 @@
         "name_cn": "契约之吻",
         "date": "2022-07-02",
         "score": 6.9,
-        "rank": 3024,
+        "rank": 3025,
         "eps": 13,
-        "collection_total": 31018,
+        "collection_total": 31067,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/25/cd/375817_O7LGk.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/25/cd/375817_O7LGk.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/25/cd/375817_O7LGk.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/25/cd/375817_O7LGk.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-07-29T18:14:41+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 165972,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 1,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 165972,
-        "name": "ステラのまほう",
-        "name_cn": "斯特拉的魔法",
-        "date": "2016-10-03",
-        "score": 6.5,
-        "rank": 5214,
-        "eps": 12,
-        "collection_total": 4174,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/03/72/165972_bY6dY.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/03/72/165972_bY6dY.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/03/72/165972_bY6dY.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/03/72/165972_bY6dY.jpg"
         }
       }
     },
@@ -1368,7 +1676,7 @@
         "score": 5.6,
         "rank": 9267,
         "eps": 12,
-        "collection_total": 5550,
+        "collection_total": 5555,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/11/76/225021_bU822.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/11/76/225021_bU822.jpg",
@@ -1394,9 +1702,9 @@
         "name_cn": "吹响吧！上低音号",
         "date": "2015-04-07",
         "score": 8.3,
-        "rank": 94,
+        "rank": 95,
         "eps": 14,
-        "collection_total": 44148,
+        "collection_total": 44203,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/37/df/115908_c0uQj.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/37/df/115908_c0uQj.jpg",
@@ -1424,9 +1732,9 @@
         "name_cn": "Happy Sugar Life",
         "date": "2018-07-13",
         "score": 6.6,
-        "rank": 4743,
+        "rank": 4745,
         "eps": 12,
-        "collection_total": 11910,
+        "collection_total": 11933,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e2/68/240828_H4uLo.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e2/68/240828_H4uLo.jpg",
@@ -1454,7 +1762,7 @@
         "score": 7.4,
         "rank": 1222,
         "eps": 12,
-        "collection_total": 28909,
+        "collection_total": 28979,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/40/01/393037_I7mvN.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/40/01/393037_I7mvN.jpg",
@@ -1482,7 +1790,7 @@
         "score": 7.1,
         "rank": 2045,
         "eps": 6,
-        "collection_total": 13081,
+        "collection_total": 13111,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/01/d5/504950_WmdZx.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/01/d5/504950_WmdZx.jpg",
@@ -1508,9 +1816,9 @@
         "name_cn": "潜行吧！奈亚子W",
         "date": "2013-04-07",
         "score": 7,
-        "rank": 2543,
+        "rank": 2544,
         "eps": 12,
-        "collection_total": 13426,
+        "collection_total": 13443,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/5a/69/58015_P8711.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/5a/69/58015_P8711.jpg",
@@ -1536,9 +1844,9 @@
         "name_cn": "潜行吧！奈亚子",
         "date": "2012-04-09",
         "score": 7,
-        "rank": 2649,
+        "rank": 2644,
         "eps": 12,
-        "collection_total": 21874,
+        "collection_total": 21908,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/f8/c0/24508_GalOa.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/f8/c0/24508_GalOa.jpg",
@@ -1568,7 +1876,7 @@
         "score": 8.2,
         "rank": 149,
         "eps": 13,
-        "collection_total": 35220,
+        "collection_total": 35262,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/16/de/218708_jhZHz.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/16/de/218708_jhZHz.jpg",
@@ -1596,7 +1904,7 @@
         "score": 8.4,
         "rank": 61,
         "eps": 1,
-        "collection_total": 35430,
+        "collection_total": 35481,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/9e/3c/12426_vt490.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/9e/3c/12426_vt490.jpg",
@@ -1622,9 +1930,9 @@
         "name_cn": "紫云寺家的兄弟姐妹",
         "date": "2025-04-08",
         "score": 5.7,
-        "rank": 8835,
+        "rank": 8837,
         "eps": 12,
-        "collection_total": 8528,
+        "collection_total": 8539,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/48/c8/480545_gGwa0.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/48/c8/480545_gGwa0.jpg",
@@ -1650,9 +1958,9 @@
         "name_cn": "杜鹃的婚约",
         "date": "2022-04-23",
         "score": 5.5,
-        "rank": 9413,
+        "rank": 9412,
         "eps": 24,
-        "collection_total": 6445,
+        "collection_total": 6449,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ff/e5/327606_Q11Sq.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ff/e5/327606_Q11Sq.jpg",
@@ -1678,9 +1986,9 @@
         "name_cn": "GAMERS电玩咖",
         "date": "2017-07-13",
         "score": 7,
-        "rank": 2815,
+        "rank": 2809,
         "eps": 12,
-        "collection_total": 15689,
+        "collection_total": 15725,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c9/f3/195816_oXlKL.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/c9/f3/195816_oXlKL.jpg",
@@ -1705,10 +2013,10 @@
         "name": "彼女、お借りします 第5期",
         "name_cn": "租借女友 第五季",
         "date": "2026-04-10",
-        "score": 4.1,
-        "rank": 10331,
+        "score": 4.2,
+        "rank": 10330,
         "eps": 12,
-        "collection_total": 2306,
+        "collection_total": 2312,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/97/ba/533027_q6S52.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/97/ba/533027_q6S52.jpg",
@@ -1734,42 +2042,14 @@
         "name_cn": "继母的拖油瓶是我的前女友",
         "date": "2022-07-06",
         "score": 5.7,
-        "rank": 9055,
+        "rank": 9056,
         "eps": 12,
-        "collection_total": 14759,
+        "collection_total": 14791,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/49/54/343106_cT6ZV.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/49/54/343106_cT6ZV.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/49/54/343106_cT6ZV.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/49/54/343106_cT6ZV.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-06-15T18:45:03+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 217249,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 2,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 217249,
-        "name": "こみっくがーるず",
-        "name_cn": "漫画女孩",
-        "date": "2018-04-05",
-        "score": 7.1,
-        "rank": 2322,
-        "eps": 12,
-        "collection_total": 10080,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/27/97/217249_jIbkA.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/27/97/217249_jIbkA.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/27/97/217249_jIbkA.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/27/97/217249_jIbkA.jpg"
         }
       }
     },
@@ -1790,9 +2070,9 @@
         "name_cn": "你所期望的永远",
         "date": "2003-10-04",
         "score": 7.2,
-        "rank": 1928,
+        "rank": 1926,
         "eps": 14,
-        "collection_total": 4223,
+        "collection_total": 4226,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/97/3a/1650_HhHGJ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/97/3a/1650_HhHGJ.jpg",
@@ -1818,9 +2098,9 @@
         "name_cn": "可塑性记忆",
         "date": "2015-04-04",
         "score": 7,
-        "rank": 2531,
+        "rank": 2533,
         "eps": 13,
-        "collection_total": 30372,
+        "collection_total": 30441,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1d/08/114685_Ege3l.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/1d/08/114685_Ege3l.jpg",
@@ -1848,7 +2128,7 @@
         "score": 3.8,
         "rank": 10378,
         "eps": 12,
-        "collection_total": 3556,
+        "collection_total": 3561,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/84/a9/503450_wS9yJ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/84/a9/503450_wS9yJ.jpg",
@@ -1874,9 +2154,9 @@
         "name_cn": "租借女友 第三季",
         "date": "2023-07-07",
         "score": 5.4,
-        "rank": 9578,
+        "rank": 9580,
         "eps": 12,
-        "collection_total": 5084,
+        "collection_total": 5091,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/83/14/401783_x6496.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/83/14/401783_x6496.jpg",
@@ -1904,7 +2184,7 @@
         "score": 5.7,
         "rank": 9073,
         "eps": 12,
-        "collection_total": 7607,
+        "collection_total": 7615,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a6/f0/315745_n981m.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/a6/f0/315745_n981m.jpg",
@@ -1930,42 +2210,14 @@
         "name_cn": "租借女友",
         "date": "2020-07-10",
         "score": 5.6,
-        "rank": 9220,
+        "rank": 9219,
         "eps": 12,
-        "collection_total": 15407,
+        "collection_total": 15430,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/7a/37/296076_6cP6Q.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/7a/37/296076_6cP6Q.jpg",
           "medium": "https://lain.bgm.tv/r/800/pic/cover/l/7a/37/296076_6cP6Q.jpg",
           "large": "https://lain.bgm.tv/pic/cover/l/7a/37/296076_6cP6Q.jpg"
-        }
-      }
-    },
-    {
-      "updated_at": "2026-05-31T23:06:54+08:00",
-      "comment": null,
-      "tags": [],
-      "subject_id": 110467,
-      "subject_type": 2,
-      "type": 3,
-      "rate": 0,
-      "ep_status": 3,
-      "vol_status": 0,
-      "private": false,
-      "subject": {
-        "id": 110467,
-        "name": "SHIROBAKO",
-        "name_cn": "白箱",
-        "date": "2014-10-09",
-        "score": 8.7,
-        "rank": 13,
-        "eps": 24,
-        "collection_total": 53726,
-        "images": {
-          "grid": "https://lain.bgm.tv/r/100/pic/cover/l/73/26/110467_Fx9tT.jpg",
-          "common": "https://lain.bgm.tv/r/400/pic/cover/l/73/26/110467_Fx9tT.jpg",
-          "medium": "https://lain.bgm.tv/r/800/pic/cover/l/73/26/110467_Fx9tT.jpg",
-          "large": "https://lain.bgm.tv/pic/cover/l/73/26/110467_Fx9tT.jpg"
         }
       }
     },
@@ -1986,9 +2238,9 @@
         "name_cn": "终将成为你",
         "date": "2018-10-05",
         "score": 7.8,
-        "rank": 396,
+        "rank": 397,
         "eps": 13,
-        "collection_total": 28752,
+        "collection_total": 28811,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/bc/72/243981_J20I2.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/bc/72/243981_J20I2.jpg",
@@ -2014,9 +2266,9 @@
         "name_cn": "路人女主的养成方法 Fine",
         "date": "2019-10-26",
         "score": 7.7,
-        "rank": 486,
+        "rank": 487,
         "eps": 1,
-        "collection_total": 26547,
+        "collection_total": 26592,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/8b/4c/231497_tZxtU.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/8b/4c/231497_tZxtU.jpg",
@@ -2044,7 +2296,7 @@
         "score": 7.5,
         "rank": 897,
         "eps": 26,
-        "collection_total": 23426,
+        "collection_total": 23460,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/16/29/47889_gZy58.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/16/29/47889_gZy58.jpg",
@@ -2070,9 +2322,9 @@
         "name_cn": "电影 中二病也要谈恋爱！ -Take On Me-",
         "date": "2018-01-06",
         "score": 7.5,
-        "rank": 880,
+        "rank": 881,
         "eps": 1,
-        "collection_total": 21973,
+        "collection_total": 22012,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d4/3b/215425_i1V31.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/d4/3b/215425_i1V31.jpg",
@@ -2100,7 +2352,7 @@
         "score": 7.3,
         "rank": 1446,
         "eps": 5,
-        "collection_total": 17430,
+        "collection_total": 17477,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a1/ea/587454_1KdKJ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/a1/ea/587454_1KdKJ.jpg",
@@ -2126,9 +2378,9 @@
         "name_cn": "真实之泪",
         "date": "2008-01-05",
         "score": 7.4,
-        "rank": 1093,
+        "rank": 1090,
         "eps": 13,
-        "collection_total": 16631,
+        "collection_total": 16640,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ed/de/309_958Es.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ed/de/309_958Es.jpg",
@@ -2156,7 +2408,7 @@
         "score": 7.5,
         "rank": 825,
         "eps": 11,
-        "collection_total": 53836,
+        "collection_total": 53908,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6c/e8/10440_8HP6O.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6c/e8/10440_8HP6O.jpg",
@@ -2184,7 +2436,7 @@
         "score": 7.6,
         "rank": 682,
         "eps": 12,
-        "collection_total": 32412,
+        "collection_total": 32459,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a0/5f/185943_VDh22.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/a0/5f/185943_VDh22.jpg",
@@ -2210,9 +2462,9 @@
         "name_cn": "天使降临到了我身边！",
         "date": "2019-01-08",
         "score": 7.3,
-        "rank": 1407,
+        "rank": 1410,
         "eps": 13,
-        "collection_total": 29037,
+        "collection_total": 29084,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/f3/2d/249637_2r3gw.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/f3/2d/249637_2r3gw.jpg",
@@ -2238,9 +2490,9 @@
         "name_cn": "摇曳露营△",
         "date": "2018-01-04",
         "score": 8.2,
-        "rank": 118,
+        "rank": 117,
         "eps": 12,
-        "collection_total": 42238,
+        "collection_total": 42322,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/18/bc/207195_2Cp3o.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/18/bc/207195_2Cp3o.jpg",
@@ -2268,7 +2520,7 @@
         "score": 7.4,
         "rank": 1063,
         "eps": 12,
-        "collection_total": 36057,
+        "collection_total": 36130,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ae/03/524707_1quxk.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ae/03/524707_1quxk.jpg",
@@ -2294,9 +2546,9 @@
         "name_cn": "恋爱小行星",
         "date": "2020-01-03",
         "score": 6.9,
-        "rank": 2891,
+        "rank": 2892,
         "eps": 12,
-        "collection_total": 13562,
+        "collection_total": 13586,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/eb/9f/276150_tJJGx.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/eb/9f/276150_tJJGx.jpg",
@@ -2322,9 +2574,9 @@
         "name_cn": "夏洛特",
         "date": "2015-07-04",
         "score": 6.4,
-        "rank": 5980,
+        "rank": 5981,
         "eps": 14,
-        "collection_total": 41999,
+        "collection_total": 42072,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/9b/d6/120925_Zp040.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/9b/d6/120925_Zp040.jpg",
@@ -2350,9 +2602,9 @@
         "name_cn": "青春猪头少年不会梦到怀梦美少女",
         "date": "2019-06-15",
         "score": 7.4,
-        "rank": 1162,
+        "rank": 1166,
         "eps": 1,
-        "collection_total": 28260,
+        "collection_total": 28319,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/10/19/260680_Sx2HP.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/10/19/260680_Sx2HP.jpg",
@@ -2378,9 +2630,9 @@
         "name_cn": "青春猪头少年不会梦到娇怜外出妹",
         "date": "2023-06-23",
         "score": 6.6,
-        "rank": 4728,
+        "rank": 4723,
         "eps": 1,
-        "collection_total": 13903,
+        "collection_total": 13933,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c4/bf/402656_SXThf.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/c4/bf/402656_SXThf.jpg",
@@ -2406,9 +2658,9 @@
         "name_cn": "青春猪头少年不会梦到红书包女孩",
         "date": "2023-12-01",
         "score": 6.9,
-        "rank": 2964,
+        "rank": 2967,
         "eps": 1,
-        "collection_total": 13866,
+        "collection_total": 13899,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/37/af/426239_1D3s9.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/37/af/426239_1D3s9.jpg",
@@ -2434,9 +2686,9 @@
         "name_cn": "青春猪头少年不会梦到兔女郎学姐",
         "date": "2018-10-03",
         "score": 7.4,
-        "rank": 1074,
+        "rank": 1073,
         "eps": 13,
-        "collection_total": 52266,
+        "collection_total": 52367,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/b9/45/240038_b5j7g.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/b9/45/240038_b5j7g.jpg",
@@ -2462,9 +2714,9 @@
         "name_cn": "干物妹！小埋",
         "date": "2015-07-08",
         "score": 6.8,
-        "rank": 3571,
+        "rank": 3568,
         "eps": 12,
-        "collection_total": 36200,
+        "collection_total": 36269,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/41/2c/120187_nXjYb.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/41/2c/120187_nXjYb.jpg",
@@ -2490,9 +2742,9 @@
         "name_cn": "干物妹！小埋R",
         "date": "2017-10-08",
         "score": 6.7,
-        "rank": 4197,
+        "rank": 4195,
         "eps": 12,
-        "collection_total": 22789,
+        "collection_total": 22824,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/27/da/212775_as9It.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/27/da/212775_as9It.jpg",
@@ -2520,7 +2772,7 @@
         "score": 5.7,
         "rank": 8873,
         "eps": 12,
-        "collection_total": 8436,
+        "collection_total": 8445,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e1/b7/501702_VXrd2.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e1/b7/501702_VXrd2.jpg",
@@ -2548,7 +2800,7 @@
         "score": 8.4,
         "rank": 73,
         "eps": 12,
-        "collection_total": 80055,
+        "collection_total": 80209,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e2/e7/328609_2EHLJ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e2/e7/328609_2EHLJ.jpg",
@@ -2574,9 +2826,9 @@
         "name_cn": "学园孤岛",
         "date": "2015-07-09",
         "score": 6.9,
-        "rank": 2890,
+        "rank": 2889,
         "eps": 12,
-        "collection_total": 22341,
+        "collection_total": 22373,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e9/a7/106693_68MDM.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e9/a7/106693_68MDM.jpg",
@@ -2604,7 +2856,7 @@
         "score": 8.2,
         "rank": 115,
         "eps": 24,
-        "collection_total": 38313,
+        "collection_total": 38391,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/f6/91/129807_9VAi4.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/f6/91/129807_9VAi4.jpg",
@@ -2632,7 +2884,7 @@
         "score": 8.8,
         "rank": 7,
         "eps": 25,
-        "collection_total": 81452,
+        "collection_total": 81588,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a9/79/10380_YwP4R.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/a9/79/10380_YwP4R.jpg",
@@ -2660,7 +2912,7 @@
         "score": 8.6,
         "rank": 34,
         "eps": 1,
-        "collection_total": 35027,
+        "collection_total": 35070,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/31/1c/44693_YS9kU.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/31/1c/44693_YS9kU.jpg",
@@ -2688,7 +2940,7 @@
         "score": 8.6,
         "rank": 35,
         "eps": 12,
-        "collection_total": 73611,
+        "collection_total": 73704,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/cb/57/9717_sAVag.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/cb/57/9717_sAVag.jpg",
@@ -2716,7 +2968,7 @@
         "score": 7,
         "rank": 2620,
         "eps": 13,
-        "collection_total": 36184,
+        "collection_total": 36258,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c8/e4/72942_VniXv.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/c8/e4/72942_VniXv.jpg",
@@ -2742,9 +2994,9 @@
         "name_cn": "中二病也要谈恋爱！",
         "date": "2012-10-03",
         "score": 7.4,
-        "rank": 1128,
+        "rank": 1129,
         "eps": 13,
-        "collection_total": 56043,
+        "collection_total": 56155,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/3d/fd/29648_LOcOx.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/3d/fd/29648_LOcOx.jpg",
@@ -2772,7 +3024,7 @@
         "score": 8,
         "rank": 266,
         "eps": 12,
-        "collection_total": 61302,
+        "collection_total": 61452,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/e4/dc/464376_NsZRw.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/e4/dc/464376_NsZRw.jpg",
@@ -2798,9 +3050,9 @@
         "name_cn": "",
         "date": "2016-07-04",
         "score": 7.4,
-        "rank": 1170,
+        "rank": 1173,
         "eps": 13,
-        "collection_total": 21815,
+        "collection_total": 21846,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/0f/79/150775_rRSAT.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/0f/79/150775_rRSAT.jpg",
@@ -2826,9 +3078,9 @@
         "name_cn": "",
         "date": "2017-07-11",
         "score": 7.4,
-        "rank": 1139,
+        "rank": 1138,
         "eps": 12,
-        "collection_total": 17216,
+        "collection_total": 17241,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/32/44/208908_AATp0.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/32/44/208908_AATp0.jpg",
@@ -2856,7 +3108,7 @@
         "score": 8,
         "rank": 253,
         "eps": 25,
-        "collection_total": 57622,
+        "collection_total": 57732,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/a4/30/909_e5zhk.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/a4/30/909_e5zhk.jpg",
@@ -2884,7 +3136,7 @@
         "score": 8,
         "rank": 225,
         "eps": 28,
-        "collection_total": 41922,
+        "collection_total": 41990,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/49/5d/1606_64k44.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/49/5d/1606_64k44.jpg",
@@ -2912,7 +3164,7 @@
         "score": 8.7,
         "rank": 16,
         "eps": 1,
-        "collection_total": 48876,
+        "collection_total": 48938,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/9b/9b/3375_33BCV.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/9b/9b/3375_33BCV.jpg",
@@ -2938,9 +3190,9 @@
         "name_cn": "珈百璃的堕落",
         "date": "2017-01-09",
         "score": 7.1,
-        "rank": 2197,
+        "rank": 2195,
         "eps": 12,
-        "collection_total": 28057,
+        "collection_total": 28115,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/39/3d/188091_diaJ7.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/39/3d/188091_diaJ7.jpg",
@@ -2966,9 +3218,9 @@
         "name_cn": "魔女之旅",
         "date": "2020-10-02",
         "score": 7.2,
-        "rank": 1802,
+        "rank": 1804,
         "eps": 12,
-        "collection_total": 40735,
+        "collection_total": 40825,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/99/17/292970_mxMxx.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/99/17/292970_mxMxx.jpg",
@@ -2996,7 +3248,7 @@
         "score": 8.4,
         "rank": 55,
         "eps": 26,
-        "collection_total": 51547,
+        "collection_total": 51614,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/73/f1/3774_hs9Fr.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/73/f1/3774_hs9Fr.jpg",
@@ -3024,7 +3276,7 @@
         "score": 8.3,
         "rank": 101,
         "eps": 14,
-        "collection_total": 63959,
+        "collection_total": 64064,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/48/9d/1424_q8FMQ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/48/9d/1424_q8FMQ.jpg",
@@ -3052,7 +3304,7 @@
         "score": 7.5,
         "rank": 932,
         "eps": 26,
-        "collection_total": 29963,
+        "collection_total": 30000,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/56/2d/22759_A5N6H.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/56/2d/22759_A5N6H.jpg",
@@ -3078,9 +3330,9 @@
         "name_cn": "我的妹妹哪有这么可爱。",
         "date": "2013-04-06",
         "score": 6.9,
-        "rank": 3125,
+        "rank": 3128,
         "eps": 16,
-        "collection_total": 28717,
+        "collection_total": 28772,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/50/53/37898_GB3nG.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/50/53/37898_GB3nG.jpg",
@@ -3106,9 +3358,9 @@
         "name_cn": "我的妹妹哪有这么可爱！",
         "date": "2010-10-03",
         "score": 7.1,
-        "rank": 2161,
+        "rank": 2165,
         "eps": 15,
-        "collection_total": 36319,
+        "collection_total": 36386,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/cf/8c/5436_MNxnb.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/cf/8c/5436_MNxnb.jpg",
@@ -3134,9 +3386,9 @@
         "name_cn": "天使的心跳！",
         "date": "2010-04-02",
         "score": 7.6,
-        "rank": 778,
+        "rank": 780,
         "eps": 13,
-        "collection_total": 46293,
+        "collection_total": 46355,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ff/14/1851_ZFEg7.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ff/14/1851_ZFEg7.jpg",
@@ -3162,9 +3414,9 @@
         "name_cn": "我的青春恋爱物语果然有问题 完",
         "date": "2020-07-09",
         "score": 6.7,
-        "rank": 3927,
+        "rank": 3923,
         "eps": 12,
-        "collection_total": 29121,
+        "collection_total": 29183,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ba/69/277954_s8qHA.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ba/69/277954_s8qHA.jpg",
@@ -3192,7 +3444,7 @@
         "score": 7.4,
         "rank": 1118,
         "eps": 13,
-        "collection_total": 39834,
+        "collection_total": 39908,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1e/ef/102134_luzUc.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/1e/ef/102134_luzUc.jpg",
@@ -3218,9 +3470,9 @@
         "name_cn": "我的青春恋爱物语果然有问题",
         "date": "2013-04-04",
         "score": 7.5,
-        "rank": 831,
+        "rank": 830,
         "eps": 13,
-        "collection_total": 51835,
+        "collection_total": 51934,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/1e/f1/54433_JZ99l.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/1e/f1/54433_JZ99l.jpg",
@@ -3246,9 +3498,9 @@
         "name_cn": "樱花庄的宠物女孩",
         "date": "2012-10-08",
         "score": 7.4,
-        "rank": 1098,
+        "rank": 1096,
         "eps": 24,
-        "collection_total": 42681,
+        "collection_total": 42766,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/01/a2/41488_qw09G.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/01/a2/41488_qw09G.jpg",
@@ -3274,9 +3526,9 @@
         "name_cn": "某科学的超电磁炮S",
         "date": "2013-04-12",
         "score": 7.6,
-        "rank": 772,
+        "rank": 774,
         "eps": 24,
-        "collection_total": 38155,
+        "collection_total": 38203,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/99/8c/51928_wuG5D.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/99/8c/51928_wuG5D.jpg",
@@ -3304,7 +3556,7 @@
         "score": 7.6,
         "rank": 757,
         "eps": 25,
-        "collection_total": 30004,
+        "collection_total": 30046,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/aa/db/262940_z2mQQ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/aa/db/262940_z2mQQ.jpg",
@@ -3330,9 +3582,9 @@
         "name_cn": "某科学的超电磁炮",
         "date": "2009-10-02",
         "score": 7.5,
-        "rank": 844,
+        "rank": 842,
         "eps": 24,
-        "collection_total": 49936,
+        "collection_total": 50020,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/36/e7/2585_pn2eP.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/36/e7/2585_pn2eP.jpg",
@@ -3358,9 +3610,9 @@
         "name_cn": "citrus～柑橘味香气～",
         "date": "2018-01-06",
         "score": 6.3,
-        "rank": 6814,
+        "rank": 6817,
         "eps": 12,
-        "collection_total": 16909,
+        "collection_total": 16932,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/8e/45/198098_g44Mz.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/8e/45/198098_g44Mz.jpg",
@@ -3386,9 +3638,9 @@
         "name_cn": "我心里危险的东西 第二季",
         "date": "2024-01-06",
         "score": 8.3,
-        "rank": 102,
+        "rank": 103,
         "eps": 13,
-        "collection_total": 31625,
+        "collection_total": 31693,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/ba/7e/441795_q6Sc3.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/ba/7e/441795_q6Sc3.jpg",
@@ -3414,9 +3666,9 @@
         "name_cn": "安达与岛村",
         "date": "2020-10-08",
         "score": 7.3,
-        "rank": 1335,
+        "rank": 1338,
         "eps": 12,
-        "collection_total": 20139,
+        "collection_total": 20174,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/0f/a4/282372_pqp0S.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/0f/a4/282372_pqp0S.jpg",
@@ -3444,7 +3696,7 @@
         "score": 6.3,
         "rank": 6677,
         "eps": 13,
-        "collection_total": 42714,
+        "collection_total": 42790,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/65/19/364450_xx2zx.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/65/19/364450_xx2zx.jpg",
@@ -3470,9 +3722,9 @@
         "name_cn": "时光流逝，饭菜依旧美味",
         "date": "2025-04-12",
         "score": 7.7,
-        "rank": 591,
+        "rank": 593,
         "eps": 12,
-        "collection_total": 30302,
+        "collection_total": 30349,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/5d/531159_BayD9.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/5d/531159_BayD9.jpg",
@@ -3498,9 +3750,9 @@
         "name_cn": "我心里危险的东西",
         "date": "2023-04-01",
         "score": 7.8,
-        "rank": 384,
+        "rank": 383,
         "eps": 12,
-        "collection_total": 38528,
+        "collection_total": 38617,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/01/ee/394260_VMqvV.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/01/ee/394260_VMqvV.jpg",
@@ -3526,9 +3778,9 @@
         "name_cn": "青春猪头少年不会梦到圣诞服女郎",
         "date": "2025-07-05",
         "score": 6.8,
-        "rank": 3300,
+        "rank": 3298,
         "eps": 13,
-        "collection_total": 20288,
+        "collection_total": 20334,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/d3/a3/467930_jH4s4.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/d3/a3/467930_jH4s4.jpg",
@@ -3556,7 +3808,7 @@
         "score": 8.1,
         "rank": 152,
         "eps": 22,
-        "collection_total": 68345,
+        "collection_total": 68453,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/cd/38/27364_1ZFmr.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/cd/38/27364_1ZFmr.jpg",
@@ -3582,9 +3834,9 @@
         "name_cn": "路人女主的养成方法",
         "date": "2015-01-08",
         "score": 7.2,
-        "rank": 1696,
+        "rank": 1698,
         "eps": 13,
-        "collection_total": 44341,
+        "collection_total": 44428,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6b/01/100403_R8KN2.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6b/01/100403_R8KN2.jpg",
@@ -3612,7 +3864,7 @@
         "score": 7.6,
         "rank": 725,
         "eps": 12,
-        "collection_total": 43922,
+        "collection_total": 44010,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/7e/ca/378862_24TnR.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/7e/ca/378862_24TnR.jpg",
@@ -3638,9 +3890,9 @@
         "name_cn": "人形电脑天使心",
         "date": "2002-04-02",
         "score": 7.5,
-        "rank": 949,
+        "rank": 950,
         "eps": 27,
-        "collection_total": 15770,
+        "collection_total": 15793,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/c2/0a/12_q23bZ.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/c2/0a/12_q23bZ.jpg",
@@ -3666,9 +3918,9 @@
         "name_cn": "缘之空",
         "date": "2010-10-04",
         "score": 6.6,
-        "rank": 4587,
+        "rank": 4586,
         "eps": 12,
-        "collection_total": 34295,
+        "collection_total": 34366,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/6e/01/7157_hF46A.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/6e/01/7157_hF46A.jpg",
@@ -3694,9 +3946,9 @@
         "name_cn": "路人女主的养成方法 ♭",
         "date": "2017-04-06",
         "score": 7.3,
-        "rank": 1349,
+        "rank": 1351,
         "eps": 12,
-        "collection_total": 33894,
+        "collection_total": 33956,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/3a/ce/132734_CcMW0.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/3a/ce/132734_CcMW0.jpg",
@@ -3722,9 +3974,9 @@
         "name_cn": "你好 世界",
         "date": "2019-09-20",
         "score": 6.8,
-        "rank": 3441,
+        "rank": 3449,
         "eps": 1,
-        "collection_total": 17950,
+        "collection_total": 17988,
         "images": {
           "grid": "https://lain.bgm.tv/r/100/pic/cover/l/14/a6/269090_600EK.jpg",
           "common": "https://lain.bgm.tv/r/400/pic/cover/l/14/a6/269090_600EK.jpg",
