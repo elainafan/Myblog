@@ -39,6 +39,7 @@
 }
 
 .music-player__dock {
+  position: relative;
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) auto;
   align-items: center;
@@ -205,6 +206,17 @@
   border: 1px solid var(--music-line);
   box-shadow: var(--shadow-l2);
   pointer-events: auto;
+}
+
+.music-player__dock .music-player__minimize {
+  position: absolute;
+  inset-block-start: -12px;
+  inset-inline-end: 10px;
+  width: 34px;
+  height: 28px;
+  border: 1px solid var(--music-line);
+  background: var(--card-background);
+  box-shadow: var(--shadow-l1);
 }
 
 .music-player.music-player--minimized {

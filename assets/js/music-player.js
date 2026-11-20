@@ -170,15 +170,16 @@
         const modeButton = createIconButton("mode", PLAYBACK_MODE_LABELS[playbackMode], icons.modeList);
         const listButton = createIconButton("list", "Playlist", icons.list);
         const minimizeButton = createIconButton("minimize", "收起播放器", icons.minimize);
+        minimizeButton.classList.add("music-player__minimize");
         minimizeButton.setAttribute("aria-controls", dock.id);
         minimizeButton.setAttribute("aria-expanded", "true");
         const restoreButton = createIconButton("restore", "展开播放器", icons.music);
         restoreButton.classList.add("music-player__launcher");
         restoreButton.setAttribute("aria-controls", dock.id);
         restoreButton.setAttribute("aria-expanded", "false");
-        controls.append(prevButton, playButton, nextButton, modeButton, listButton, minimizeButton);
+        controls.append(prevButton, playButton, nextButton, modeButton, listButton);
 
-        dock.append(coverButton, info, controls);
+        dock.append(coverButton, info, controls, minimizeButton);
         root.append(panel, dock, restoreButton);
         document.body.append(root);
 
@@ -480,13 +481,11 @@
                 case "list":
                     setExpanded(!isExpanded);
                     break;
-                case "minimize":
-                    setMinimized(true);
-                    break;
             }
         });
 
         coverButton.addEventListener("click", () => setExpanded(!isExpanded));
+        minimizeButton.addEventListener("click", () => setMinimized(true));
         restoreButton.addEventListener("click", () => setMinimized(false));
         list.addEventListener("click", event => {
             const button = event.target.closest(".music-player__track");

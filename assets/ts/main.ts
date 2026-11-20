@@ -11,7 +11,6 @@ import menu from 'ts/menu';
 import createElement from 'ts/createElement';
 import StackColorScheme from 'ts/colorScheme';
 import { setupScrollspy } from 'ts/scrollspy';
-import { setupSmoothAnchors } from "ts/smoothAnchors";
 import { searchInit } from "ts/search";
 
 const LONG_CODE_LINE_THRESHOLD = 80;
@@ -594,7 +593,6 @@ let Stack = {
         const articleContent = document.querySelector('.article-content') as HTMLElement;
         if (articleContent) {
             new StackGallery(articleContent);
-            setupSmoothAnchors();
         }
         setupScrollspy();
 

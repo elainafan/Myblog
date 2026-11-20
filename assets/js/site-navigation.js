@@ -82,21 +82,95 @@
         document.body.appendChild(counter);
     }
 
+    function documentUrl(url) {
+        return url.origin + url.pathname + url.search;
+    }
+
+    function fragmentTarget(hash) {
+        if (!hash) return null;
+        try {
+            const id = decodeURIComponent(hash.slice(1));
+            return document.getElementById(id) || document.getElementsByName(id)[0];
+        } catch (_) {
+            return null;
+        }
+    }
+
+    function stopPendingNavigation(pjax) {
+        pjax.abortRequest(pjax.request);
+        window.topbar?.hide();
+    }
+
+    function bindAnchorNavigation(pjax) {
+        document.addEventListener("click", event => {
+            if (event.defaultPrevented || event.button !== 0 ||
+                event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+            const link = event.target.closest?.('a[href*="#"]');
+            if (!link || link.hasAttribute("download") ||
+                (link.target && link.target.toLowerCase() !== "_self")) return;
+
+            let targetUrl;
+            try {
+                targetUrl = new URL(link.href);
+            } catch (_) {
+                return;
+            }
+            const current = new URL(location.href);
+            if (documentUrl(targetUrl) !== documentUrl(current)) return;
+            const target = fragmentTarget(targetUrl.hash);
+            if (!target) return;
+
+            event.preventDefault();
+            stopPendingNavigation(pjax);
+            const top = target.getBoundingClientRect().top + window.scrollY;
+            if (targetUrl.href !== current.href) {
+                // Fragment visits belong to this PJAX document and share its uid.
+                const state = {
+                    ...history.state,
+                    uid: history.state?.uid ?? pjax.lastUid,
+                    title: document.title,
+                    url: current.href,
+                    scrollPos: [window.scrollX, window.scrollY]
+                };
+                history.replaceState(state, "", current.href);
+                history.pushState({ ...state, url: targetUrl.href, scrollPos: [window.scrollX, top] }, "", targetUrl.href);
+            }
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            window.scrollTo({ top, behavior: reduceMotion ? "instant" : "smooth" });
+        });
+    }
+
     window.addEventListener("onColorSchemeChange", () => {
         const widget = document.querySelector("giscus-widget");
         if (widget) setCommentTheme(widget);
     });
 
     if (window.Pjax?.isSupported?.()) {
-        window.pjax = new Pjax({
+        const pjax = window.pjax = new Pjax({
             elements: "a[href], form[action]:not([data-result-title])",
             selectors: [".main-container"],
             switches: { ".main-container": switchPage },
             cacheBust: false
         });
+        let renderedUrl = documentUrl(new URL(location.href));
+        const loadUrl = pjax.loadUrl.bind(pjax);
+        pjax.loadUrl = (href, options) => {
+            // PJAX 0.2.8 passes history:false for back/forward navigation.
+            if (options?.history !== false) return loadUrl(href, options);
+
+            const targetUrl = new URL(location.href);
+            if (documentUrl(targetUrl) !== renderedUrl) return loadUrl(targetUrl.href, options);
+
+            stopPendingNavigation(pjax);
+            const target = fragmentTarget(targetUrl.hash);
+            const position = options.scrollPos ||
+                [0, target ? target.getBoundingClientRect().top + window.scrollY : 0];
+            window.scrollTo({ left: position[0], top: position[1], behavior: "instant" });
+        };
+        bindAnchorNavigation(pjax);
         document.addEventListener("pjax:send", () => window.topbar?.show());
         document.addEventListener("pjax:complete", () => window.topbar?.hide());
-        document.addEventListener("pjax:success", () => {
+        document.addEventListener("pjax:success", event => {
             const url = new URL(location.href);
             url.searchParams.delete("t");
             if (url.hash.includes("?")) {
@@ -105,9 +179,15 @@
                 params.delete("t");
                 url.hash = anchor + (params.size ? "?" + params : "");
             }
-            if (url.href !== location.href) {
-                history.replaceState({ ...history.state, url: url.href }, "", url.href);
+            // PJAX overwrites the destination entry before swapping on popstate.
+            // Put its saved scroll position back so later fragment visits can use it.
+            const scrollPos = event.history === false && event.scrollPos;
+            if (url.href !== location.href || scrollPos) {
+                const state = { ...history.state, url: url.href };
+                if (scrollPos) state.scrollPos = scrollPos;
+                history.replaceState(state, "", url.href);
             }
+            renderedUrl = documentUrl(url);
             updatePage();
             window.Stack?.init();
         });
